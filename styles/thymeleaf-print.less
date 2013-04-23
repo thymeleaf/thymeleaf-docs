@@ -1,0 +1,91 @@
+/*
+ * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@charset "UTF-8";
+
+/**
+ * Stylesheet for all Thymeleaf documentation in print (PDF) form.
+ * 
+ * @author Emanuel Rabina
+ */
+
+body {
+	background-color: white;
+	font-size: 1.5em;
+}
+
+
+/* Title block */
+/* -------------------------------------------------------------------------- */
+
+#doc-banner {
+	margin-top: 12em;
+}
+
+#doc-title {
+	margin-top: 3em;
+}
+
+
+/* Table of contents */
+/* -------------------------------------------------------------------------- */
+
+#toc-wrapper {
+	display: none;
+}
+
+
+/* Documentation content */
+/* -------------------------------------------------------------------------- */
+
+#content {
+	.level1 {
+		border: none;
+		page-break-before: always;
+	}
+	h1 {
+		border-bottom: none;
+		border-left: 0.5em solid #add65c;
+		padding: 0.25em 0 0.25em 0.5em;
+	}
+}
+
+blockquote {
+	font-size: 0.9em;
+	page-break-inside: avoid;
+}
+
+figure img {
+	width: 100%;
+}
+
+figcaption {
+	font-size: 0.9em;
+}
+
+
+/* Code sections */
+/* -------------------------------------------------------------------------- */
+
+p > code,
+li > code,
+table > code {
+	font-size: 0.9em;
+}
+
+pre {
+	font-size: 0.9em;
+}

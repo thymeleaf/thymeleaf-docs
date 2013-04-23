@@ -1,0 +1,297 @@
+/*
+ * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@charset "UTF-8";
+
+/**
+ * Stylesheet for all Thymeleaf documentation in both screen (HTML) and print
+ * (PDF) forms.
+ * 
+ * @author Emanuel Rabina
+ */
+
+@thymeleaf-brown: #352726;
+@thymeleaf-green: #99cc33;
+@thymeleaf-light-green: #f0faaa;
+
+body {
+	color: black;
+	font: 1em/1.5em 'Open Sans', sans-serif;
+	text-align: left;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+h1, h2, h3, h4, h5, h6 {
+	line-height: 1.25em;
+
+	a {
+		color: black;
+	}
+}
+
+img {
+	max-width: 100%;
+}
+
+table {
+	width: 100%;
+
+	thead {
+		border-bottom: 1px solid lightgrey;
+	}
+}
+
+
+/* Title block */
+/* -------------------------------------------------------------------------- */
+
+#title-block {
+	margin: 0 auto 10em;
+}
+
+#doc-banner {
+	display: block;
+	margin: 0 auto;
+	width: 100%;
+}
+
+#doc-title {
+	font-size: 3em;
+	margin-bottom: 4em;
+	text-align: center;
+}
+
+#doc-info {
+	margin-left: 6em;
+
+	.info-header {
+		font-weight: bold;
+	}
+}
+
+#project-version {
+	margin-bottom: 2em;
+}
+
+
+/* Table of contents */
+/* -------------------------------------------------------------------------- */
+
+#toc-wrapper {
+	background-color: white;
+	border-radius: 0.5em;
+	border-right: 0.25em solid lighten(@thymeleaf-green, 10%);
+	overflow: hidden;
+	padding: 0.75em 1em;
+
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+#toc {
+	font: 1em/1.5em 'Source Sans Pro', sans-serif;
+	height: 100%;
+	overflow-y: auto;
+
+	a {
+		color: black;
+		display: block;
+	}
+	ul {
+		list-style-type: none;
+	}
+
+	.level1 {
+		margin: 0;
+		padding: 0;
+
+		> li {
+			margin-bottom: 1em;
+
+			> a {
+				border-bottom: 1px solid lightgrey;
+				margin-bottom: 0.25em;
+				padding-bottom: 0.25em;
+			}
+		}
+	}
+	.level2 {
+		font-size: 0.8em;
+		padding-left: 1.5em;
+		text-indent: -1.5em;
+	}
+	.level3 {
+		padding-left: 0;
+		text-indent: 0;
+	}
+	.level4 {
+		padding-left: 1.5em;
+		text-indent: 0;
+	}
+}
+
+
+/* Documentation content */
+/* -------------------------------------------------------------------------- */
+
+#content {
+	h1 {
+		border-bottom: 1px solid lightgrey;
+		margin: 0.25em 0 0.5em;
+		padding-bottom: 0.75em;
+	}
+
+	section > *:last-child {
+		margin-bottom: 0 !important;
+	}
+
+	> *:last-child {
+		margin-bottom: 0 !important;
+	}
+
+	.level1 {
+		background-color: white;
+		border: 1px solid lightgrey;
+		border-radius: 0.5em;
+		margin-bottom: 4em;
+		padding: 1em;
+	}
+	.level2 {
+		margin: 3em 0;
+	}
+	h1 + .level2 {
+		margin-top: 2em;
+	}
+	.level3 {
+		margin: 2em 0;
+	}
+}
+
+blockquote {
+	background-color: #f0f0f0;
+	border: 1px solid lightgrey;
+	border-radius: 0.5em;
+	padding: 0 1em;
+}
+
+figure {
+	img {
+		display: block;
+		margin: 0 auto;
+	}
+}
+
+figcaption {
+	font-style: italic;
+	text-align: center;
+}
+
+#setting-value-to-specific-attributes,
+#fixed-value-boolean-attributes {
+	> table {
+		td {
+			width: 33.333%;
+		}
+	}
+}
+
+#attribute-precedence {
+	> table {
+		tr:nth-last-child(n+2) {
+			border-bottom: 1px solid lightgrey;
+		}
+		td:first-child {
+			padding-right: 1.5em;
+			text-align: right;
+		}
+	}
+}
+
+.footnotes {
+	font-size: 0.8em;
+}
+
+
+/* Code sections */
+/* -------------------------------------------------------------------------- */
+
+p > code,
+li > code {
+	background-color: #f0f0f0;
+	border: 1px solid lightgrey;
+	border-radius: 0.25em;
+	padding: 0.25em;
+}
+
+pre {
+	background-color: #f0f0f0;
+	border: 1px solid lightgrey !important;
+	border-radius: 0.5em;
+	font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier , monospace;
+	line-height: 1.25em;
+	padding: 1em !important;
+}
+
+.language-java,
+.language-javascript {
+	.com {
+		color: #3f7f5f;
+	}
+	.kwd {
+		color: #7f0055;
+		font-weight: bold;
+	}
+	.typ {
+		color: black;
+	}
+	.lit {
+		color: grey;
+	}
+	.str {
+		color: #2a00ff;
+	}
+	.pun, .opn, .clo {
+		color: black;
+	}
+}
+
+.language-html,
+.language-xml {
+	.com {
+		color: #3f5fbf;
+	}
+	.dec, .tag {
+		color: #008080;
+	}
+	.atn {
+		color: #7f007f;
+	}
+	.atv {
+		color: #2a00ff;
+	}
+	.pun, .opn, .clo {
+		color: black;
+	}
+}

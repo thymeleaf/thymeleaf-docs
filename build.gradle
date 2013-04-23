@@ -1,0 +1,201 @@
+/*
+ * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import nz.net.ultraq.lesscss.LessCSSCompiler;
+import org.apache.tools.ant.filters.*;
+import org.gradle.api.plugins.jetty.internal.Monitor
+import groovy.xml.MarkupBuilder;
+
+/**
+ * Gradle build script for the Thymeleaf Docs project, converts the
+ * documentation files, in Markdown format, into HTML and PDF formats.
+ *
+ * @author Emanuel Rabina
+ */
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+project.version = '2.0.16'
+project.webAppDirName = "${buildDir}/docs/html"
+
+buildscript {
+	repositories {
+		mavenCentral()
+		maven {
+			url 'https://oss.sonatype.org/content/groups/public/'
+		}
+	}
+	dependencies {
+		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0-SNAPSHOT'
+	}
+}
+
+/**
+ * Generate HTML versions of the Thymeleaf documentation.
+ */
+task generateDocsHTML(
+	description: "Generate HTML docs from Thymeleaf's markdown docs") << {
+
+	// Preprocess the template files to insert the corrent document date and project version
+	def docsDirTemplates = file("${buildDir}/templates")
+	mkdir docsDirTemplates
+	copy {
+		from('templates') {
+			filter(ReplaceTokens, tokens:[
+				documentVersion: new Date().format('yyyyMMdd - dd MMMM yyyy'),
+				projectVersion:  project.version
+			])
+		}
+		into docsDirTemplates
+	}
+
+	// Generate the HTML documents from the markdown files, using the updated templates
+	def docsDirHtml = file("${docsDir}/html")
+	mkdir docsDirHtml
+
+	fileTree('.') {
+		include '*.md'
+		exclude 'README.md'
+	}.each { docFile ->
+		def docFileBase = fileBaseName(docFile);
+
+		println "Generating HTML doc for ${docFileBase}..."
+		execute([
+			"pandoc",
+			"--write=html5",
+			"--template=" + file("${docsDirTemplates}/thymeleaf.html"),
+			"--toc",
+			"--toc-depth=4",
+			"--section-divs",
+			"--no-highlight",	// This doesn't seem to work :(
+			"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
+			"${docFile}"
+		])
+	}
+
+	// Copy over and process any resources needed for the HTML docs
+	copy {
+		from(projectDir) {
+			include 'images/**'
+			include 'scripts/**'
+			include 'styles/**'
+			exclude 'styles/**/*.less'
+		}
+		into docsDirHtml
+	}
+	LessCSSCompiler compiler = new LessCSSCompiler()
+	fileTree('styles') { include '**/*.less' }.each { lessFile ->
+		def lessFileBase = fileBaseName(lessFile)
+		compiler.compile(lessFile, file("${docsDirHtml}/styles/${lessFileBase}.css"))
+	}
+}
+
+/**
+ * Jetty configuration, including a fix for Jetty not stopping, obtained from
+ * the bug report here: http://issues.gradle.org/browse/GRADLE-2263
+ */
+[jettyRun, jettyStop]*.stopPort = 8081
+[jettyRun, jettyStop]*.stopKey  = 'stop'
+jettyRun.doLast {
+
+	/* 
+	 * THIS IS A WORKAROUND! THE CURRENT VERSION OF THIS TASK DOESN'T START A WATCHER IN DAEMON MODE
+	 * 
+	 * If starting the monitor fails, it may be because the jetty task was updated to fix this issue
+	 * When that happens, we shouldn't need the custom task any more
+	 * 
+	 * Copied From: AbstractJettyRunTask
+	 */
+ 	if (getStopPort() != null && getStopPort() > 0 && getStopKey() != null) {
+		Monitor monitor = new Monitor(getStopPort(), getStopKey(), server.getProxiedObject());
+		monitor.start();
+	}
+}
+
+/**
+ * Generate PDF versions of the Thymeleaf documentation.  Uses a Jetty server to
+ * host the HTML documents, and wkhtmltopdf which uses the server to read files
+ * via the http:// protocol (otherwise the same-origin restriction kicks in, as
+ * do some file:// bugs on Windows) and saves them as PDF documents.
+ */
+task generateDocsPDF(
+	dependsOn: generateDocsHTML,
+	description: "Generate PDF documents from Thymeleaf's HTML docs") << {
+
+	jettyRun.daemon = true
+	jettyRun.execute()
+
+	def docsDirPdf = file("${docsDir}/pdf")
+	mkdir docsDirPdf
+
+	fileTree("${docsDir}/html") { include '*.html' }.each {docFile ->
+		def docFileBase = fileBaseName(docFile);
+
+		println "Generating PDF doc for ${docFileBase}..."
+		execute([
+			"wkhtmltopdf",
+			"--dpi", "150",
+			"--javascript-delay", "2000",
+			"--print-media-type",
+			"--footer-spacing", "5",
+			"--margin-bottom", "15",
+			"--footer-font-size", "8",
+			"--footer-right", "Page [page] of [topage]",
+			"http://localhost:8080/thymeleaf-docs/${docFile.name}",
+			file("${docsDirPdf}/${docFileBase}.pdf")
+		])
+	}
+
+	jettyStop.execute()
+}
+
+/**
+ * Generate HTML and PDF versions of the Thymeleaf documentation.
+ */
+task generateDocs(
+	dependsOn: [generateDocsHTML, generateDocsPDF],
+	description: "Generate HTML and PDF documents from Thymeleaf's markdown docs") << {
+}
+
+/**
+ * Get just the name of the file minus the path and extension.
+ * 
+ * @param file
+ */
+def fileBaseName(file) {
+
+	return file.name.replaceFirst(~/\.[^\.]+$/, '')
+}
+
+/**
+ * Execute the given command and wait for the process to complete.
+ * 
+ * @param command
+ */
+def execute(command) {
+
+	def proc = command.execute(null, projectDir)
+
+	// NOTE: There's a bug in wkhtmltopdf that has it hang with the larger PDFs
+	//       (eg: Using Thymeleaf doc), but it generates them just fine.
+	proc.waitForOrKill(15000)
+
+	if (proc.exitValue() > 0) {
+		println "${proc.err.text}"
+	}
+}

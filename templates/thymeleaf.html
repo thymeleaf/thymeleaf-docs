@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+	<title>$pagetitle$</title>
+	<meta charset="utf-8">
+	<meta name="generator" content="pandoc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no"/>
+
+	<link rel="icon" href="images/icon.png"/>
+	<link rel="stylesheet" href="styles/fonts/open-sans.css"/>
+	<link rel="stylesheet" href="styles/fonts/source-sans-pro.css"/>
+	<link rel="stylesheet" href="styles/normalize.css"/>
+	<link rel="stylesheet" href="styles/thymeleaf.css"/>
+	<link rel="stylesheet" href="styles/thymeleaf-screen.css" media="screen"/>
+	<link rel="stylesheet" href="styles/thymeleaf-print.css" media="print"/>
+
+	<script src="scripts/prettify.min.js"></script>
+	<script src="scripts/jquery-1.9.1.min.js"></script>
+	<script src="scripts/thymeleaf.js"></script>
+
+</head>
+
+<body>
+
+	<div id="documentation-wrapper">
+
+	<div id="title-block-wrapper">
+		<header id="title-block">
+			<img id="doc-banner" class="banner" src="images/header.png" alt="Thymeleaf logo"/>
+			<h1 id="doc-title" class="title">$title$</h1>
+			<div id="doc-info">
+				<div id="doc-version">
+					<span class="info-header">Document version:</span> @documentVersion@
+				</div>
+				<div id="project-version">
+					<span class="info-header">Project Version:</span> @projectVersion@
+				</div>
+				<div id="project-website">
+					<span class="info-header">Project web site:</span>
+					<a href="http://www.thymeleaf.org">http://www.thymeleaf.org</a>
+				</div>
+			</div>
+		</header>
+	</div>
+
+	<div id="toc-wrapper">
+		<nav id="toc">
+$toc$
+		</nav>
+	</div>
+
+	<div id="content-wrapper">
+		<div id="content">
+$body$
+		</div>
+	</div>
+
+	</div>
+
+</body>
+
+</html>
