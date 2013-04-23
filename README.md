@@ -1,4 +1,3 @@
-
 Thymeleaf Docs
 ==============
 
@@ -31,7 +30,7 @@ sources to HTML, PDF, or both.  The following Gradle tasks perform these jobs:
  * `generateDocsHTML` - Create the HTML docs.
  * `generateDocsPDF` - Create the PDF docs (also creates the HTML docs since it
    depends on them)
- * `generateDocs - Creates both HTML and PDF docs (although the PDF task already
+ * `generateDocs` - Creates both HTML and PDF docs (although the PDF task already
    does that... maybe we don't need this task?)
 
 The generated docs will end up in the `build/docs` directory.
