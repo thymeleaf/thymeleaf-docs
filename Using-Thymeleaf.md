@@ -1,4 +1,4 @@
-﻿% Tutorial: Using Thymeleaf
+% Tutorial: Using Thymeleaf
 
 
 
