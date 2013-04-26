@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-import nz.net.ultraq.lesscss.LessCSSCompiler;
-import org.apache.tools.ant.filters.*;
+import nz.net.ultraq.lesscss.LessCSSCompiler
+
+import org.apache.tools.ant.filters.*
 import org.gradle.api.plugins.jetty.internal.Monitor
-import groovy.xml.MarkupBuilder;
+
+import groovy.xml.MarkupBuilder
+
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Gradle build script for the Thymeleaf Docs project, converts the
@@ -51,13 +56,15 @@ buildscript {
 task generateDocsHTML(
 	description: "Generate HTML docs from Thymeleaf's markdown docs") << {
 
+	def dateFormat = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH)
+
 	// Preprocess the template files to insert the corrent document date and project version
 	def docsDirTemplates = file("${buildDir}/templates")
 	mkdir docsDirTemplates
 	copy {
 		from('templates') {
 			filter(ReplaceTokens, tokens:[
-				documentVersion: new Date().format('yyyyMMdd - dd MMMM yyyy'),
+				documentVersion: dateFormat.format(new Date()),
 				projectVersion:  project.version
 			])
 		}
@@ -149,13 +156,13 @@ task generateDocsPDF(
 		println "Generating PDF doc for ${docFileBase}..."
 		execute([
 			"wkhtmltopdf",
-			"--dpi", "150",
-			"--javascript-delay", "2000",
 			"--print-media-type",
-			"--footer-spacing", "5",
-			"--margin-bottom", "15",
+			"--dpi",              "150",
+			"--javascript-delay", "2000",
+			"--margin-bottom",    "15",
+			"--footer-spacing",   "5",
 			"--footer-font-size", "8",
-			"--footer-right", "Page [page] of [topage]",
+			"--footer-right",     "Page [page] of [topage]",
 			"http://localhost:8080/thymeleaf-docs/${docFile.name}",
 			file("${docsDirPdf}/${docFileBase}.pdf")
 		])
@@ -190,11 +197,7 @@ def fileBaseName(file) {
 def execute(command) {
 
 	def proc = command.execute(null, projectDir)
-
-	// NOTE: There's a bug in wkhtmltopdf that has it hang with the larger PDFs
-	//       (eg: Using Thymeleaf doc), but it generates them just fine.
-	proc.waitForOrKill(15000)
-
+	proc.waitForProcessOutput(System.out, System.err)
 	if (proc.exitValue() > 0) {
 		println "${proc.err.text}"
 	}
