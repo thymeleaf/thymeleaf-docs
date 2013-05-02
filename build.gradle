@@ -41,12 +41,9 @@ project.webAppDirName = "${buildDir}/docs/html"
 buildscript {
 	repositories {
 		mavenCentral()
-		maven {
-			url 'https://oss.sonatype.org/content/groups/public/'
-		}
 	}
 	dependencies {
-		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0-SNAPSHOT'
+		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0'
 	}
 }
 
@@ -58,7 +55,7 @@ task generateDocsHTML(
 
 	def dateFormat = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH)
 
-	// Preprocess the template files to insert the corrent document date and project version
+	// Preprocess the template files to insert the correct document date and project version
 	def docsDirTemplates = file("${buildDir}/templates")
 	mkdir docsDirTemplates
 	copy {
