@@ -2932,7 +2932,7 @@ expressions into our scripts, like:
 /*<![CDATA[*/
     ...
 
-    var username = /*[[${sesion.user.name}]]*/ 'Sebastian';
+    var username = /*[[${session.user.name}]]*/ 'Sebastian';
 
     ...
 /*]]>*/
@@ -2972,7 +2972,7 @@ your script to fail when loaded statically:
 /*<![CDATA[*/
     ...
 
-    var username = [[${sesion.user.name}]];
+    var username = [[${session.user.name}]];
 
     ...
 /*]]>*/
@@ -2997,7 +2997,7 @@ For example, if we had the following code:
 /*<![CDATA[*/
     ...
 
-    var user = /*[[${sesion.user}]]*/ null;
+    var user = /*[[${session.user}]]*/ null;
 
     ...
 /*]]>*/
