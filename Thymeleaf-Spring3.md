@@ -54,6 +54,8 @@ features:
  * New attributes for form processing: `th:field` and `th:errors,` besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
+ * An expression object and method, `#themes.code(...)`, which is the equivalent
+   of the `spring:theme` JSP custom tag.
  * New DTDs for validation, including these new attributes, as well as new
    corresponding DOCTYPE translation rules.
 
