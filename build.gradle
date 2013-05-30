@@ -36,7 +36,11 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 project.version = '2.0.16'
-project.webAppDirName = "${buildDir}/docs/html"
+project.webAppDirName = "${buildDir}/tmp/html"
+
+project.ext.docsDirTemplates = file("${buildDir}/templates")
+project.ext.docsDirHtml      = file("${docsDir}/html")
+project.ext.docsDirPdf       = file("${docsDir}/pdf")
 
 buildscript {
 	repositories {
@@ -56,7 +60,6 @@ task generateDocsHTML(
 	def dateFormat = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH)
 
 	// Preprocess the template files to insert the correct document date and project version
-	def docsDirTemplates = file("${buildDir}/templates")
 	mkdir docsDirTemplates
 	copy {
 		from('templates') {
@@ -69,7 +72,6 @@ task generateDocsHTML(
 	}
 
 	// Generate the HTML documents from the markdown files, using the updated templates
-	def docsDirHtml = file("${docsDir}/html")
 	mkdir docsDirHtml
 
 	fileTree('.') {
@@ -141,13 +143,33 @@ task generateDocsPDF(
 	dependsOn: generateDocsHTML,
 	description: "Generate PDF documents from Thymeleaf's HTML docs") << {
 
+	// Copy over the HTML documents into a directory from which we can host them
+	// using the Jetty server
+	copy {
+		from(docsDirHtml)
+		into webAppDirName
+	}
+
+	// Modify the copied HTML docs, removing the Google Analytics script as it
+	// blocks the wkhtmltopdf process
+	fileTree(webAppDirName) { include '*.html' }.each { docFile ->
+		ant.replaceregexp(
+			file:    docFile,
+			match:   '<!-- Google Analytics script -->.*</script>',
+			replace: '',
+			flags:   'gis'
+		)
+	}
+
 	jettyRun.daemon = true
 	jettyRun.execute()
 
-	def docsDirPdf = file("${docsDir}/pdf")
+	// Generate the PDF documents from the modified HTML documents
 	mkdir docsDirPdf
 
-	fileTree("${docsDir}/html") { include '*.html' }.each {docFile ->
+	fileTree(webAppDirName) {
+		include '*.html'
+	}.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
 
 		println "Generating PDF doc for ${docFileBase}..."
