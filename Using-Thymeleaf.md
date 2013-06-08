@@ -2792,7 +2792,10 @@ order in which they are executed in the tag. This order is:
     <tr>
       <td>4</td>
       <td>Local variable definition</td>
-      <td>`th:with`</td>
+      <td>
+        `th:object`<br/>
+        `th:with`
+      </td>
     </tr>
     <tr>
       <td>5</td>
