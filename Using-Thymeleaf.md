@@ -2706,14 +2706,14 @@ Well, what if we wanted that `"dd MMMM yyyy"` to actually depend on the locale?
 For example, we might want to add the following message to our `home_en.properties`:
 
 ```
-date.format=MMMM dd',' yyyy
+date.format=MMMM dd'','' yyyy
 ```
 
 ...and an equivalent one to our `home_es.properties`:
 
 
 ```
-date.format=dd 'de' MMMM',' yyyy
+date.format=dd ''de'' MMMM'','' yyyy
 ```
 
 Now, let's use `th:with` to get the localized date format into a variable, and
