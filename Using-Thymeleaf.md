@@ -1272,7 +1272,7 @@ th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Produ
 ```
 
 Note that textual aliases exist for these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`) and `le` (`<=`). Also `eq` (`==`) and `neq` (`!=`).
+(`>=`) and `le` (`<=`). Also `eq` (`==`) and `neq`/`ne` (`!=`).
 
 
 
