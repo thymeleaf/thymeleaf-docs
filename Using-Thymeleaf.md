@@ -857,7 +857,7 @@ Standard Expression features:
     * Equality operators: ==, !=
  * Unary operations:
     *  Minus sign (numeric): -
-    *  Boolean negation: !
+    *  Boolean negation: !, not
  * Conditional operators:
     * If-then: (if) ? (then)
     * If-then-else: (if) ? (then) : (else)
@@ -1255,6 +1255,7 @@ Standard Expression engine):
 th:with="isEven=${prodStat.count % 2 == 0}"
 ```
 
+Note that textual aliases exist for some of these operators: `div` (`/`), `mod` (`%`).
 
 
 4.8 Comparators and Equality
@@ -1271,8 +1272,8 @@ th:if="${prodStat.count} gt; 1"
 th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')"
 ```
 
-Note that textual aliases exist for these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`) and `le` (`<=`). Also `eq` (`==`) and `neq`/`ne` (`!=`).
+Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
+(`>=`), `le` (`<=`). Also `eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
