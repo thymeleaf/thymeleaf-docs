@@ -997,7 +997,7 @@ available to expressions for higher flexibility. These objects will be
 referenced (per OGNL standard) starting with the `#` symbol:
 
  * `#ctx`: the context object
- * `#root` or `#vars: the context variables objects, against which unqualified
+ * `#root` or `#vars:` the context variables objects, against which unqualified
    expressions are evaluated (usually the variables contained in `#ctx.variables`
    plus local ones)
  * `#locale`: the context locale

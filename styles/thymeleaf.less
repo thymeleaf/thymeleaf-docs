@@ -239,15 +239,25 @@ figcaption {
 
 p > code,
 li > code {
-	background-color: #f0f0f0;
-	border: 1px solid lightgrey;
-	border-radius: 0.25em;
 	padding: 0.25em;
 }
 
+code {
+	color: #707070;
+	font-weight: bold;
+}
+
+pre code {
+	color: #b9bdb6;
+	font-weight: normal;
+}
+
+table code {
+	font-weight: normal;
+}
+
 pre {
-	background-color: #f0f0f0;
-	border: 1px solid lightgrey !important;
+	background-color: #352726;
 	border-radius: 0.5em;
 	font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier , monospace;
 	line-height: 1.25em;
@@ -257,41 +267,41 @@ pre {
 .language-java,
 .language-javascript {
 	.com {
-		color: #3f7f5f;
+		color: #b58900;
 	}
 	.kwd {
-		color: #7f0055;
+		color: #8bd1ff;
 		font-weight: bold;
 	}
 	.typ {
-		color: black;
+		color: #b9bdb6;
 	}
 	.lit {
-		color: grey;
+		color: #8bd1ff;
 	}
 	.str {
-		color: #2a00ff;
+		color: #99cc33;
 	}
-	.pun, .opn, .clo {
-		color: black;
+	.pun, .opn, .clo, .pln {
+		color: #b9bdb6;
 	}
 }
 
 .language-html,
 .language-xml {
 	.com {
-		color: #3f5fbf;
+		color: #b58900;
 	}
 	.dec, .tag {
-		color: #008080;
+		color: #8bd1ff;
 	}
 	.atn {
-		color: #7f007f;
+		color: #e0e8ff;
 	}
 	.atv {
-		color: #2a00ff;
+		color: #99cc33;
 	}
-	.pun, .opn, .clo {
-		color: black;
+	.pun, .opn, .clo, .pln {
+		color: #b9bdb6;
 	}
 }
