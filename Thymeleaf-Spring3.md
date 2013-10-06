@@ -987,7 +987,7 @@ errors exist for that field. You can also check if exist global errors (no speci
 With the function `${#fields.hasAnyErrors()` you will check if whether error exist (fields or global):
 
 ```html
-<div th:class="${#fields.hasAnyErrors()? 'errors'" /> 
+<div th:class="${#fields.hasAnyErrors()}? 'errors'" /> 
 ```
 
 Let's show the error messages themselves:
