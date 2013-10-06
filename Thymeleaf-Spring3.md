@@ -978,19 +978,33 @@ Functions first: let's set a class to a field if it has an error:
 
 As you can see, the `#fields.hasErrors(...)` function receives the field
 expression as a parameter, and returns a boolean telling whether any validation
-errors exist for that field.
+errors exist for that field. You can also check if exist global errors (no specific field):
+
+```html
+<div th:class="${#fields.hasGlobalErrors()}? 'globalError'" /> 
+```
+
+With the function `${#fields.hasAnyErrors()` you will check if whether error exist (fields or global):
+
+```html
+<div th:class="${#fields.hasAnyErrors()? 'errors'" /> 
+```
 
 Let's show the error messages themselves:
 
 ```html
-<ul th:if="${#fields.hasErrors('*')}">
-  <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+<ul th:if="${#fields.hasAnyErrors()}">
+  <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Input is incorrect</li>
 </ul>
 ```
 
-The new function is `#fields.errors(...)`, and the star (`'*'`) parameter tells
-the function we are looking for errors on any field. `#fields.errors(...)`
-returns a list of (externalized) error messages.
+The new function is `#fields.allErrors()`. That return a list of (externalized) error messages (for all fields and global.
+
+With the function `#fields.errors(...)`, you receive errors for a specific field:
+
+```html
+<li th:each="err : ${#fields.errors('*{datePlanted}')}" th:text="${err}">Input is incorrect</li>
+```
 
 `th:errors` attribute works in a similar way to the `#fields.errors(...)`
 function, but listing all errors for the specified selector separated by `<br />`:
@@ -999,6 +1013,8 @@ function, but listing all errors for the specified selector separated by `<br />
 <input type="text" th:field="*{datePlanted}" />
 <p th:if="${#fields.hasErrors('datePlanted')}" th:errors="*{datePlanted}">Incorrect date</p>
 ```
+
+You can also use `th:errors` for global `th:errors="global"` and all `th:errors="all"` errors.
 
 
 
