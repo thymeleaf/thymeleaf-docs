@@ -1037,7 +1037,7 @@ that will help us perform common tasks in our expressions.
    (for example, as a result of an iteration).
 
 You can check what functions are offered by each of these utility objects in the
-[Appendix](appendix-expression-utility-objects).
+[Appendix A](#appendix-a-expression-utility-objects).
 
 
 ### Reformatting dates in our home page
@@ -2265,7 +2265,7 @@ this code:
 ```
 
 The code above defines a fragment called `copy` that we can easily include in
-our home page using one of the `th:include` or `th:substituteby` attributes:
+our home page using one of the `th:include` or `th:replace` attributes:
 
 ```html
 <body>
@@ -2285,11 +2285,10 @@ are three different formats:
 
  * `"templatename::[domselector]"` Includes as a fragment the result of
    executing the specified DOM Selector expression on the template named `templatename`.
-   No `th:fragment` attributes are needed. 
+   No `th:fragment` attributes are needed. The brackets in this syntax are optional.
 
-   > DOM Selectors are similar to XPath expressions, see the javadoc
-   > specification for the `org.thymeleaf.dom.DOMSelector` class for more info
-   > on DOM Selector syntax.
+   > DOM Selectors are similar to XPath expressions, see the 
+   > [Appendix B](#appendix-b-dom-selector-syntax) for more info on DOM Selector syntax.
 
  * `"templatename"` Includes as a fragment the complete template named `templatename`.
 
@@ -2297,7 +2296,11 @@ are three different formats:
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
-Both `templatename` and `fragment` or `xpathexpr` in the above syntax examples
+Fragments for the same template can also be added using the following syntaxes:
+
+ * `"::fragname"` or `"this::fragname"` Includes a fragment from the same template.
+
+Both `templatename` and `fragment` or `domselector` in the above syntax examples
 can be fully-featured expressions (even conditionals!) like:
 
 ```html
@@ -2314,8 +2317,8 @@ this target template.
 > complete and even validating XHTML structure, while still retaining the
 > ability to make Thymeleaf include them into other templates.
 
-And what is the difference between `th:include` and `th:substituteby`? Whereas `th:include`
-will include the contents of the fragment into its host tag, `th:substituteby`
+And what is the difference between `th:include` and `th:replace`? Whereas `th:include`
+will include the contents of the fragment into its host tag, `th:replace`
 will actually substitute the host tag by the fragment's. So that an HTML5
 fragment like this:
 
@@ -2333,7 +2336,7 @@ fragment like this:
   ...
 
   <div th:include="footer :: copy"></div>
-  <div th:substituteby="footer :: copy"></div>
+  <div th:replace="footer :: copy"></div>
   
 </body>
 ```
@@ -2355,9 +2358,66 @@ fragment like this:
 </body>
 ```
 
+`th:substituteby` can also be used as an alias for `th:replace`.
 
 
-8.2 Removing template fragments
+
+8.2 Parameterizable fragment signatures
+---------------------------------------
+
+In order to create a more _function-like_ mechanism for the use of template fragments,
+fragments defined with `th:fragment` can specify a set of parameters:
+	
+```html
+<div th:fragment="frag (onevar,twovar)">
+    <p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+</div>
+```
+
+This requires the use of one of these two syntaxes to call the fragment from `th:include`, 
+`th:replace`:
+
+```html
+<div th:include="::frag (${value1},${value2})">...</div>
+<div th:include="::frag (onevar=${value1},twovar=${value2})">...</div>
+```
+
+Note that order is not important in the last option:
+
+```html
+<div th:include="::frag (twovar=${value2},onevar=${value1})">...</div>
+```
+
+###Fragment local variables without fragment signature
+
+Even if fragments are defined without signature, like this:
+
+```html	
+<div th:fragment="frag">
+    ...
+</div>
+```
+
+We could use the second syntax specified above to call them (and only the second one):
+
+```html	
+<div th:include="::frag (onevar=${value1},twovar=${value2})">
+```
+
+This would be, in fact, equivalent to a combination of `th:include` and `th:with`:
+
+```html	
+<div th:include="::frag" th:with="onevar=${value1},twovar=${value2}">
+```
+
+**Note** that this specification of local variables for a fragment —no matter whether it 
+has a signature or not— does not cause an initialization of the context to zero. Fragments 
+will still be able to access every context variable being used at the calling template 
+like they currently are. 
+
+
+
+8.3 Removing template fragments
 -------------------------------
 
 Let's revisit the last version of our product list template:
@@ -3632,8 +3692,8 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 
 
 
-16 Appendix: Expression Utility Objects
-=======================================
+16 Appendix A: Expression Utility Objects
+=========================================
 
  * **\#dates** : utility methods for `java.util.Date` objects:
 
@@ -4265,3 +4325,117 @@ ${#ids.seq('someId')}
 ${#ids.next('someId')}
 ${#ids.prev('someId')}
 ```
+
+
+
+
+17 Appendix B: DOM Selector syntax
+==================================
+
+DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way 
+to specify template fragments.
+
+For example, the following selector will select every `<div>` with the class `content`, in every position inside
+the markup:
+
+```html
+<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+```
+
+The basic syntax inspired from XPath includes:
+
+ * `/x` means direct children of the current node with name x.
+
+ * `//x` means children of the current node with name x, at any depth.
+
+ * `x[@z="v"]` means elements with name x and an attribute called z with value "v".
+
+ * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and z2 with values "v1" and "v2", respectively.
+
+ * `x[i]` means element with name x positioned in number i among its siblings.
+
+ * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its 
+    siblings that also match this condition.
+
+But more concise syntax can also be used:
+
+ * `x` is exactly equivalent to `//x` (search an element with name or reference "x" at any depth level).
+
+ * Selectors are also allowed without element name/reference, as long as it includes a specification of arguments. 
+   So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute 
+   with value "oneclass".
+
+Advanced attribute selection features:
+
+ * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) 
+   and `$=` (ends with).
+   For example: `x[@class^='section']` means elements with name x and a value for attribute class that starts 
+   with section.
+
+ * Attributes can be specified both starting with @ (XPath-style) and without (jQuery-style).
+   So `x[z='v']` is equivalent to `x[@z='v']`.
+   Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers
+   (jQuery-style).
+   So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
+
+Direct _jQuery-like_ selectors:
+
+ * `x.oneclass` is equivalent to `x[class='oneclass']`.
+
+ * `.oneclass` is equivalent to `[class='oneclass']`.
+
+ * `x#oneid` is equivalent to `x[id='oneid']`.
+
+ * `#oneid` is equivalent to `[id='oneid']`.
+
+ * `x%oneref` means nodes -not just elements- with name x that match reference _oneref_ according to a 
+   specified `DOMSelector.INodeReferenceChecker` implementation.
+
+ * `%oneref` means nodes -not just elements- with any name that match reference _oneref_ according to a 
+   specified `DOMSelector.INodeReferenceChecker` implementation.
+   Note this is actually equivalent to simply _oneref_ because references can be used instead of element names.
+
+ * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
+
+The above DOM Selector expression:
+
+```html
+<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+```
+could be written as:
+
+```html
+<div th:include="mytemplate :: [div.content]">...</div>
+```
+
+###Multivalued class matching
+
+DOM Selectors understand the class attribute to be **multivalued**, and therefore allow 
+the application of selectors on this attribute even if the element has several class values.
+For example, `div[class='two']` will match `<div class="one two three" />`
+
+###Optional brackets
+
+The syntax of the fragment inclusion attributes converts every fragment selection into a DOM selection,
+so brackets [...] are no needed (though allowed).
+
+So the following, with no brackets, is equivalent to the bracketed selector seen above:
+
+```html
+<div th:include="mytemplate :: div.content">...</div>
+```
+
+So, summarizing, this:
+
+```html
+<div th:replace="mytemplate :: myfrag">...</div>
+```
+
+Will look for a `th:fragment="myfrag"` fragment signature. But would also look for tags with name 
+myfrag if they existed (which they don't, in HTML). Note the difference with:
+
+```html
+<div th:replace="mytemplate :: .myfrag">...</div>
+```
+
+which will actually look for any elements with class="myfrag", without caring about `th:fragment` signatures. 
