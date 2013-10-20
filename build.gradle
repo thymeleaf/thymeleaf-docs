@@ -35,11 +35,13 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-project.version = '2.0.19'
+project.version = '2.1.0'
 project.webAppDirName = "${buildDir}/tmp/html"
 
 project.ext.docsDirTemplates = file("${buildDir}/templates")
+project.ext.docsDirStyles    = file("${projectDir}/styles")
 project.ext.docsDirHtml      = file("${docsDir}/html")
+project.ext.docsDirEbook     = file("${docsDir}/ebook")
 project.ext.docsDirPdf       = file("${docsDir}/pdf")
 
 buildscript {
@@ -93,21 +95,40 @@ task generateDocsHTML(
 			"${docFile}"
 		])
 	}
+}
 
-	// Copy over and process any resources needed for the HTML docs
-	copy {
-		from(projectDir) {
-			include 'images/**'
-			include 'scripts/**'
-			include 'styles/**'
-			exclude 'styles/**/*.less'
-		}
-		into docsDirHtml
-	}
-	LessCSSCompiler compiler = new LessCSSCompiler()
-	fileTree('styles') { include '**/*.less' }.each { lessFile ->
-		def lessFileBase = fileBaseName(lessFile)
-		compiler.compile(lessFile, file("${docsDirHtml}/styles/${lessFileBase}.css"))
+/**
+ * Generate e-books of the Thymeleaf documentation.
+ */
+task generateDocsEbook(
+	dependsOn: generateDocsHTML,
+	description: "Generate e-books from Thymeleaf's markdown docs") << {
+
+	mkdir docsDirEbook
+
+	fileTree('.') {
+		include '*.md'
+		exclude 'README.md'
+	}.each { docFile ->
+		def docFileBase = fileBaseName(docFile);
+
+		println "Generating E-books for ${docFileBase}..."
+		execute([
+			"pandoc",
+			"--write=epub",
+			"--template=" + file("${docsDirTemplates}/thymeleaf.epub"),
+			"--data-dir=" + file("${docsDirStyles}"),
+			"--toc",
+			"--toc-depth=4",
+			"--section-divs",
+			"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
+			"${docFile}"
+		])
+		execute([
+			"ebook-convert",
+			file("${docsDirEbook}/${docFileBase}.epub"),
+			file("${docsDirEbook}/${docFileBase}.mobi")
+		])
 	}
 }
 
@@ -191,11 +212,11 @@ task generateDocsPDF(
 }
 
 /**
- * Generate HTML and PDF versions of the Thymeleaf documentation.
+ * Generate HTML, E-book and PDF versions of the Thymeleaf documentation.
  */
 task generateDocs(
-	dependsOn: [generateDocsHTML, generateDocsPDF],
-	description: "Generate HTML and PDF documents from Thymeleaf's markdown docs") << {
+	dependsOn: [generateDocsHTML, generateDocsEbook, generateDocsPDF],
+	description: "Generate HTML, E-book and PDF documents from Thymeleaf's markdown docs") << {
 }
 
 /**

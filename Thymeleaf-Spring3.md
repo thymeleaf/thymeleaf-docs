@@ -1,4 +1,5 @@
 % Tutorial: Thymeleaf + Spring 3
+% The Thymeleaf Team
 
 
 

@@ -1,4 +1,5 @@
 % Tutorial: Extending Thymeleaf
+% The Thymeleaf Team
 
 
 

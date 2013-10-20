@@ -1,4 +1,5 @@
 % Tutorial: Using Thymeleaf
+% The Thymeleaf Team
 
 
 
