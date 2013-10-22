@@ -729,7 +729,37 @@ Let's see the results of this using the Spanish locale:
 
 
 
-3.2 More on texts and variables
+3.2 Literal substitutions
+-------------------------
+
+The literal substitutions in _Thymeleaf Standard Expressions_ allow the easy formatting of strings 
+which may contain values from variables without the need to append literals with `'...' + '...'`.
+
+These substitutions must be surrounded by vertical bars (`|`), like:
+
+```html
+<span th:text="|Welcome to our application, ${user.name}!|">
+```
+
+Which is actually equivalent to:
+
+```html
+<span th:text="'Welcome to our application, ' + ${user.name} + '!'">
+```
+
+Literal substitutions can be combined with other types of expressions:
+
+```html
+<span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">
+```
+
+**Note:** Note: only variable expressions are allowed inside `|...|` literal substitutions.
+No other literals (`'...'`), boolean/numeric tokens, conditional expressions etc. are. 
+
+
+
+
+3.3 More on texts and variables
 -------------------------------
 
 
