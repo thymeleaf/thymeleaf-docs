@@ -102,8 +102,7 @@ Besides HTML5, it specifically supports and validates the following XHTML
 specifications: _XHTML 1.0 Transitional_, _XHTML 1.0 Strict_, _XHTML 1.0 Frameset_,
 and _XHTML 1.1_.
 
-Also, the Standard Dialect does not include any processors to be applied on tags
-–called elements in DOM terminology–: it is an _attribute-only dialect_. This
+Most of the processors of the Standard Dialect are _attribute processors_. This
 allows browsers to correctly display XHTML/HTML5 template files even before
 being processed, because they will simply ignore the additional attributes. For
 example, while a JSP using tag libraries could include a fragment of code not
@@ -1184,6 +1183,7 @@ There are different types of URLs:
       added automatically)
     * Server-relative, like `~/billing/processInvoice` (allows calling URLs in
       another context (= application) in the same server.
+    * Protocol-relative URLs, like `//code.jquery.com/jquery-2.0.3.min.js`
 
 Thymeleaf can handle absolute URLs in any situation, but for relative ones it
 will require you to use a context object that implements the `IWebContext`
@@ -1255,6 +1255,28 @@ As for numeric literals, they are simply numbers:
 <p>In two years, it will be <span th:text="2011 + 2">1494</span>.</p>
 ```
 
+
+###Boolean and null literals
+
+Boolean literals can also be used in expressions (i.e. outside OGNL or SpringEL variable expressions).
+For example:
+
+```html
+<div th:if="${user.isAdmin()} == false"> ...
+```
+
+Note the difference specifying the `false` literal inside the OGNL/SpringEL expression and therefore let 
+these expression engines evaluate it (not Thymeleaf).
+
+```html
+<div th:if="${user.isAdmin() == false}"> ...
+```
+
+The `null` literal can also been used:
+
+```html
+<div th:if="${variable.something} == null"> ...
+```
 
 
 4.6 Concatenating texts
@@ -1421,6 +1443,86 @@ following equivalent:
 ```html
 <p th:text="${@myapp.translator.Translator@translateToFrench(textVar)}">Some text here...</p>
 ```
+
+
+
+4.12 Comments
+-------------
+
+As a Thymeleaf template is usually HTML or XML, HTML comments `<!-- ... -->` can be used everywhere.
+Anything inside this comments won't be processed by neither Thymeleaf nor the browser.
+This comments will be present in the generated HTML code.
+
+###Prototype-only comment blocks
+
+Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open
+statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
+
+```html
+<span>hello!</span>
+<!--/*/
+  <div th:text="${...}">
+    ...
+  </div>
+/*/-->
+<span>goodbye!</span>
+```
+
+Thymeleaf's parsing system will simply remove the `<!--/*/ and /*/-->` markers, but not its contents, which 
+will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
+
+```html
+<span>hello!</span>
+ 
+  <div th:text="${...}">
+    ...
+  </div>
+ 
+<span>goodbye!</span>
+```
+
+As with parser-level comment blocks, note that this feature is also dialect-independent.
+
+###Synthetic th:block tag
+
+Thymeleaf only element processor (not an attribute) is `th:block`.
+
+`th:block` is a mere attribute container that allows template developers to specify whichever attributes 
+they want, executes them, and then simply dissapears without a trace.
+So it could be useful, for example, when creating iterated tables that require more than one `<tr>` for each element:
+
+```html
+<table>
+  <th:block th:each="user : ${users}">
+    <tr>
+        <td th:text="${user.login}">...</td>
+        <td th:text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" th:text="${user.address}">...</td>
+    </tr>
+  </th:block>
+</table>
+```
+
+And especially useful when used in combination with prototype-only comment blocks:
+
+```html
+<table>
+    <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+    <tr>
+        <td th:text="${user.login}">...</td>
+        <td th:text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" th:text="${user.address}">...</td>
+    </tr>
+    <!--/*/ </th:block> /*/-->
+</table>
+```
+
+Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks
+inside `<table>`), and still works OK when open statically in browsers as prototypes! 
 
 
 
