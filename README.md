@@ -41,7 +41,7 @@ The generated docs will end up in the `build/docs` directory.
 Pandoc is used to convert the Markdown sources into HTML, using the `templates/thymeleaf.html`
 template.
 
-Pandoc is also use to generate e-books in EPUB format.
+Pandoc is also used to generate e-books in EPUB format.
 
 Calibre is used to convert e-books to MOBI format.
 
