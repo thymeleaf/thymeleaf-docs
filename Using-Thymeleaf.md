@@ -1526,6 +1526,50 @@ inside `<table>`), and still works OK when open statically in browsers as protot
 
 
 
+4.13 Support for HTML5-friendly attribute and element names
+-----------------------------------------------------------
+
+It is also possible to use a completely different syntax to apply processors to your templates, more HTML5-friendly.
+
+```html	
+<table>
+    <tr data-th-each="user : ${users}">
+        <td data-th-text="${user.login}">...</td>
+        <td data-th-text="${user.name}">...</td>
+    </tr>
+</table>
+```
+
+The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without
+requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically
+available to all your dialects (not only the Standard ones).
+
+There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the 
+_W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_).
+You can use this, for example, for the `th:block` element (or also `th-block`):
+
+```html
+<!-- ======================================================= -->
+<!-- Fully HTML5-valid, both prototype and working template! -->
+<!-- ======================================================= -->
+<table>
+    <!--/*/ <th-block data-th-each="user : ${users}"> /*/-->
+    <tr>
+        <td data-th-text="${user.login}">...</td>
+        <td data-th-text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" data-th-text="${user.address}">...</td>
+    </tr>
+    <!--/*/ </th-block> /*/-->
+</table>
+```
+
+**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it.
+There is no intention at all to deprecate the namespaced syntax in the future. 
+
+
+
 
 5 Setting attribute values
 ==========================
@@ -2549,6 +2593,24 @@ like they currently are.
 
 
 
+###th:assert for in-template assertions
+
+The `th:assert` attribute can specify a comma-separated list of expressions which should be
+evaluated and produce true for every evaluation, raising an exception if not.
+
+```html
+<div th:assert="${onevar},(${twovar} != 43)">...</div>
+```
+
+This comes in handy for validating parameters at a fragment signature:
+
+```html
+<header th:fragment="contentheader(title)" th:assert="${!#strings.isEmpty(title)}">...</header>
+```
+
+
+
+
 8.3 Removing template fragments
 -------------------------------
 
@@ -2887,6 +2949,12 @@ assignation syntax:
     <p>The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.</p>
     <p>But the name of the second person is <span th:text="${secondPer.name}">Marcus Antonius</span>.</p>
 </div>
+```
+
+The `th:with` attribute allows reusing variables defined in the same attribute:
+
+```html
+<div th:with="company=${user.company + ' Co.'},account=${accounts[company]}">...</div>
 ```
 
 Let's use this in our Grocery's home page! Remember the code we wrote for
