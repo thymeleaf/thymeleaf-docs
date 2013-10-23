@@ -731,8 +731,7 @@ Let's see the results of this using the Spanish locale:
 3.2 Literal substitutions
 -------------------------
 
-The literal substitutions in _Thymeleaf Standard Expressions_ allow the easy formatting of strings 
-which may contain values from variables without the need to append literals with `'...' + '...'`.
+Literal substitutions in _Thymeleaf Standard Expressions_ allow the easy formatting of strings  which may contain values from variables without the need to append literals with `'...' + '...'`.
 
 These substitutions must be surrounded by vertical bars (`|`), like:
 
@@ -752,8 +751,7 @@ Literal substitutions can be combined with other types of expressions:
 <span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">
 ```
 
-**Note:** Note: only variable expressions are allowed inside `|...|` literal substitutions.
-No other literals (`'...'`), boolean/numeric tokens, conditional expressions etc. are. 
+**Note:** only variable expressions (`${...}`) are allowed inside `|...|` literal substitutions. No other literals (`'...'`), boolean/numeric tokens, conditional expressions etc. are. 
 
 
 
@@ -1258,15 +1256,13 @@ As for numeric literals, they are simply numbers:
 
 ###Boolean and null literals
 
-Boolean literals can also be used in expressions (i.e. outside OGNL or SpringEL variable expressions).
-For example:
+Boolean literals can also be used in expressions (i.e. outside OGNL or SpringEL variable expressions). For example:
 
 ```html
 <div th:if="${user.isAdmin()} == false"> ...
 ```
 
-Note the difference specifying the `false` literal inside the OGNL/SpringEL expression and therefore let 
-these expression engines evaluate it (not Thymeleaf).
+Note the difference specifying the `false` literal inside the OGNL/SpringEL expression and therefore let these expression engines evaluate it (not Thymeleaf).
 
 ```html
 <div th:if="${user.isAdmin() == false}"> ...
@@ -1449,14 +1445,55 @@ following equivalent:
 4.12 Comments
 -------------
 
-As a Thymeleaf template is usually HTML or XML, HTML comments `<!-- ... -->` can be used everywhere.
-Anything inside this comments won't be processed by neither Thymeleaf nor the browser.
-This comments will be present in the generated HTML code.
+As a Thymeleaf template is usually HTML or XML, HTML comments `<!-- ... -->` can be used everywhere. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
+
+```html
+<!-- User info follows -->
+<div th:text="${...}">
+  ...
+</div>
+```
+
+###Parser-level comment blocks
+
+Parser-level comment blocks are code that will be simply removed from the template when thymeleaf parses them. They should look like this:
+
+```html
+<!--/* This code will be removed at thymeleaf parsing time! */-->
+``` 
+
+Thymeleaf should remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can be used for displaying code when a template is statically open, knowing that it will be removed when thymeleaf processes it:
+
+```html
+<!--/*--> 
+  <div>
+     you can see me only before thymeleaf processes me!
+  </div>
+<!--*/-->
+```
+
+This might come very handy for prototyping tables with a lot of `<tr>`'s, for example:
+
+```html
+<table>
+   <tr th:each="x : ${xs}">
+     ...
+   </tr>
+   <!--/*-->
+   <tr>
+     ...
+   </tr>
+   <tr>
+     ...
+   </tr>
+   <!--*/-->
+</table>
+```
+
 
 ###Prototype-only comment blocks
 
-Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open
-statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
+Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
 
 ```html
 <span>hello!</span>
@@ -1468,8 +1505,7 @@ statically (i.e. as a prototype), but considered normal markup by Thymeleaf when
 <span>goodbye!</span>
 ```
 
-Thymeleaf's parsing system will simply remove the `<!--/*/ and /*/-->` markers, but not its contents, which 
-will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
+Thymeleaf's parsing system will simply remove the `<!--/*/ and /*/-->` markers, but not its contents, which will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
 
 ```html
 <span>hello!</span>
@@ -1481,14 +1517,15 @@ will be left therefore uncommented. So when executing the template, Thymeleaf wi
 <span>goodbye!</span>
 ```
 
-As with parser-level comment blocks, note that this feature is also dialect-independent.
+As happens with parser-level comment blocks, note that this feature is dialect-independent.
+
 
 ###Synthetic th:block tag
 
-Thymeleaf only element processor (not an attribute) is `th:block`.
+Thymeleaf's only element processor (not an attribute) is `th:block`.
 
-`th:block` is a mere attribute container that allows template developers to specify whichever attributes 
-they want, executes them, and then simply dissapears without a trace.
+`th:block` is a mere attribute container that allows template developers to specify whichever attributes they want, executes them, and then simply dissapears without a trace.
+
 So it could be useful, for example, when creating iterated tables that require more than one `<tr>` for each element:
 
 ```html
@@ -1521,8 +1558,7 @@ And especially useful when used in combination with prototype-only comment block
 </table>
 ```
 
-Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks
-inside `<table>`), and still works OK when open statically in browsers as prototypes! 
+Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks inside `<table>`), and still works OK when open statically in browsers as prototypes! 
 
 
 
@@ -1540,12 +1576,10 @@ It is also possible to use a completely different syntax to apply processors to 
 </table>
 ```
 
-The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without
-requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically
-available to all your dialects (not only the Standard ones).
+The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically available to all your dialects (not only the Standard ones).
 
-There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the 
-_W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_).
+There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the _W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_).
+
 You can use this, for example, for the `th:block` element (or also `th-block`):
 
 ```html
@@ -1565,8 +1599,7 @@ You can use this, for example, for the `th:block` element (or also `th-block`):
 </table>
 ```
 
-**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it.
-There is no intention at all to deprecate the namespaced syntax in the future. 
+**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it. There is no intention at all to deprecate the namespaced syntax in the future. 
 
 
 
@@ -4532,11 +4565,9 @@ ${#ids.prev('someId')}
 17 Appendix B: DOM Selector syntax
 ==================================
 
-DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way 
-to specify template fragments.
+DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
 
-For example, the following selector will select every `<div>` with the class `content`, in every position inside
-the markup:
+For example, the following selector will select every `<div>` with the class `content`, in every position inside the markup:
 
 ```html
 <div th:include="mytemplate :: [//div[@class='content']]">...</div>
@@ -4554,29 +4585,21 @@ The basic syntax inspired from XPath includes:
 
  * `x[i]` means element with name x positioned in number i among its siblings.
 
- * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its 
-    siblings that also match this condition.
+ * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its siblings that also match this condition.
 
 But more concise syntax can also be used:
 
- * `x` is exactly equivalent to `//x` (search an element with name or reference "x" at any depth level).
+ * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level).
 
- * Selectors are also allowed without element name/reference, as long as it includes a specification of arguments. 
-   So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute 
-   with value "oneclass".
+ * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value "oneclass".
 
 Advanced attribute selection features:
 
- * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) 
-   and `$=` (ends with).
-   For example: `x[@class^='section']` means elements with name x and a value for attribute class that starts 
-   with section.
+ * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']` means elements with name `x` and a value for attribute `class` that starts with `section`.
 
- * Attributes can be specified both starting with @ (XPath-style) and without (jQuery-style).
-   So `x[z='v']` is equivalent to `x[@z='v']`.
-   Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers
-   (jQuery-style).
-   So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
+ * Attributes can be specified both starting with `@` (XPath-style) and without (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
+ 
+ * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
 
 Direct _jQuery-like_ selectors:
 
@@ -4588,12 +4611,9 @@ Direct _jQuery-like_ selectors:
 
  * `#oneid` is equivalent to `[id='oneid']`.
 
- * `x%oneref` means nodes -not just elements- with name x that match reference _oneref_ according to a 
-   specified `DOMSelector.INodeReferenceChecker` implementation.
+ * `x%oneref` means nodes -not just elements- with name x that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation.
 
- * `%oneref` means nodes -not just elements- with any name that match reference _oneref_ according to a 
-   specified `DOMSelector.INodeReferenceChecker` implementation.
-   Note this is actually equivalent to simply _oneref_ because references can be used instead of element names.
+ * `%oneref` means nodes -not just elements- with any name that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
 
  * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
 
@@ -4610,14 +4630,13 @@ could be written as:
 
 ###Multivalued class matching
 
-DOM Selectors understand the class attribute to be **multivalued**, and therefore allow 
-the application of selectors on this attribute even if the element has several class values.
+DOM Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
+
 For example, `div[class='two']` will match `<div class="one two three" />`
 
 ###Optional brackets
 
-The syntax of the fragment inclusion attributes converts every fragment selection into a DOM selection,
-so brackets [...] are no needed (though allowed).
+The syntax of the fragment inclusion attributes converts every fragment selection into a DOM selection, so brackets `[...]` are not needed (though allowed).
 
 So the following, with no brackets, is equivalent to the bracketed selector seen above:
 
@@ -4631,11 +4650,10 @@ So, summarizing, this:
 <div th:replace="mytemplate :: myfrag">...</div>
 ```
 
-Will look for a `th:fragment="myfrag"` fragment signature. But would also look for tags with name 
-myfrag if they existed (which they don't, in HTML). Note the difference with:
+Will look for a `th:fragment="myfrag"` fragment signature. But would also look for tags with name `myfrag` if they existed (which they don't, in HTML). Note the difference with:
 
 ```html
 <div th:replace="mytemplate :: .myfrag">...</div>
 ```
 
-which will actually look for any elements with class="myfrag", without caring about `th:fragment` signatures. 
+which will actually look for any elements with `class="myfrag"`, without caring about `th:fragment` signatures. 
