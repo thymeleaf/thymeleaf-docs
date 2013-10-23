@@ -2497,7 +2497,7 @@ are three different formats:
    No `th:fragment` attributes are needed. The brackets in this syntax are optional.
 
    > DOM Selectors are similar to XPath expressions, see the 
-   > [Appendix B](#appendix-b-dom-selector-syntax) for more info on DOM Selector syntax.
+   > [Appendix C](#appendix-c-dom-selector-syntax) for more info on DOM Selector syntax.
 
  * `"templatename"` Includes as a fragment the complete template named `templatename`.
 
@@ -4561,8 +4561,146 @@ ${#ids.prev('someId')}
 
 
 
+17 Appendix B: Implicit objects
+===============================
 
-17 Appendix B: DOM Selector syntax
+There are some objects that are always available to be invoked from the expression language.
+
+ * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
+   `org.thymeleaf.context.IWebContext` depending on your environment (standalone or web). If you're
+   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IContext
+ * ======================================================================
+ */
+
+${#ctx.locale}
+${#ctx.variables}
+
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IWebContext
+ * ======================================================================
+ */
+
+${#ctx.applicationAttributes}
+${#ctx.httpServletRequest}
+${#ctx.httpServletResponse}
+${#ctx.httpSession}
+${#ctx.requestAttributes}
+${#ctx.requestParameters}
+${#ctx.servletContext}
+${#ctx.sessionAttributes}
+```
+
+ * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+
+```java
+${#locale}
+```
+
+ * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context.
+   `#root` and `#object` are synomyns for the same object.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.VariablesMap
+ * ======================================================================
+ */
+
+${#vars.get('foo')}
+${#vars.containsKey('foo')}
+${#vars.size()}
+...
+```
+
+###Web context objects
+
+If you are in a web environment you can also access these objects:
+
+ * **param** : instance of `org.thymeleaf.context.WebRequestParamsVariablesMap`
+
+```java
+/*
+ * ============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
+ * ============================================================================
+ */
+
+${param.foo}              // Retrieves the values of request parameter 'foo'
+${param.size()}
+${param.isEmpty()}
+${param.containsKey('foo')}
+...
+```
+
+ * **session** : instance of `org.thymeleaf.context.WebSessionVariablesMap`
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
+ * ======================================================================
+ */
+
+${session.foo}              // Retrieves the values of session atttribute 'foo'
+${session.size()}
+${session.isEmpty()}
+${session.containsKey('foo')}
+...
+```
+
+ * **application** : instance of `org.thymeleaf.context.WebServletContextVariablesMap`
+
+```java
+/*
+ * =============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
+ * =============================================================================
+ */
+
+${application.foo}              // Retrieves the values of ServletContext atttribute 'foo'
+${application.size()}
+${application.isEmpty()}
+${application.containsKey('foo')}
+...
+```
+
+ * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` associated with current request.
+
+```java
+${#httpServletRequest.getAttribute('foo')}
+${#httpServletRequest.getParameter('foo')}
+${#httpServletRequest.getContextPath()}
+${#httpServletRequest.getRequestName()}
+...
+```
+ * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` associated with current request.
+
+```java
+${#httpSession.getAttribute('foo')}
+${#httpSession.id}
+${#httpSession.lastAccessedTime}
+...
+```
+
+###Spring context objects
+
+If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access to these objects:
+
+ * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
+
+```java
+${#themes.code('foo')}
+```
+
+
+
+18 Appendix C: DOM Selector syntax
 ==================================
 
 DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
