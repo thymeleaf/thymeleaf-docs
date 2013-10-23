@@ -1038,6 +1038,9 @@ So we can do this:
 Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
 
+You can read the full reference of these objects in the
+[Appendix B](#appendix-b-implicit-objects).
+
 
 ### Expression utility objects
 
