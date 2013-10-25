@@ -47,11 +47,10 @@ Besides all the features already present in the Standard Dialect – and therefo
 inherited –, the SpringStandard Dialect introduces the following specific
 features:
 
- * Use of Spring Expression Language (Spring EL) as a variable expression
+ * Use Spring Expression Language (Spring EL) as a variable expression
    language, instead of OGNL. Consequently, all `${...}` and `*{...}`
    expressions will be evaluated by Spring's Expression Language engine.
- * A new beans special variable that allows you to access any bean in your
-   application context inside variable expressions: `${beans.myBean.doSomething()}`
+ * Access any beans in your application context using SpringEL's syntax: `${@myBean.doSomething()}`
  * New attributes for form processing: `th:field` and `th:errors,` besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
