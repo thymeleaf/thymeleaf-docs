@@ -185,12 +185,49 @@ it? Easy:
 
 
 
-4 Spring Thyme Seed Starter Manager
+4 Template Resolution
+=====================
+
+
+
+4.1 Spring-based Template Resolution
+------------------------------------
+
+When used with Spring, Thymeleaf provides additional implementations of `ITemplateResolver` and an associated `IResourceResolver`, fully integrated with Spring's resource resolution mechanism. These are:
+
+  * `org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver` for resolving templates.
+  * `org.thymeleaf.spring3.resourceresolver.SpringResourceResourceResolver`, mostly for internal use.
+
+This template resolver will allow applications to resolve templates using the standard Spring resource resolution syntax. It can be configured like:
+
+```xml
+<bean id="templateResolver"
+      class="org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver">
+  <property name="suffix" value=".html" />
+  <property name="templateMode" value="HTML5" />
+</bean>
+```
+
+And this will allow you to use view names like:
+
+```java
+@RequestMapping("/doit")
+public String doIt() {
+    ...
+    return "classpath:resources/templates/doit";
+}
+```
+
+Note that this Spring-based resource resolver will never be used by default. It will just be an option available for applications to configure in addition to the other template resolver implementations offered by the Thymeleaf core.
+
+
+
+5 Spring Thyme Seed Starter Manager
 ===================================
 
 
 
-4.1 The Concept
+5.1 The Concept
 ---------------
 
 At Thymeleaf we're huge fans of thyme, and every spring we prepare our seed
@@ -211,7 +248,7 @@ Spring MVC.
 
 
 
-4.2 Business Layer
+5.2 Business Layer
 ------------------
 
 We will need a very simple business layer for our application. First of all,
@@ -262,7 +299,7 @@ public class VarietyService {
 
 
 
-4.3 Spring MVC configuration
+5.3 Spring MVC configuration
 ----------------------------
 
 Next we need to set up the Spring MVC configuration for the application, which
@@ -337,7 +374,7 @@ Important: Note that we have selected HTML5 as a template mode.
 
 
 
-4.4 The Controller
+5.4 The Controller
 ------------------
 
 Of course, we will also need a controller for our application. As the STSM will
@@ -447,7 +484,7 @@ public String saveSeedstarter(
 
 
 
-5 Listing Seed Starter Data
+6 Listing Seed Starter Data
 ===========================
 
 The first thing that our `/WEB-INF/templates/seedstartermng.html` page will show
@@ -626,12 +663,12 @@ nested table for showing the contents of each row in the container:
 
 
 
-6 Creating a Form
+7 Creating a Form
 =================
 
 
 
-6.1 Handling the command object
+7.1 Handling the command object
 -------------------------------
 
 _Command object_ is the name Spring MVC gives to form-backing beans, this is, to
@@ -661,7 +698,7 @@ Spring MVC's infrastructure:
 
 
 
-6.2 Inputs
+7.2 Inputs
 ----------
 
 Let's see now how to add an input to our form:
@@ -703,7 +740,7 @@ etc., effectively adding complete HTML5 support to Spring MVC.
 
 
 
-6.3 Checkbox fields
+7.3 Checkbox fields
 -------------------
 
 `th:field` also allows us to define checkbox inputs. Let's see an example from
@@ -777,7 +814,7 @@ a `checked="checked"` attribute to the corresponding input tags.
 
 
 
-6.4 Radio Button fields
+7.4 Radio Button fields
 -----------------------
 
 Radio button fields are specified in a similar way to non-boolean (multi-valued)
@@ -794,7 +831,7 @@ checkboxes –except that they are not multivalued, of course:
 
 
 
-6.5 Dropdown/List selectors
+7.5 Dropdown/List selectors
 ---------------------------
 
 Select fields have two parts: the `<select>` tag and its nested `<option>` tags.
@@ -820,7 +857,7 @@ tag itself.
 
 
 
-6.6 Dynamic fields
+7.6 Dynamic fields
 ------------------
 
 Thanks to the advanced form-field binding capabilities in Spring MVC, we can use
@@ -961,7 +998,7 @@ a couple of times:
 
 
 
-7 Validation and error messages
+8 Validation and error messages
 ===============================
 
 Most of our forms will need to show validation messages in order to inform the
@@ -1003,7 +1040,7 @@ function, but listing all errors for the specified selector separated by `<br />
 
 
 
-8 It's still a prototype!
+9 It's still a prototype!
 =========================
 
 Our application is ready now. But let's have a second look at the `.html` page
@@ -1021,12 +1058,12 @@ that with JSP!
 
 
 
-9 Spring WebFlow integration
+10 Spring WebFlow integration
 ============================
 
 
 
-9.1 Basic configuration
+10.1 Basic configuration
 -----------------------
 
 The `thymeleaf–spring3` integration package includes integration with Spring
@@ -1066,7 +1103,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-9.2 Ajax fragments
+10.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
