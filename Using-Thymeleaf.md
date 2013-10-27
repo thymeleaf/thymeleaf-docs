@@ -1024,11 +1024,9 @@ When evaluating OGNL expressions on the context variables, some objects are made
 available to expressions for higher flexibility. These objects will be
 referenced (per OGNL standard) starting with the `#` symbol:
 
- * `#ctx`: the context object
- * `#root` or `#vars:` the context variables objects, against which unqualified
-   expressions are evaluated (usually the variables contained in `#ctx.variables`
-   plus local ones)
- * `#locale`: the context locale
+ * `#ctx`: the context object.
+ * `#vars:` the context variables.
+ * `#locale`: the context locale.
  * `#httpServletRequest`: (only in Web Contexts) the `HttpServletRequest` object.
  * `#httpSession`: (only in Web Contexts) the `HttpSession` object.
 
@@ -1039,7 +1037,7 @@ Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
 
 You can read the full reference of these objects in the
-[Appendix B](#appendix-b-implicit-objects).
+[Appendix A](#appendix-a-expression-basic-objects).
 
 
 ### Expression utility objects
@@ -1067,7 +1065,7 @@ that will help us perform common tasks in our expressions.
    (for example, as a result of an iteration).
 
 You can check what functions are offered by each of these utility objects in the
-[Appendix A](#appendix-a-expression-utility-objects).
+[Appendix B](#appendix-b-expression-utility-objects).
 
 
 ### Reformatting dates in our home page
@@ -3928,7 +3926,162 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 
 
 
-16 Appendix A: Expression Utility Objects
+16 Appendix A: Expression basic objects
+=======================================
+
+There are some objects that are always available to be invoked from the expression language.
+
+ * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
+   `org.thymeleaf.context.IWebContext` depending on your environment (standalone or web). If you're
+   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IContext
+ * ======================================================================
+ */
+
+${#ctx.locale}
+${#ctx.variables}
+
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IWebContext
+ * ======================================================================
+ */
+
+${#ctx.applicationAttributes}
+${#ctx.httpServletRequest}
+${#ctx.httpServletResponse}
+${#ctx.httpSession}
+${#ctx.requestAttributes}
+${#ctx.requestParameters}
+${#ctx.servletContext}
+${#ctx.sessionAttributes}
+```
+
+ * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+
+```java
+${#locale}
+```
+
+ * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context
+    ((usually the variables contained in `#ctx.variables` plus local ones).
+
+    Unqualified expressions are evaluated against this object. In fact, `${something}` is completely equivalent
+    to (but more beautiful than) `${#vars.something}`.
+
+    `#root` is a synomyn for the same object.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.VariablesMap
+ * ======================================================================
+ */
+
+${#vars.get('foo')}
+${#vars.containsKey('foo')}
+${#vars.size()}
+...
+```
+
+###Web context objects
+
+If you are in a web environment you can also access these shortcuts for request, session 
+and application attributes:
+
+ * **param** : instance of `org.thymeleaf.context.WebRequestParamsVariablesMap`
+
+```java
+/*
+ * ============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
+ * ============================================================================
+ */
+
+${param.foo}              // Retrieves the values of request parameter 'foo'
+${param.size()}
+${param.isEmpty()}
+${param.containsKey('foo')}
+...
+```
+
+ * **session** : instance of `org.thymeleaf.context.WebSessionVariablesMap`
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
+ * ======================================================================
+ */
+
+${session.foo}              // Retrieves the values of session atttribute 'foo'
+${session.size()}
+${session.isEmpty()}
+${session.containsKey('foo')}
+...
+```
+
+ * **application** : instance of `org.thymeleaf.context.WebServletContextVariablesMap`
+
+```java
+/*
+ * =============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
+ * =============================================================================
+ */
+
+${application.foo}              // Retrieves the values of ServletContext atttribute 'foo'
+${application.size()}
+${application.isEmpty()}
+${application.containsKey('foo')}
+...
+```
+
+Inside a web environment there is also direct access to the following objects:
+
+ * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` associated with current request.
+
+```java
+${#httpServletRequest.getAttribute('foo')}
+${#httpServletRequest.getParameter('foo')}
+${#httpServletRequest.getContextPath()}
+${#httpServletRequest.getRequestName()}
+...
+```
+ * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` associated with current request.
+
+```java
+${#httpSession.getAttribute('foo')}
+${#httpSession.id}
+${#httpSession.lastAccessedTime}
+...
+```
+
+###Spring context objects
+
+If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access to these objects:
+
+ * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
+
+```java
+${#themes.code('foo')}
+```
+
+Thymeleaf also allows to access beans registered in your Spring application context in the standard way defined 
+by Spring EL, which is using the syntax `@beanName`, for example:
+
+```html
+<div th:text="${@authService.getUserName()}">...</div>
+```
+
+
+
+
+17 Appendix B: Expression Utility Objects
 =========================================
 
  * **\#dates** : utility methods for `java.util.Date` objects:
@@ -4560,145 +4713,6 @@ ${#ids.seq('someId')}
  */
 ${#ids.next('someId')}
 ${#ids.prev('someId')}
-```
-
-
-
-17 Appendix B: Implicit objects
-===============================
-
-There are some objects that are always available to be invoked from the expression language.
-
- * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
-   `org.thymeleaf.context.IWebContext` depending on your environment (standalone or web). If you're
-   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.IContext
- * ======================================================================
- */
-
-${#ctx.locale}
-${#ctx.variables}
-
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.IWebContext
- * ======================================================================
- */
-
-${#ctx.applicationAttributes}
-${#ctx.httpServletRequest}
-${#ctx.httpServletResponse}
-${#ctx.httpSession}
-${#ctx.requestAttributes}
-${#ctx.requestParameters}
-${#ctx.servletContext}
-${#ctx.sessionAttributes}
-```
-
- * **\#locale** : direct access to the `java.util.Locale` associated with current request.
-
-```java
-${#locale}
-```
-
- * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context.
-   `#root` and `#object` are synomyns for the same object.
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.VariablesMap
- * ======================================================================
- */
-
-${#vars.get('foo')}
-${#vars.containsKey('foo')}
-${#vars.size()}
-...
-```
-
-###Web context objects
-
-If you are in a web environment you can also access these objects:
-
- * **param** : instance of `org.thymeleaf.context.WebRequestParamsVariablesMap`
-
-```java
-/*
- * ============================================================================
- * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
- * ============================================================================
- */
-
-${param.foo}              // Retrieves the values of request parameter 'foo'
-${param.size()}
-${param.isEmpty()}
-${param.containsKey('foo')}
-...
-```
-
- * **session** : instance of `org.thymeleaf.context.WebSessionVariablesMap`
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
- * ======================================================================
- */
-
-${session.foo}              // Retrieves the values of session atttribute 'foo'
-${session.size()}
-${session.isEmpty()}
-${session.containsKey('foo')}
-...
-```
-
- * **application** : instance of `org.thymeleaf.context.WebServletContextVariablesMap`
-
-```java
-/*
- * =============================================================================
- * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
- * =============================================================================
- */
-
-${application.foo}              // Retrieves the values of ServletContext atttribute 'foo'
-${application.size()}
-${application.isEmpty()}
-${application.containsKey('foo')}
-...
-```
-
- * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` associated with current request.
-
-```java
-${#httpServletRequest.getAttribute('foo')}
-${#httpServletRequest.getParameter('foo')}
-${#httpServletRequest.getContextPath()}
-${#httpServletRequest.getRequestName()}
-...
-```
- * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` associated with current request.
-
-```java
-${#httpSession.getAttribute('foo')}
-${#httpSession.id}
-${#httpSession.lastAccessedTime}
-...
-```
-
-###Spring context objects
-
-If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access to these objects:
-
- * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
-
-```java
-${#themes.code('foo')}
 ```
 
 
