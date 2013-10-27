@@ -1276,6 +1276,29 @@ The `null` literal can also been used:
 ```
 
 
+###Literal tokens
+
+In fact, the previous literals are a particular case of the so-call literal tokens.
+They allow a little bit of simplification in Standard Expressions (i.e. outside OGNL or SpringEL 
+variable expressions).
+
+These tokens work exactly the same as literals ('...'), but they only allow letters (A-Z and a-z),
+numbers (0-9), brackets ([ and ]), dots (.), hyphens (-) and underscores (_). So no whitespaces, no commas, etc.
+
+The nice part? tokens don't need any quotes surrounding them. So we can do this:
+
+```html
+<div th:class="content">...</div>
+```
+
+instead of:
+
+```html
+<div th:class="'content'">...</div>
+```
+
+
+
 4.6 Concatenating texts
 -----------------------
 
