@@ -1347,7 +1347,7 @@ th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Produ
 ```
 
 Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`), `le` (`<=`). Also `eq` (`==`), `neq`/`ne` (`!=`).
+(`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
@@ -1464,6 +1464,8 @@ following equivalent:
 ```html
 <p th:text="${@myapp.translator.Translator@translateToFrench(textVar)}">Some text here...</p>
 ```
+
+The preprocessing String `__` can be escaped in attributes using `\_\_`.
 
 
 
@@ -4451,7 +4453,21 @@ ${#strings.escapeJava(str)}                         // 
 ${#strings.escapeJavaScript(str)}                   // also array*, list* and set*
 ${#strings.unescapeJava(str)}                       // also array*, list* and set*
 ${#strings.unescapeJavaScript(str)}                 // also array*, list* and set*
+
+/*
+ * Null-safe comparison and concatenation
+ */
+${#strings.equals(str)}
+${#strings.equalsIgnoreCase(str)}
+${#strings.concat(str)}
+${#strings.concatReplaceNulls(str)}
+
+/*
+ * Random
+ */
+${#strings.randomAlphanumeric(count)}
 ```
+
 
 
  * **\#objects** : utility methods for objects in general
