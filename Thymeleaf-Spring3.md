@@ -51,7 +51,7 @@ features:
    language, instead of OGNL. Consequently, all `${...}` and `*{...}`
    expressions will be evaluated by Spring's Expression Language engine.
  * Access any beans in your application context using SpringEL's syntax: `${@myBean.doSomething()}`
- * New attributes for form processing: `th:field` and `th:errors,` besides a new
+ * New attributes for form processing: `th:field`, `th:errors` and `th:errorclass`, besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
  * An expression object and method, `#themes.code(...)`, which is the equivalent
@@ -998,26 +998,67 @@ a couple of times:
 
 
 
-8 Validation and error messages
+8 Validation and Error Messages
 ===============================
 
 Most of our forms will need to show validation messages in order to inform the
 user of the errors he/she has made.
 
-Thymeleaf offers two tools for this: a couple of functions in the `#fields`
-object and the `th:errors` attribute.
+Thymeleaf offers some tools for this: a couple of functions in the `#fields`
+object, the `th:errors` and the `th:errorclass` attributes.
 
-Functions first: let's set a class to a field if it has an error:
+
+8.1 Field errors
+----------------
+
+Let's see how we could set a specific CSS class to a field if it has an error:
 
 ```html
-<input type="text" th:field="*{datePlanted}" th:class="${#fields.hasErrors('datePlanted')}? 'fieldError'"/>
+<input type="text" th:field="*{datePlanted}" th:class="${#fields.hasErrors('datePlanted')}? fieldError" />
 ```
 
 As you can see, the `#fields.hasErrors(...)` function receives the field
-expression as a parameter, and returns a boolean telling whether any validation
+expression as a parameter (`datePlanted`), and returns a boolean telling whether any validation
 errors exist for that field.
 
-Let's show the error messages themselves:
+We could also obtain all the errors for that field and iterate them:
+
+```html
+<ul>
+  <li th:each="err : ${#fields.errors('datePlanted')}" th:text="${err}" />
+</ul>
+```
+
+Instead of iterating, we could have also used `th:errors`, a specialized attribute which builds a list with all the errors for the specified selector, separated by `<br />`:
+
+```html
+<input type="text" th:field="*{datePlanted}" />
+<p th:if="${#fields.hasErrors('datePlanted')}" th:errors="*{datePlanted}">Incorrect date</p>
+```
+
+
+
+### Simplifying error-based CSS styling: `th:errorclass`
+
+The example we saw above, *setting a CSS class to a form input if that field has errors*, is so common that Thymeleaf offers a specific attribute for doing exacly that: `th:errorclass`.
+
+Applied to a form field tag (input, select, textarea...), it will read the name of the field to be examined from any existing `name` or `th:field` attributes in the same tag, and then append the specified CSS class to the tag if such field has any associated errors:
+
+```html
+<input type="text" th:field="*{datePlanted}" class="small" th:errorclass="fieldError" />
+```
+
+If `datePlanted` has errors, this will render as:
+
+```html
+<input type="text" id="datePlanted" name="datePlanted" value="2013-01-01" class="small fieldError" />
+```
+
+
+8.2 All errors
+--------------
+
+And what if we want to show all the errors in the form? We just need to query the `#fields.hasErrors(...)` and `#fields.errors(...)` methods with the `'*'` or `'all'` constants (which are equivalent):
 
 ```html
 <ul th:if="${#fields.hasErrors('*')}">
@@ -1025,18 +1066,52 @@ Let's show the error messages themselves:
 </ul>
 ```
 
-The new function is `#fields.errors(...)`, and the star (`'*'`) parameter tells
-the function we are looking for errors on any field. `#fields.errors(...)`
-returns a list of (externalized) error messages.
-
-`th:errors` attribute works in a similar way to the `#fields.errors(...)`
-function, but listing all errors for the specified selector separated by `<br />`:
+As in the examples above, we could obtain all the errors and iterate them...
 
 ```html
-<input type="text" th:field="*{datePlanted}" />
-<p th:if="${#fields.hasErrors('datePlanted')}" th:errors="*{datePlanted}">Incorrect date</p>
+<ul>
+  <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+</ul>
+```
+...as well as build a `<br />`-separated list:
+
+```html
+<p th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</p>
 ```
 
+Finally. Note `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyErrors()` and `#fields.errors('*')` is equivalent to `#fields.allErrors()`. Use whichever syntax you prefer:
+
+```html
+<div th:if="${#fields.hasAnyErrors()}">
+  <p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
+</div>
+```
+
+
+8.3 Global errors
+-----------------
+
+There is a third type of error in a Spring form: *global* errors. These are errors that are not associated with any specific fields in the form, but still exist.
+
+Thymeleaf offers the `global` constant for accessing these errors:
+
+```html
+<ul th:if="${#fields.hasErrors('global')}">
+  <li th:each="err : ${#fields.errors('global')}" th:text="${err}">Input is incorrect</li>
+</ul>
+```
+
+```html
+<p th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Incorrect date</p>
+```
+
+...as well as equivalent `#fields.hasGlobalErrors()` and `#fields.globalErrors()` convenience methods: 
+
+```html
+<div th:if="${#fields.hasGlobalErrors()}">
+  <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+</div>
+```
 
 
 
