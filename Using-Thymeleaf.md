@@ -1278,14 +1278,15 @@ The `null` literal can also been used:
 
 ###Literal tokens
 
-In fact, the previous literals are a particular case of the so-call literal tokens.
-They allow a little bit of simplification in Standard Expressions (i.e. outside OGNL or SpringEL 
+In fact, the previous literals are a particular case of the so-called _literal tokens_.
+They allow a little bit of simplification in Standard Expressions (i.e. outside _OGNL_ or _SpringEL_
 variable expressions).
 
-These tokens work exactly the same as literals ('...'), but they only allow letters (A-Z and a-z),
-numbers (0-9), brackets ([ and ]), dots (.), hyphens (-) and underscores (_). So no whitespaces, no commas, etc.
+These tokens work exactly the same as literals (`'...'`), but they only allow letters (`A-Z` and `a-z`),
+numbers (`0-9`), brackets (`[` and `]`), dots (`.`), hyphens (`-`) and underscores (`_`).
+So no whitespaces, no commas, etc.
 
-The nice part? tokens don't need any quotes surrounding them. So we can do this:
+The nice part? Tokens don't need any quotes surrounding them. So we can do this:
 
 ```html
 <div th:class="content">...</div>
@@ -2907,8 +2908,8 @@ And what about that all value in the attribute, what does it mean? Well, in fact
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
  * `tag`: Remove the containing tag, but do not remove its children.
- * `all-but-first`: Remove all children of the containing tag except the first
-   one.
+ * `all-but-first`: Remove all children of the containing tag except the first one.
+ * `none` : Do nothing. This value is useful for dynamic evaluation.
 
 What can that `all-but-first` value be useful for? It will let us save some `th:remove="all"`
 when prototyping:
@@ -2955,6 +2956,24 @@ when prototyping:
   </tbody>
 </table>
 ```
+
+The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long as it returns one 
+of the allowed String values (`all`, `tag`, `body`, `all-but-first` or `none`).
+
+This means removals could be conditional, like:
+
+```html
+<a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
+```
+
+Also note that `th:remove` could consider `null` a synonym to `none`, so that the following works
+exactly as the example above:
+
+```html
+<a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
+```
+
+If `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
 
 
 
