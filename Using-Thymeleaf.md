@@ -1024,11 +1024,9 @@ When evaluating OGNL expressions on the context variables, some objects are made
 available to expressions for higher flexibility. These objects will be
 referenced (per OGNL standard) starting with the `#` symbol:
 
- * `#ctx`: the context object
- * `#root` or `#vars:` the context variables objects, against which unqualified
-   expressions are evaluated (usually the variables contained in `#ctx.variables`
-   plus local ones)
- * `#locale`: the context locale
+ * `#ctx`: the context object.
+ * `#vars:` the context variables.
+ * `#locale`: the context locale.
  * `#httpServletRequest`: (only in Web Contexts) the `HttpServletRequest` object.
  * `#httpSession`: (only in Web Contexts) the `HttpSession` object.
 
@@ -1037,6 +1035,9 @@ So we can do this:
 ```html
 Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
+
+You can read the full reference of these objects in the
+[Appendix A](#appendix-a-expression-basic-objects).
 
 
 ### Expression utility objects
@@ -1064,7 +1065,7 @@ that will help us perform common tasks in our expressions.
    (for example, as a result of an iteration).
 
 You can check what functions are offered by each of these utility objects in the
-[Appendix A](#appendix-a-expression-utility-objects).
+[Appendix B](#appendix-b-expression-utility-objects).
 
 
 ### Reformatting dates in our home page
@@ -1275,6 +1276,30 @@ The `null` literal can also been used:
 ```
 
 
+###Literal tokens
+
+In fact, the previous literals are a particular case of the so-called _literal tokens_.
+They allow a little bit of simplification in Standard Expressions (i.e. outside _OGNL_ or _SpringEL_
+variable expressions).
+
+These tokens work exactly the same as literals (`'...'`), but they only allow letters (`A-Z` and `a-z`),
+numbers (`0-9`), brackets (`[` and `]`), dots (`.`), hyphens (`-`) and underscores (`_`).
+So no whitespaces, no commas, etc.
+
+The nice part? Tokens don't need any quotes surrounding them. So we can do this:
+
+```html
+<div th:class="content">...</div>
+```
+
+instead of:
+
+```html
+<div th:class="'content'">...</div>
+```
+
+
+
 4.6 Concatenating texts
 -----------------------
 
@@ -1322,7 +1347,7 @@ th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Produ
 ```
 
 Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`), `le` (`<=`). Also `eq` (`==`), `neq`/`ne` (`!=`).
+(`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
@@ -1439,6 +1464,8 @@ following equivalent:
 ```html
 <p th:text="${@myapp.translator.Translator@translateToFrench(textVar)}">Some text here...</p>
 ```
+
+The preprocessing String `__` can be escaped in attributes using `\_\_`.
 
 
 
@@ -2497,7 +2524,7 @@ are three different formats:
    No `th:fragment` attributes are needed. The brackets in this syntax are optional.
 
    > DOM Selectors are similar to XPath expressions, see the 
-   > [Appendix B](#appendix-b-dom-selector-syntax) for more info on DOM Selector syntax.
+   > [Appendix C](#appendix-c-dom-selector-syntax) for more info on DOM Selector syntax.
 
  * `"templatename"` Includes as a fragment the complete template named `templatename`.
 
@@ -2883,8 +2910,8 @@ And what about that all value in the attribute, what does it mean? Well, in fact
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
  * `tag`: Remove the containing tag, but do not remove its children.
- * `all-but-first`: Remove all children of the containing tag except the first
-   one.
+ * `all-but-first`: Remove all children of the containing tag except the first one.
+ * `none` : Do nothing. This value is useful for dynamic evaluation.
 
 What can that `all-but-first` value be useful for? It will let us save some `th:remove="all"`
 when prototyping:
@@ -2931,6 +2958,24 @@ when prototyping:
   </tbody>
 </table>
 ```
+
+The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long as it returns one 
+of the allowed String values (`all`, `tag`, `body`, `all-but-first` or `none`).
+
+This means removals could be conditional, like:
+
+```html
+<a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
+```
+
+Also note that `th:remove` could consider `null` a synonym to `none`, so that the following works
+exactly as the example above:
+
+```html
+<a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
+```
+
+If `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
 
 
 
@@ -3925,7 +3970,162 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 
 
 
-16 Appendix A: Expression Utility Objects
+16 Appendix A: Expression basic objects
+=======================================
+
+There are some objects that are always available to be invoked from the expression language.
+
+ * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
+   `org.thymeleaf.context.IWebContext` depending on your environment (standalone or web). If you're
+   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IContext
+ * ======================================================================
+ */
+
+${#ctx.locale}
+${#ctx.variables}
+
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IWebContext
+ * ======================================================================
+ */
+
+${#ctx.applicationAttributes}
+${#ctx.httpServletRequest}
+${#ctx.httpServletResponse}
+${#ctx.httpSession}
+${#ctx.requestAttributes}
+${#ctx.requestParameters}
+${#ctx.servletContext}
+${#ctx.sessionAttributes}
+```
+
+ * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+
+```java
+${#locale}
+```
+
+ * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context
+    ((usually the variables contained in `#ctx.variables` plus local ones).
+
+    Unqualified expressions are evaluated against this object. In fact, `${something}` is completely equivalent
+    to (but more beautiful than) `${#vars.something}`.
+
+    `#root` is a synomyn for the same object.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.VariablesMap
+ * ======================================================================
+ */
+
+${#vars.get('foo')}
+${#vars.containsKey('foo')}
+${#vars.size()}
+...
+```
+
+###Web context objects
+
+If you are in a web environment you can also access these shortcuts for request, session 
+and application attributes:
+
+ * **param** : instance of `org.thymeleaf.context.WebRequestParamsVariablesMap`
+
+```java
+/*
+ * ============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
+ * ============================================================================
+ */
+
+${param.foo}              // Retrieves the values of request parameter 'foo'
+${param.size()}
+${param.isEmpty()}
+${param.containsKey('foo')}
+...
+```
+
+ * **session** : instance of `org.thymeleaf.context.WebSessionVariablesMap`
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
+ * ======================================================================
+ */
+
+${session.foo}              // Retrieves the values of session atttribute 'foo'
+${session.size()}
+${session.isEmpty()}
+${session.containsKey('foo')}
+...
+```
+
+ * **application** : instance of `org.thymeleaf.context.WebServletContextVariablesMap`
+
+```java
+/*
+ * =============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
+ * =============================================================================
+ */
+
+${application.foo}              // Retrieves the values of ServletContext atttribute 'foo'
+${application.size()}
+${application.isEmpty()}
+${application.containsKey('foo')}
+...
+```
+
+Inside a web environment there is also direct access to the following objects:
+
+ * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` associated with current request.
+
+```java
+${#httpServletRequest.getAttribute('foo')}
+${#httpServletRequest.getParameter('foo')}
+${#httpServletRequest.getContextPath()}
+${#httpServletRequest.getRequestName()}
+...
+```
+ * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` associated with current request.
+
+```java
+${#httpSession.getAttribute('foo')}
+${#httpSession.id}
+${#httpSession.lastAccessedTime}
+...
+```
+
+###Spring context objects
+
+If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access to these objects:
+
+ * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
+
+```java
+${#themes.code('foo')}
+```
+
+Thymeleaf also allows to access beans registered in your Spring application context in the standard way defined 
+by Spring EL, which is using the syntax `@beanName`, for example:
+
+```html
+<div th:text="${@authService.getUserName()}">...</div>
+```
+
+
+
+
+17 Appendix B: Expression Utility Objects
 =========================================
 
  * **\#dates** : utility methods for `java.util.Date` objects:
@@ -4253,7 +4453,21 @@ ${#strings.escapeJava(str)}                         // 
 ${#strings.escapeJavaScript(str)}                   // also array*, list* and set*
 ${#strings.unescapeJava(str)}                       // also array*, list* and set*
 ${#strings.unescapeJavaScript(str)}                 // also array*, list* and set*
+
+/*
+ * Null-safe comparison and concatenation
+ */
+${#strings.equals(str)}
+${#strings.equalsIgnoreCase(str)}
+${#strings.concat(str)}
+${#strings.concatReplaceNulls(str)}
+
+/*
+ * Random
+ */
+${#strings.randomAlphanumeric(count)}
 ```
+
 
 
  * **\#objects** : utility methods for objects in general
@@ -4561,8 +4775,7 @@ ${#ids.prev('someId')}
 
 
 
-
-17 Appendix B: DOM Selector syntax
+18 Appendix C: DOM Selector syntax
 ==================================
 
 DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
