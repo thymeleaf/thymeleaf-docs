@@ -1018,7 +1018,7 @@ ${person.createCompleteNameWithSeparator('-')}
 ```
 
 
-### Expression basic objects
+### Expression Basic Objects
 
 When evaluating OGNL expressions on the context variables, some objects are made
 available to expressions for higher flexibility. These objects will be
@@ -1040,7 +1040,7 @@ You can read the full reference of these objects in the
 [Appendix A](#appendix-a-expression-basic-objects).
 
 
-### Expression utility objects
+### Expression Utility Objects
 
 Besides these basic objects, Thymeleaf will offer us a set of utility objects
 that will help us perform common tasks in our expressions.
@@ -3970,7 +3970,7 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 
 
 
-16 Appendix A: Expression basic objects
+16 Appendix A: Expression Basic Objects
 =======================================
 
 There are some objects that are always available to be invoked from the expression language.
@@ -4034,10 +4034,13 @@ ${#vars.size()}
 
 ###Web context objects
 
-If you are in a web environment you can also access these shortcuts for request, session 
-and application attributes:
+If you are in a web environment you can also access these shortcuts for request
+parameters, session attributes and application attributes:
 
  * **param** : instance of `org.thymeleaf.context.WebRequestParamsVariablesMap`
+   It's an expressive way of retrieving request parameters. `${param.foo}` is a
+   `String[]` with the values of the request parameter `foo`, so you usually
+   will use `${param.foo[0]}` to get the first value.
 
 ```java
 /*
@@ -4046,7 +4049,7 @@ and application attributes:
  * ============================================================================
  */
 
-${param.foo}              // Retrieves the values of request parameter 'foo'
+${param.foo}              // Retrieves a String[] with the values of request parameter 'foo'
 ${param.size()}
 ${param.isEmpty()}
 ${param.containsKey('foo')}
@@ -4062,7 +4065,7 @@ ${param.containsKey('foo')}
  * ======================================================================
  */
 
-${session.foo}              // Retrieves the values of session atttribute 'foo'
+${session.foo}                 // Retrieves the session atttribute 'foo'
 ${session.size()}
 ${session.isEmpty()}
 ${session.containsKey('foo')}
@@ -4078,7 +4081,7 @@ ${session.containsKey('foo')}
  * =============================================================================
  */
 
-${application.foo}              // Retrieves the values of ServletContext atttribute 'foo'
+${application.foo}              // Retrieves the ServletContext atttribute 'foo'
 ${application.size()}
 ${application.isEmpty()}
 ${application.containsKey('foo')}
