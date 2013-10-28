@@ -1137,19 +1137,109 @@ that with JSP!
 10 Rendering Template Fragments
 ===============================
 
-As an advanced feature, Thymeleaf offers the possibility to 
+Thymeleaf offers the possibility to render only part of a template as the result of its execution: a *fragment*. 
+
+This can be a useful componentization tool. For example, it can be used at controllers that execute on AJAX calls, which might return markup fragments of a page that is already loaded at the browser (for updating a select, enabling/disabling buttons...).
+
+Fragmentary rendering can be achieved by using Thymeleaf's *fragment specs*: objects implementing the `org.thymeleaf.fragment.IFragmentSpec` interface.
+
+The most common of these implementations is `org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec`, which allows specifying a fragment using a DOM Selector exactly like the ones used at `th:include` or `th:replace`.
 
 
 10.1. Specifying fragments in view beans
 -------------------------------------
 
-blah blah blah
+*View beans* are beans of the `org.thymeleaf.spring3.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
+
+```xml
+<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+  <property name="templateName" value="index" />
+  <property name="fragmentSpec">
+    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
+          c:selectorExpression="content" />
+  </property>
+</bean>
+``` 
+
+Given the above bean definition, if our controller returns `content-part` (the name of the above bean)...
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "content-part";
+}
+```
+
+...thymeleaf will return only the `content` fragment of the `index` template -- which location will probably be something like `/WEB-INF/templates/index.html`, once prefix and suffix are applied:
+
+```html
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div th:fragment="content">
+      Only this will be rendered!!
+    </div>
+    ...
+  </body>
+</html>
+```
+
+Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select a fragment in a template without needing any `th:fragment` attributes at all. Let's use the `id` attribute, for example:
+
+```xml
+<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+  <property name="fragmentSpec">
+    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
+          c:selectorExpression="#content" />
+  </property>
+  <property name="templateName" value="index" />
+</bean>
+``` 
+
+...which will perfectly select:
+
+```html
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div id="content">
+      Only this will be rendered!!
+    </div>
+    ...
+  </body>
+</html>
+```
+
+
 
 
 10.2. Specifying fragments in controller return values
 ---------------------------------------------------
 
-blah blah blah
+Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the same syntax as in `th:include` or `th:replace` attributes:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: content";
+}
+```
+
+Of course, again the full power of DOM Selectors is available, so we could select our fragment based on standard HTML attributes, like `id="content"`:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: #content";
+}
+```
 
 
 
