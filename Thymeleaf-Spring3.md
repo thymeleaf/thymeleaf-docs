@@ -1115,6 +1115,7 @@ Thymeleaf offers the `global` constant for accessing these errors:
 
 
 
+
 9 It's still a prototype!
 =========================
 
@@ -1133,12 +1134,32 @@ that with JSP!
 
 
 
-10 Spring WebFlow integration
+10 Rendering Template Fragments
+===============================
+
+As an advanced feature, Thymeleaf offers the possibility to 
+
+
+10.1. Specifying fragments in view beans
+-------------------------------------
+
+blah blah blah
+
+
+10.2. Specifying fragments in controller return values
+---------------------------------------------------
+
+blah blah blah
+
+
+
+
+11 Spring WebFlow integration
 ============================
 
 
 
-10.1 Basic configuration
+11.1 Basic configuration
 -----------------------
 
 The `thymeleaf–spring3` integration package includes integration with Spring
@@ -1178,7 +1199,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-10.2 Ajax fragments
+11.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
