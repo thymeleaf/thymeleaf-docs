@@ -21,8 +21,7 @@ This will allow you to:
  * Use **Spring Expression Language** (Spring EL) instead of OGNL in your
    templates.
  * Create forms in your templates that are completely integrated with your
-   form-backing beans and result bindings, including the use of property editors
-   and validation error handling.
+   form-backing beans and result bindings, including the use of property editors, conversion services and validation error handling.
  * Display internationalization messages from messages files managed by Spring
    (through the usual `MessageSource` objects).
 
@@ -54,8 +53,8 @@ features:
  * New attributes for form processing: `th:field`, `th:errors` and `th:errorclass`, besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
- * An expression object and method, `#themes.code(...)`, which is the equivalent
-   of the `spring:theme` JSP custom tag.
+ * An expression object and method, `#themes.code(...)`, which is equivalent
+   to the `spring:theme` JSP custom tag.
  * New DTDs for validation, including these new attributes, as well as new
    corresponding DOCTYPE translation rules.
 
@@ -101,7 +100,7 @@ behaviour by defining them as beans. Views are in charge of rendering the actual
 HTML interface, usually by the execution of some template engine like JSP (or
 Thymeleaf).
 
-ViewResolvers are the objects in charge of obtaining view objects for a specific
+ViewResolvers are the objects in charge of obtaining View objects for a specific
 operation and locale. Tipically, controllers ask ViewResolvers to forward to a
 view with a specific name (a String returned by the controller method), and then
 all the view resolvers in the application execute in ordered chain until one of
@@ -149,9 +148,9 @@ Thymeleaf offers implementations for the two interfaces mentioned above:
  * `org.thymeleaf.spring3.view.ThymeleafViewResolver`
 
 These two classes will be in charge of processing Thymeleaf templates as a
-result of your controllers' executions.
+result of the execution of controllers.
 
-Configuration of the View Resolver is very similar to that of JSP:
+Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
 
 ```xml
 <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
@@ -166,9 +165,10 @@ we defined in the previous chapter. The other two (`order` and `viewNames`) are
 both optional, and have the same meaning as in the JSP ViewResolver we saw
 before.
 
-Note that we do not need `prefix` or `suffix` parameters, because this are
-already specified in the Template Resolver (which in turn is passed to the
+Note that we do not need `prefix` or `suffix` parameters, because these are
+already specified at the Template Resolver (which in turn is passed to the
 Template Engine).
+
 And what if we wanted to define a `View` bean and add some static variables to
 it? Easy:
 
@@ -329,23 +329,38 @@ Resolver instances.
   <mvc:resources location="/css/" mapping="/css/**" />
     
 
-  <!-- **************************************************************** -->
-  <!--  SPRING ANNOTATION PROCESSING                                    -->
-  <!-- **************************************************************** -->
-  <mvc:annotation-driven />
-  <context:component-scan base-package="thymeleafexamples.stsm" />
+  <!-- **************************************************************** -->
+  <!--  SPRING ANNOTATION PROCESSING                                    -->
+  <!-- **************************************************************** -->
+  <mvc:annotation-driven conversion-service="conversionService" />
+  <context:component-scan base-package="thymeleafexamples.stsm" />
 
 
-  <!-- **************************************************************** -->
-  <!--  MESSAGE EXTERNALIZATION/INTERNATIONALIZATION                    -->
-  <!--  Standard Spring MessageSource implementation                    -->
-  <!-- **************************************************************** -->
-  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="Messages" />
-  </bean>
+  <!-- **************************************************************** -->
+  <!--  MESSAGE EXTERNALIZATION/INTERNATIONALIZATION                    -->
+  <!--  Standard Spring MessageSource implementation                    -->
+  <!-- **************************************************************** -->
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="Messages" />
+  </bean>
 
 
-  <!-- **************************************************************** -->
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService" 
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+
+  <!-- **************************************************************** -->
   <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
   <!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
   <!-- **************************************************************** -->
@@ -384,9 +399,6 @@ ones, we will write only one controller class for all the server interactions:
 ```java
 @Controller
 public class SeedStarterMngController {
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private VarietyService varietyService;
@@ -429,33 +441,6 @@ public List<SeedStarter> populateSeedStarters() {
 ```
 
 
-### Property Editors
-
-Property Editors in a Spring MVC application allow forms to contain fields of
-types other than String, and define the way in which values of these types will
-be converted to and from String so that they can be shown in form inputs and
-transmitted over the network when users click submit.
-
-We will need two property editors: one for `java.util.Date` objects
-(locale-dependent) and a second one for `Variety` objects.
-
-```java
-@InitBinder
-public void initDateBinder(final WebDataBinder dataBinder, final Locale locale) {
-    final String dateformat = 
-        this.messageSource.getMessage("date.format", null, locale);
-    final SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
-    sdf.setLenient(false);
-    dataBinder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, false));
-}
-
-@InitBinder
-public void initVarietyBinder(final WebDataBinder dataBinder) {
-    dataBinder.registerCustomEditor(Variety.class, new VarietyPropertyEditor(this.varietyService));
-}
-```
-
-
 ### Mapped methods
 
 And now the most important part of a controller, the mapped methods: one for
@@ -480,6 +465,104 @@ public String saveSeedstarter(
     return "redirect:/seedstartermng";
 }
 ```
+
+
+
+5.5 The Conversion Service
+--------------------------
+
+In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we registered a Spring `ConversionService` implementation at the application context. See it again:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...>
+
+  ...    
+  <mvc:annotation-driven conversion-service="conversionService" />
+  ...
+
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService"
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+  ...
+    
+</beans>
+```
+
+That conversion service allowed us to register two Spring *formatters*, 
+implementations of the `org.springframework.format.Formatter` interface. For more information on how the Spring conversion infrastructure works, see the docs at [spring.io](http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/validation.html#core-convert).
+
+Let's have a look at the `DateFormatter`, which formats dates according to a format string present at the `date.format` message key of our `Messages.properties`:
+
+```java
+public class DateFormatter implements Formatter<Date> {
+
+    @Autowired
+    private MessageSource messageSource;
+
+
+    public DateFormatter() {
+        super();
+    }
+
+    public Date parse(final String text, final Locale locale) throws ParseException {
+        final SimpleDateFormat dateFormat = createDateFormat(locale);
+        return dateFormat.parse(text);
+    }
+
+    public String print(final Date object, final Locale locale) {
+        final SimpleDateFormat dateFormat = createDateFormat(locale);
+        return dateFormat.format(object);
+    }
+
+    private SimpleDateFormat createDateFormat(final Locale locale) {
+        final String format = this.messageSource.getMessage("date.format", null, locale);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setLenient(false);
+        return dateFormat;
+    }
+
+}
+```
+
+The `VarietyFormatter` automatically converts between our `Variety` entities and the way we want to use them in our forms (basically, by their `id` field values):
+
+```java
+public class VarietyFormatter implements Formatter<Variety> {
+
+    @Autowired
+    private VarietyService varietyService;
+
+
+    public VarietyFormatter() {
+        super();
+    }
+
+    public Variety parse(final String text, final Locale locale) throws ParseException {
+        final Integer varietyId = Integer.valueOf(text);
+        return this.varietyService.findById(varietyId);
+    }
+
+
+    public String print(final Variety object, final Locale locale) {
+        return (object != null ? object.getId().toString() : "");
+    }
+
+}
+```
+
+We will learn more on how these formatters affect the way our data is displayed later on. 
 
 
 
