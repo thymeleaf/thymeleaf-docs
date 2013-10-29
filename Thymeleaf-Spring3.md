@@ -1259,6 +1259,15 @@ public String showContentPart() {
 }
 ```
 
+And we can also use parameters, like:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: #content ('myvalue')";
+}
+```
 
 
 
