@@ -468,8 +468,8 @@ public String saveSeedstarter(
 
 
 
-5.5 The Conversion Service
---------------------------
+5.5 Configuring a Conversion Service
+------------------------------------
 
 In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we registered a Spring `ConversionService` implementation at the application context. See it again:
 
@@ -592,7 +592,7 @@ Like this:
     </thead>
     <tbody>
       <tr th:each="sb : ${allSeedStarters}">
-        <td th:text="${#dates.format(sb.datePlanted, #messages.msg('date.format'))}">13/01/2011</td>
+        <td th:text="${{sb.datePlanted}}">13/01/2011</td>
         <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
         <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
         <td th:text="${#strings.arrayJoin(
@@ -679,12 +679,10 @@ seedstarter.feature.PH_CORRECTOR=Corrector de PH
 ```
 
 In the first column of the table listing we will show the date when the seed
-starter was prepared. In order to do that we will obtain the format pattern as
-an externalized text by using the `#mesages.msg(...)` function and then use it
-for formatting the `Date` object.
+starter was prepared. But **we will show it formatted** in the way we defined in our `DateFormatter`. In order to do that we will use the double-bracket syntax, which will automatically apply the Spring Conversion Service.
 
 ```html
-<td th:text="${#dates.format(sb.datePlanted, #messages.msg('date.format'))}">13/01/2011</td>
+<td th:text="${{sb.datePlanted}}">13/01/2011</td>
 ```
 
 Next is showing whether the seed starter container is covered or not, by
@@ -768,7 +766,7 @@ attribute in your `<form>` tag:
 </form>
 ```
 
-This is quite consistent with any other uses of `th:object,` but in fact this
+This is consistent with other uses of `th:object,` but in fact this
 specific scenario adds some limitations in order to correctly integrate with
 Spring MVC's infrastructure:
 
@@ -805,9 +803,7 @@ line of code is similar to:
 <input type="text" id="datePlanted" name="datePlanted" th:value="*{datePlanted}" />
 ```
 
-...but in fact it is a little bit more than that, because `th:field` will take
-care of the property editor we have defined for `java.util.Date` objects and use
-it correspondingly to show the property value (which `th:value` will not do).
+...but in fact it is a little bit more than that, because `th:field` will also apply the registered Spring Conversion Service, including the `DateFormatter` we saw before (even if the field expression is not double-bracketed). Thanks to this, the date will be shown correctly formatted.
 
 Values for `th:field` attributes must be selection expressions (`*{...}`), which
 makes sense given the fact that they will be evaluated on the form-backing bean
@@ -1235,7 +1231,103 @@ that with JSP!
 
 
 
-10 Rendering Template Fragments
+10 The Conversion Service
+=========================
+
+10.1 Configuration
+------------------
+
+As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Let's see again what it looks like:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...>
+
+  ...    
+  <mvc:annotation-driven conversion-service="conversionService" />
+  ...
+
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService"
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+  ...
+    
+</beans>
+```
+
+10.1 Double-bracket syntax
+--------------------------
+
+The Conversion Service can be easily applied in order to convert/format any object into String. This is done by means of the double-bracket syntax:
+
+  * For variable expressions: `${{...}}`
+  * For selection expressions: `*{{...}}`
+  
+So, for example, given an Integer-to-String converter that adds commas as a thousands separator, this:
+
+```html
+<p th:text="${val}">...</p>
+<p th:text="${{val}}">...</p>
+```
+
+...should result in:
+
+```html
+<p>1234567890</p>
+<p>1,234,567,890</p>
+```
+
+
+
+10.2 Use in forms
+-----------------
+
+
+We saw before that every `th:field` attribute will always apply the conversion service, so this:
+
+```html
+<input type="text" th:field="*{datePlanted}" />
+```
+
+...is actually equivalent to:
+
+```html
+<input type="text" th:field="*{{datePlanted}}" />
+```
+
+Note that this is the only scenario in which the Conversion Service is applied in expressions using single-bracket syntax.
+
+
+
+10.3 `#conversions` utility object
+----------------------------------- 
+
+The `#conversions` expression utility object allows the manual execution of the Conversion Service wherever needed:
+
+```html
+<p th:text="${'Val: ' + #conversions.convert(val,'String')}">...</p>
+```
+
+Syntax for this utility object:
+
+  * `#conversions.convert(Object,Class)`: converts the object to the specified class.
+  * `#conversions.convert(Object,String)`: same as above, but specifying the target class as a String (note the `java.lang.` package can be ommitted).
+
+
+
+
+11 Rendering Template Fragments
 ===============================
 
 Thymeleaf offers the possibility to render only part of a template as the result of its execution: a *fragment*. 
@@ -1247,8 +1339,8 @@ Fragmentary rendering can be achieved by using Thymeleaf's *fragment specs*: obj
 The most common of these implementations is `org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec`, which allows specifying a fragment using a DOM Selector exactly like the ones used at `th:include` or `th:replace`.
 
 
-10.1. Specifying fragments in view beans
--------------------------------------
+11.1 Specifying fragments in view beans
+----------------------------------------
 
 *View beans* are beans of the `org.thymeleaf.spring3.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
 
@@ -1319,7 +1411,7 @@ Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select 
 
 
 
-10.2. Specifying fragments in controller return values
+11.2 Specifying fragments in controller return values
 ---------------------------------------------------
 
 Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the same syntax as in `th:include` or `th:replace` attributes:
@@ -1354,12 +1446,12 @@ public String showContentPart() {
 
 
 
-11 Spring WebFlow integration
+12 Spring WebFlow integration
 ============================
 
 
 
-11.1 Basic configuration
+12.1 Basic configuration
 -----------------------
 
 The `thymeleaf–spring3` integration package includes integration with Spring
@@ -1399,7 +1491,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-11.2 Ajax fragments
+12.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
