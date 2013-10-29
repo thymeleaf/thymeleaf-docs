@@ -95,6 +95,21 @@ task generateDocsHTML(
 			"${docFile}"
 		])
 	}
+        // Copy over and process any resources needed for the HTML docs
+        copy {
+                from(projectDir) {
+                        include 'images/**'
+                        include 'scripts/**'
+                        include 'styles/**'
+                        exclude 'styles/**/*.less'
+                }
+                into docsDirHtml
+        }
+        LessCSSCompiler compiler = new LessCSSCompiler()
+        fileTree('styles') { include '**/*.less' }.each { lessFile ->
+                def lessFileBase = fileBaseName(lessFile)
+                compiler.compile(lessFile, file("${docsDirHtml}/styles/${lessFileBase}.css"))
+        }
 }
 
 /**
