@@ -1114,6 +1114,24 @@ Thymeleaf offers the `global` constant for accessing these errors:
 ```
 
 
+8.4 Displaying errors outside forms
+-----------------------------------
+
+Form validation errors can also be displayed outside forms by using variable (`${...}`) instead of selection (`*{...}`) expressions and prefixing the name of the form-backing bean: 
+
+```html
+<div th:errors="${myForm}">...</div>
+<div th:errors="${myForm.date}">...</div>
+<div th:errors="${myForm.*}">...</div>
+
+<div th:if="${#fields.hasErrors('${myForm}')}">...</div>
+<div th:if="${#fields.hasErrors('${myForm.date}')}">...</div>
+<div th:if="${#fields.hasErrors('${myForm.*}')}">...</div>
+
+<form th:object="${myForm}">
+    ...
+</form>
+```
 
 
 9 It's still a prototype!
