@@ -614,7 +614,7 @@ public class HomeController implements IGTVGController {
             HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, TemplateEngine templateEngine) {
         
-        WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+        WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         templateEngine.process("home", ctx, response.getWriter());
         
     }
