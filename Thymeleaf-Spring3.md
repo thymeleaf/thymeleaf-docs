@@ -1213,7 +1213,7 @@ Form validation errors can also be displayed outside forms by using variable (`$
 ```
 
 
-9 It's still a prototype!
+9 It's still a Prototype!
 =========================
 
 Our application is ready now. But let's have a second look at the `.html` page
