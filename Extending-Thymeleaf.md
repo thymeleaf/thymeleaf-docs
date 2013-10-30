@@ -4,7 +4,7 @@
 
 
 
-1 Some reasons to extend Thymeleaf
+1 Some Reasons to Extend Thymeleaf
 ==================================
 
 Thymeleaf is an extremely extensible library. The key to it is that most of its
@@ -17,8 +17,8 @@ for doing this:
 
 
 
-Scenario 1: adding features to the Standard dialects
-----------------------------------------------------
+1.1. Scenario 1: adding features to the Standard dialects
+---------------------------------------------------------
 
 Say your application uses the _SpringStandard_ dialect and that it needs to show
 an alert text box in blue or red background depending on the user's role (admin
@@ -34,8 +34,8 @@ the `th` prefix (same as the _SpringStandard_ one) and you'll now be able to use
 
 
 
-Scenario 2: view-layer components
----------------------------------
+1.2. Scenario 2: view-layer components
+--------------------------------------
 
 Let's say your company uses Thymeleaf extensively, and you want to create a
 repository of common functionalities (tags and/or attributes) that you can use
@@ -53,8 +53,8 @@ with JSP.
 
 
 
-Scenario 3: creating your own template system
----------------------------------------------
+1.3. Scenario 3: creating your own template system
+--------------------------------------------------
 
 Now imagine your are creating a public website that allows users to create their
 own design templates for showing their content. Of course, you don't want your
@@ -76,8 +76,8 @@ not allowed to.
 2 Dialects and Processors
 =========================
 
-2.1 Dialects
-------------
+2.1. Dialects
+-------------
 
 If you've read the _Using Thymeleaf_ tutorial before getting here –which you
 should have done–, you should know that what you've been learning all this time
@@ -96,7 +96,6 @@ which looks like this:
 public interface IDialect {
 
     public String getPrefix();
-    public boolean isLenient();
 
     public Set<IProcessor> getProcessors();
     public Map<String,Object> getExecutionAttributes();
@@ -123,20 +122,6 @@ The prefix for both the Standard and SpringStandard Dialects is, obviously, `th`
 Prefix can be null so that you can define attribute/tag processors for
 non-namespaced tags (for example, standard `<p>`, `<div>` or `<table>` tags in
 XHTML).
-
-Now the _leniency_ flag:
-
-```java
-    public boolean isLenient();
-```
-
-A dialect is considered lenient when it allows the existence of attributes or
-tags in a template which name starts with the specified prefix (e.g.: `<input planets:saturn="..." />`)
-processor is defined in the template for it (there would be no defined behaviour
-for `planets:saturn`). If this happens, a lenient dialect would simply ignore
-the attribute/tag.
-
-Both the Standard and the SpringStandard dialects are *not* lenient.
 
 Now, let's have a look at the most important part of the `IDialect` interface,
 the processors:
@@ -186,8 +171,8 @@ but you can always add your own ones for your own template DTDs.
 
 
 
-2.2 Processors
---------------
+2.2. Processors
+---------------
 
 Processors are objects implementing the `org.thymeleaf.processor.IProcessor`
 interface, and they contain the real logic to be applied on DOM nodes. This
@@ -324,7 +309,7 @@ processors.
 
 
 
-3 Template modes
+3 Template Modes
 ================
 
 Probably the most powerful extension point in Thymeleaf, template modes define
@@ -381,13 +366,13 @@ package.
 
 
 
-4 Creating our own dialect
+4 Creating our own Dialect
 ==========================
 
 
 
-4.1 Extrathyme: a website for Thymeland's football league
----------------------------------------------------------
+4.1. Extrathyme: a website for Thymeland's football league
+----------------------------------------------------------
 
 Football is a popular sport in Thymeland^[European football, of course ;-)].
 There is a 10-team league going on
@@ -462,20 +447,31 @@ attributes:
         </thead>
         <tbody>
           <tr th:each="t : ${teams}" score:classforposition="${tStat.count}">
-            <td th:text="${t.name + ' (' + t.code + ')'}">The Winners (TWN)</td>
+            <td th:text="|${t.name} (${t.code})|">The Winners (TWN)</td>
             <td th:text="${t.won}" class="matches">1</td>
             <td th:text="${t.drawn}" class="matches">0</td>
             <td th:text="${t.lost}" class="matches">0</td>
             <td th:text="${t.points}" class="points">3</td>
             <td score:remarkforposition="${tStat.count}">Great winner!</td>
           </tr>
-          <tr th:remove="all"> <td>The Losers (TLS)</td>
+          <!--/*-->
+          <tr>
+            <td>The First Losers (TFL)</td>
+            <td class="matches">0</td>
+            <td class="matches">1</td>
+            <td class="matches">0</td>
+            <td class="points">1</td>
+            <td>Little loser!</td>
+          </tr>
+          <tr>
+            <td>The Last Losers (TLL)</td>
             <td class="matches">0</td>
             <td class="matches">0</td>
             <td class="matches">1</td>
             <td class="points">0</td>
             <td>Big loooooser</td>
           </tr>
+          <!--*/-->
         </tbody>
       </table>
 
@@ -486,17 +482,14 @@ attributes:
 </html>
 ```      
 
-_(Note that we've added a second row to our table with `th:remove="all"` so that
-our template shows nicely as a prototype when directly opened in a browser.)_
+_(Note that we've added a second and third rows to our table, surrounded by parser-level comments `<!--/* ... */-->` so that our template shows nicely as a prototype when directly opened in a browser.)_
 
 
 
-4.2 Changing the CSS class by team position
--------------------------------------------
+4.2. Changing the CSS class by team position
+--------------------------------------------
 
-The first attribute processor we will develop will be `ClassForPositionAttrProcessor`,
-which we will implement as a subclass of a convenience abstract class provided
-by Thymeleaf called `AbstractAttributeModifierAttrProcessor`.
+The first attribute processor we will develop will be `ClassForPositionAttrProcessor`, which we will implement as a subclass of a convenience abstract class provided by Thymeleaf called `AbstractAttributeModifierAttrProcessor`.
 
 This abstract class is already oriented towards creating attribute processors
 that set or modify the value of attributes in their host tags, which is exactly
@@ -520,17 +513,30 @@ public class ClassForPositionAttrProcessor
     protected Map<String, String> getModifiedAttributeValues(
             final Arguments arguments, final Element element, final String attributeName) {
 
+        final Configuration configuration = arguments.getConfiguration();
+
         /*
          * Obtain the attribute value
          */
         final String attributeValue = element.getAttributeValue(attributeName);
 
         /*
-         * Process (parse and execute) the attribute value, specified as a
-         * Thymeleaf Standard Expression.
+         * Obtain the Thymeleaf Standard Expression parser
+         */
+        final IStandardExpressionParser parser =
+                StandardExpressions.getExpressionParser(configuration);
+
+        /*
+         * Parse the attribute value as a Thymeleaf Standard Expression
+         */
+        final IStandardExpression expression =
+                parser.parseExpression(configuration, arguments, attributeValue);
+
+        /*
+         * Execute the expression just parsed
          */
         final Integer position =
-           (Integer) StandardExpressionProcessor.processExpression(arguments, attributeValue);
+                (Integer) expression.execute(configuration, arguments);
 
         /*
          * Obtain the remark corresponding to this position in the league table.
@@ -600,33 +606,30 @@ and the _SpringStandard_ dialects). This is, the ability to be set values like `
 <tr th:each="t : ${teams}" score:classforposition="${tStat.count}">
 ```
 
-In order to evaluate these expressions (also called _Thymeleaf Standard Expressions_)
-we make use of the `StandardExpressionProcessor` class methods:
+In order to evaluate these expressions (also called _Thymeleaf Standard Expressions_) we need to first obtain the Standard Expression Parser, then parse the attribute value, and finally execute the parsed expresion:
 
 ```java
+final IStandardExpressionParser parser =
+        StandardExpressions.getExpressionParser(configuration);
+
+final IStandardExpression expression =
+        parser.parseExpression(configuration, arguments, attributeValue);
+
 final Integer position =
-    (Integer) StandardExpressionProcessor.processExpression(arguments, attributeValue);
+        (Integer) expression.execute(configuration, arguments);
 ```
 
 
 
-4.3 Displaying an internationalized remark
-------------------------------------------
+4.3. Displaying an internationalized remark
+-------------------------------------------
 
-The next thing to do is creating an attribute processor able to display the
-remark text. This will be very similar to the `ClassForPositionAttrProcessor`,
-but with a couple of important differences:
+The next thing to do is creating an attribute processor able to display the remark text. This will be very similar to the `ClassForPositionAttrProcessor`, but with a couple of important differences:
 
- * We will not be setting a value for an attribute in the host tag, but rather
-   the text body (content) of the tag, in the same way a `th:text` attribute
-   does.
- * We need to access the message externalization (internationalization) system
-   from our code so that we can display the text corresponding to the selected
-   locale.
+ * We will not be setting a value for an attribute in the host tag, but rather the text body (content) of the tag, in the same way a `th:text` attribute does.
+ * We need to access the message externalization (internationalization) system from our code so that we can display the text corresponding to the selected locale.
 
-This time we will be using a different convenience abstract class –one
-especially designed for setting the tag's text content–, `AbstractTextChildModifierAttrProcessor`.
-And this will be our code:
+This time we will be using a different convenience abstract class –one especially designed for setting the tag's text content–, `AbstractTextChildModifierAttrProcessor`. And this will be our code:
 
 ```java
 public class RemarkForPositionAttrProcessor
@@ -643,17 +646,30 @@ public class RemarkForPositionAttrProcessor
     @Override
     protected String getText(final Arguments arguments, final Element element, final String attributeName) {
 
+        final Configuration configuration = arguments.getConfiguration();
+
         /*
          * Obtain the attribute value
          */
         final String attributeValue = element.getAttributeValue(attributeName);
 
         /*
-         * Process (parse and execute) the attribute value, specified as a
-         * Thymeleaf Standard Expression.
+         * Obtain the Thymeleaf Standard Expression parser
+         */
+        final IStandardExpressionParser parser =
+                StandardExpressions.getExpressionParser(configuration);
+
+        /*
+         * Parse the attribute value as a Thymeleaf Standard Expression
+         */
+        final IStandardExpression expression =
+                parser.parseExpression(configuration, arguments, attributeValue);
+
+        /*
+         * Execute the expression just parsed
          */
         final Integer position =
-            (Integer) StandardExpressionProcessor.processExpression(arguments, attributeValue);
+                (Integer) expression.execute(configuration, arguments);
 
         /*
          * Obtain the remark corresponding to this position in the leaguh table.
@@ -740,27 +756,19 @@ message. This way, applications can override –if needed– any messages
 
 
 
-4.4 An element processor for our headlines
-------------------------------------------
+4.4. An element processor for our headlines
+-------------------------------------------
 
 The third and last processor we will have to write is an element (tag) processor.
 As their name implies, element processors are triggered by element names instead
 of attribute names, and they have one advantage and also one disadvantage with
 respect to attribute processors:
 
- * Advantage: elements can contain multiple attributes, and so your element
-   processors can receive a richer and more complex set of configuration
-   parameters.
- * Disadvantage: custom elements/tags are unknown to browsers, and so if you are
-   developing a web application using custom tags you might have to sacrifice
-   one of the most interesting features of Thymeleaf: the ability to statically
-   display templates as prototypes (something called _natural templating_)
+ * Advantage: elements can contain multiple attributes, and so your element processors can receive a richer and more complex set of configuration parameters.
+ * Disadvantage: custom elements/tags are unknown to browsers, and so if you are developing a web application using custom tags you might have to sacrifice one of the most interesting features of Thymeleaf: the ability to statically display templates as prototypes (something called _natural templating_)
 
 This processor will extend `org.thymeleaf.processor.element.AbstractElementProcessor`,
-but as we did with our attribute processors, instead of extending it directly,
-we will use a more specialized abstract convenience class as a base for our
-processor class: `AbstractMarkupSubstitutionElementProcessor`. This is a base
-element processor that simply expects you to generate the DOM nodes that will
+but as we did with our attribute processors, instead of extending it directly, we will use a more specialized abstract convenience class as a base for our processor class: `AbstractMarkupSubstitutionElementProcessor`. This is a base element processor that simply expects you to generate the DOM nodes that will
 substitute the host tag when the template is processed.
 
 And this is our code:
@@ -850,8 +858,8 @@ final String order = element.getAttributeValue("order");
 
 
 
-4.5 Declaring it all: the dialect
----------------------------------
+4.5. Declaring it all: the Dialect
+----------------------------------
 
 The last step we need to take in order to complete our dialect is, of course,
 the dialect class itself.
@@ -876,15 +884,6 @@ public class ScoreDialect extends AbstractDialect {
     }
 
     /*
-     * Non-lenient: if a tag or attribute with its prefix ('score') appears on
-     * the template and there is no valuetag/attribute processor
-     * associated with it, an exception is thrown.
-     */
-    public boolean isLenient() {
-        return false;
-    }
-
-    /*
      * Two attribute processors are declared: 'classforposition' and
      * 'remarkforposition'. Also one element processor: the 'headlines'
      * tag.
@@ -901,17 +900,16 @@ public class ScoreDialect extends AbstractDialect {
 }
 ```
 
-Once our dialect is created, we will need to declare it for use from our
-Template Engine. Let's see how we'd configure this in our Spring bean
-configuration files:
+Once our dialect is created, we will need to declare it for use from our Template Engine. We will use the `additionalDialects` property in the template engine so that we add our dialect to the Spring Standard one (declared by default). 
+
+Let's see how we'd configure this in our Spring bean configuration files:
 
 ```xml
 <bean id="templateEngine"
       class="org.thymeleaf.spring3.SpringTemplateEngine">
   <property name="templateResolver" ref="templateResolver" />
-  <property name="dialects">
+  <property name="additionalDialects">
     <set>
-      <bean class="org.thymeleaf.spring3.dialect.SpringStandardDialect" />
       <bean class="thymeleafexamples.extrathyme.dialects.score.ScoreDialect" />
     </set>
   </property>
