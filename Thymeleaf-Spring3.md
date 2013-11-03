@@ -1446,12 +1446,52 @@ public String showContentPart() {
 
 
 
-12 Spring WebFlow integration
+12 Advanced Integration Features
+================================
+
+
+12.1 Integration with `RequestDataValueProcessor`
+-------------------------------------------------
+
+Thymeleaf now seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
+
+An implementation of `RequestDataValueProcessor` can be easily configured at the Application Context:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+ 
+    ...
+ 
+    <bean name="requestDataValueProcessor"
+          class="net.example.requestdata.processor.MyRequestDataValueProcessor" />
+ 
+</beans>
+```
+
+...and Thymeleaf uses it this way:
+
+  * `th:href` and `th:src` call `RequestDataValueProcessor.processUrl(...)` before rendering the URL.
+
+  * `th:action` calls `RequestDataValueProcessor.processAction(...)` before rendering the form's `action` attribute, and additionally it detects when this attribute is being applied on a `<form>` tag —which should be the only place, anyway—, and in such case calls `RequestDataValueProcessor.getExtraHiddenFields(...)` and adds the returned hidden fields just before the closing `</form>` tag.
+
+  * `th:value` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value it refers to, unless there is a `th:field` present in the same tag (in which case `th:field` will take care).
+
+  * `th:field` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value of the field it applies to (or the tag body if it is a `<textarea>`).
+
+Note this feature will only be available for Spring versions 3.1 and newer.
+
+
+
+
+13 Spring WebFlow integration
 ============================
 
 
-
-12.1 Basic configuration
+13.1 Basic configuration
 -----------------------
 
 The `thymeleaf–spring3` integration package includes integration with Spring
@@ -1491,7 +1531,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-12.2 Ajax fragments
+13.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
