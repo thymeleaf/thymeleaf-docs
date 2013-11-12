@@ -101,7 +101,7 @@ HTML interface, usually by the execution of some template engine like JSP (or
 Thymeleaf).
 
 ViewResolvers are the objects in charge of obtaining View objects for a specific
-operation and locale. Tipically, controllers ask ViewResolvers to forward to a
+operation and locale. Typically, controllers ask ViewResolvers to forward to a
 view with a specific name (a String returned by the controller method), and then
 all the view resolvers in the application execute in ordered chain until one of
 them is able to resolve that view, in which case a View object is returned and
