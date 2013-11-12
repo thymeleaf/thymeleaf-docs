@@ -1,4 +1,5 @@
 % Tutorial: Thymeleaf + Spring 3
+% The Thymeleaf Team
 
 
 
@@ -20,8 +21,7 @@ This will allow you to:
  * Use **Spring Expression Language** (Spring EL) instead of OGNL in your
    templates.
  * Create forms in your templates that are completely integrated with your
-   form-backing beans and result bindings, including the use of property editors
-   and validation error handling.
+   form-backing beans and result bindings, including the use of property editors, conversion services and validation error handling.
  * Display internationalization messages from messages files managed by Spring
    (through the usual `MessageSource` objects).
 
@@ -46,16 +46,15 @@ Besides all the features already present in the Standard Dialect – and therefo
 inherited –, the SpringStandard Dialect introduces the following specific
 features:
 
- * Use of Spring Expression Language (Spring EL) as a variable expression
+ * Use Spring Expression Language (Spring EL) as a variable expression
    language, instead of OGNL. Consequently, all `${...}` and `*{...}`
    expressions will be evaluated by Spring's Expression Language engine.
- * A new beans special variable that allows you to access any bean in your
-   application context inside variable expressions: `${beans.myBean.doSomething()}`
- * New attributes for form processing: `th:field` and `th:errors,` besides a new
+ * Access any beans in your application context using SpringEL's syntax: `${@myBean.doSomething()}`
+ * New attributes for form processing: `th:field`, `th:errors` and `th:errorclass`, besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
- * An expression object and method, `#themes.code(...)`, which is the equivalent
-   of the `spring:theme` JSP custom tag.
+ * An expression object and method, `#themes.code(...)`, which is equivalent
+   to the `spring:theme` JSP custom tag.
  * New DTDs for validation, including these new attributes, as well as new
    corresponding DOCTYPE translation rules.
 
@@ -101,7 +100,7 @@ behaviour by defining them as beans. Views are in charge of rendering the actual
 HTML interface, usually by the execution of some template engine like JSP (or
 Thymeleaf).
 
-ViewResolvers are the objects in charge of obtaining view objects for a specific
+ViewResolvers are the objects in charge of obtaining View objects for a specific
 operation and locale. Tipically, controllers ask ViewResolvers to forward to a
 view with a specific name (a String returned by the controller method), and then
 all the view resolvers in the application execute in ordered chain until one of
@@ -149,9 +148,9 @@ Thymeleaf offers implementations for the two interfaces mentioned above:
  * `org.thymeleaf.spring3.view.ThymeleafViewResolver`
 
 These two classes will be in charge of processing Thymeleaf templates as a
-result of your controllers' executions.
+result of the execution of controllers.
 
-Configuration of the View Resolver is very similar to that of JSP:
+Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
 
 ```xml
 <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
@@ -166,9 +165,10 @@ we defined in the previous chapter. The other two (`order` and `viewNames`) are
 both optional, and have the same meaning as in the JSP ViewResolver we saw
 before.
 
-Note that we do not need `prefix` or `suffix` parameters, because this are
-already specified in the Template Resolver (which in turn is passed to the
+Note that we do not need `prefix` or `suffix` parameters, because these are
+already specified at the Template Resolver (which in turn is passed to the
 Template Engine).
+
 And what if we wanted to define a `View` bean and add some static variables to
 it? Easy:
 
@@ -185,12 +185,49 @@ it? Easy:
 
 
 
-4 Spring Thyme Seed Starter Manager
+4 Template Resolution
+=====================
+
+
+
+4.1 Spring-based Template Resolution
+------------------------------------
+
+When used with Spring, Thymeleaf provides additional implementations of `ITemplateResolver` and an associated `IResourceResolver`, fully integrated with Spring's resource resolution mechanism. These are:
+
+  * `org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver` for resolving templates.
+  * `org.thymeleaf.spring3.resourceresolver.SpringResourceResourceResolver`, mostly for internal use.
+
+This template resolver will allow applications to resolve templates using the standard Spring resource resolution syntax. It can be configured like:
+
+```xml
+<bean id="templateResolver"
+      class="org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver">
+  <property name="suffix" value=".html" />
+  <property name="templateMode" value="HTML5" />
+</bean>
+```
+
+And this will allow you to use view names like:
+
+```java
+@RequestMapping("/doit")
+public String doIt() {
+    ...
+    return "classpath:resources/templates/doit";
+}
+```
+
+Note that this Spring-based resource resolver will never be used by default. It will just be an option available for applications to configure in addition to the other template resolver implementations offered by the Thymeleaf core.
+
+
+
+5 Spring Thyme Seed Starter Manager
 ===================================
 
 
 
-4.1 The Concept
+5.1 The Concept
 ---------------
 
 At Thymeleaf we're huge fans of thyme, and every spring we prepare our seed
@@ -211,7 +248,7 @@ Spring MVC.
 
 
 
-4.2 Business Layer
+5.2 Business Layer
 ------------------
 
 We will need a very simple business layer for our application. First of all,
@@ -262,7 +299,7 @@ public class VarietyService {
 
 
 
-4.3 Spring MVC configuration
+5.3 Spring MVC configuration
 ----------------------------
 
 Next we need to set up the Spring MVC configuration for the application, which
@@ -292,23 +329,38 @@ Resolver instances.
   <mvc:resources location="/css/" mapping="/css/**" />
     
 
-  <!-- **************************************************************** -->
-  <!--  SPRING ANNOTATION PROCESSING                                    -->
-  <!-- **************************************************************** -->
-  <mvc:annotation-driven />
-  <context:component-scan base-package="thymeleafexamples.stsm" />
+  <!-- **************************************************************** -->
+  <!--  SPRING ANNOTATION PROCESSING                                    -->
+  <!-- **************************************************************** -->
+  <mvc:annotation-driven conversion-service="conversionService" />
+  <context:component-scan base-package="thymeleafexamples.stsm" />
 
 
-  <!-- **************************************************************** -->
-  <!--  MESSAGE EXTERNALIZATION/INTERNATIONALIZATION                    -->
-  <!--  Standard Spring MessageSource implementation                    -->
-  <!-- **************************************************************** -->
-  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="Messages" />
-  </bean>
+  <!-- **************************************************************** -->
+  <!--  MESSAGE EXTERNALIZATION/INTERNATIONALIZATION                    -->
+  <!--  Standard Spring MessageSource implementation                    -->
+  <!-- **************************************************************** -->
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="Messages" />
+  </bean>
 
 
-  <!-- **************************************************************** -->
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService" 
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+
+  <!-- **************************************************************** -->
   <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
   <!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
   <!-- **************************************************************** -->
@@ -337,7 +389,7 @@ Important: Note that we have selected HTML5 as a template mode.
 
 
 
-4.4 The Controller
+5.4 The Controller
 ------------------
 
 Of course, we will also need a controller for our application. As the STSM will
@@ -347,9 +399,6 @@ ones, we will write only one controller class for all the server interactions:
 ```java
 @Controller
 public class SeedStarterMngController {
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private VarietyService varietyService;
@@ -392,33 +441,6 @@ public List<SeedStarter> populateSeedStarters() {
 ```
 
 
-### Property Editors
-
-Property Editors in a Spring MVC application allow forms to contain fields of
-types other than String, and define the way in which values of these types will
-be converted to and from String so that they can be shown in form inputs and
-transmitted over the network when users click submit.
-
-We will need two property editors: one for `java.util.Date` objects
-(locale-dependent) and a second one for `Variety` objects.
-
-```java
-@InitBinder
-public void initDateBinder(final WebDataBinder dataBinder, final Locale locale) {
-    final String dateformat = 
-        this.messageSource.getMessage("date.format", null, locale);
-    final SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
-    sdf.setLenient(false);
-    dataBinder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, false));
-}
-
-@InitBinder
-public void initVarietyBinder(final WebDataBinder dataBinder) {
-    dataBinder.registerCustomEditor(Variety.class, new VarietyPropertyEditor(this.varietyService));
-}
-```
-
-
 ### Mapped methods
 
 And now the most important part of a controller, the mapped methods: one for
@@ -446,8 +468,106 @@ public String saveSeedstarter(
 
 
 
+5.5 Configuring a Conversion Service
+------------------------------------
 
-5 Listing Seed Starter Data
+In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we registered a Spring `ConversionService` implementation at the application context. See it again:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...>
+
+  ...    
+  <mvc:annotation-driven conversion-service="conversionService" />
+  ...
+
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService"
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+  ...
+    
+</beans>
+```
+
+That conversion service allowed us to register two Spring *formatters*, 
+implementations of the `org.springframework.format.Formatter` interface. For more information on how the Spring conversion infrastructure works, see the docs at [spring.io](http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/validation.html#core-convert).
+
+Let's have a look at the `DateFormatter`, which formats dates according to a format string present at the `date.format` message key of our `Messages.properties`:
+
+```java
+public class DateFormatter implements Formatter<Date> {
+
+    @Autowired
+    private MessageSource messageSource;
+
+
+    public DateFormatter() {
+        super();
+    }
+
+    public Date parse(final String text, final Locale locale) throws ParseException {
+        final SimpleDateFormat dateFormat = createDateFormat(locale);
+        return dateFormat.parse(text);
+    }
+
+    public String print(final Date object, final Locale locale) {
+        final SimpleDateFormat dateFormat = createDateFormat(locale);
+        return dateFormat.format(object);
+    }
+
+    private SimpleDateFormat createDateFormat(final Locale locale) {
+        final String format = this.messageSource.getMessage("date.format", null, locale);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setLenient(false);
+        return dateFormat;
+    }
+
+}
+```
+
+The `VarietyFormatter` automatically converts between our `Variety` entities and the way we want to use them in our forms (basically, by their `id` field values):
+
+```java
+public class VarietyFormatter implements Formatter<Variety> {
+
+    @Autowired
+    private VarietyService varietyService;
+
+
+    public VarietyFormatter() {
+        super();
+    }
+
+    public Variety parse(final String text, final Locale locale) throws ParseException {
+        final Integer varietyId = Integer.valueOf(text);
+        return this.varietyService.findById(varietyId);
+    }
+
+
+    public String print(final Variety object, final Locale locale) {
+        return (object != null ? object.getId().toString() : "");
+    }
+
+}
+```
+
+We will learn more on how these formatters affect the way our data is displayed later on. 
+
+
+
+
+6 Listing Seed Starter Data
 ===========================
 
 The first thing that our `/WEB-INF/templates/seedstartermng.html` page will show
@@ -472,7 +592,7 @@ Like this:
     </thead>
     <tbody>
       <tr th:each="sb : ${allSeedStarters}">
-        <td th:text="${#dates.format(sb.datePlanted, #messages.msg('date.format'))}">13/01/2011</td>
+        <td th:text="${{sb.datePlanted}}">13/01/2011</td>
         <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
         <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
         <td th:text="${#strings.arrayJoin(
@@ -559,12 +679,10 @@ seedstarter.feature.PH_CORRECTOR=Corrector de PH
 ```
 
 In the first column of the table listing we will show the date when the seed
-starter was prepared. In order to do that we will obtain the format pattern as
-an externalized text by using the `#mesages.msg(...)` function and then use it
-for formatting the `Date` object.
+starter was prepared. But **we will show it formatted** in the way we defined in our `DateFormatter`. In order to do that we will use the double-bracket syntax, which will automatically apply the Spring Conversion Service.
 
 ```html
-<td th:text="${#dates.format(sb.datePlanted, #messages.msg('date.format'))}">13/01/2011</td>
+<td th:text="${{sb.datePlanted}}">13/01/2011</td>
 ```
 
 Next is showing whether the seed starter container is covered or not, by
@@ -626,12 +744,12 @@ nested table for showing the contents of each row in the container:
 
 
 
-6 Creating a Form
+7 Creating a Form
 =================
 
 
 
-6.1 Handling the command object
+7.1 Handling the command object
 -------------------------------
 
 _Command object_ is the name Spring MVC gives to form-backing beans, this is, to
@@ -648,7 +766,7 @@ attribute in your `<form>` tag:
 </form>
 ```
 
-This is quite consistent with any other uses of `th:object,` but in fact this
+This is consistent with other uses of `th:object,` but in fact this
 specific scenario adds some limitations in order to correctly integrate with
 Spring MVC's infrastructure:
 
@@ -661,7 +779,7 @@ Spring MVC's infrastructure:
 
 
 
-6.2 Inputs
+7.2 Inputs
 ----------
 
 Let's see now how to add an input to our form:
@@ -685,9 +803,7 @@ line of code is similar to:
 <input type="text" id="datePlanted" name="datePlanted" th:value="*{datePlanted}" />
 ```
 
-...but in fact it is a little bit more than that, because `th:field` will take
-care of the property editor we have defined for `java.util.Date` objects and use
-it correspondingly to show the property value (which `th:value` will not do).
+...but in fact it is a little bit more than that, because `th:field` will also apply the registered Spring Conversion Service, including the `DateFormatter` we saw before (even if the field expression is not double-bracketed). Thanks to this, the date will be shown correctly formatted.
 
 Values for `th:field` attributes must be selection expressions (`*{...}`), which
 makes sense given the fact that they will be evaluated on the form-backing bean
@@ -703,7 +819,7 @@ etc., effectively adding complete HTML5 support to Spring MVC.
 
 
 
-6.3 Checkbox fields
+7.3 Checkbox fields
 -------------------
 
 `th:field` also allows us to define checkbox inputs. Let's see an example from
@@ -777,7 +893,7 @@ a `checked="checked"` attribute to the corresponding input tags.
 
 
 
-6.4 Radio Button fields
+7.4 Radio Button fields
 -----------------------
 
 Radio button fields are specified in a similar way to non-boolean (multi-valued)
@@ -794,7 +910,7 @@ checkboxes –except that they are not multivalued, of course:
 
 
 
-6.5 Dropdown/List selectors
+7.5 Dropdown/List selectors
 ---------------------------
 
 Select fields have two parts: the `<select>` tag and its nested `<option>` tags.
@@ -820,7 +936,7 @@ tag itself.
 
 
 
-6.6 Dynamic fields
+7.6 Dynamic fields
 ------------------
 
 Thanks to the advanced form-field binding capabilities in Spring MVC, we can use
@@ -961,39 +1077,38 @@ a couple of times:
 
 
 
-7 Validation and error messages
+8 Validation and Error Messages
 ===============================
 
 Most of our forms will need to show validation messages in order to inform the
 user of the errors he/she has made.
 
-Thymeleaf offers two tools for this: a couple of functions in the `#fields`
-object and the `th:errors` attribute.
+Thymeleaf offers some tools for this: a couple of functions in the `#fields`
+object, the `th:errors` and the `th:errorclass` attributes.
 
-Functions first: let's set a class to a field if it has an error:
+
+8.1 Field errors
+----------------
+
+Let's see how we could set a specific CSS class to a field if it has an error:
 
 ```html
-<input type="text" th:field="*{datePlanted}" th:class="${#fields.hasErrors('datePlanted')}? 'fieldError'"/>
+<input type="text" th:field="*{datePlanted}" th:class="${#fields.hasErrors('datePlanted')}? fieldError" />
 ```
 
 As you can see, the `#fields.hasErrors(...)` function receives the field
-expression as a parameter, and returns a boolean telling whether any validation
+expression as a parameter (`datePlanted`), and returns a boolean telling whether any validation
 errors exist for that field.
 
-Let's show the error messages themselves:
+We could also obtain all the errors for that field and iterate them:
 
 ```html
-<ul th:if="${#fields.hasErrors('*')}">
-  <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+<ul>
+  <li th:each="err : ${#fields.errors('datePlanted')}" th:text="${err}" />
 </ul>
 ```
 
-The new function is `#fields.errors(...)`, and the star (`'*'`) parameter tells
-the function we are looking for errors on any field. `#fields.errors(...)`
-returns a list of (externalized) error messages.
-
-`th:errors` attribute works in a similar way to the `#fields.errors(...)`
-function, but listing all errors for the specified selector separated by `<br />`:
+Instead of iterating, we could have also used `th:errors`, a specialized attribute which builds a list with all the errors for the specified selector, separated by `<br />`:
 
 ```html
 <input type="text" th:field="*{datePlanted}" />
@@ -1002,8 +1117,103 @@ function, but listing all errors for the specified selector separated by `<br />
 
 
 
+### Simplifying error-based CSS styling: `th:errorclass`
 
-8 It's still a prototype!
+The example we saw above, *setting a CSS class to a form input if that field has errors*, is so common that Thymeleaf offers a specific attribute for doing exacly that: `th:errorclass`.
+
+Applied to a form field tag (input, select, textarea...), it will read the name of the field to be examined from any existing `name` or `th:field` attributes in the same tag, and then append the specified CSS class to the tag if such field has any associated errors:
+
+```html
+<input type="text" th:field="*{datePlanted}" class="small" th:errorclass="fieldError" />
+```
+
+If `datePlanted` has errors, this will render as:
+
+```html
+<input type="text" id="datePlanted" name="datePlanted" value="2013-01-01" class="small fieldError" />
+```
+
+
+8.2 All errors
+--------------
+
+And what if we want to show all the errors in the form? We just need to query the `#fields.hasErrors(...)` and `#fields.errors(...)` methods with the `'*'` or `'all'` constants (which are equivalent):
+
+```html
+<ul th:if="${#fields.hasErrors('*')}">
+  <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+</ul>
+```
+
+As in the examples above, we could obtain all the errors and iterate them...
+
+```html
+<ul>
+  <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+</ul>
+```
+...as well as build a `<br />`-separated list:
+
+```html
+<p th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</p>
+```
+
+Finally. Note `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyErrors()` and `#fields.errors('*')` is equivalent to `#fields.allErrors()`. Use whichever syntax you prefer:
+
+```html
+<div th:if="${#fields.hasAnyErrors()}">
+  <p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
+</div>
+```
+
+
+8.3 Global errors
+-----------------
+
+There is a third type of error in a Spring form: *global* errors. These are errors that are not associated with any specific fields in the form, but still exist.
+
+Thymeleaf offers the `global` constant for accessing these errors:
+
+```html
+<ul th:if="${#fields.hasErrors('global')}">
+  <li th:each="err : ${#fields.errors('global')}" th:text="${err}">Input is incorrect</li>
+</ul>
+```
+
+```html
+<p th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Incorrect date</p>
+```
+
+...as well as equivalent `#fields.hasGlobalErrors()` and `#fields.globalErrors()` convenience methods: 
+
+```html
+<div th:if="${#fields.hasGlobalErrors()}">
+  <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+</div>
+```
+
+
+8.4 Displaying errors outside forms
+-----------------------------------
+
+Form validation errors can also be displayed outside forms by using variable (`${...}`) instead of selection (`*{...}`) expressions and prefixing the name of the form-backing bean: 
+
+```html
+<div th:errors="${myForm}">...</div>
+<div th:errors="${myForm.date}">...</div>
+<div th:errors="${myForm.*}">...</div>
+
+<div th:if="${#fields.hasErrors('${myForm}')}">...</div>
+<div th:if="${#fields.hasErrors('${myForm.date}')}">...</div>
+<div th:if="${#fields.hasErrors('${myForm.*}')}">...</div>
+
+<form th:object="${myForm}">
+    ...
+</form>
+```
+
+
+9 It's still a Prototype!
 =========================
 
 Our application is ready now. But let's have a second look at the `.html` page
@@ -1021,12 +1231,267 @@ that with JSP!
 
 
 
-9 Spring WebFlow integration
+10 The Conversion Service
+=========================
+
+10.1 Configuration
+------------------
+
+As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Let's see again what it looks like:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...>
+
+  ...    
+  <mvc:annotation-driven conversion-service="conversionService" />
+  ...
+
+  <!-- **************************************************************** -->
+  <!--  CONVERSION SERVICE                                              -->
+  <!--  Standard Spring formatting-enabled implementation               -->
+  <!-- **************************************************************** -->
+  <bean id="conversionService"
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <property name="formatters">
+      <set>
+        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+      </set>
+    </property>
+  </bean>
+
+  ...
+    
+</beans>
+```
+
+10.1 Double-bracket syntax
+--------------------------
+
+The Conversion Service can be easily applied in order to convert/format any object into String. This is done by means of the double-bracket syntax:
+
+  * For variable expressions: `${{...}}`
+  * For selection expressions: `*{{...}}`
+  
+So, for example, given an Integer-to-String converter that adds commas as a thousands separator, this:
+
+```html
+<p th:text="${val}">...</p>
+<p th:text="${{val}}">...</p>
+```
+
+...should result in:
+
+```html
+<p>1234567890</p>
+<p>1,234,567,890</p>
+```
+
+
+
+10.2 Use in forms
+-----------------
+
+
+We saw before that every `th:field` attribute will always apply the conversion service, so this:
+
+```html
+<input type="text" th:field="*{datePlanted}" />
+```
+
+...is actually equivalent to:
+
+```html
+<input type="text" th:field="*{{datePlanted}}" />
+```
+
+Note that this is the only scenario in which the Conversion Service is applied in expressions using single-bracket syntax.
+
+
+
+10.3 `#conversions` utility object
+----------------------------------- 
+
+The `#conversions` expression utility object allows the manual execution of the Conversion Service wherever needed:
+
+```html
+<p th:text="${'Val: ' + #conversions.convert(val,'String')}">...</p>
+```
+
+Syntax for this utility object:
+
+  * `#conversions.convert(Object,Class)`: converts the object to the specified class.
+  * `#conversions.convert(Object,String)`: same as above, but specifying the target class as a String (note the `java.lang.` package can be ommitted).
+
+
+
+
+11 Rendering Template Fragments
+===============================
+
+Thymeleaf offers the possibility to render only part of a template as the result of its execution: a *fragment*. 
+
+This can be a useful componentization tool. For example, it can be used at controllers that execute on AJAX calls, which might return markup fragments of a page that is already loaded at the browser (for updating a select, enabling/disabling buttons...).
+
+Fragmentary rendering can be achieved by using Thymeleaf's *fragment specs*: objects implementing the `org.thymeleaf.fragment.IFragmentSpec` interface.
+
+The most common of these implementations is `org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec`, which allows specifying a fragment using a DOM Selector exactly like the ones used at `th:include` or `th:replace`.
+
+
+11.1 Specifying fragments in view beans
+----------------------------------------
+
+*View beans* are beans of the `org.thymeleaf.spring3.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
+
+```xml
+<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+  <property name="templateName" value="index" />
+  <property name="fragmentSpec">
+    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
+          c:selectorExpression="content" />
+  </property>
+</bean>
+``` 
+
+Given the above bean definition, if our controller returns `content-part` (the name of the above bean)...
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "content-part";
+}
+```
+
+...thymeleaf will return only the `content` fragment of the `index` template -- which location will probably be something like `/WEB-INF/templates/index.html`, once prefix and suffix are applied:
+
+```html
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div th:fragment="content">
+      Only this will be rendered!!
+    </div>
+    ...
+  </body>
+</html>
+```
+
+Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select a fragment in a template without needing any `th:fragment` attributes at all. Let's use the `id` attribute, for example:
+
+```xml
+<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+  <property name="fragmentSpec">
+    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
+          c:selectorExpression="#content" />
+  </property>
+  <property name="templateName" value="index" />
+</bean>
+``` 
+
+...which will perfectly select:
+
+```html
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div id="content">
+      Only this will be rendered!!
+    </div>
+    ...
+  </body>
+</html>
+```
+
+
+
+
+11.2 Specifying fragments in controller return values
+---------------------------------------------------
+
+Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the same syntax as in `th:include` or `th:replace` attributes:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: content";
+}
+```
+
+Of course, again the full power of DOM Selectors is available, so we could select our fragment based on standard HTML attributes, like `id="content"`:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: #content";
+}
+```
+
+And we can also use parameters, like:
+
+```java    
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: #content ('myvalue')";
+}
+```
+
+
+
+12 Advanced Integration Features
+================================
+
+
+12.1 Integration with `RequestDataValueProcessor`
+-------------------------------------------------
+
+Thymeleaf now seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
+
+An implementation of `RequestDataValueProcessor` can be easily configured at the Application Context:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+ 
+    ...
+ 
+    <bean name="requestDataValueProcessor"
+          class="net.example.requestdata.processor.MyRequestDataValueProcessor" />
+ 
+</beans>
+```
+
+...and Thymeleaf uses it this way:
+
+  * `th:href` and `th:src` call `RequestDataValueProcessor.processUrl(...)` before rendering the URL.
+
+  * `th:action` calls `RequestDataValueProcessor.processAction(...)` before rendering the form's `action` attribute, and additionally it detects when this attribute is being applied on a `<form>` tag —which should be the only place, anyway—, and in such case calls `RequestDataValueProcessor.getExtraHiddenFields(...)` and adds the returned hidden fields just before the closing `</form>` tag.
+
+  * `th:value` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value it refers to, unless there is a `th:field` present in the same tag (in which case `th:field` will take care).
+
+  * `th:field` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value of the field it applies to (or the tag body if it is a `<textarea>`).
+
+Note this feature will only be available for Spring versions 3.1 and newer.
+
+
+
+
+13 Spring WebFlow integration
 ============================
 
 
-
-9.1 Basic configuration
+13.1 Basic configuration
 -----------------------
 
 The `thymeleaf–spring3` integration package includes integration with Spring
@@ -1066,7 +1531,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-9.2 Ajax fragments
+13.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`

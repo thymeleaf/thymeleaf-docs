@@ -1,4 +1,5 @@
 % Tutorial: Using Thymeleaf
+% The Thymeleaf Team
 
 
 
@@ -101,8 +102,7 @@ Besides HTML5, it specifically supports and validates the following XHTML
 specifications: _XHTML 1.0 Transitional_, _XHTML 1.0 Strict_, _XHTML 1.0 Frameset_,
 and _XHTML 1.1_.
 
-Also, the Standard Dialect does not include any processors to be applied on tags
-–called elements in DOM terminology–: it is an _attribute-only dialect_. This
+Most of the processors of the Standard Dialect are _attribute processors_. This
 allows browsers to correctly display XHTML/HTML5 template files even before
 being processed, because they will simply ignore the additional attributes. For
 example, while a JSP using tag libraries could include a fragment of code not
@@ -453,7 +453,7 @@ Thymeleaf.
 
 
 
-3 Using texts
+3 Using Texts
 =============
 
 
@@ -467,7 +467,7 @@ The first version we will write of this page will be extremely simple: just a
 title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -614,7 +614,7 @@ public class HomeController implements IGTVGController {
             HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, TemplateEngine templateEngine) {
         
-        WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+        WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         templateEngine.process("home", ctx, response.getWriter());
         
     }
@@ -725,6 +725,7 @@ Let's see the results of this using the Spanish locale:
 
 </html>
 ```
+
 
 
 
@@ -842,28 +843,35 @@ But there are more types of value we don't know yet, and more interesting detail
 to know about the ones we already know. First, let's see a quick summary of the
 Standard Expression features:
 
- * Text literals: '...'
- * Number literals: 0, 34, 12, 3.0, 12.3, etc.
  * Simple expressions:
-    * Variable Expressions: ${...}
-    * Selection Variable Expressions: *{...}
-    * Message Expressions: #{...}
-    * Link URL Expressions: @{...}
- * Binary operations:
-    * String concatenation: +
-    * Arithmetic operators: +, -, *, /, %
-    * Comparators: >, <, >=, <=
-    * Boolean operators: and, or
-    * Equality operators: ==, !=
- * Unary operations:
-    *  Minus sign (numeric): -
-    *  Boolean negation: !, not
+    * Variable Expressions: `${...}`
+    * Selection Variable Expressions: `*{...}`
+    * Message Expressions: `#{...}`
+    * Link URL Expressions: `@{...}`
+ * Literals
+    * Text literals: `'one text'`, `'Another one!'`,...
+    * Number literals: `0`, `34`, `3.0`, `12.3`,...
+    * Boolean literals: `true`, `false`
+    * Null literal: `null`
+    * Literal tokens: `one`, `sometext`, `main`,...
+ * Text operations: 
+    * String concatenation: `+`
+    * Literal substitutions: `|The name is ${name}|`
+ * Arithmetic operations:
+    * Binary operators: `+`, `-`, `*`, `/`, `%`
+    * Minus sign (unary operator): `-`
+ * Boolean operations:
+    * Binary operators: `and`, `or`
+    * Boolean negation (unary operator): `!`, `not`
+ * Comparisons and equality:
+    * Comparators: `>`, `<`, `>=`, `<=` (`gt`, `lt`, `ge`, `le`)
+    * Equality operators: `==`, `!=` (`eq`, `ne`)
  * Conditional operators:
-    * If-then: (if) ? (then)
-    * If-then-else: (if) ? (then) : (else)
-    * Default: (value) ?: (defaultvalue)
+    * If-then: `(if) ? (then)`
+    * If-then-else: `(if) ? (then) : (else)`
+    * Default: `(value) ?: (defaultvalue)`
 
-All this operations can be combined and nested:
+All this features can be combined and nested:
 
 ```html
 'User is of type ' + (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown'))
@@ -990,17 +998,15 @@ ${person.createCompleteNameWithSeparator('-')}
 ```
 
 
-### Expression basic objects
+### Expression Basic Objects
 
 When evaluating OGNL expressions on the context variables, some objects are made
 available to expressions for higher flexibility. These objects will be
 referenced (per OGNL standard) starting with the `#` symbol:
 
- * `#ctx`: the context object
- * `#root` or `#vars:` the context variables objects, against which unqualified
-   expressions are evaluated (usually the variables contained in `#ctx.variables`
-   plus local ones)
- * `#locale`: the context locale
+ * `#ctx`: the context object.
+ * `#vars:` the context variables.
+ * `#locale`: the context locale.
  * `#httpServletRequest`: (only in Web Contexts) the `HttpServletRequest` object.
  * `#httpSession`: (only in Web Contexts) the `HttpSession` object.
 
@@ -1010,8 +1016,11 @@ So we can do this:
 Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
 
+You can read the full reference of these objects in the
+[Appendix A](#appendix-a-expression-basic-objects).
 
-### Expression utility objects
+
+### Expression Utility Objects
 
 Besides these basic objects, Thymeleaf will offer us a set of utility objects
 that will help us perform common tasks in our expressions.
@@ -1036,7 +1045,7 @@ that will help us perform common tasks in our expressions.
    (for example, as a result of an iteration).
 
 You can check what functions are offered by each of these utility objects in the
-[Appendix](appendix-expression-utility-objects).
+[Appendix B](#appendix-b-expression-utility-objects).
 
 
 ### Reformatting dates in our home page
@@ -1153,6 +1162,7 @@ There are different types of URLs:
       added automatically)
     * Server-relative, like `~/billing/processInvoice` (allows calling URLs in
       another context (= application) in the same server.
+    * Protocol-relative URLs, like `//code.jquery.com/jquery-2.0.3.min.js`
 
 Thymeleaf can handle absolute URLs in any situation, but for relative ones it
 will require you to use a context object that implements the `IWebContext`
@@ -1212,25 +1222,74 @@ for some of the other pages in the site?
 4.5 Literals
 ------------
 
-Literals are a type of value extremely simple to understand. There are two types:
-text and numeric.
+###Text literals
 
-Text literals are just character strings specified between single quotes:
+Text literals are just character strings specified between single quotes. They can include any character, but you should escape any single quotes inside them as `\'`.
 
 ```html
 <p>Now you are looking at a <span th:text="'working web application'">template file</span>.</p>
-As for numeric literals, they are simply numbers:
-<p>The year is <span th:text="2011">1492</span>.</p>
-<p>In two years, it will be <span th:text="2011 + 2">1494</span>.</p>
+```
+
+###Number literals
+
+Numeric literals look exactly like what they are: numbers.
+
+```html
+<p>The year is <span th:text="2013">1492</span>.</p>
+<p>In two years, it will be <span th:text="2013 + 2">1494</span>.</p>
+```
+
+
+###Boolean literals
+
+The boolean literals are `true` and `false`. For example:
+
+```html
+<div th:if="${user.isAdmin()} == false"> ...
+```
+
+Note the difference between the above example and specifying the `false` literal inside an OGNL/SpringEL variable expression and therefore let these expression engines evaluate it (not Thymeleaf):
+
+```html
+<div th:if="${user.isAdmin() == false}"> ...
+```
+
+
+###The null literal
+
+The `null` literal can be also used:
+
+```html
+<div th:if="${variable.something} == null"> ...
+```
+
+
+###Literal tokens
+
+Numeric, boolean and null literals are in fact a particular case of _literal tokens_.
+
+These tokens allow a little bit of simplification in Standard Expressions. They work exactly the same as text literals (`'...'`), but they only allow letters (`A-Z` and `a-z`),
+numbers (`0-9`), brackets (`[` and `]`), dots (`.`), hyphens (`-`) and underscores (`_`).
+So no whitespaces, no commas, etc.
+
+The nice part? Tokens don't need any quotes surrounding them. So we can do this:
+
+```html
+<div th:class="content">...</div>
+```
+
+instead of:
+
+```html
+<div th:class="'content'">...</div>
 ```
 
 
 
-4.6 Concatenating texts
------------------------
+4.6 Appending texts
+-------------------
 
-Texts, no matter whether they are literals or the result of evaluating variable
-or message expressions, can be easily concatenated using the `+` operator:
+Texts, no matter whether they are literals or the result of evaluating variable or message expressions, can be easily appended using the `+` operator:
 
 ```html
 th:text="'The name of the user is ' + ${user.name}"
@@ -1238,7 +1297,36 @@ th:text="'The name of the user is ' + ${user.name}"
 
 
 
-4.7 Arithmetic operations
+
+4.7 Literal substitutions
+-------------------------
+
+Literal substitutions allow the easy formatting of strings containing values from variables without the need to append literals with `'...' + '...'`.
+
+These substitutions must be surrounded by vertical bars (`|`), like:
+
+```html
+<span th:text="|Welcome to our application, ${user.name}!|">
+```
+
+Which is actually equivalent to:
+
+```html
+<span th:text="'Welcome to our application, ' + ${user.name} + '!'">
+```
+
+Literal substitutions can be combined with other types of expressions:
+
+```html
+<span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">
+```
+
+**Note:** only variable expressions (`${...}`) are allowed inside `|...|` literal substitutions. No other literals (`'...'`), boolean/numeric tokens, conditional expressions etc. are. 
+
+
+
+
+4.8 Arithmetic operations
 -------------------------
 
 Some arithmetic operations are also available: `+`, `-`, `*`, `/` and `%`.
@@ -1258,7 +1346,7 @@ th:with="isEven=${prodStat.count % 2 == 0}"
 Note that textual aliases exist for some of these operators: `div` (`/`), `mod` (`%`).
 
 
-4.8 Comparators and Equality
+4.9 Comparators and Equality
 ----------------------------
 
 Values in expressions can be compared with the `>`, `<`, `>=` and `<=` symbols,
@@ -1273,11 +1361,11 @@ th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Produ
 ```
 
 Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`), `le` (`<=`). Also `eq` (`==`), `neq`/`ne` (`!=`).
+(`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
-4.9 Conditional expressions
+4.10 Conditional expressions
 ---------------------------
 
 _Conditional expressions_ are meant to evaluate only one of two expressions
@@ -1316,7 +1404,7 @@ the condition is false:
 
 
 
-4.10 Default expressions (Elvis operator)
+4.11 Default expressions (Elvis operator)
 -----------------------------------------
 
 A _default expression_ is a special kind of conditional value without a _then_
@@ -1350,7 +1438,7 @@ parentheses:
 
 
 
-4.11 Preprocessing
+4.12 Preprocessing
 ------------------
 
 In addition to all these features for expression processing, Thymeleaf offers to
@@ -1391,10 +1479,12 @@ following equivalent:
 <p th:text="${@myapp.translator.Translator@translateToFrench(textVar)}">Some text here...</p>
 ```
 
+The preprocessing String `__` can be escaped in attributes using `\_\_`.
 
 
 
-5 Setting attribute values
+
+5 Setting Attribute Values
 ==========================
 
 This chapter will explain the way in which we can set (or modify) values of
@@ -1835,6 +1925,28 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 
 
 
+5.6 Support for HTML5-friendly attribute and element names
+----------------------------------------------------------
+
+It is also possible to use a completely different syntax to apply processors to your templates, more HTML5-friendly.
+
+```html	
+<table>
+    <tr data-th-each="user : ${users}">
+        <td data-th-text="${user.login}">...</td>
+        <td data-th-text="${user.name}">...</td>
+    </tr>
+</table>
+```
+
+The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically available to all your dialects (not only the Standard ones).
+
+There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the _W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_). This can be used, for example, for the `th:block` element (or also `th-block`), which will be explained in a later section. 
+
+**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it. There is no intention at all to deprecate the namespaced syntax in the future. 
+
+
+
 
 6 Iteration
 ===========
@@ -1881,7 +1993,7 @@ public void process(
 And then we will use `th:each` in our template to iterate the list of products:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -2073,7 +2185,7 @@ one for you by suffixing `Stat` to the name of the iter variable:
 
 
 
-7 Conditional evaluation
+7 Conditional Evaluation
 ========================
 
 
@@ -2236,6 +2348,8 @@ The default option is specified as `th:case="*"`:
 8.1 Including template fragments
 --------------------------------
 
+### Defining and referencing fragments
+
 We will often want to include in our templates fragments from other templates.
 Common uses for this are footers, headers, menus...
 
@@ -2247,7 +2361,7 @@ pages, and for that we define a `/WEB-INF/templates/footer.html` file containing
 this code:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -2264,7 +2378,7 @@ this code:
 ```
 
 The code above defines a fragment called `copy` that we can easily include in
-our home page using one of the `th:include` or `th:substituteby` attributes:
+our home page using one of the `th:include` or `th:replace` attributes:
 
 ```html
 <body>
@@ -2279,24 +2393,20 @@ our home page using one of the `th:include` or `th:substituteby` attributes:
 The syntax for both these inclusion attributes is quite straightforward. There
 are three different formats:
 
- * `"templatename::fragname"` Includes the fragment named fragname, which should
-   have been specified with a `th:fragment` attribute in the template named `templatename`.
+ * `"templatename::domselector"` or the equivalent `templatename::[domselector]` Includes the fragment resulting from executing the specified DOM Selector on the template named `templatename`.
+    * Note that `domselector` can be a mere fragment name, so you could specify something as simple as `templatename::fragmentname` like in the `footer :: copy` above.
 
- * `"templatename::[domselector]"` Includes as a fragment the result of
-   executing the specified DOM Selector expression on the template named `templatename`.
-   No `th:fragment` attributes are needed. 
+   > DOM Selector syntax is similar to XPath expressions and CSS selectors, see the [Appendix C](#appendix-c-dom-selector-syntax) for more info on this syntax.
 
-   > DOM Selectors are similar to XPath expressions, see the javadoc
-   > specification for the `org.thymeleaf.dom.DOMSelector` class for more info
-   > on DOM Selector syntax.
+ * `"templatename"` Includes the complete template named `templatename`.
 
- * `"templatename"` Includes as a fragment the complete template named `templatename`.
-
-   > Note that the template name you use in `th:include`/`th:substituteby` tags
+   > Note that the template name you use in `th:include`/`th:replace` tags
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
-Both `templatename` and `fragment` or `xpathexpr` in the above syntax examples
+ * `::domselector"` or `"this::domselector"` Includes a fragment from the same template.
+
+Both `templatename` and `domselector` in the above examples
 can be fully-featured expressions (even conditionals!) like:
 
 ```html
@@ -2304,7 +2414,7 @@ can be fully-featured expressions (even conditionals!) like:
 ```
 
 Fragments can include any `th:* attributes`. These attributes will be evaluated
-once the fragment is included into the target template (the one with the `th:include`/`th:substituteby`
+once the fragment is included into the target template (the one with the `th:include`/`th:replace`
 attribute), and they will be able to reference any context variables defined in
 this target template.
 
@@ -2313,8 +2423,37 @@ this target template.
 > complete and even validating XHTML structure, while still retaining the
 > ability to make Thymeleaf include them into other templates.
 
-And what is the difference between `th:include` and `th:substituteby`? Whereas `th:include`
-will include the contents of the fragment into its host tag, `th:substituteby`
+
+### Referencing fragments without `th:fragment`
+
+Besides, thanks to the power of DOM Selectors, we can include fragments that do not use any `th:fragment` attributes. It can even be markup code coming from a different application with no knowledge of Thymeleaf at all:
+
+```html
+...
+<div id="copy-section">
+  &copy; 2011 The Good Thymes Virtual Grocery
+</div>
+...
+```
+
+We can use the fragment above simply referencing it by its `id` attribute, in a similar way to a CSS selector:
+
+```html
+<body>
+
+  ...
+
+  <div th:include="footer :: #copy-section"></div>
+  
+</body>
+```
+
+
+
+### Difference between `th:include` and `th:replace` 
+
+And what is the difference between `th:include` and `th:replace`? Whereas `th:include`
+will include the contents of the fragment into its host tag, `th:replace`
 will actually substitute the host tag by the fragment's. So that an HTML5
 fragment like this:
 
@@ -2332,7 +2471,7 @@ fragment like this:
   ...
 
   <div th:include="footer :: copy"></div>
-  <div th:substituteby="footer :: copy"></div>
+  <div th:replace="footer :: copy"></div>
   
 </body>
 ```
@@ -2354,9 +2493,84 @@ fragment like this:
 </body>
 ```
 
+The `th:substituteby` attribute can also be used as an alias for `th:replace`, but the latter is recommended. Note that `th:substituteby` might be deprecated in future versions.
 
 
-8.2 Removing template fragments
+
+8.2 Parameterizable fragment signatures
+---------------------------------------
+
+In order to create a more _function-like_ mechanism for the use of template fragments,
+fragments defined with `th:fragment` can specify a set of parameters:
+	
+```html
+<div th:fragment="frag (onevar,twovar)">
+    <p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+</div>
+```
+
+This requires the use of one of these two syntaxes to call the fragment from `th:include`, 
+`th:replace`:
+
+```html
+<div th:include="::frag (${value1},${value2})">...</div>
+<div th:include="::frag (onevar=${value1},twovar=${value2})">...</div>
+```
+
+Note that order is not important in the last option:
+
+```html
+<div th:include="::frag (twovar=${value2},onevar=${value1})">...</div>
+```
+
+###Fragment local variables without fragment signature
+
+Even if fragments are defined without signature, like this:
+
+```html	
+<div th:fragment="frag">
+    ...
+</div>
+```
+
+We could use the second syntax specified above to call them (and only the second one):
+
+```html	
+<div th:include="::frag (onevar=${value1},twovar=${value2})">
+```
+
+This would be, in fact, equivalent to a combination of `th:include` and `th:with`:
+
+```html	
+<div th:include="::frag" th:with="onevar=${value1},twovar=${value2}">
+```
+
+**Note** that this specification of local variables for a fragment —no matter whether it 
+has a signature or not— does not cause an initialization of the context to zero. Fragments 
+will still be able to access every context variable being used at the calling template 
+like they currently are. 
+
+
+
+###th:assert for in-template assertions
+
+The `th:assert` attribute can specify a comma-separated list of expressions which should be
+evaluated and produce true for every evaluation, raising an exception if not.
+
+```html
+<div th:assert="${onevar},(${twovar} != 43)">...</div>
+```
+
+This comes in handy for validating parameters at a fragment signature:
+
+```html
+<header th:fragment="contentheader(title)" th:assert="${!#strings.isEmpty(title)}">...</header>
+```
+
+
+
+
+8.3 Removing template fragments
 -------------------------------
 
 Let's revisit the last version of our product list template:
@@ -2595,8 +2809,8 @@ And what about that all value in the attribute, what does it mean? Well, in fact
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
  * `tag`: Remove the containing tag, but do not remove its children.
- * `all-but-first`: Remove all children of the containing tag except the first
-   one.
+ * `all-but-first`: Remove all children of the containing tag except the first one.
+ * `none` : Do nothing. This value is useful for dynamic evaluation.
 
 What can that `all-but-first` value be useful for? It will let us save some `th:remove="all"`
 when prototyping:
@@ -2644,10 +2858,28 @@ when prototyping:
 </table>
 ```
 
+The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long as it returns one 
+of the allowed String values (`all`, `tag`, `body`, `all-but-first` or `none`).
+
+This means removals could be conditional, like:
+
+```html
+<a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
+```
+
+Also note that `th:remove` could consider `null` a synonym to `none`, so that the following works
+exactly as the example above:
+
+```html
+<a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
+```
+
+If `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
 
 
 
-9 Local variables
+
+9 Local Variables
 =================
 
 Thymeleaf calls _local variables_ those variables that are defined for a
@@ -2696,6 +2928,12 @@ assignation syntax:
 </div>
 ```
 
+The `th:with` attribute allows reusing variables defined in the same attribute:
+
+```html
+<div th:with="company=${user.company + ' Co.'},account=${accounts[company]}">...</div>
+```
+
 Let's use this in our Grocery's home page! Remember the code we wrote for
 outputting a formatted date?
 
@@ -2741,7 +2979,7 @@ worry because that is exactly what next chapter is about.
 
 
 
-10 Attribute precedence
+10 Attribute Precedence
 =======================
 
 What happens when you write more than one `th:*` attribute in the same tag? For
@@ -2845,13 +3083,140 @@ slightly less readable):
 
 
 
+11. Comments and Blocks
+=======================
 
-11 Inlining
+11.1. Standard HTML/XML comments
+--------------------------------
+
+Standard HTML/XML comments `<!-- ... -->` can be used anywhere in thymeleaf templates. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
+
+```html
+<!-- User info follows -->
+<div th:text="${...}">
+  ...
+</div>
+```
+
+
+11.2. Thymeleaf parser-level comment blocks
+-------------------------------------------
+
+Parser-level comment blocks are code that will be simply removed from the template when thymeleaf parses it. They look like this:
+
+```html
+<!--/* This code will be removed at thymeleaf parsing time! */-->
+``` 
+
+Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can also be used for displaying code when a template is statically open, knowing that it will be removed when thymeleaf processes it:
+
+```html
+<!--/*--> 
+  <div>
+     you can see me only before thymeleaf processes me!
+  </div>
+<!--*/-->
+```
+
+This might come very handy for prototyping tables with a lot of `<tr>`'s, for example:
+
+```html
+<table>
+   <tr th:each="x : ${xs}">
+     ...
+   </tr>
+   <!--/*-->
+   <tr>
+     ...
+   </tr>
+   <tr>
+     ...
+   </tr>
+   <!--*/-->
+</table>
+```
+
+
+11.3. Thymeleaf prototype-only comment blocks
+---------------------------------------------
+
+Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
+
+```html
+<span>hello!</span>
+<!--/*/
+  <div th:text="${...}">
+    ...
+  </div>
+/*/-->
+<span>goodbye!</span>
+```
+
+Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers, but not its contents, which will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
+
+```html
+<span>hello!</span>
+ 
+  <div th:text="${...}">
+    ...
+  </div>
+ 
+<span>goodbye!</span>
+```
+
+As happens with parser-level comment blocks, note that this feature is dialect-independent.
+
+
+11.4. Synthetic `th:block` tag
+------------------------------
+
+Thymeleaf's only element processor (not an attribute) included in the Standard Dialects is `th:block`.
+
+`th:block` is a mere attribute container that allows template developers to specify whichever attributes they want. Thymeleaf will execute these attributes and then simply make the block dissapear without a trace.
+
+So it could be useful, for example, when creating iterated tables that require more than one `<tr>` for each element:
+
+```html
+<table>
+  <th:block th:each="user : ${users}">
+    <tr>
+        <td th:text="${user.login}">...</td>
+        <td th:text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" th:text="${user.address}">...</td>
+    </tr>
+  </th:block>
+</table>
+```
+
+And especially useful when used in combination with prototype-only comment blocks:
+
+```html
+<table>
+    <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+    <tr>
+        <td th:text="${user.login}">...</td>
+        <td th:text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" th:text="${user.address}">...</td>
+    </tr>
+    <!--/*/ </th:block> /*/-->
+</table>
+```
+
+Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks inside `<table>`), and still works OK when open statically in browsers as prototypes! 
+
+
+
+
+12 Inlining
 ===========
 
 
 
-11.1 Text inlining
+12.1 Text inlining
 ------------------
 
 Although the Standard Dialect allows us to do almost everything we might need by
@@ -2920,7 +3285,7 @@ Hello, [[${session.user.name}]]!
 
 
 
-11.2 Script inlining (JavaScript and Dart)
+12.2 Script inlining (JavaScript and Dart)
 ------------------------------------------
 
 Thymeleaf offers a series of "scripting" modes for its inlining capabilities, so
@@ -3092,12 +3457,12 @@ var f = function() {
 
 
 
-12 Validation and Doctypes
+13 Validation and Doctypes
 ==========================
 
 
 
-12.1 Validating templates
+13.1 Validating templates
 -------------------------
 
 As mentioned before, Thymeleaf offers us out-of-the-box two standard template
@@ -3122,7 +3487,7 @@ XHTML standards, but adding all the available `th:*` attributes from the
 Standard Dialect. That's why we have been using this in our templates:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 ```
 
 That `SYSTEM` identifier instructs the Thymeleaf parser to resolve the special
@@ -3138,10 +3503,10 @@ Here you have the complete set of Thymeleaf-enabled `DTD` declarations for all
 the supported flavours of XHTML:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-transitional-thymeleaf-3.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-frameset-thymeleaf-3.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-transitional-thymeleaf-4.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-frameset-thymeleaf-4.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-4.dtd">
 ```
 
 Also note that, in order for your IDE to be happy, and even if you are not
@@ -3155,13 +3520,13 @@ your `html` tag:
 
 
 
-12.2 Doctype translation
+13.2 Doctype translation
 ------------------------
 
 It is fine for our templates to have a `DOCTYPE` like:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 ```
 
 But it would not be fine for our web applications to send XHTML documents with
@@ -3178,7 +3543,7 @@ automatically translate your thymeleaf-specific XHTML `DOCTYPE`s into standard `
 For example, if your template is _XHTML 1.0 Strict_ and looks like this:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -3203,7 +3568,7 @@ will take care of them automatically.
 
 
 
-13 Some more pages for our grocery
+14 Some more Pages for our Grocery
 ==================================
 
 Now we know a lot about using Thymeleaf, we can add some new pages to our
@@ -3214,13 +3579,13 @@ source code if you want to see the corresponding controllers.
 
 
 
-13.1 Order List
+14.1 Order List
 ---------------
 
 Let's start by creating an order list page, `/WEB-INF/templates/order/list.html`:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -3280,14 +3645,14 @@ You've got to love the power of OGNL.
 
 
 
-13.2 Order Details
+14.2 Order Details
 ------------------
 
 Now for the order details page, in which we will make a heavy use of asterisk
 syntax:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -3369,12 +3734,12 @@ Not much really new here, except for this nested object selection:
 
 
 
-14 More on configuration
+15 More on Configuration
 ========================
 
 
 
-14.1 Template Resolvers
+15.1 Template Resolvers
 -----------------------
 
 For our Good Thymes Virtual Grocery, we chose an `ITemplateResolver`
@@ -3492,7 +3857,7 @@ servletContextTemplateResolver.setOrder(Integer.valueOf(2));
 
 
 
-14.2 Message Resolvers
+15.2 Message Resolvers
 ----------------------
 
 We did not explicitly specify a Message Resolver implementation for our Grocery
@@ -3527,7 +3892,7 @@ etc.
 
 
 
-14.3 Logging
+15.3 Logging
 ------------
 
 Thymeleaf pays quite a lot of attention to logging, and always tries to offer
@@ -3567,7 +3932,7 @@ log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=TRACE
 
 
 
-15 Template Cache
+16 Template Cache
 =================
 
 Thymeleaf works thanks to a DOM processing engine and a series of processors
@@ -3631,8 +3996,178 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 
 
 
-16 Appendix: Expression Utility Objects
+17 Appendix A: Expression Basic Objects
 =======================================
+
+Some objects and variable maps are always available to be invoked at variable expressions (executed by OGNL or SpringEL). Let's see them:
+
+### Base objects
+
+ * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
+   `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web). If we are
+   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IContext
+ * ======================================================================
+ */
+
+${#ctx.locale}
+${#ctx.variables}
+
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.IWebContext
+ * ======================================================================
+ */
+
+${#ctx.applicationAttributes}
+${#ctx.httpServletRequest}
+${#ctx.httpServletResponse}
+${#ctx.httpSession}
+${#ctx.requestAttributes}
+${#ctx.requestParameters}
+${#ctx.servletContext}
+${#ctx.sessionAttributes}
+```
+
+ * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+
+```java
+${#locale}
+```
+
+ * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context
+    ((usually the variables contained in `#ctx.variables` plus local ones).
+
+    Unqualified expressions are evaluated against this object. In fact, `${something}` is completely equivalent
+    to (but more beautiful than) `${#vars.something}`.
+
+    `#root` is a synomyn for the same object.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.VariablesMap
+ * ======================================================================
+ */
+
+${#vars.get('foo')}
+${#vars.containsKey('foo')}
+${#vars.size()}
+...
+```
+
+### Web context namespaces for request/session attributes, etc.
+
+When using Thymeleaf in a web environment, we can use a series of shortcuts for accessing request parameters, session attributes and application attributes:
+
+   > Note these are not *context objects*, but maps added to the context as variables, so we access them without `#`. In some way, therefore, they act as *namespaces*.
+
+ * **param** : for retrieving request parameters. `${param.foo}` is a
+   `String[]` with the values of the `foo` request parameter, so `${param.foo[0]}` will normally be used for getting the first value.
+
+```java
+/*
+ * ============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
+ * ============================================================================
+ */
+
+${param.foo}              // Retrieves a String[] with the values of request parameter 'foo'
+${param.size()}
+${param.isEmpty()}
+${param.containsKey('foo')}
+...
+```
+
+ * **session** : for retrieving session attributes.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
+ * ======================================================================
+ */
+
+${session.foo}                 // Retrieves the session atttribute 'foo'
+${session.size()}
+${session.isEmpty()}
+${session.containsKey('foo')}
+...
+```
+
+ * **application** : for retrieving application/servlet context attributes.
+
+```java
+/*
+ * =============================================================================
+ * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
+ * =============================================================================
+ */
+
+${application.foo}              // Retrieves the ServletContext atttribute 'foo'
+${application.size()}
+${application.isEmpty()}
+${application.containsKey('foo')}
+...
+```
+
+Note there is **no need to specify a namespace for accessing request attributes** (as opposed to *request parameters*) because all request attributes are automatically added to the context as variables in the context root:
+
+```java
+${myRequestAttribute}
+```
+
+### Web context objects
+
+Inside a web environment there is also direct access to the following objects (note these are objects, not maps/namespaces):
+
+ * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` object associated with the current request.
+
+```java
+${#httpServletRequest.getAttribute('foo')}
+${#httpServletRequest.getParameter('foo')}
+${#httpServletRequest.getContextPath()}
+${#httpServletRequest.getRequestName()}
+...
+```
+ * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` object associated with the current request.
+
+```java
+${#httpSession.getAttribute('foo')}
+${#httpSession.id}
+${#httpSession.lastAccessedTime}
+...
+```
+
+### Spring context objects
+
+If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access these objects:
+
+ * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
+
+```java
+${#themes.code('foo')}
+```
+
+### Spring beans
+
+Thymeleaf also allows accessing beans registered at your Spring Application Context in the standard way defined  by Spring EL, which is using the syntax `@beanName`, for example:
+
+```html
+<div th:text="${@authService.getUserName()}">...</div>
+```
+
+
+
+
+18 Appendix B: Expression Utility Objects
+=========================================
+
+### Dates
 
  * **\#dates** : utility methods for `java.util.Date` objects:
 
@@ -3703,6 +4238,8 @@ ${#dates.createToday()}
 ```
 
 
+### Calendars
+
  * **\#calendars** : analogous to `#dates`, but for `java.util.Calendar` objects:
 
 ```java
@@ -3766,6 +4303,8 @@ ${#calendars.createNow()}
 ${#calendars.createToday()}
 ```
 
+
+### Numbers
 
  * **\#numbers** : utility methods for number objects:
 
@@ -3853,6 +4392,8 @@ ${#numbers.sequence(from,to)}
 ${#numbers.sequence(from,to,step)}
 ```
 
+
+### Strings
 
  * **\#strings** : utility methods for `String` objects:
 
@@ -3959,8 +4500,23 @@ ${#strings.escapeJava(str)}                         // 
 ${#strings.escapeJavaScript(str)}                   // also array*, list* and set*
 ${#strings.unescapeJava(str)}                       // also array*, list* and set*
 ${#strings.unescapeJavaScript(str)}                 // also array*, list* and set*
+
+/*
+ * Null-safe comparison and concatenation
+ */
+${#strings.equals(str)}
+${#strings.equalsIgnoreCase(str)}
+${#strings.concat(str)}
+${#strings.concatReplaceNulls(str)}
+
+/*
+ * Random
+ */
+${#strings.randomAlphanumeric(count)}
 ```
 
+
+### Objects
 
  * **\#objects** : utility methods for objects in general
 
@@ -3980,6 +4536,9 @@ ${#objects.arrayNullSafe(objArray,default)}
 ${#objects.listNullSafe(objList,default)}
 ${#objects.setNullSafe(objSet,default)}
 ```
+
+
+### Booleans
 
  * **\#bools** : utility methods for boolean evaluation
 
@@ -4027,6 +4586,8 @@ ${#bools.setOr(condSet)}
 ```
 
 
+### Arrays
+
  * **\#arrays** : utility methods for arrays
 
 ```java
@@ -4072,6 +4633,8 @@ ${#arrays.containsAll(array, elements)}
 ```
 
 
+### Lists
+
  * **\#lists** : utility methods for lists
 
 ```java
@@ -4111,6 +4674,8 @@ ${#lists.sort(list, comparator)}
 ```
 
 
+### Sets
+
  * **\#sets** : utility methods for sets
 
 ```java
@@ -4143,6 +4708,8 @@ ${#sets.containsAll(set, elements)}
 ```
 
 
+### Maps
+
  * **\#maps** : utility methods for maps
 
 ```java
@@ -4172,6 +4739,8 @@ ${#maps.containsAllValues(map, value)}
 ```
 
 
+### Aggregates
+
  * **\#aggregates** : utility methods for creating aggregates on arrays or
    collections
 
@@ -4195,6 +4764,8 @@ ${#aggregates.avg(array)}
 ${#aggregates.avg(collection)}
 ```
 
+
+### Messages
 
  * **\#messages** : utility methods for obtaining externalized messages inside
    variables expressions, in the same way as they would be obtained using `#{...}`
@@ -4237,6 +4808,8 @@ ${#messages.setMsgOrNull(messageKeySet)}
 ```
 
 
+### IDs
+
  * **\#ids** : utility methods for dealing with `id` attributes that might be
    repeated (for example, as a result of an iteration).
 
@@ -4264,3 +4837,101 @@ ${#ids.seq('someId')}
 ${#ids.next('someId')}
 ${#ids.prev('someId')}
 ```
+
+
+
+19 Appendix C: DOM Selector syntax
+==================================
+
+DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
+
+For example, the following selector will select every `<div>` with the class `content`, in every position inside the markup:
+
+```html
+<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+```
+
+The basic syntax inspired from XPath includes:
+
+ * `/x` means direct children of the current node with name x.
+
+ * `//x` means children of the current node with name x, at any depth.
+
+ * `x[@z="v"]` means elements with name x and an attribute called z with value "v".
+
+ * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and z2 with values "v1" and "v2", respectively.
+
+ * `x[i]` means element with name x positioned in number i among its siblings.
+
+ * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its siblings that also match this condition.
+
+But more concise syntax can also be used:
+
+ * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level).
+
+ * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value "oneclass".
+
+Advanced attribute selection features:
+
+ * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']` means elements with name `x` and a value for attribute `class` that starts with `section`.
+
+ * Attributes can be specified both starting with `@` (XPath-style) and without (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
+ 
+ * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
+
+Direct _jQuery-like_ selectors:
+
+ * `x.oneclass` is equivalent to `x[class='oneclass']`.
+
+ * `.oneclass` is equivalent to `[class='oneclass']`.
+
+ * `x#oneid` is equivalent to `x[id='oneid']`.
+
+ * `#oneid` is equivalent to `[id='oneid']`.
+
+ * `x%oneref` means nodes -not just elements- with name x that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation.
+
+ * `%oneref` means nodes -not just elements- with any name that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
+
+ * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
+
+The above DOM Selector expression:
+
+```html
+<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+```
+could be written as:
+
+```html
+<div th:include="mytemplate :: [div.content]">...</div>
+```
+
+###Multivalued class matching
+
+DOM Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
+
+For example, `div[class='two']` will match `<div class="one two three" />`
+
+###Optional brackets
+
+The syntax of the fragment inclusion attributes converts every fragment selection into a DOM selection, so brackets `[...]` are not needed (though allowed).
+
+So the following, with no brackets, is equivalent to the bracketed selector seen above:
+
+```html
+<div th:include="mytemplate :: div.content">...</div>
+```
+
+So, summarizing, this:
+
+```html
+<div th:replace="mytemplate :: myfrag">...</div>
+```
+
+Will look for a `th:fragment="myfrag"` fragment signature. But would also look for tags with name `myfrag` if they existed (which they don't, in HTML). Note the difference with:
+
+```html
+<div th:replace="mytemplate :: .myfrag">...</div>
+```
+
+which will actually look for any elements with `class="myfrag"`, without caring about `th:fragment` signatures. 
