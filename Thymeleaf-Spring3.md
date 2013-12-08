@@ -1213,6 +1213,23 @@ Form validation errors can also be displayed outside forms by using variable (`$
 ```
 
 
+8.5 Rich error objects
+----------------------
+
+Thymeleaf offers the possibility to obtain form error information in the form of beans (instead of mere *strings*), with the `fieldName` (String), `message` (String) and `global` (boolean) attributes.
+
+These errors can be obtained by means of the `#fields.detailedErrors()` utility method:
+
+```html
+<ul>
+    <li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+        <span th:text="${e.global}? '*' : ${e.fieldName}">The field name</span> |
+        <span th:text="${e.message}">The error message</span>
+    </li>
+</ul>
+```
+
+
 9 It's still a Prototype!
 =========================
 
