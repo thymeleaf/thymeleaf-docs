@@ -35,7 +35,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-project.version = '2.1.0'
+project.version = '2.1.2'
 project.webAppDirName = "${buildDir}/tmp/html"
 
 project.ext.docsDirTemplates = file("${buildDir}/templates")
