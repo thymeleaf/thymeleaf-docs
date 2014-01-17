@@ -38,13 +38,18 @@ apply plugin: 'jetty'
 project.version = '2.1.2'
 project.webAppDirName = "${buildDir}/jetty"
 
+project.ext.conversions = [
+	articles:  ['html'],
+	tutorials: ['html', 'ebook', 'pdf']
+]
+
 project.ext.srcDir          = file("${buildDir}/tmp")
 project.ext.srcDirTemplates = file("${buildDir}/tmp/templates")
 project.ext.docTypes        = [:]
 
-project.ext.docsDirHtml     = file("${docsDir}/html")
-project.ext.docsDirEbook    = file("${docsDir}/ebook")
-project.ext.docsDirPdf      = file("${docsDir}/pdf")
+project.ext.docsDirHtml  = file("${docsDir}/html")
+project.ext.docsDirEbook = file("${docsDir}/ebook")
+project.ext.docsDirPdf   = file("${docsDir}/pdf")
 
 buildscript {
 	repositories {
@@ -71,7 +76,7 @@ task copyResources() << {
 
 	// Copy all .md files into the same directory
 	fileTree(docsDir) { include '**/*.md' }.each { docFile ->
-		docTypes.put(docFile.name, docFile.parentFile.name)
+		docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		copy {
 			from docFile
 			into srcDir
@@ -123,20 +128,22 @@ task generateDocsHTML(
 
 	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile)
-		def docType     = docTypes.get(docFile.name)
+		def docType     = docTypes.get(docFileBase)
 
-		println "Generating HTML doc for ${docFileBase}..."
-		execute([
-			"pandoc",
-			"--write=html5",
-			"--template=" + file("${srcDirTemplates}/${docType}.html"),
-			"--toc",
-			"--toc-depth=4",
-			"--section-divs",
-			"--no-highlight",	// This doesn't seem to work :(
-			"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
-			"${docFile}"
-		])
+		if (conversions[docType].contains('html')) {
+			println "Generating HTML doc for ${docFileBase}..."
+			execute([
+					"pandoc",
+					"--write=html5",
+					"--template=" + file("${srcDirTemplates}/${docType}.html"),
+					"--toc",
+					"--toc-depth=4",
+					"--section-divs",
+					"--no-highlight",	// This doesn't seem to work :(
+					"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
+					"${docFile}"
+			])
+		}
 	}
 
 	// Copy over resources needed for the HTML docs
@@ -162,9 +169,9 @@ task generateDocsEbook(
 	// Currently only limited to tutorials
 	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
-		def docType     = docTypes.get(docFile.name)
+		def docType     = docTypes.get(docFileBase)
 
-		if (docType == 'tutorials') {
+		if (conversions[docType].contains('ebook')) {
 			println "Generating E-books for ${docFileBase}..."
 			execute([
 					"pandoc",
@@ -244,20 +251,23 @@ task generateDocsPDF(
 
 	fileTree(webAppDirName) { include '*.html' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
+		def docType     = docTypes.get(docFileBase)
 
-		println "Generating PDF doc for ${docFileBase}..."
-		execute([
-			"wkhtmltopdf",
-			"--print-media-type",
-			"--dpi",              "150",
-			"--javascript-delay", "2000",
-			"--margin-bottom",    "15",
-			"--footer-spacing",   "5",
-			"--footer-font-size", "8",
-			"--footer-right",     "Page [page] of [topage]",
-			"http://localhost:8080/thymeleaf-docs/${docFile.name}",
-			file("${docsDirPdf}/${docFileBase}.pdf")
-		])
+		if (conversions[docType].contains('pdf')) {
+			println "Generating PDF doc for ${docFileBase}..."
+			execute([
+				"wkhtmltopdf",
+				"--print-media-type",
+				"--dpi",              "150",
+				"--javascript-delay", "2000",
+				"--margin-bottom",    "15",
+				"--footer-spacing",   "5",
+				"--footer-font-size", "8",
+				"--footer-right",     "Page [page] of [topage]",
+				"http://localhost:8080/thymeleaf-docs/${docFile.name}",
+				file("${docsDirPdf}/${docFileBase}.pdf")
+			])
+		}
 	}
 
 	jettyStop.execute()
