@@ -36,20 +36,79 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 project.version = '2.1.2'
-project.webAppDirName = "${buildDir}/tmp/html"
+project.webAppDirName = "${buildDir}/jetty"
 
-project.ext.docsDirTemplates = file("${buildDir}/templates")
-project.ext.docsDirStyles    = file("${projectDir}/styles")
-project.ext.docsDirHtml      = file("${docsDir}/html")
-project.ext.docsDirEbook     = file("${docsDir}/ebook")
-project.ext.docsDirPdf       = file("${docsDir}/pdf")
+project.ext.srcDir          = file("${buildDir}/tmp")
+project.ext.srcDirTemplates = file("${buildDir}/tmp/templates")
+project.ext.docTypes        = [:]
+
+project.ext.docsDirHtml     = file("${docsDir}/html")
+project.ext.docsDirEbook    = file("${docsDir}/ebook")
+project.ext.docsDirPdf      = file("${docsDir}/pdf")
 
 buildscript {
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0'
+		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.1'
+	}
+}
+
+/**
+ * Flatten the directory structure of the docs and resources, putting the
+ * markdown files at the head of a directory and all resources are
+ * subdirectories, needed for some doc types where external resource paths are
+ * always relative to the markdown file.
+ */
+task copyResources() << {
+
+	def docsDir      = file("${projectDir}/docs")
+	def imagesDir    = file("${projectDir}/images")
+	def scriptsDir   = file("${projectDir}/scripts")
+	def stylesDir    = file("${projectDir}/styles")
+	def templatesDir = file("${projectDir}/templates")
+
+	// Copy all .md files into the same directory
+	fileTree(docsDir) { include '**/*.md' }.each { docFile ->
+		docTypes.put(docFile.name, docFile.parentFile.name)
+		copy {
+			from docFile
+			into srcDir
+		}
+	}
+
+	// Copy all resource directories straight over
+	[imagesDir, scriptsDir].each { dir ->
+		copy {
+			from dir
+			into "${srcDir.path}/${dir.name}"
+		}
+	}
+
+	// Copy over stylesheets, compiling LessCSS files into CSS
+	copy {
+		from(stylesDir) {
+			exclude '**/*.less'
+		}
+		into "${srcDir.path}/styles"
+	}
+	LessCSSCompiler compiler = new LessCSSCompiler()
+	fileTree(stylesDir) { include '**/*.less' }.each { lessFile ->
+		def lessFileBase = fileBaseName(lessFile)
+		compiler.compile(lessFile, file("${srcDir.path}/styles/${lessFileBase}.css"))
+	}
+
+	// Preprocess the template files to insert the correct document date and project version
+	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
+	copy {
+		from(templatesDir) {
+			filter(ReplaceTokens, tokens: [
+					documentVersion: documentVersion,
+					projectVersion:  project.version
+			])
+		}
+		into srcDirTemplates
 	}
 }
 
@@ -57,36 +116,20 @@ buildscript {
  * Generate HTML versions of the Thymeleaf documentation.
  */
 task generateDocsHTML(
+	dependsOn: copyResources,
 	description: "Generate HTML docs from Thymeleaf's markdown docs") << {
 
-	def dateFormat = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH)
-
-	// Preprocess the template files to insert the correct document date and project version
-	mkdir docsDirTemplates
-	copy {
-		from('templates') {
-			filter(ReplaceTokens, tokens:[
-				documentVersion: dateFormat.format(new Date()),
-				projectVersion:  project.version
-			])
-		}
-		into docsDirTemplates
-	}
-
-	// Generate the HTML documents from the markdown files, using the updated templates
 	mkdir docsDirHtml
 
-	fileTree('.') {
-		include '*.md'
-		exclude 'README.md'
-	}.each { docFile ->
-		def docFileBase = fileBaseName(docFile);
+	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
+		def docFileBase = fileBaseName(docFile)
+		def docType     = docTypes.get(docFile.name)
 
 		println "Generating HTML doc for ${docFileBase}..."
 		execute([
 			"pandoc",
 			"--write=html5",
-			"--template=" + file("${docsDirTemplates}/thymeleaf.html"),
+			"--template=" + file("${srcDirTemplates}/${docType}.html"),
 			"--toc",
 			"--toc-depth=4",
 			"--section-divs",
@@ -95,55 +138,51 @@ task generateDocsHTML(
 			"${docFile}"
 		])
 	}
-        // Copy over and process any resources needed for the HTML docs
-        copy {
-                from(projectDir) {
-                        include 'images/**'
-                        include 'scripts/**'
-                        include 'styles/**'
-                        exclude 'styles/**/*.less'
-                }
-                into docsDirHtml
-        }
-        LessCSSCompiler compiler = new LessCSSCompiler()
-        fileTree('styles') { include '**/*.less' }.each { lessFile ->
-                def lessFileBase = fileBaseName(lessFile)
-                compiler.compile(lessFile, file("${docsDirHtml}/styles/${lessFileBase}.css"))
-        }
+
+	// Copy over resources needed for the HTML docs
+	copy {
+		from(srcDir) {
+			include 'images/**'
+			include 'scripts/**'
+			include 'styles/**'
+		}
+		into docsDirHtml
+	}
 }
 
 /**
  * Generate e-books of the Thymeleaf documentation.
  */
 task generateDocsEbook(
-	dependsOn: generateDocsHTML,
+	dependsOn: copyResources,
 	description: "Generate e-books from Thymeleaf's markdown docs") << {
 
 	mkdir docsDirEbook
 
-	fileTree('.') {
-		include '*.md'
-		exclude 'README.md'
-	}.each { docFile ->
+	// Currently only limited to tutorials
+	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
+		def docType     = docTypes.get(docFile.name)
 
-		println "Generating E-books for ${docFileBase}..."
-		execute([
-			"pandoc",
-			"--write=epub",
-			"--template=" + file("${docsDirTemplates}/thymeleaf.epub"),
-			"--data-dir=" + file("${docsDirStyles}"),
-			"--toc",
-			"--toc-depth=4",
-			"--section-divs",
-			"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
-			"${docFile}"
-		])
-		execute([
-			"ebook-convert",
-			file("${docsDirEbook}/${docFileBase}.epub"),
-			file("${docsDirEbook}/${docFileBase}.mobi")
-		])
+		if (docType == 'tutorials') {
+			println "Generating E-books for ${docFileBase}..."
+			execute([
+					"pandoc",
+					"--write=epub",
+					"--template=" + file("${srcDirTemplates}/${docType}.epub"),
+//					"--data-dir=" + file("${docsDirStyles}"),
+					"--toc",
+					"--toc-depth=4",
+					"--section-divs",
+					"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
+					"${docFile}"
+			])
+			execute([
+					"ebook-convert",
+					file("${docsDirEbook}/${docFileBase}.epub"),
+					file("${docsDirEbook}/${docFileBase}.mobi")
+			])
+		}
 	}
 }
 
@@ -182,7 +221,7 @@ task generateDocsPDF(
 	// Copy over the HTML documents into a directory from which we can host them
 	// using the Jetty server
 	copy {
-		from(docsDirHtml)
+		from docsDirHtml
 		into webAppDirName
 	}
 
@@ -203,9 +242,7 @@ task generateDocsPDF(
 	// Generate the PDF documents from the modified HTML documents
 	mkdir docsDirPdf
 
-	fileTree(webAppDirName) {
-		include '*.html'
-	}.each { docFile ->
+	fileTree(webAppDirName) { include '*.html' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
 
 		println "Generating PDF doc for ${docFileBase}..."

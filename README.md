@@ -38,8 +38,8 @@ sources to HTML, e-books and PDF. The following Gradle tasks perform these jobs:
 
 The generated docs will end up in the `build/docs` directory.
 
-Pandoc is used to convert the Markdown sources into HTML, using the `templates/thymeleaf.html`
-template.
+Pandoc is used to convert the Markdown sources into HTML, using the appropriate
+HTML template in the `templates` directory.
 
 Pandoc is also used to generate e-books in EPUB format.
 

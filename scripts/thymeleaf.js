@@ -19,7 +19,6 @@
  * 
  * @author Emanuel Rabina
  */
-
 $(document).ready(function() {
 
 	// Add class names to the various table-of-contents levels so they're easier
