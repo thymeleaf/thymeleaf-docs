@@ -284,7 +284,7 @@ To get started with Tiles Dialect we need to include it into the `pom.xml`. The 
     <dependency>
         <groupId>org.thymeleaf.extras</groupId>
         <artifactId>thymeleaf-extras-tiles2</artifactId>
-        <version>2.1.0.RELEASE</version>
+        <version>2.1.1.RELEASE</version>
     </dependency>
 
 We will also need to configure the integration by adding a view resolver bean that will resolve Tiles views, a Tiles Configurer bean and of course the additional dialect to our template engine. Let's go through it really quickly:
@@ -305,7 +305,7 @@ This view resolver will resolve Tiles views. We will configure it to have lower 
 
   - Basic view resolver
 
-The basic view resolver will **not** resolve the views whose names start with `message/*` -- those are our Tiles-based views, and they will be resolved by the previous `ViewResolver` bean. This is very important, if we want to have several view resolvers in the application working alongside.
+The basic view resolver will **not** resolve the views whose names start with `message/*` -- those are our Tiles-based views, and they will be resolved by the previous `ViewResolver` bean. This is very important, if we want to have several view resolvers in the application working alongside:
 
     @Bean
     public ViewResolver thymeleafViewResolver() {
@@ -320,7 +320,7 @@ The basic view resolver will **not** resolve the views whose names start with `m
 
  - Template engine
 
-We need to add the `Tiles Dialect` to the template engine.
+We need to add the `Tiles Dialect` to the template engine:
 
     @Bean
     public SpringTemplateEngine templateEngine() {
