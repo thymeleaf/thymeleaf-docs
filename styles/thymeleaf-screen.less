@@ -28,17 +28,22 @@ body {
 
 #documentation-wrapper {
 	margin: 0 auto;
-	max-width: 90.625em;
 	padding: 1em;
+}
+
+.tutorial #documentation-wrapper {
+	max-width: 90.625em;
 }
 
 
 /* Title block */
 /* -------------------------------------------------------------------------- */
 
-#title-block-wrapper {
-	margin-left: 25%;
-	padding-left: 1.5em;
+.tutorial {
+	#title-block-wrapper {
+		margin-left: 25%;
+		padding-left: 1.5em;
+	}
 }
 
 #title-block {
@@ -57,24 +62,33 @@ body {
 /* Table of contents */
 /* -------------------------------------------------------------------------- */
 
-#toc-wrapper {
-	bottom: 1em;
-	max-width: 20.625em;
-	position: fixed;
-	top: 1em;
-	width: 25%;
+.tutorial {
+	#toc-wrapper {
+		bottom: 1em;
+		max-width: 20.625em;
+		position: fixed;
+		top: 1em;
+		width: 25%;
+	}
 }
 
 
 /* Documentation content */
 /* -------------------------------------------------------------------------- */
 
-#content {
-	margin-left: 25%;
-	padding-left: 1.5em;
+.article #content {
+	margin: 0 auto;
+	max-width: 51.4375em;
+}
 
-	@media (min-width: 83.75em) {
-		margin-left: 20.125em;
+.tutorial {
+	#content {
+		margin-left: 25%;
+		padding-left: 1.5em;
+
+		@media (min-width: 83.75em) {
+			margin-left: 20.125em;
+		}
 	}
 }
 
