@@ -1,5 +1,5 @@
 
-# Thymeleaf layouts #
+# Thymeleaf Page Layouts #
 
 [TOC]
 
@@ -12,7 +12,7 @@ Usually websites share common page components like the header, footer, menu and 
 In this style pages are built by embedding common page component code directly within each view to generate the final result. In Thymeleaf this can be done using **Thymeleaf Standard Layout System**:
 
     <body>
-      <div th:include="footer :: copy"></div>
+      <div th:include="footer :: copy">...</div>
     </body>
 
 The include-style layouts are pretty simple to understand and implement and in fact they offer flexibility in developing views, which is their biggest advantage. The main disadvantage of this solution, though, is that some code duplication is introduced so modifying the layout of a large number of views in big applications can become a bit cumbersome.
@@ -35,7 +35,7 @@ Thymeleaf Standard Layout System offers page fragment inclusion that is similar 
 
 Thymeleaf can include parts of other pages as fragments (whereas JSP only includes complete pages) using `th:include` (will include the contents of the fragment into its host tag) or `th:replace` (will actually substitute the host tag by the fragment's). This allows the grouping of fragments into one or several pages. Look at the example. The `home/homeNotSignedIn.html` template is rendered when the anonymous user enters the home page of our application.
 
-`src/main/java/thymeleafexamples/layouts/home/HomeController.java`
+Class `thymeleafexamples.layouts.home.HomeController`
 
     @Controller
     public class HomeController {
@@ -46,7 +46,7 @@ Thymeleaf can include parts of other pages as fragments (whereas JSP only includ
     	}
     }
 
-`home/homeNotSignedIn.html`
+Template `home/homeNotSignedIn.html`
     
     <!DOCTYPE html>
     <html>
@@ -100,7 +100,7 @@ Let's shortly analyze the inclusion statement: `<div th:replace="fragments/heade
 
 Header and footer are defined in the following files:
 
-`fragments/header.html`
+Template `fragments/header.html`
     
     <!DOCTYPE html>
     <html>
@@ -109,16 +109,40 @@ Header and footer are defined in the following files:
     </head>
     <body>
     <div class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
-        ...
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">My project</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#" th:href="@{/}">Home</a></li>
+            <li><a href="#" th:href="@{/message}">Messages</a></li>
+            <li><a href="#" th:href="@{/task}">Tasks</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${#authorization.expression('!isAuthenticated()')}">
+              <a href="/signin" th:href="@{/signin}">Sign in</a>
+            </li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+              <a href="/logout" th:href="@{/logout}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     </body>
     </html>
 
-You can open the file directly in a browser:
+...which we can open directly in a browser:
 
 ![fragments/header.html][2]
 
-`fragments/footer.html`
+And template `fragments/footer.html`
     
     <!DOCTYPE html>
     <html>
@@ -127,20 +151,20 @@ You can open the file directly in a browser:
     </head>
     <body>
         <div th:fragment="footer">
-            ...
+            &copy; 2013 Footer
         </div>
     </body>
     </html>
 
-Note how that the referenced fragments are specified with `th:fragment` attributes. This way we can defined multiple fragments in one template file, as it was mentioned earlier.
+Note how that the referenced fragments are specified with `th:fragment` attributes. This way we can define multiple fragments in one template file, as it was mentioned earlier.
 
-What is important here, is that all the templates are still natural templates and can be viewed in a browser without a running server.
+What is important here, is that all the templates can still be natural templates and can be viewed in a browser without a running server.
 
 ### Including with DOM Selectors ###
 
-In Thymeleaf, fragments don't need to be explicitly specified using `th:fragment` at the page they are extracted from. Thymeleaf can select any fragment of any page as a fragment (even a page living on an external server) by means of its DOM Selector syntax, similar to XPath expressions and CSS selectors. 
+In Thymeleaf, fragments don't need to be explicitly specified using `th:fragment` at the page they are extracted from. Thymeleaf can select an arbitrary section of a page as a fragment (even a page living on an external server) by means of its DOM Selector syntax, similar to XPath expressions and CSS selectors. 
 
-    <div th:include="http://www.thymeleaf.org :: p.notice" />
+    <div th:include="http://www.thymeleaf.org :: p.notice" >...</div>
 
 The above code will include a paragraph with `class="notice"` from `thymeleaf.org`. In order to make it happen, the template engine must be configured with `UrlTemplateResolver`:
 
@@ -173,10 +197,10 @@ In `templatename :: domselector`, both `templatename` and `domselector` can be f
     <body>
         <!-- /*  Multiple fragments may be defined in one file */-->
         <div th:fragment="footer">
-           Content of a regular footer goes here
+           &copy; 2013 Footer
         </div>
         <div th:fragment="footer-admin">
-            Content of an admin footer goes here
+           &copy; 2013 Admin Footer
         </div>
     </body>
     </html>
@@ -236,7 +260,7 @@ Fragments can be directly specified from a Spring MVC controller, i.e. `signup :
         return SIGNUP_VIEW_NAME;
 	}
 
-The fragment is defined in `/WEB-INF/views/signup/signup.html`:
+The fragment is defined in `signup/signup.html`:
     
     <!DOCTYPE html>
     <html>
@@ -250,7 +274,7 @@ The fragment is defined in `/WEB-INF/views/signup/signup.html`:
     </body>
     </html>
     
-The above fragment is loaded when a new user wants to signup from a home page. The modal dialog will be shown upon clicking `Signup` button and the content will be loaded via AJAX call (see `/WEB-INF/views/home/homeNotSignedIn.html`).
+The above fragment is loaded when a new user wants to signup from a home page. The modal dialog will be shown upon clicking `Signup` button and the content will be loaded via AJAX call (see `home/homeNotSignedIn.html`).
 
 ### References ###
 
@@ -273,7 +297,7 @@ Thymol documentation and examples can be found on the official project site here
 
 ## Thymeleaf Tiles Integration ##
 
-The **[Apache Tiles 2 Dialect][10]** was created in order to provide a more comfortable migration path to all those developers who are currently using Apache Tiles 2 with JSP. **[Tiles][11]** is one of the most used Java templating framework, and a lot of JSP users are used to thinking in terms of Tiles when it comes to layout.
+The **[Apache Tiles 2 Dialect][10]** was created in order to provide a more comfortable migration path to all those developers who are currently using Apache Tiles 2 with JSP. **[Tiles][11]** is one of the most used Java templating frameworks, and a lot of JSP users are used to thinking in terms of Tiles when it comes to layout.
 
 Tiles dialect offers the possibility to go on doing layouts in the same way with Thymeleaf! In addition, The Tiles dialect allows mixing JSPs and Thymeleaf, so that migrating JSP applications gets much easier.
 
@@ -286,6 +310,7 @@ To get started with Tiles Dialect we need to include it into the `pom.xml`. The 
         <artifactId>thymeleaf-extras-tiles2</artifactId>
         <version>2.1.1.RELEASE</version>
     </dependency>
+	<!-- Only if you use Spring (can be -spring3 if using that version) -->
     <dependency>
         <groupId>org.thymeleaf.extras</groupId>
         <artifactId>thymeleaf-extras-tiles2-spring4</artifactId>
@@ -499,7 +524,7 @@ The layout file is defined in `/WEB-INF/views/task/layout.html`:
       </body>
     </html>
 
-You can open the file directly in a browser:
+We can open the file directly in a browser:
 
 ![task/layout.html][15]
 
