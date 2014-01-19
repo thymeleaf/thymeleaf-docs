@@ -635,7 +635,7 @@ And the layout file (2):
         ...
     </head>
     <body>
-    <div th:raplace="fragments/header :: header">Header</div>
+    <div th:replace="fragments/header :: header">Header</div>
     <div th:replace="${view} :: content">Page Content</div>
     <div th:replace="fragments/footer :: footer">Footer</div>
     </body>
@@ -670,7 +670,7 @@ The Apache Tiles integration module currently only supports Tiles 2 integration.
 
 ## Summary ##
 
-In this article, I described many ways of achieving the same: **layouts**. You can build layouts using Thymeleaf Standard Layout System that is based on include-style approach. You can use Apache Tiles with Tiles Dialect, if you are either migrating from Tiles or if Tiles is your choice. You also have powerful Layout Dialect, that uses decorator pattern for working with layout files. Finally, you can easily create your own solution. Hopefully, this article gives you some more insights on the topic and you will find your preferred approach depending on your needs.
+In this article, we described many ways of achieving the same: **layouts**. You can build layouts using Thymeleaf Standard Layout System that is based on include-style approach. You can use Apache Tiles with Tiles Dialect, if you are either migrating from Tiles or if Tiles is your choice. You also have powerful Layout Dialect, that uses decorator pattern for working with layout files. Finally, you can easily create your own solution. Hopefully, this article gives you some more insights on the topic and you will find your preferred approach depending on your needs.
 
 
   [1]: https://drive.google.com/uc?export=view&id=0B0b09VuqaAG8RmJmR0ZHMmF0WjA
