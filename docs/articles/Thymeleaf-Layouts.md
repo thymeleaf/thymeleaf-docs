@@ -286,6 +286,11 @@ To get started with Tiles Dialect we need to include it into the `pom.xml`. The 
         <artifactId>thymeleaf-extras-tiles2</artifactId>
         <version>2.1.1.RELEASE</version>
     </dependency>
+    <dependency>
+        <groupId>org.thymeleaf.extras</groupId>
+        <artifactId>thymeleaf-extras-tiles2-spring4</artifactId>
+        <version>2.1.1.RELEASE</version>
+    </dependency>
 
 We will also need to configure the integration by adding a view resolver bean that will resolve Tiles views, a Tiles Configurer bean and of course the additional dialect to our template engine. Let's go through it really quickly:
 
@@ -480,6 +485,7 @@ The layout file is defined in `/WEB-INF/view/task/layout.html`:
         <div th:replace="fragments/footer :: footer">&nbsp;</div>
     </div>
     </body>
+	</html>
 
 You can open the file directly in a browser:
 
