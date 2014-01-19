@@ -464,28 +464,40 @@ No other changes are required.
 
 ### Creating a layout ###
 
-The layout file is defined in `/WEB-INF/view/task/layout.html`:
+The layout file is defined in `/WEB-INF/views/task/layout.html`:
 
     <!DOCTYPE html>
     <html>
-    <head>
-        <!-- /*  Each token will be replaced by their respective titles in the resulting page. */ -->
+      <head>
+        <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
         <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Task List</title>
-        
         ...
-        
-    </head>
-    <body>
-    <!-- /* Standard layout can be mixed with Layout Dialect */ -->
-    <div th:replace="fragments/header :: header">&nbsp;</div>
-    <div class="container">
-        <div layout:fragment="content">
-            <p>Page content goes here</p>
+      </head>
+      <body>
+        <!--/* Standard layout can be mixed with Layout Dialect */-->
+        <div th:replace="fragments/header :: header">
+          ...
         </div>
-        <div th:replace="fragments/footer :: footer">&nbsp;</div>
-    </div>
-    </body>
-	</html>
+        <div class="container">
+          <div layout:fragment="content">
+            <!-- ============================================================================ -->
+            <!-- This content is only used for static prototyping purposes (natural templates)-->
+            <!-- and is therefore entirely optional, as this markup fragment will be included -->
+            <!-- from "fragments/header.html" at runtime.                                     -->
+            <!-- ============================================================================ -->
+            <h1>Static content for prototyping purposes only</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+              Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+              Phasellus et placerat elit.
+            </p>
+          </div>
+          <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
+        </div>
+      </body>
+    </html>
 
 You can open the file directly in a browser:
 
