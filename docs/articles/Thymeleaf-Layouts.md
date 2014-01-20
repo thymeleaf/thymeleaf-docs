@@ -533,7 +533,7 @@ The above file is our decorator for content pages we will be creating in the app
 The content page looks as follows (`WEB-INF/views/task/list.html`):
     
     <!DOCTYPE html>
-    <html>
+    <html layout:decorator="task/layout">
     <head>
         <title>Task List</title>
         
