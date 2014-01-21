@@ -25,11 +25,11 @@ so we simply set URLs for login page and login error page as
 configuration file (usually **applicationContext-security.xml**):
 
 ```html
-&lt;http auto-config=&quot;true&quot;&gt;
-&lt;form-login login-page=&quot;/login.html&quot; authentication-failure-url=&quot;/login-error.html&quot; /&gt;
-&lt;logout /&gt;
-...
-&lt;/http&gt;
+<http auto-config="true">
+  <form-login login-page="/login.html" authentication-failure-url="/login-error.html" />
+  <logout />
+  ...
+</http>
 ```
 
 Now we have to match these pages inside a Spring Controller:
@@ -38,20 +38,20 @@ Now we have to match these pages inside a Spring Controller:
 @Controller
 public class MainController {
 
-...
+  ...
 
-// Login form
-@RequestMapping(&quot;/login.html&quot;)
-public String login() {
-return &quot;login.html&quot;;
-}
+  // Login form
+  @RequestMapping("/login.html")
+  public String login() {
+    return "login.html";
+  }
 
-// Login form with error
-@RequestMapping(&quot;/login-error.html&quot;)
-public String loginError(Model model) {
-model.addAttribute(&quot;loginError&quot;, true);
-return &quot;login.html&quot;;
-}
+  // Login form with error
+  @RequestMapping("/login-error.html")
+  public String loginError(Model model) {
+    model.addAttribute("loginError", true);
+    return "login.html";
+  }
 
 }
 ```
@@ -62,23 +62,23 @@ but when there is an error, we set a boolean attribute into the model.
 Our **login.html** template is as follows:
 
 ```html
-&lt;!DOCTYPE html&gt;
-&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
-&lt;head&gt;
-&lt;title&gt;Login page&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Login page&lt;/h1&gt;
-&lt;p th:if=&quot;${loginError}&quot;&gt;Wrong user or password&lt;/p&gt;
-&lt;form th:action=&quot;@{/j_spring_security_check}&quot; method=&quot;post&quot;&gt;
-&lt;label for=&quot;j_username&quot;&gt;Username&lt;/label&gt;:
-&lt;input type=&quot;text&quot; id=&quot;j_username&quot; name=&quot;j_username&quot; /&gt; &lt;br /&gt;
-&lt;label for=&quot;j_password&quot;&gt;Password&lt;/label&gt;:
-&lt;input type=&quot;password&quot; id=&quot;j_password&quot; name=&quot;j_password&quot; /&gt; &lt;br /&gt;
-&lt;input type=&quot;submit&quot; value=&quot;Log in&quot; /&gt;
-&lt;/form&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Login page</title>
+  </head>
+  <body>
+    <h1>Login page</h1>
+    <p th:if="${loginError}">Wrong user or password</p>
+    <form th:action="@{/j_spring_security_check}" method="post">
+      <label for="j_username">Username</label>:
+      <input type="text" id="j_username" name="j_username" /> <br />
+      <label for="j_password">Password</label>:
+      <input type="password" id="j_password" name="j_password" /> <br />
+      <input type="submit" value="Log in" />
+    </form>
+  </body>
+</html>
 ```
 
 Error page
@@ -90,14 +90,14 @@ adding error **\<error-page\>** elements like:
 
 ```xml
 ...
-&lt;error-page&gt;
-&lt;exception-type&gt;java.lang.Throwable&lt;/exception-type&gt;
-&lt;location&gt;/error.html&lt;/location&gt;
-&lt;/error-page&gt;
-&lt;error-page&gt;
-&lt;error-code&gt;500&lt;/error-code&gt;
-&lt;location&gt;/error.html&lt;/location&gt;
-&lt;/error-page&gt;
+<error-page>
+  <exception-type>java.lang.Throwable</exception-type>
+  <location>/error.html</location>
+</error-page>
+<error-page>
+  <error-code>500</error-code>
+  <location>/error.html</location>
+</error-page>
 ...
 ```
 
@@ -107,20 +107,20 @@ Then, we have to map the **/error.html** in our Spring Controller:
 @Controller
 public class HomeController {
 
-...
+  ...
 
-// Error page
-@RequestMapping(&quot;/error.html&quot;)
-public String error(HttpServletRequest request, Model model) {
-model.addAttribute(&quot;errorCode&quot;, request.getAttribute(&quot;javax.servlet.error.status_code&quot;));
-Throwable throwable = (Throwable) request.getAttribute(&quot;javax.servlet.error.exception&quot;);
-String errorMessage = null;
-if (throwable != null) {
-errorMessage = throwable.getMessage();
-}
-model.addAttribute(&quot;errorMessage&quot;, errorMessage.toString());
-return &quot;error.html&quot;;
-}
+  // Error page
+  @RequestMapping("/error.html")
+  public String error(HttpServletRequest request, Model model) {
+    model.addAttribute("errorCode", request.getAttribute("javax.servlet.error.status_code"));
+    Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
+    String errorMessage = null;
+    if (throwable != null) {
+      errorMessage = throwable.getMessage();
+    }
+    model.addAttribute("errorMessage", errorMessage.toString());
+    return "error.html";
+  }
 
 }
 ```
@@ -131,16 +131,16 @@ some information in the error page.
 The **error.html** template could be like:
 
 ```html
-&lt;!DOCTYPE html&gt;
-&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
-&lt;head&gt;
-&lt;title&gt;Error page&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1 th:text=&quot;${errorCode}&quot;&gt;500&lt;/h1&gt;
-&lt;p th:text=&quot;${errorMessage}&quot;&gt;java.lang.NullPointerException&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Error page</title>
+  </head>
+  <body>
+    <h1 th:text="${errorCode}">500</h1>
+    <p th:text="${errorMessage}">java.lang.NullPointerException</p>
+  </body>
+</html>
 ```
 
 Spring security dialect
@@ -158,12 +158,12 @@ The attribute **sec:authorize** renders its content when the attribute
 expression is evaluated to **true**:
 
 ```html
-&lt;div sec:authorize=&quot;hasRole('ROLE_ADMIN')&quot;&gt;
-This content is only shown to administrators.
-&lt;/div&gt;
-&lt;div sec:authorize=&quot;hasRole('ROLE_USER')&quot;&gt;
-This content is only shown to users.
-&lt;/div&gt;
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+  This content is only shown to administrators.
+</div>
+<div sec:authorize="hasRole('ROLE_USER')">
+  This content is only shown to users.
+</div>
 ```
 
 The attribute **sec:authentication** is used to print logged user name
@@ -171,7 +171,7 @@ and roles:
 
 ```html
 Logged user: <span sec:authentication="name">Bob</span>
-Roles: &lt;span sec:authentication=&quot;principal.authorities&quot;&gt;[ROLE_USER, ROLE_ADMIN]&lt;/span&gt;
+Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
 ```
 
 Download example

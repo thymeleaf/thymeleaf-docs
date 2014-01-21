@@ -205,9 +205,9 @@ th:href="@{/webjars/bootstrap/2.3.0/css/bootstrap.min.css}" rel="stylesheet" />
 th:href="@{/resources/css/petclinic.css}" rel="stylesheet" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"
-th:src="@{/webjars/jquery/1.9.0/jquery.js}">&lt;/script>
+th:src="@{/webjars/jquery/1.9.0/jquery.js}"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"
-th:src="@{/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js}">&lt;/script>
+th:src="@{/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js}"></script>
 
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css"
 th:href="@{/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css}"

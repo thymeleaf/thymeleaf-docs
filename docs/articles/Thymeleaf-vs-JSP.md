@@ -52,57 +52,58 @@ And this is our JSP code, making use of both JSTL (`core`) and Spring
 (`tags` and `form`) JSP tag libraries:
 
 ```html
-&lt;%@ taglib prefix=&quot;sf&quot; uri=&quot;http://www.springframework.org/tags/form&quot; %&gt;&lt;%@
-taglib prefix=&quot;s&quot; uri=&quot;http://www.springframework.org/tags&quot; %&gt;&lt;%@
-taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;&lt;%@
-page contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;&lt;!DOCTYPE html&gt;
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 
-&lt;html&gt;
+<html>
 
-&lt;head&gt;
-&lt;title&gt;Spring MVC view layer: Thymeleaf vs. JSP&lt;/title&gt;
-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
-&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;all&quot; href=&quot;&lt;s:url value='/css/thvsjsp.css' /&gt;&quot;/&gt;
-&lt;/head&gt;
+  <head>
+    <title>Spring MVC view layer: Thymeleaf vs. JSP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" href="<s:url value='/css/thvsjsp.css' />"/>
+  </head>
 
-&lt;body&gt;
+  <body>
 
-&lt;h2&gt;This is a JSP&lt;/h2&gt;
+    <h2>This is a JSP</h2>
 
-&lt;s:url var=&quot;formUrl&quot; value=&quot;/subscribejsp&quot; /&gt;
-&lt;sf:form modelAttribute=&quot;subscription&quot; action=&quot;${formUrl}&quot;&gt;
+    <s:url var="formUrl" value="/subscribejsp" />
+    <sf:form modelAttribute="subscription" action="${formUrl}">
 
-&lt;fieldset&gt;
+      <fieldset>
 
-&lt;div&gt;
-&lt;label for=&quot;email&quot;&gt;&lt;s:message code=&quot;subscription.email&quot; /&gt;: &lt;/label&gt;
-&lt;sf:input path=&quot;email&quot; /&gt;
-&lt;/div&gt;
-&lt;div&gt;
-&lt;label&gt;&lt;s:message code=&quot;subscription.type&quot; /&gt;: &lt;/label&gt;
-&lt;ul&gt;
-&lt;c:forEach var=&quot;type&quot; items=&quot;${allTypes}&quot; varStatus=&quot;typeStatus&quot;&gt;
-&lt;li&gt;
-&lt;sf:radiobutton path=&quot;subscriptionType&quot; value=&quot;${type}&quot; /&gt;
-&lt;label for=&quot;subscriptionType${typeStatus.count}&quot;&gt;
-&lt;s:message code=&quot;subscriptionType.${type}&quot; /&gt;
-&lt;/label&gt;
-&lt;/li&gt;
-&lt;/c:forEach&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
+        <div>
+          <label for="email"><s:message code="subscription.email" />: </label>
+          <sf:input path="email" />
+        </div>
+        <div>
+          <label><s:message code="subscription.type" />: </label>
+          <ul>
+            <c:forEach var="type" items="${allTypes}" varStatus="typeStatus">
+              <li>
+                <sf:radiobutton path="subscriptionType" value="${type}" />
+                <label for="subscriptionType${typeStatus.count}">
+                  <s:message code="subscriptionType.${type}" />
+                </label>
+              </li>
+            </c:forEach>
+          </ul>
+        </div>
 
-&lt;div class=&quot;submit&quot;&gt;
-&lt;button type=&quot;submit&quot; name=&quot;save&quot;&gt;&lt;s:message code=&quot;subscription.submit&quot; /&gt;&lt;/button&gt;
-&lt;/div&gt;
+        <div class="submit">
+          <button type="submit" name="save"><s:message code="subscription.submit" /></button>
+        </div>
 
-&lt;/fieldset&gt;
+      </fieldset>
 
-&lt;/sf:form&gt;
+    </sf:form>
 
-&lt;/body&gt;
+  </body>
 
-&lt;/html&gt;
+</html>
 ```
 
 Doing it with Thymeleaf
@@ -115,52 +116,52 @@ Now, let's do the same with Thymeleaf. This is our page:
 And this is our Thymeleaf code:
 
 ```html
-&lt;!DOCTYPE html&gt;
+<!DOCTYPE html>
 
-&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+<html xmlns:th="http://www.thymeleaf.org">
 
-&lt;head&gt;
-&lt;title&gt;Spring MVC view layer: Thymeleaf vs. JSP&lt;/title&gt;
-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
-&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;all&quot;
-href=&quot;../../css/thvsjsp.css&quot; th:href=&quot;@{/css/thvsjsp.css}&quot;/&gt;
-&lt;/head&gt;
+  <head>
+    <title>Spring MVC view layer: Thymeleaf vs. JSP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all"
+      href="../../css/thvsjsp.css" th:href="@{/css/thvsjsp.css}"/>
+  </head>
 
-&lt;body&gt;
+  <body>
 
-&lt;h2&gt;This is a Thymeleaf template&lt;/h2&gt;
+    <h2>This is a Thymeleaf template</h2>
 
-&lt;form action=&quot;#&quot; th:object=&quot;${subscription}&quot; th:action=&quot;@{/subscribeth}&quot;&gt;
+    <form action="#" th:object="${subscription}" th:action="@{/subscribeth}">
 
-&lt;fieldset&gt;
+      <fieldset>
 
-&lt;div&gt;
-&lt;label for=&quot;email&quot; th:text=&quot;#{subscription.email}&quot;&gt;Email: &lt;/label&gt;
-&lt;input type=&quot;text&quot; th:field=&quot;*{email}&quot; /&gt;
-&lt;/div&gt;
-&lt;div&gt;
-&lt;label th:text=&quot;#{subscription.type}&quot;&gt;Type: &lt;/label&gt;
-&lt;ul&gt;
-&lt;li th:each=&quot;type : ${allTypes}&quot;&gt;
-&lt;input type=&quot;radio&quot; th:field=&quot;*{subscriptionType}&quot; th:value=&quot;${type}&quot; /&gt;
-&lt;label th:for=&quot;${#ids.prev('subscriptionType')}&quot;
-th:text=&quot;#{'subscriptionType.'+${type}}&quot;&gt;First type&lt;/label&gt;
-&lt;/li&gt;
-&lt;li th:remove=&quot;all&quot;&gt;&lt;input type=&quot;radio&quot; /&gt; &lt;label&gt;Second Type&lt;/label&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
+        <div>
+          <label for="email" th:text="#{subscription.email}">Email: </label>
+          <input type="text" th:field="*{email}" />
+        </div>
+        <div>
+          <label th:text="#{subscription.type}">Type: </label>
+          <ul>
+            <li th:each="type : ${allTypes}">
+              <input type="radio" th:field="*{subscriptionType}" th:value="${type}" />
+              <label th:for="${#ids.prev('subscriptionType')}"
+                th:text="#{'subscriptionType.'+${type}}">First type</label>
+            </li>
+            <li th:remove="all"><input type="radio" /> <label>Second Type</label></li>
+          </ul>
+        </div>
 
-&lt;div class=&quot;submit&quot;&gt;
-&lt;button type=&quot;submit&quot; name=&quot;save&quot; th:text=&quot;#{subscription.submit}&quot;&gt;Subscribe me!&lt;/button&gt;
-&lt;/div&gt;
+        <div class="submit">
+          <button type="submit" name="save" th:text="#{subscription.submit}">Subscribe me!</button>
+        </div>
 
-&lt;/fieldset&gt;
+      </fieldset>
 
-&lt;/form&gt;
+    </form>
 
-&lt;/body&gt;
+  </body>
 
-&lt;/html&gt;
+</html>
 ```
 
 Things to notice here:
@@ -317,7 +318,7 @@ until Spring 3.1, so before this version there was no way to write an
 *email type* input tag other than do it in plain HTML, like:
 
 ```html
-&lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; placeholder=&quot;your@email&quot; value=&quot;&quot; /&gt;
+<input type="email" id="email" name="email" placeholder="your@email" value="" />
 ```
 
 But this was not correct! In Spring MVC we should never write a JSP
@@ -328,8 +329,8 @@ required transformations (like *property editors*) and make our
 plain-HTML tag work as if an `<sf:email/>` tag existed:
 
 ```html
-&lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; placeholder=&quot;your@email&quot;
-value=&quot;&lt;s:eval expression='subscription.email' /&gt;&quot; /&gt;
+<input type="email" id="email" name="email" placeholder="your@email"
+  value="<s:eval expression='subscription.email' />" />
 ```
 
 #### Since Spring 3.1
@@ -339,7 +340,7 @@ In Spring 3.1 there still is no `<sf:email ...>` tag, but the existing
 `email`, which will work just fine:
 
 ```html
-&lt;sf:input path=&quot;email&quot; type=&quot;email&quot; /&gt;
+<sf:input path="email" type="email" />
 ```
 
 And this will correctly perform our *form bindings* :-).
@@ -354,7 +355,7 @@ importantly, being displayed as a usual `input` box when displayed as a
 prototype —something the `sf:input` tag won't—:
 
 ```html
-&lt;input type=&quot;email&quot; th:field=&quot;*{email}&quot; placeholder=&quot;your@email&quot; /&gt;
+<input type="email" th:field="*{email}" placeholder="your@email" />
 ```
 
 Done!

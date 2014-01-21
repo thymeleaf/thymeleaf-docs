@@ -13,13 +13,13 @@ Absolute URLs allow you to create links to other servers. They start by
 specifying a protocol name (`http://` or `https://`)
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{http://www.thymeleaf/documentation.html}&amp;quot;&amp;gt;
+<a th:href="@{http://www.thymeleaf/documentation.html}">
 ```
 
 They are not modified at all:
 
 ```html
-&amp;lt;a href=&amp;quot;http://www.thymeleaf/documentation.html&amp;quot;&amp;gt;
+<a href="http://www.thymeleaf/documentation.html">
 ```
 
 Context-relative URLs
@@ -34,14 +34,14 @@ into a Tomcat server, our application will probably be accessible as
 Context-relative URLs start with `/`:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/list}&amp;quot;&amp;gt;
+<a th:href="@{/order/list}">
 ```
 
 If our app is installed at `http://localhost:8080/myapp`, this URL will
 output:
 
 ```html
-&amp;lt;a href=&amp;quot;/myapp/order/list&amp;quot;&amp;gt;
+<a href="/myapp/order/list">
 ```
 
 ### URL Rewriting
@@ -67,7 +67,7 @@ inside your application's context, and therefore allow you to link to a
 different context in the same server:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{~/billing-app/showDetails.htm}&amp;quot;&amp;gt;
+<a th:href="@{~/billing-app/showDetails.htm}">
 ```
 
 The current application's context will be ignored, therefore although
@@ -75,7 +75,7 @@ our application is deployed at `http://localhost:8080/myapp`, this URL
 will output:
 
 ```html
-&amp;lt;a href=&amp;quot;/billing-app/showDetails.htm&amp;quot;&amp;gt;
+<a href="/billing-app/showDetails.htm">
 ```
 
 *(Note that server-relative URLs are only available since Thymeleaf
@@ -90,13 +90,13 @@ are typically used for including external resources like styles,
 scripts, etc.:
 
 ```html
-&amp;amp;lt;script th:src=&amp;quot;@{//scriptserver.example.net/myscript.js}&amp;quot;&amp;gt;...&amp;amp;lt;/script&amp;gt;
+<script th:src="@{//scriptserver.example.net/myscript.js}">...</script>
 ```
 
 ...which will render unmodified, as:
 
 ```html
-&amp;amp;lt;script src=&amp;quot;//scriptserver.example.net/myscript.js&amp;quot;&amp;gt;...&amp;amp;lt;/script&amp;gt;
+<script src="//scriptserver.example.net/myscript.js">...</script>
 ```
 
 Adding parameters
@@ -106,25 +106,25 @@ How do we add parameters to the URLs we create with `@{...}`
 expressions? Simple:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/details(id=3)}&amp;quot;&amp;gt;
+<a th:href="@{/order/details(id=3)}">
 ```
 
 Which would output as:
 
 ```html
-&amp;lt;a href=&amp;quot;/order/details?id=3&amp;quot;&amp;gt;
+<a href="/order/details?id=3">
 ```
 
 You can add several parameters, separating them with commas:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/details(id=3,action='show_all')}&amp;quot;&amp;gt;
+<a th:href="@{/order/details(id=3,action='show_all')}">
 ```
 
 Which would output as:
 
 ```html
-&amp;lt;a href=&amp;quot;/order/details?id=3&amp;amp;action=show_all&amp;quot;&amp;gt;
+<a href="/order/details?id=3&action=show_all">
 ```
 
 URL fragment identifiers
@@ -134,13 +134,13 @@ Fragment identifiers can be included in URLs, both with and without
 parameters. They will always be included at the URL base, so that:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/home#all_info(action='show')}&amp;quot;&amp;gt;
+<a th:href="@{/home#all_info(action='show')}">
 ```
 
 ...would output as:
 
 ```html
-&amp;lt;a href=&amp;quot;/home?action=show#all_info&amp;quot;&amp;gt;
+<a href="/home?action=show#all_info">
 ```
 
 *(Note that fragment identifiers in parameterized URLs are only
@@ -157,14 +157,14 @@ ones (`#{...}`).
 For example, you could use them in forms...
 
 ```html
-&amp;lt;form th:action=&amp;quot;@{/order/processOrder}&amp;quot;&amp;gt;
+<form th:action="@{/order/processOrder}">
 ```
 
 ...or as a part of other expression. Here as a parameter of an
 externalized/internationalized string:
 
 ```html
-&amp;lt;p th:text=&amp;quot;#{orders.explanation('3', @{/order/details(id=3,action='show_all')})}&amp;quot;&amp;gt;
+<p th:text="#{orders.explanation('3', @{/order/details(id=3,action='show_all')})}">
 ```
 
 Using expressions in URLs
@@ -173,7 +173,7 @@ Using expressions in URLs
 What if we needed to write an URL expression like this:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/details(id=3,action='show_all')}&amp;quot;&amp;gt;
+<a th:href="@{/order/details(id=3,action='show_all')}">
 ```
 
 ...but neither `3` nor `'show_all'` could be literals, because we only
@@ -184,54 +184,54 @@ can easily substitute your literals with any other expressions,
 including i18n, conditionals...:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/details(id=${order.id},action=(${user.admin} ? 'show_all' : 'show_public'))}&amp;quot;&amp;gt;
+<a th:href="@{/order/details(id=${order.id},action=(${user.admin} ? 'show_all' : 'show_public'))}">
 ```
 
 What's more: an URL expression like:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{/order/details(id=${order.id})}&amp;quot;&amp;gt;
+<a th:href="@{/order/details(id=${order.id})}">
 ```
 
 ...is in fact a shortcut for:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{'/order/details'(id=${order.id})}&amp;quot;&amp;gt;
+<a th:href="@{'/order/details'(id=${order.id})}">
 ```
 
 Which means that the URL base itself can be specified as an expression,
 for example a variable expression:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{${detailsURL}(id=${order.id})}&amp;quot;&amp;gt;
+<a th:href="@{${detailsURL}(id=${order.id})}">
 ```
 
 ...or an externalized/internationalized text:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{#{orders.details.localized_url}(id=${order.id})}&amp;quot;&amp;gt;
+<a th:href="@{#{orders.details.localized_url}(id=${order.id})}">
 ```
 
 ...even complex expressions can be used, including conditionals, for
 example:
 
 ```html
-&amp;lt;a th:href=&amp;quot;@{(${user.admin}? '/admin/home' : ${user.homeUrl})(id=${order.id})}&amp;quot;&amp;gt;
+<a th:href="@{(${user.admin}? '/admin/home' : ${user.homeUrl})(id=${order.id})}">
 ```
 
 Want it cleaner? Use `th:with`:
 
 ```html
-&lt;a th:with=&quot;baseUrl=(${user.admin}? '/admin/home' : ${user.homeUrl})&quot;
-th:href=&quot;@{${baseUrl}(id=${order.id})}&quot;&gt;
+<a th:with="baseUrl=(${user.admin}? '/admin/home' : ${user.homeUrl})"
+  th:href="@{${baseUrl}(id=${order.id})}">
 ```
 
 ...or...
 
 ```html
-&amp;lt;div th:with=&amp;quot;baseUrl=(${user.admin}? '/admin/home' : ${user.homeUrl})&amp;quot;&amp;gt;
-...
-&amp;lt;a th:href=&amp;quot;@{${baseUrl}(id=${order.id})}&amp;quot;&amp;gt;...&amp;lt;/a&amp;gt;
-...
-&amp;lt;/div&amp;gt;
+<div th:with="baseUrl=(${user.admin}? '/admin/home' : ${user.homeUrl})">
+  ...
+  <a th:href="@{${baseUrl}(id=${order.id})}">...</a>
+  ...
+</div>
 ```

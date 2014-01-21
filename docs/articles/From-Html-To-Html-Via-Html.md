@@ -51,7 +51,7 @@ conformed to by means of a clause that should appear as their first
 line, the *Document Type Declaration* or `DOCTYPE` clause:
 
 ```html
-&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 ```
 
 The Document Object Model and the tag soup
@@ -157,7 +157,7 @@ made use of deprecated tags and attributes, and the third one for
 frameset pages.
 
 ```html
-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 ```
 
 But one of the most important aspects of XHTML was that it also
@@ -308,7 +308,7 @@ current HTML and XHTML code will be considered valid HTML5 just by
 changing your `DOCTYPE` to the HTML5 one:
 
 ```html
-&lt;!DOCTYPE html&gt;
+<!DOCTYPE html>
 ```
 
 And by serving your content with content type `text/html`:
