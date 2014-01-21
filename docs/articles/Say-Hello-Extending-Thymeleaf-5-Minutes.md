@@ -78,35 +78,35 @@ class for our attribute processor:
 
 ```java
 public class SayToAttrProcessor
-extends AbstractTextChildModifierAttrProcessor {
+  extends AbstractTextChildModifierAttrProcessor {
 
 
-public SayToAttrProcessor() {
-// Only execute this processor for 'sayto' attributes.
-super("sayto");
-}
+  public SayToAttrProcessor() {
+    // Only execute this processor for 'sayto' attributes.
+    super("sayto");
+  }
 
 
-public int getPrecedence() {
-// A value of 10000 is higher than any attribute in the
-// SpringStandard dialect. So this attribute will execute
-// after all other attributes from that dialect, if in the
-// same tag.
-return 10000;
-}
+  public int getPrecedence() {
+    // A value of 10000 is higher than any attribute in the
+    // SpringStandard dialect. So this attribute will execute
+    // after all other attributes from that dialect, if in the
+    // same tag.
+    return 10000;
+  }
 
 
-//
-// Our processor is a subclass of the convenience abstract implementation
-// 'AbstractTextChildModifierAttrProcessor', which takes care of the
-// DOM modifying stuff and allows us just to implement this 'getText(...)'
-// method to compute the text to be set as tag body.
-//
-@Override
-protected String getText(final Arguments arguments, final Element element,
-final String attributeName) {
-return "Hello, "  + element.getAttributeValue(attributeName) + "!";
-}
+  //
+  // Our processor is a subclass of the convenience abstract implementation
+  // 'AbstractTextChildModifierAttrProcessor', which takes care of the
+  // DOM modifying stuff and allows us just to implement this 'getText(...)'
+  // method to compute the text to be set as tag body.
+  //
+  @Override
+  protected String getText(final Arguments arguments, final Element element,
+    final String attributeName) {
+    return "Hello, "  + element.getAttributeValue(attributeName) + "!";
+  }
 
 
 }
@@ -128,28 +128,28 @@ require).
 ```java
 public class HelloDialect extends AbstractDialect {
 
-public HelloDialect() {
-super();
-}
+  public HelloDialect() {
+    super();
+  }
 
-//
-// All of this dialect's attributes and/or tags
-// will start with 'hello:'
-//
-public String getPrefix() {
-return "hello";
-}
+  //
+  // All of this dialect's attributes and/or tags
+  // will start with 'hello:'
+  //
+  public String getPrefix() {
+    return "hello";
+  }
 
 
-//
-// The processors.
-//
-@Override
-public Set<IProcessor> getProcessors() {
-final Set<IProcessor> processors = new HashSet<IProcessor>();
-processors.add(new SayToAttrProcessor());
-return processors;
-}
+  //
+  // The processors.
+  //
+  @Override
+  public Set<IProcessor> getProcessors() {
+    final Set<IProcessor> processors = new HashSet<IProcessor>();
+    processors.add(new SayToAttrProcessor());
+    return processors;
+  }
 
 }
 ```
@@ -171,14 +171,13 @@ Template Engine bean, so that it is added to the default
 *SpringStandard* dialect:
 
 ```html
-<bean id="templateEngine"
-class="org.thymeleaf.spring3.SpringTemplateEngine">
-<property name="templateResolver" ref="templateResolver" />
-<property name="additionalDialects">
-<set>
-<bean class="thymeleafexamples.sayhello.dialect.HelloDialect"/>
-</set>
-</property>
+<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+  <property name="templateResolver" ref="templateResolver" />
+  <property name="additionalDialects">
+    <set>
+      <bean class="thymeleafexamples.sayhello.dialect.HelloDialect"/>
+    </set>
+  </property>
 </bean>
 ```
 

@@ -92,7 +92,7 @@ Template `home/homeNotSignedIn.html`
 
 You can open the file directly in a browser:
 
-![home/homeNotSignedIn.html][1]
+![thymeleaf-layouts/homeNotSignedIn.html][1]
 
 In the above example, we are building a page that consists of page header and page footer. In Thymeleaf all fragments can be defined in a single file (e.g. `fragments.html`) or in separate files, like in this particular case. 
 
@@ -140,7 +140,7 @@ Template `fragments/header.html`
 
 ...which we can open directly in a browser:
 
-![fragments/header.html][2]
+![thymeleaf-layouts/header.html][2]
 
 And template `fragments/footer.html`
     
@@ -457,7 +457,7 @@ The layout file reads as follows:
 
 We can see several things in the above example. Firstly, the layout is a natural template and it is a valid UI design prototype (in this example the layout is very simple): 
 
-![message/layout.html][12]
+![thymeleaf-layouts/layout.html][12]
 
 Secondly, we can mix standard layout (`th:include/th:replace`) with Tiles dialect. Thirdly, Thymeleaf has ability to include a template fragment instead of the whole template.
 
@@ -526,7 +526,7 @@ The layout file is defined in `/WEB-INF/views/task/layout.html`:
 
 We can open the file directly in a browser:
 
-![task/layout.html][15]
+![thymeleaf-layouts/layout.html][15]
 
 The above file is our decorator for content pages we will be creating in the application. The most important thing about the above example is `layout:fragment="content"`. This is the "heart" of the decorator page (layout). You can also notice, that header and footer are included using Standard Thymeleaf Layout System.
 
@@ -571,7 +571,7 @@ The content page looks as follows (`WEB-INF/views/task/list.html`):
 
 And in the browser it looks like this:
 
-![task/list.html][16]
+![thymeleaf-layouts/list.html][16]
 
 Content of this `task/list`view will be decorated by the elements of `task/layout` view. Please note `layout:decorator="task/layout"` attribute in `<html>` element. This attribute signals to the Layout Dialect which layout should be used to decorate given view. 
 

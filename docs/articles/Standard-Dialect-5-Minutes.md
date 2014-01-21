@@ -72,9 +72,9 @@ The object they act on is specified by a `th:object` attribute:
 
 ```html
 <div th:object="${book}">
-...
-<span th:text="*{title}">...</span>
-...
+  ...
+  <span th:text="*{title}">...</span>
+  ...
 </div>
 ```
 
@@ -93,10 +93,10 @@ You can find them in templates like:
 
 ```html
 <table>
-...
-<th th:text="#{header.address.city}">...</th>
-<th th:text="#{header.address.country}">...</th>
-...
+  ...
+  <th th:text="#{header.address.city}">...</th>
+  <th th:text="#{header.address.country}">...</th>
+  ...
 </table>
 ```
 
@@ -121,7 +121,7 @@ Let's see these expressions in context:
 ```html
 <form th:action="@{/createOrder}">
 
-<a href="main.html" th:href="@{/main}">
+  <a href="main.html" th:href="@{/main}">
 ```
 
 From this last example, see how Thymleaf allows us to set an `href`

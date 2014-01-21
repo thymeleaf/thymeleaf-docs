@@ -38,14 +38,14 @@ needs might differ):
 
 ```xml
 <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-<property name="host" value="${mail.server.host}" />
-<property name="port" value="${mail.server.port}" />
-<property name="protocol" value="${mail.server.protocol}" />
-<property name="username" value="${mail.server.username}" />
-<property name="password" value="${mail.server.password}" />
-<property name="javaMailProperties">
-<util:properties location="classpath:javamail.properties" />
-</property>
+  <property name="host" value="${mail.server.host}" />
+  <property name="port" value="${mail.server.port}" />
+  <property name="protocol" value="${mail.server.protocol}" />
+  <property name="username" value="${mail.server.username}" />
+  <property name="password" value="${mail.server.password}" />
+  <property name="javaMailProperties">
+    <util:properties location="classpath:javamail.properties" />
+  </property>
 </bean>
 ```
 
@@ -100,36 +100,36 @@ In order to process our templates, we will need to configure our
 ```xml
 <!-- THYMELEAF: Template Resolver for email templates -->
 <bean id="emailTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
-<property name="prefix" value="mail/" />
-<property name="templateMode" value="HTML5" />
-<property name="characterEncoding" value="UTF-8" />
-<property name="order" value="1" />
+  <property name="prefix" value="mail/" />
+  <property name="templateMode" value="HTML5" />
+  <property name="characterEncoding" value="UTF-8" />
+  <property name="order" value="1" />
 </bean>
 
 <!-- THYMELEAF: Template Resolver for webapp pages   -->
 <!-- (we would not need this if our app was not web) -->
 <bean id="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-<property name="prefix" value="/WEB-INF/templates/" />
-<property name="templateMode" value="HTML5" />
-<property name="characterEncoding" value="UTF-8" />
-<property name="order" value="2" />
+  <property name="prefix" value="/WEB-INF/templates/" />
+  <property name="templateMode" value="HTML5" />
+  <property name="characterEncoding" value="UTF-8" />
+  <property name="order" value="2" />
 </bean>
 
 <!-- THYMELEAF: Template Engine (Spring3-specific version) -->
 <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
-<property name="templateResolvers">
-<set>
-<ref bean="emailTemplateResolver" />
-<ref bean="webTemplateResolver" />
-</set>
-</property>
+  <property name="templateResolvers">
+    <set>
+      <ref bean="emailTemplateResolver" />
+      <ref bean="webTemplateResolver" />
+    </set>
+  </property>
 </bean>
 
 <!-- THYMELEAF: View Resolver - implementation of Spring's ViewResolver interface -->
 <!-- (we would not need this if our app was not web)                              -->
 <bean id="viewResolver" class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
-<property name="templateEngine" ref="templateEngine" />
-<property name="characterEncoding" value="UTF-8" />
+  <property name="templateEngine" ref="templateEngine" />
+  <property name="characterEncoding" value="UTF-8" />
 </bean>
 ```
 
@@ -171,38 +171,38 @@ sending emails with an inlined image, and it looks like:
 ```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title th:remove="all">Template for HTML email with inline image</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-<p th:text="#{greeting(${name})}">
-Hello, Peter Static!
-</p>
-<p th:if="${name.length() > 10}">
-Wow! You've got a long name (more than 10 chars)!
-</p>
-<p>
-You have been successfully subscribed to the <b>Fake newsletter</b> on
-<span th:text="${#dates.format(subscriptionDate)}">28-12-2012</span>
-</p>
-<p>Your hobbies are:</p>
-<ul th:remove="all-but-first">
-<li th:each="hobby : ${hobbies}" th:text="${hobby}">Reading</li>
-<li>Writing</li>
-<li>Bowling</li>
-</ul>
-<p>
-You can find <b>your inlined image</b> just below this text.
-</p>
-<p>
-<img src="sample.png" th:src="'cid:' + ${imageResourceName}" />
-</p>
-<p>
-Regards, <br />
-&emsp; <em>The Thymeleaf Team</em>
-</p>
-</body>
+  <head>
+    <title th:remove="all">Template for HTML email with inline image</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <p th:text="#{greeting(${name})}">
+      Hello, Peter Static!
+    </p>
+    <p th:if="${name.length() > 10}">
+      Wow! You've got a long name (more than 10 chars)!
+    </p>
+    <p>
+      You have been successfully subscribed to the <b>Fake newsletter</b> on
+      <span th:text="${#dates.format(subscriptionDate)}">28-12-2012</span>
+    </p>
+    <p>Your hobbies are:</p>
+    <ul th:remove="all-but-first">
+      <li th:each="hobby : ${hobbies}" th:text="${hobby}">Reading</li>
+      <li>Writing</li>
+      <li>Bowling</li>
+    </ul>
+    <p>
+      You can find <b>your inlined image</b> just below this text.
+    </p>
+    <p>
+      <img src="sample.png" th:src="'cid:' + ${imageResourceName}" />
+    </p>
+    <p>
+      Regards, <br />
+      <em>The Thymeleaf Team</em>
+    </p>
+  </body>
 </html>
 ```
 
@@ -212,7 +212,7 @@ Let's remark some points:
     just by opening it with your browser. That's much better than
     sending an email to see the result, isn't it?
 
-![](images/springmail_inline.png)
+![](images/spring-mail/inline.png)
 
 -   We can use all Thymeleaf features. Here for example we have used
     i18n with a parameterized `#{...}` expression, `th:each` to iterate
@@ -231,35 +231,35 @@ Finally, let's see how the method executing this email template at our
 
 ```java
 public void sendMailWithInline(
-final String recipientName, final String recipientEmail, final String imageResourceName,
-final byte[] imageBytes, final String imageContentType, final Locale locale)
-throws MessagingException {
+  final String recipientName, final String recipientEmail, final String imageResourceName,
+  final byte[] imageBytes, final String imageContentType, final Locale locale)
+  throws MessagingException {
 
-// Prepare the evaluation context
-final Context ctx = new Context(locale);
-ctx.setVariable("name", recipientName);
-ctx.setVariable("subscriptionDate", new Date());
-ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
-ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
+  // Prepare the evaluation context
+  final Context ctx = new Context(locale);
+  ctx.setVariable("name", recipientName);
+  ctx.setVariable("subscriptionDate", new Date());
+  ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+  ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
 
-// Prepare message using a Spring helper
-final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-final MimeMessageHelper message =
-new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-message.setSubject("Example HTML email with inline image");
-message.setFrom("thymeleaf@example.com");
-message.setTo(recipientEmail);
+  // Prepare message using a Spring helper
+  final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+  final MimeMessageHelper message =
+      new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
+  message.setSubject("Example HTML email with inline image");
+  message.setFrom("thymeleaf@example.com");
+  message.setTo(recipientEmail);
 
-// Create the HTML body using Thymeleaf
-final String htmlContent = this.templateEngine.process("email-inlineimage.html", ctx);
-message.setText(htmlContent, true); // true = isHtml
+  // Create the HTML body using Thymeleaf
+  final String htmlContent = this.templateEngine.process("email-inlineimage.html", ctx);
+  message.setText(htmlContent, true); // true = isHtml
 
-// Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
-final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-message.addInline(imageResourceName, imageSource, imageContentType);
+  // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
+  final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
+  message.addInline(imageResourceName, imageSource, imageContentType);
 
-// Send mail
-this.mailSender.send(mimeMessage);
+  // Send mail
+  this.mailSender.send(mimeMessage);
 
 }
 ```
@@ -283,16 +283,16 @@ Now for the controller method that calls our service:
 */
 @RequestMapping(value = "/sendMailWithInlineImage", method = RequestMethod.POST)
 public String sendMailWithInline(
-@RequestParam("recipientName") final String recipientName,
-@RequestParam("recipientEmail") final String recipientEmail,
-@RequestParam("image") final MultipartFile image,
-final Locale locale)
-throws MessagingException, IOException {
+  @RequestParam("recipientName") final String recipientName,
+  @RequestParam("recipientEmail") final String recipientEmail,
+  @RequestParam("image") final MultipartFile image,
+  final Locale locale)
+  throws MessagingException, IOException {
 
-this.emailService.sendMailWithInline(
-recipientName, recipientEmail, image.getName(),
-image.getBytes(), image.getContentType(), locale);
-return "redirect:sent.html";
+  this.emailService.sendMailWithInline(
+      recipientName, recipientEmail, image.getName(),
+      image.getBytes(), image.getContentType(), locale);
+  return "redirect:sent.html";
 
 }
 ```

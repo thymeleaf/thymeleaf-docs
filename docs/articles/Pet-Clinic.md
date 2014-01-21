@@ -18,7 +18,7 @@ original SpringSource version lives in GitHub
 thymeleaf-enabled version lives also in GitHub
 [here](https://github.com/thymeleaf/thymeleafexamples-petclinic).
 
-![PetClinic home page](images/thymeleafpetclinic_home.png)
+![PetClinic home page](images/pet-clinic/home.png)
 
 *Pet Clinic* originally includes a view layer created with JSP, which we
 will replace using Thymeleaf:
@@ -95,34 +95,33 @@ Spring beans configuration file, `mvc-view-config.xml`:
     original application.
 
 ```xml
-<bean id="templateResolver"
-class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-<property name="prefix" value="/WEB-INF/thymeleaf/" />
-<property name="suffix" value=".html" />
-<property name="templateMode" value="HTML5" />
-<!-- Template cache is set to false (default is true).        -->
-<property name="cacheable" value="false" />
+<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <property name="prefix" value="/WEB-INF/thymeleaf/" />
+  <property name="suffix" value=".html" />
+  <property name="templateMode" value="HTML5" />
+  <!-- Template cache is set to false (default is true). -->
+  <property name="cacheable" value="false" />
 </bean>
 
 <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
-<property name="templateResolver" ref="templateResolver" />
+  <property name="templateResolver" ref="templateResolver" />
 </bean>
 
 <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-<property name="contentNegotiationManager" ref="cnManager"/>
-<property name="viewResolvers">
-<list>
-<!-- Used here for 'xml' and 'atom' views  -->
-<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
-<property name="order" value="1"/>
-</bean>
-<!-- Used for Thymeleaf views  -->
-<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
-<property name="templateEngine" ref="templateEngine" />
-<property name="order" value="2"/>
-</bean>
-</list>
-</property>
+  <property name="contentNegotiationManager" ref="cnManager"/>
+  <property name="viewResolvers">
+    <list>
+      <!-- Used here for 'xml' and 'atom' views  -->
+      <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="1"/>
+      </bean>
+      <!-- Used for Thymeleaf views  -->
+      <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="order" value="2"/>
+      </bean>
+    </list>
+  </property>
 </bean>
 ```
 
@@ -144,7 +143,7 @@ review the original JSP files at the `doc/old_viewlayer` folder.
 
 The *owners/ownersList* page looks like this:
 
-![Owners page](images/thymeleafpetclinic_owners.png)
+![Owners page](images/pet-clinic/owners.png)
 
 In order to convert this page to Thymeleaf, we will:
 
@@ -166,18 +165,18 @@ In order to convert this page to Thymeleaf, we will:
 
 <html lang="en">
 
-<jsp:include page="../fragments/headTag.jsp"/>
+  <jsp:include page="../fragments/headTag.jsp"/>
 
-<body>
-<div class="container">
-<jsp:include page="../fragments/bodyHeader.jsp"/>
+  <body>
+    <div class="container">
+      <jsp:include page="../fragments/bodyHeader.jsp"/>
 
-<!-- ... -->
+      <!-- ... -->
 
-<jsp:include page="../fragments/footer.jsp"/>
+      <jsp:include page="../fragments/footer.jsp"/>
 
-</div>
-</body>
+    </div>
+  </body>
 
 </html>
 ```
@@ -188,99 +187,109 @@ In order to convert this page to Thymeleaf, we will:
 
 <html lang="en">
 
-<head th:substituteby="fragments/headTag :: headTag">
+  <head th:substituteby="fragments/headTag :: headTag">
 
-<!-- ============================================================================ -->
-<!-- This <head> is only used for static prototyping purposes (natural templates) -->
-<!-- and is therefore entirely optionl, as this markup fragment will be included  -->
-<!-- from "fragments.html" at runtime.                                            -->
-<!-- ============================================================================ -->
+    <!-- ============================================================================ -->
+    <!-- This <head> is only used for static prototyping purposes (natural templates) -->
+    <!-- and is therefore entirely optionl, as this markup fragment will be included  -->
+    <!-- from "fragments.html" at runtime.                                            -->
+    <!-- ============================================================================ -->
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>PetClinic :: a Spring Framework demonstration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>PetClinic :: a Spring Framework demonstration</title>
 
-<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css"
-th:href="@{/webjars/bootstrap/2.3.0/css/bootstrap.min.css}" rel="stylesheet" />
-<link href="../../../resources/css/petclinic.css"
-th:href="@{/resources/css/petclinic.css}" rel="stylesheet" />
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css"
+      th:href="@{/webjars/bootstrap/2.3.0/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="../../../resources/css/petclinic.css"
+      th:href="@{/resources/css/petclinic.css}" rel="stylesheet" />
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"
-th:src="@{/webjars/jquery/1.9.0/jquery.js}"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"
-th:src="@{/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"
+      th:src="@{/webjars/jquery/1.9.0/jquery.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"
+      th:src="@{/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js}"></script>
 
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css"
-th:href="@{/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css}"
-rel="stylesheet" />
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css"
+      th:href="@{/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css}"
+      rel="stylesheet" />
 
-</head>
+  </head>
 
-<body>
+  <body>
 
-<div class="container">
+    <div class="container">
 
-<div th:include="fragments/bodyHeader" th:remove="tag">
+      <div th:include="fragments/bodyHeader" th:remove="tag">
 
-<!-- =========================================================================== -->
-<!-- This div is only used for static prototyping purposes (natural templates)   -->
-<!-- and is therefore entirely optionl, as this markup fragment will be included -->
-<!-- from "fragments.html" at runtime.                                           -->
-<!-- =========================================================================== -->
+        <!-- =========================================================================== -->
+        <!-- This div is only used for static prototyping purposes (natural templates)   -->
+        <!-- and is therefore entirely optionl, as this markup fragment will be included -->
+        <!-- from "fragments.html" at runtime.                                           -->
+        <!-- =========================================================================== -->
 
-<img th:src="@{/resources/images/banner-graphic.png}"
-src="../../../resources/images/banner-graphic.png"/>
+        <img th:src="@{/resources/images/banner-graphic.png}"
+          src="../../../resources/images/banner-graphic.png"/>
 
-<div class="navbar" style="width: 601px;">
-<div class="navbar-inner">
-<ul class="nav">
-<li style="width: 100px;"><a
-href="../welcome.html" th:href="@{/}"><i
-class="icon-home"></i>Home</a></li>
-<li style="width: 130px;"><a
-href="../owners/findOwners.html" th:href="@{/owners/find.html}"><i
-class="icon-search"></i>Find owners</a></li>
-<li style="width: 140px;"><a
-href="../vets/vetList.html" th:href="@{/vets.html}"><i
-class="icon-th-list"></i>Veterinarians</a></li>
-<li style="width: 90px;"><a
-href="../exception.html" th:href="@{/oups.html}"
-title="trigger a RuntimeException to see how it is handled"><i
-class="icon-warning-sign"></i>Error</a></li>
-<li style="width: 80px;"><a
-href="#" title="not available yet. Work in progress!!"><i
-class=" icon-question-sign"></i>Help</a></li>
-</ul>
-</div>
-</div>
+        <div class="navbar" style="width: 601px;">
+          <div class="navbar-inner">
+            <ul class="nav">
+              <li style="width: 100px;">
+                <a href="../welcome.html" th:href="@{/}">
+                  <i class="icon-home"></i>Home
+                </a>
+              </li>
+              <li style="width: 130px;">
+                <a href="../owners/findOwners.html" th:href="@{/owners/find.html}">
+                  <i class="icon-search"></i>Find owners
+                </a>
+              </li>
+              <li style="width: 140px;">
+                <a href="../vets/vetList.html" th:href="@{/vets.html}">
+                  <i class="icon-th-list"></i>Veterinarians
+                </a>
+              </li>
+              <li style="width: 90px;">
+                <a href="../exception.html" th:href="@{/oups.html}"
+                  title="trigger a RuntimeException to see how it is handled">
+                  <i class="icon-warning-sign"></i>Error
+                </a>
+              </li>
+              <li style="width: 80px;">
+                <a href="#" title="not available yet. Work in progress!!">
+                  <i class=" icon-question-sign"></i>Help
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-</div>
+      </div>
 
 
-<!-- ... -->
+      <!-- ... -->
 
 
-<table th:substituteby="fragments/footer :: footer" class="footer">
+      <table th:substituteby="fragments/footer :: footer" class="footer">
 
-<!-- =========================================================================== -->
-<!-- This table section is only used for static prototyping purposes (natural    -->
-<!-- templates) and is therefore entirely optionl, as this markup fragment will  -->
-<!-- be included from "fragments.html" at runtime.                               -->
-<!-- =========================================================================== -->
+        <!-- =========================================================================== -->
+        <!-- This table section is only used for static prototyping purposes (natural    -->
+        <!-- templates) and is therefore entirely optionl, as this markup fragment will  -->
+        <!-- be included from "fragments.html" at runtime.                               -->
+        <!-- =========================================================================== -->
 
-<tr>
-<td></td>
-<td align="right">
-<img src="../../../resources/images/springsource-logo.png"
-th:src="@{/resources/images/springsource-logo.png}"
-alt="Sponsored by SpringSource" />
-</td>
-</tr>
+        <tr>
+          <td></td>
+          <td align="right">
+            <img src="../../../resources/images/springsource-logo.png"
+              th:src="@{/resources/images/springsource-logo.png}"
+              alt="Sponsored by SpringSource" />
+          </td>
+        </tr>
 
-</table>
+      </table>
 
-</div>
+    </div>
 
-</body>
+  </body>
 
 </html>
 ```
@@ -301,25 +310,25 @@ prototyping code is optional!
 ```html
 <!-- ownersList.jsp -->
 <datatables:table id="owners" data="${selections}" cdn="true" row="owner" theme="bootstrap2"
-cssClass="table table-striped" paginate="false" info="false" export="pdf">
-<datatables:column title="Name" cssStyle="width: 150px;" display="html">
-<spring:url value="owners/{ownerId}.html" var="ownerUrl">
-<spring:param name="ownerId" value="${owner.id}"/>
-</spring:url>
-<a href="${fn:escapeXml(ownerUrl)}"><c:out value="${owner.firstName} ${owner.lastName}"/></a>
-</datatables:column>
-<datatables:column title="Name" display="pdf">
-<c:out value="${owner.firstName} ${owner.lastName}"/>
-</datatables:column>
-<datatables:column title="Address" property="address" cssStyle="width: 200px;"/>
-<datatables:column title="City" property="city"/>
-<datatables:column title="Telephone" property="telephone"/>
-<datatables:column title="Pets" cssStyle="width: 100px;">
-<c:forEach var="pet" items="${owner.pets}">
-<c:out value="${pet.name}"/>
-</c:forEach>
-</datatables:column>
-<datatables:export type="pdf" cssClass="btn btn-small" />
+  cssClass="table table-striped" paginate="false" info="false" export="pdf">
+  <datatables:column title="Name" cssStyle="width: 150px;" display="html">
+    <spring:url value="owners/{ownerId}.html" var="ownerUrl">
+      <spring:param name="ownerId" value="${owner.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(ownerUrl)}"><c:out value="${owner.firstName} ${owner.lastName}"/></a>
+  </datatables:column>
+  <datatables:column title="Name" display="pdf">
+    <c:out value="${owner.firstName} ${owner.lastName}"/>
+  </datatables:column>
+  <datatables:column title="Address" property="address" cssStyle="width: 200px;"/>
+  <datatables:column title="City" property="city"/>
+  <datatables:column title="Telephone" property="telephone"/>
+  <datatables:column title="Pets" cssStyle="width: 100px;">
+    <c:forEach var="pet" items="${owner.pets}">
+      <c:out value="${pet.name}"/>
+    </c:forEach>
+  </datatables:column>
+  <datatables:export type="pdf" cssClass="btn btn-small" />
 </datatables:table>
 ```
 
@@ -330,32 +339,32 @@ Which we will replace with:
 <h2>Owners</h2>
 
 <table class="table table-striped">
-<thead>
-<tr>
-<th style="width: 150px;">Name</th>
-<th style="width: 200px;">Address</th>
-<th>City</th>
-<th>Telephone</th>
-<th style="width: 100px;">Pets</th>
-</tr>
-</thead>
-<tbody>
-<tr th:each="owner : ${selections}">
-<td>
-<a href="ownerDetails.html"
-th:href="@{|/owners/${owner.id}|}"
-th:text="|${owner.firstName} ${owner.lastName}|">Mary Smith</a>
-</td>
-<td th:text="${owner.address}">45, Oxford Street</td>
-<td th:text="${owner.city}">Cambridge</td>
-<td th:text="${owner.telephone}">555-555-555</td>
-<td>
-<span th:each="pet : ${owner.pets}" th:text="${pet.name}" th:remove="tag">
-Rob&nbsp;
-</span>
-</td>
-</tr>
-</tbody>
+  <thead>
+    <tr>
+      <th style="width: 150px;">Name</th>
+      <th style="width: 200px;">Address</th>
+      <th>City</th>
+      <th>Telephone</th>
+      <th style="width: 100px;">Pets</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="owner : ${selections}">
+      <td>
+        <a href="ownerDetails.html"
+          th:href="@{|/owners/${owner.id}|}"
+          th:text="|${owner.firstName} ${owner.lastName}|">Mary Smith</a>
+      </td>
+      <td th:text="${owner.address}">45, Oxford Street</td>
+      <td th:text="${owner.city}">Cambridge</td>
+      <td th:text="${owner.telephone}">555-555-555</td>
+      <td>
+        <span th:each="pet : ${owner.pets}" th:text="${pet.name}" th:remove="tag">
+          Rob
+        </span>
+      </td>
+    </tr>
+  </tbody>
 </table>
 ```
 
@@ -378,13 +387,13 @@ Well, let's have a look at how the original `owners/ownersList.jsp`
 template looks like when seen statically:
 
 ![Owners list (JSP), statically
-opened](images/thymeleafpetclinic_ownerslist_jsp_static.png)
+opened](images/pet-clinic/ownerslist_jsp_static.png)
 
 ...and now let's have a look at our new Thymeleaf-powered
 `owners/ownersList.html`:
 
 ![Owners list (thymeleaf), statically
-opened](images/thymeleafpetclinic_ownerslist_thymeleaf_static.png)
+opened](images/pet-clinic/ownerslist_thymeleaf_static.png)
 
 There we are. Data is not valid, because it is a prototype. But it looks
 good!

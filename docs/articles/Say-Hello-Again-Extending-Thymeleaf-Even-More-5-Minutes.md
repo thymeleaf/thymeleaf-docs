@@ -37,7 +37,7 @@ solar system, with a template like this:
 
 ```html
 <ul>
-<li th:each="planet : ${planets}" hello:saytoplanet="${planet}">Hello Planet!</li>
+  <li th:each="planet : ${planets}" hello:saytoplanet="${planet}">Hello Planet!</li>
 </ul>
 ```
 
@@ -49,21 +49,21 @@ a model attribute called `planets`:
 @Controller
 public class SayHelloController {
 
-public SayHelloController() {
-super();
-}
+  public SayHelloController() {
+    super();
+  }
 
-@ModelAttribute("planets")
-public List<String> populatePlanets() {
-return Arrays.asList(new String[] {
-"Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"
-});
-}
+  @ModelAttribute("planets")
+  public List<String> populatePlanets() {
+    return Arrays.asList(new String[] {
+        "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"
+    });
+  }
 
-@RequestMapping({"/","/sayhello"})
-public String showSayHello() {
-return "sayhello";
-}
+  @RequestMapping({"/","/sayhello"})
+  public String showSayHello() {
+    return "sayhello";
+  }
 
 }
 ```
@@ -80,18 +80,18 @@ public class HelloDialect extends AbstractDialect {
 
 ...
 
-//
-// The processors.
-//
-@Override
-public Set<IProcessor> getProcessors() {
-final Set<IProcessor> processors = new HashSet<IProcessor>();
-processors.add(new SayToAttrProcessor());
-processors.add(new SayToPlanetAttrProcessor());
-return processors;
-}
+  //
+  // The processors.
+  //
+  @Override
+  public Set<IProcessor> getProcessors() {
+    final Set<IProcessor> processors = new HashSet<IProcessor>();
+    processors.add(new SayToAttrProcessor());
+    processors.add(new SayToPlanetAttrProcessor());
+    return processors;
+  }
 
-...
+  ...
 
 }
 ```
@@ -117,38 +117,38 @@ Parser*, which will parse the attribute value into an executable
 public class SayToPlanetAttrProcessor
 extends AbstractTextChildModifierAttrProcessor {
 
-private static final String SAYTO_PLANET_MESSAGE = "msg.helloplanet";
+  private static final String SAYTO_PLANET_MESSAGE = "msg.helloplanet";
 
-public SayToPlanetAttrProcessor() {
-// Only execute this processor for 'saytoplanet' attributes.
-super("saytoplanet");
-}
+  public SayToPlanetAttrProcessor() {
+    // Only execute this processor for 'saytoplanet' attributes.
+    super("saytoplanet");
+  }
 
-public int getPrecedence() {
-// Higher (less-precedent) than any attribute in the
-// SpringStandard dialect and also than 'sayto'.
-return 11000;
-}
+  public int getPrecedence() {
+    // Higher (less-precedent) than any attribute in the
+    // SpringStandard dialect and also than 'sayto'.
+    return 11000;
+  }
 
-@Override
-protected String getText(final Arguments arguments, final Element element,
-final String attributeName) {
+  @Override
+  protected String getText(final Arguments arguments, final Element element,
+    final String attributeName) {
 
-final Configuration configuration = arguments.getConfiguration();
+    final Configuration configuration = arguments.getConfiguration();
 
-final IStandardExpressionParser parser =
-StandardExpressions.getExpressionParser(configuration);
+    final IStandardExpressionParser parser =
+        StandardExpressions.getExpressionParser(configuration);
 
-final String attributeValue = element.getAttributeValue(attributeName);
+    final String attributeValue = element.getAttributeValue(attributeName);
 
-final IStandardExpression expression =
-parser.parseExpression(configuration, arguments, attributeValue);
+    final IStandardExpression expression =
+        parser.parseExpression(configuration, arguments, attributeValue);
 
-final String planet = (String) expression.execute(configuration, arguments);
+    final String planet = (String) expression.execute(configuration, arguments);
 
-return "Hello, planet " + planet;
+    return "Hello, planet " + planet;
 
-}
+  }
 
 }
 ```
@@ -175,13 +175,13 @@ offers three methods we can use for this:
 
 ```java
 protected String getMessage(
-final Arguments arguments, final String messageKey, final Object[] messageParameters);
+  final Arguments arguments, final String messageKey, final Object[] messageParameters);
 
 protected String getMessageForTemplate(
-final Arguments arguments, final String messageKey, final Object[] messageParameters);
+  final Arguments arguments, final String messageKey, final Object[] messageParameters);
 
 protected String getMessageForProcessor(
-final Arguments arguments, final String messageKey, final Object[] messageParameters);
+  final Arguments arguments, final String messageKey, final Object[] messageParameters);
 ```
 
 Each of them has a different meaning, let's start by the last two:
@@ -241,37 +241,37 @@ And now we will have to modify the `getText()` method in our
 ```java
 @Override
 protected String getText(final Arguments arguments, final Element element,
-final String attributeName) {
+  final String attributeName) {
 
 
-final Configuration configuration = arguments.getConfiguration();
+  final Configuration configuration = arguments.getConfiguration();
 
-final IStandardExpressionParser parser =
-StandardExpressions.getExpressionParser(configuration);
+  final IStandardExpressionParser parser =
+      StandardExpressions.getExpressionParser(configuration);
 
-final String attributeValue = element.getAttributeValue(attributeName);
+  final String attributeValue = element.getAttributeValue(attributeName);
 
-final IStandardExpression expression =
-parser.parseExpression(configuration, arguments, attributeValue);
+  final IStandardExpression expression =
+      parser.parseExpression(configuration, arguments, attributeValue);
 
-final String planet = (String) expression.execute(configuration, arguments);
+  final String planet = (String) expression.execute(configuration, arguments);
 
-//
-// This 'getMessage(...)' method will first try to resolve the
-// message as a 'template message' (one that is defined for a specific
-// template or templates, and that would be resolved, in a Spring MVC app,
-// by Spring's MessageSource objects).
-//
-// If not found, it will try to resolve it as a 'processor message', a type
-// of messages meant to appear in .properties files by the side of the
-// attribute processor itself (or any of its superclasses) and, if needed,
-// be packaged along with it in a .jar file for better encapsulation of UI
-// components.
-//
-final String message =
-getMessage(arguments, SAYTO_PLANET_MESSAGE, new Object[] {planet});
+  //
+  // This 'getMessage(...)' method will first try to resolve the
+  // message as a 'template message' (one that is defined for a specific
+  // template or templates, and that would be resolved, in a Spring MVC app,
+  // by Spring's MessageSource objects).
+  //
+  // If not found, it will try to resolve it as a 'processor message', a type
+  // of messages meant to appear in .properties files by the side of the
+  // attribute processor itself (or any of its superclasses) and, if needed,
+  // be packaged along with it in a .jar file for better encapsulation of UI
+  // components.
+  //
+  final String message =
+      getMessage(arguments, SAYTO_PLANET_MESSAGE, new Object[] {planet});
 
-return message;
+  return message;
 
 }
 ```
