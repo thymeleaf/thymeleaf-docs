@@ -3011,7 +3011,10 @@ order in which they are executed in the tag. This order is:
     <tr>
       <td>1</td>
       <td>Fragment inclusion</td>
-      <td>`th:include`</td>
+      <td>
+        `th:include`<br/>
+        `th:replace`
+      </td>
     </tr>
     <tr>
       <td>2</td>
