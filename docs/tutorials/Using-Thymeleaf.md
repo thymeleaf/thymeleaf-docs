@@ -277,7 +277,7 @@ This is our `IGTVGController` interface:
 ```java
 public interface IGTVGController {
 
-    public String process(
+    public void process(
             HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, TemplateEngine templateEngine);    
     
