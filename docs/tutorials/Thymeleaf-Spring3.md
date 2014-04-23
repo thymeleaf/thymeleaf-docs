@@ -379,6 +379,7 @@ Resolver instances.
    
   <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
     <property name="templateEngine" ref="templateEngine" />
+    <property name="characterEncoding" value="UTF-8" />
   </bean>    
 
     
