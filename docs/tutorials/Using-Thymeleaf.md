@@ -1840,8 +1840,8 @@ you will get:
 <input type="button" value="Do it!" class="btn warning" />
 ```
 
-There is also a specific _appending attribute_ in the Standard Dialect: the `th:classappend`
-attribute, which is used for adding a CSS class to an element without
+There are also two specific _appending attributes_ in the Standard Dialect: the `th:classappend`
+and `th:styleappend` attributes, which are used for adding a CSS class or a fragment of _style_ to an element without
 overwriting the existing ones:
 
 ```html
