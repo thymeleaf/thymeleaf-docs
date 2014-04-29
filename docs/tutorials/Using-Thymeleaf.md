@@ -4417,6 +4417,16 @@ ${#strings.listIsEmpty(nameList)}
 ${#strings.setIsEmpty(nameSet)}
 
 /*
+ * Perform an 'isEmpty()' check on a string and return it if false, defaulting to
+ * another specified string if true.
+ * Also works with arrays, lists or sets
+ */
+${#strings.defaultString(text,default)}
+${#strings.arrayDefaultString(textArr,default)}
+${#strings.listDefaultString(textList,default)}
+${#strings.setDefaultString(textSet,default)}
+
+/*
  * Check whether a fragment is contained in a String
  * Also works with arrays, lists or sets
  */
