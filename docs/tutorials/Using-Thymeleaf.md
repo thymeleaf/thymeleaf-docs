@@ -1187,9 +1187,11 @@ Some things to note here:
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
    prefixed the application context name.
- * If cookies are not enabled or this is not yet known, Thymeleaf will add a `";jsessionid=..."`
-   suffix to relative URLs so that session is preserved. This is called _URL Rewriting_.
- * The `th:href` tag allowed us to (optionally) have a working static href
+ * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
+   suffix might be added to relative URLs so that session is preserved. This is called _URL Rewriting_,
+   and Thymeleaf allows you to plug in your own rewriting filters by using the `response.encodeURL(...)`
+   mechanism from the Servlet API for every URL.
+ * The `th:href` tag allowed us to (optionally) have a working static `href`
    attribute in our template, so that our template links remained navigable by a
    browser when opened directly for prototyping purposes.
 
