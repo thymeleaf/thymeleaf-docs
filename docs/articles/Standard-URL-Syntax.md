@@ -2,9 +2,10 @@ Standard URL Syntax
 ===================
 
 The Thymeleaf standard dialects —called *Standard* and *SpringStandard*—
-offer a way to easily create URLs in your web application so that they
+offer a way to easily create URLs in your web applications so that they
 include any required *URL preparation* artifacts. This is done by means
 of the so-called *“at” syntax* of the *standard expressions*: `@{...}`
+
 
 Absolute URLs
 -------------
@@ -16,11 +17,13 @@ specifying a protocol name (`http://` or `https://`)
 <a th:href="@{http://www.thymeleaf/documentation.html}">
 ```
 
-They are not modified at all:
+They are not modified at all (unless you have an _URL Rewriting_ filter
+configured at your server):
 
 ```html
 <a href="http://www.thymeleaf/documentation.html">
 ```
+
 
 Context-relative URLs
 ---------------------
@@ -44,19 +47,6 @@ output:
 <a href="/myapp/order/list">
 ```
 
-### URL Rewriting
-
-Rewriting *context-relative* URLs means to:
-
--   Automatically add the context name to context-relative URLs, as
-    already seen.
--   Automatically detect whether the user has cookies enabled or not,
-    and add the `;jsessionid=...` fragment to the URL if not —or if it
-    is the first request and cookie configuration is still unknown.
-
-All of this is automatically done when outputting this kind of URLs,
-because thymeleaf will apply the standard application server's
-`response.encodeURL(url)` mechanism before outputting any URL.
 
 Server-relative URLs
 --------------------
@@ -78,8 +68,6 @@ will output:
 <a href="/billing-app/showDetails.htm">
 ```
 
-*(Note that server-relative URLs are only available since Thymeleaf
-2.0.5)*
 
 Protocol-relative URLs
 ----------------------
@@ -98,6 +86,7 @@ scripts, etc.:
 ```html
 <script src="//scriptserver.example.net/myscript.js">...</script>
 ```
+
 
 Adding parameters
 -----------------
@@ -127,6 +116,21 @@ Which would output as:
 <a href="/order/details?id=3&action=show_all">
 ```
 
+You can also include parameters in the form of _path variables_ similarly
+to _normal_ parameters but specifying a placeholder inside your URL's path:
+
+```html
+<a th:href="@{/order/{id}/details(id=3,action='show_all')}">
+```
+
+Which would output as:
+
+```html
+<a href="/order/3/details?action=show_all">
+```
+
+
+
 URL fragment identifiers
 ------------------------
 
@@ -143,8 +147,28 @@ parameters. They will always be included at the URL base, so that:
 <a href="/home?action=show#all_info">
 ```
 
-*(Note that fragment identifiers in parameterized URLs are only
-supported since Thymeleaf 2.0.7)*
+
+URL rewriting
+-------------
+
+Thymeleaf allows you to configure _URL rewriting filters_ in your application,
+and it does so by calling the `response.encodeURL(...)` method in the
+`javax.servlet.http.HttpServletResponse` class of the Servlet API for every
+URL generated from a thymeleaf template.
+
+This is the standard way of supporting URL rewriting operations in Java web
+applications, and allows URLs to:
+
+-   Automatically detect whether the user has cookies enabled or not,
+    and add the `;jsessionid=...` fragment to the URL if not —or if it
+    is the first request and cookie configuration is still unknown.
+-   Automatically apply proxy configuration to URLs when needed.
+-   Make use (if configured so) of different CDN (Content Delivery Network)
+    setups, in order to link to content distributed among several servers.
+
+A very common (and recommended) technology for URL Rewriting is
+[URLRewriteFilter](http://tuckey.org/urlrewrite/).
+
 
 Only for th:href's?
 -------------------
