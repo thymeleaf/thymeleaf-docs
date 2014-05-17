@@ -127,12 +127,12 @@ At some point, driven by the obvious usefulness of XML and the fact that
 it could make web documents more extensible and interoperable (like, for
 example, producing more predictable DOMs across browsers), the W3C
 decided to reformulate HTML as an XML dialect (or *application*) instead
-of and SGML one, and so XHTML was born.
+of an SGML one, and so XHTML was born.
 
 XHTML required web authors to write their documents as well-formed XML,
 which introduced some formatting rules that didn't exist in HTML before:
 tags should always be closed, attributes should always be escaped and
-surrounded by commas, etc.
+surrounded by quotes, etc.
 
 The introduction of XHTML and the transformation of web documents into
 well formed XML was generally perceived as a step forward, because it
@@ -214,7 +214,7 @@ XHTML web site. What you've done is (probably ill-formed) XHTML
 documents served and displayed as plain old HTML. How about that?
 
 But it went worse, because in 2002 `XHTML 1.1` removed the possibility
-of using of the HTML content type, therefore allowing only
+of using the HTML content type, therefore allowing only
 `application/xhtml+xml`. The problem was that, instead of this forcing
 Internet Explorer to support `application/xhtml+xml`, which didn't
 happen, this restriction simply turned XHTML 1.1 into as much a
