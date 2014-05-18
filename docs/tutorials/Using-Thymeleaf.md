@@ -447,7 +447,7 @@ A template resolver is the only required parameter a `TemplateEngine` needs,
 although of course there are many others that will be covered later (message
 resolvers, cache sizes, etc). For now, this is all we need.
 
-Out Template Engine is now ready and we can start creating our pages using
+Our Template Engine is now ready and we can start creating our pages using
 Thymeleaf.
 
 
@@ -668,7 +668,7 @@ requires that we use a context implementing `IWebContext`.
 WebContext ctx = new WebContext(request, servletContext, request.getLocale());
 ```
 
-Only two of those three constructor arguments is required, because the default
+Only two of those three constructor arguments are required, because the default
 locale for the system will be used if none is specified (although you should
 never let this happen in real applications).
 
@@ -678,13 +678,13 @@ and application attributes . But in fact `WebContext` will do a little bit more
 than just that:
 
  * Add all the request attributes to the context variables map.
- * Add a context variable called param containing all the request parameters.
- * Add a context variable called session containing all the session attributes.
- * Add a context variable called application containing all the ServletContext attributes.
+ * Add a context variable called `param` containing all the request parameters.
+ * Add a context variable called `session` containing all the session attributes.
+ * Add a context variable called `application` containing all the ServletContext attributes.
 
-All context objects (implementations of `IContext`), including both `Context`
-and `WebContext`, are set a special variable just before execution called the
-execution info (`execInfo`). This variable contains two pieces of data that can
+Just before execution, a special variable is set into all context objects 
+(implementations of `IContext`), including both `Context` and `WebContext`, 
+called the execution info (`execInfo`). This variable contains two pieces of data that can
 be used from within your templates:
 
  * The template name (`${execInfo.templateName}`), the name specified for engine
@@ -871,7 +871,7 @@ Standard Expression features:
     * If-then-else: `(if) ? (then) : (else)`
     * Default: `(value) ?: (defaultvalue)`
 
-All this features can be combined and nested:
+All these features can be combined and nested:
 
 ```html
 'User is of type ' + (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown'))
@@ -913,7 +913,7 @@ syntax, which means you could add format to numbers and dates as specified in
 the API docs for that class.
 
 In order to specify a value for our parameter, and given an HTTP session
-attribute called user, we would have:
+attribute called `user`, we would have:
 
 ```html
 <p th:utext="#{home.welcome(${session.user.name})}">Welcome to our grocery store, Sebastian Pepper!</p>
@@ -1088,8 +1088,8 @@ in `*{...}` ones.
 
 There is an important difference, though: the asterisk syntax evaluates
 expressions on selected objects rather than on the whole context variables map.
-This is, unless a selection has not been yet performed, in which case the dollar
-and the asterisk syntaxes do exactly the same.
+This is: as long as there is no selected object, the dollar and the asterisk 
+syntaxes do exactly the same.
 
 And what is that object selection thing? A `th:object` attribute. Let's use it
 in our user profile (`userprofile.html`) page:
@@ -1172,10 +1172,13 @@ create relative links.
 Let's use this new syntax. Meet the `th:href` attribute:
 
 ```html
+<!-- Will generate something like 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
 <a href="details.html" th:href="@{http://localhost:8080/gtvg/order/details(orderId=${o.id})}">view</a>
 
+<!-- Will generate something like '/gtvg/order/details?orderId=3' (plus rewriting) -->
 <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
 
+<!-- Will generate something like '/gtvg/order/3/details' (plus rewriting) -->
 <a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
 ```
 
@@ -1253,7 +1256,9 @@ The boolean literals are `true` and `false`. For example:
 <div th:if="${user.isAdmin()} == false"> ...
 ```
 
-Note the difference between the above example and specifying the `false` literal inside an OGNL/SpringEL variable expression and therefore let these expression engines evaluate it (not Thymeleaf):
+Note that in the above example, the `== false` is written outside the braces, and thus
+it is Thymeleaf itself who takes care of it. If it were written inside the braces, it would
+be the responsibility of the OGNL/SpringEL engines:
 
 ```html
 <div th:if="${user.isAdmin() == false}"> ...
@@ -1340,7 +1345,7 @@ Some arithmetic operations are also available: `+`, `-`, `*`, `/` and `%`.
 th:with="isEven=(${prodStat.count} % 2 == 0)"
 ```
 
-Note that this operators can also be applied inside OGNL variable expressions
+Note that these operators can also be applied inside OGNL variable expressions
 themselves (and in that case will be executed by OGNL instead of the Thymeleaf
 Standard Expression engine):
 
@@ -1361,7 +1366,7 @@ not be used in attribute values, and so they should be substituted by `&lt;` and
 `&gt;`.
 
 ```html
-th:if="${prodStat.count} gt; 1"
+th:if="${prodStat.count} &gt; 1"
 th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')"
 ```
 
@@ -1551,7 +1556,7 @@ explained in the previous chapter.
 
 But what if we wanted to set more than one attribute at a time? XML rules do not
 allow you to set an attribute twice in a tag, so `th:attr` will take a
-comma-separated list of assignations, like:
+comma-separated list of assignments, like:
 
 ```html
 <img src="../../images/gtvglogo.png" th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
@@ -1574,16 +1579,16 @@ By now, you might be thinking that something like:
 <input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
 ```
 
-...is quite an ugly piece of markup. Specifying an assignation inside an
+...is quite an ugly piece of markup. Specifying an assignment inside an
 attribute's value can be very practical, but it is not the most elegant way of
 creating templates if you have to do it all the time.
 
 Thymeleaf agrees with you. And that's why in fact `th:attr` is scarcely used in
-templates. Normally, you will be using other `th:*` attributes which task is
+templates. Normally, you will be using other `th:*` attributes whose task is
 setting specific tag attributes (and not just any attribute like `th:attr`).
 
 And which attribute does the Standard Dialect offer us for setting the `value`
-attribute of our button? Well, in a rather obvious manner, it' `th:value. Let's
+attribute of our button? Well, in a rather obvious manner, it's `th:value`. Let's
 have a look:
 
 ```html
@@ -1826,7 +1831,7 @@ For our GTVG home page, this will allow us to substitute this:
 ----------------------------
 
 Working in an equivalent way to `th:attr`, Thymeleaf offers the `th:attrappend`
-and `th:attrprepend` attributes, which append (sufix) or prepend (prefix) the
+and `th:attrprepend` attributes, which append (suffix) or prepend (prefix) the
 result of their evaluation to the existing attribute values.
 
 For example, you might want to store the name of a CSS class to be added (not
@@ -1854,7 +1859,7 @@ overwriting the existing ones:
 ```
 
 (Don't worry about that `th:each` attribute. It is an _iterating attribute_ and
-will talk about it later.)
+we will talk about it later.)
 
 
 
@@ -2077,7 +2082,7 @@ following data:
  * The total amount of elements in the iterated variable. This is the `size`
    property.
  * The _iter variable_ for each iteration. This is the `current` property.
- * Whether the current iteration is even or odd. This are the `even/odd` boolean
+ * Whether the current iteration is even or odd. These are the `even/odd` boolean
    properties.
  * Whether the current iteration is the first one. This is the `first` boolean
    property.
@@ -2292,7 +2297,7 @@ and `colspan` attributes for a cleaner view):
 Perfect! That's exactly what we wanted.
 
 Note that the `th:if` attribute will not only evaluate _boolean_ conditions.
-It's capabilities go a little beyond that, and it will evaluate the specified
+Its capabilities go a little beyond that, and it will evaluate the specified
 expression as `true` following these rules:
 
  * If value is not null:
@@ -2551,9 +2556,9 @@ This would be, in fact, equivalent to a combination of `th:include` and `th:with
 ```
 
 **Note** that this specification of local variables for a fragment —no matter whether it 
-has a signature or not— does not cause an initialization of the context to zero. Fragments 
-will still be able to access every context variable being used at the calling template 
-like they currently are. 
+has a signature or not— does not cause the context to emptied previously to its 
+execution. Fragments will still be able to access every context variable being used at the 
+calling template like they currently are. 
 
 
 
@@ -2808,7 +2813,7 @@ Once processed, everything will look again as it should:
 </table>
 ```
 
-And what about that all value in the attribute, what does it mean? Well, in fact
+And what about that `all` value in the attribute, what does it mean? Well, in fact
 `th:remove` can behave in three different ways, depending on its value:
 
  * `all`: Remove both the containing tag and all its children.
@@ -2872,14 +2877,14 @@ This means removals could be conditional, like:
 <a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
 ```
 
-Also note that `th:remove` could consider `null` a synonym to `none`, so that the following works
+Also note that `th:remove` considers `null` a synonym to `none`, so that the following works
 exactly as the example above:
 
 ```html
 <a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
 ```
 
-If `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
+In this case, if `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
 
 
 
@@ -2910,7 +2915,7 @@ Specifically:
 
 Thymeleaf offers you a way to declare local variables without iteration. It is
 the `th:with` attribute, and its syntax is like that of attribute value
-assignation:
+assignments:
 
 ```html
 <div th:with="firstPer=${persons[0]}">
@@ -2924,7 +2929,7 @@ as available for evaluation as any other variables declared in the context from
 the beginning, but only within the bounds of the containing `<div>` tag.
 
 You can define several variables at the same time using the usual multiple
-assignation syntax:
+assignment syntax:
 
 ```html
 <div th:with="firstPer=${persons[0]},secondPer=${persons[1]}">
@@ -2979,7 +2984,7 @@ That was clean and easy. In fact, given the fact that `th:with` has a higher
 ```
 
 You might be thinking: Precedence? We haven't talked about that yet! Well, don't
-worry because that is exactly what next chapter is about.
+worry because that is exactly what the next chapter is about.
 
 
 
@@ -3080,7 +3085,7 @@ order in which they are executed in the tag. This order is:
 </table>
 
 This precedence mechanism means that the above iteration fragment will give
-exactly the same results if attribute position is inverted (although it would be
+exactly the same results if the attribute position is inverted (although it would be
 slightly less readable):
 
 ```html
@@ -3297,7 +3302,7 @@ Hello, [[${session.user.name}]]!
 ------------------------------------------
 
 Thymeleaf offers a series of "scripting" modes for its inlining capabilities, so
-that you can integrate your date inside scripts created in some script languages.
+that you can integrate your data inside scripts created in some script languages.
 
 Current scripting modes are `javascript` (`th:inline="javascript"`) and `dart` (`th:inline="dart"`).
 
@@ -3831,7 +3836,7 @@ of configuration parameters, which include:
     templateResolver.setCacheTTLMs(60000L);
     ```
 
-Also, a Template Engine can be set several template resolvers, in which case an
+Also, a Template Engine can be specified several template resolvers, in which case an
 order can be established between them for template resolution so that, if the
 first one is not able to resolve the template, the second one is asked, and so
 on:
@@ -4048,7 +4053,7 @@ ${#locale}
 ```
 
  * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context
-    ((usually the variables contained in `#ctx.variables` plus local ones).
+    (usually the variables contained in `#ctx.variables` plus local ones).
 
     Unqualified expressions are evaluated against this object. In fact, `${something}` is completely equivalent
     to (but more beautiful than) `${#vars.something}`.
