@@ -1,20 +1,32 @@
-% Tutorial: Thymeleaf + Spring 3
+% Tutorial: Thymeleaf + Spring
 % The Thymeleaf Team
 
 
 
 
-1 Integrating Thymeleaf with Spring 3
-=====================================
+Preface
+=======
+
+This tutorial explains how Thymeleaf can be integrated with the Spring Framework, especially (but not only) Spring MVC.
+
+Note that Thymeleaf has integrations for both versions 3.x and 4.x of the Spring Framework, provided by two
+separate libraries called `thymeleaf-spring3` and `thymeleaf-spring4`. These libraries are packaged in separate
+`.jar` files (`thymeleaf-spring3-{version}.jar` and `thymeleaf-spring4-{version}.jar`) and need to be added to your
+classpath in order to use Thymeleaf's Spring integrations in your application.
+
+The code samples and example application in this tutorial make use of **Spring 4.x** and its corresponding
+Thymeleaf integrations, but the contents of this text are valid also for Spring 3.x. If your application uses
+Spring 3.x, all you have to do is replace the `org.thymeleaf.spring4` package with `org.thymeleaf.spring3` in the
+code samples. 
+
+
+1 Integrating Thymeleaf with Spring
+===================================
 
 Thymeleaf offers a set of Spring integrations that allow you to use it as a
 full-featured substitute for JSP in Spring MVC applications.
 
-These integrations are a separate library called `thymeleaf-spring3` and packed
-in a separate `.jar` file (`thymeleaf-spring3-{version}.jar`), which has to be
-added to your classpath in order to use these integrations in your applications.
-
-This will allow you to:
+These integrations will allow you to:
 
  * Make the mapped methods in your Spring MVC `@Controller` objects forward to
    templates managed by Thymeleaf, exactly like you do with JSPs.
@@ -39,7 +51,7 @@ dialect which specifically implements all the needed features for it to work
 correctly with Spring.
 
 This specific dialect is based on the Thymeleaf Standard Dialect and is
-implemented in a class called `org.thymeleaf.spring3.dialect.SpringStandardDialect`,
+implemented in a class called `org.thymeleaf.spring4.dialect.SpringStandardDialect`,
 which in fact extends from `org.thymeleaf.standard.StandardDialect`.
 
 Besides all the features already present in the Standard Dialect – and therefore
@@ -60,7 +72,7 @@ features:
 
 Note that _you shouldn't use this dialect directly in a normal TemplateEngine object_
 as a part of its configuration. Instead, you should instance a new template
-engine class that performs all the required configuration steps: `org.thymeleaf.spring3.SpringTemplateEngine`.
+engine class that performs all the required configuration steps: `org.thymeleaf.spring4.SpringTemplateEngine`.
 
 An example bean configuration:
 
@@ -73,7 +85,7 @@ An example bean configuration:
 </bean>
     
 <bean id="templateEngine"
-      class="org.thymeleaf.spring3.SpringTemplateEngine">
+      class="org.thymeleaf.spring4.SpringTemplateEngine">
   <property name="templateResolver" ref="templateResolver" />
 </bean>
 ```
@@ -144,8 +156,8 @@ A quick look at its properties is enough to know about how it's configured:
 
 Thymeleaf offers implementations for the two interfaces mentioned above:
 
- * `org.thymeleaf.spring3.view.ThymeleafView`
- * `org.thymeleaf.spring3.view.ThymeleafViewResolver`
+ * `org.thymeleaf.spring4.view.ThymeleafView`
+ * `org.thymeleaf.spring4.view.ThymeleafViewResolver`
 
 These two classes will be in charge of processing Thymeleaf templates as a
 result of the execution of controllers.
@@ -153,7 +165,7 @@ result of the execution of controllers.
 Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
 
 ```xml
-<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
   <property name="templateEngine" ref="templateEngine" />
   <property name="order" value="1" />
   <property name="viewNames" value="*.html,*.xhtml" />
@@ -173,7 +185,7 @@ And what if we wanted to define a `View` bean and add some static variables to
 it? Easy:
 
 ```xml
-<bean name="main" class="org.thymeleaf.spring3.view.ThymeleafView">
+<bean name="main" class="org.thymeleaf.spring4.view.ThymeleafView">
   <property name="staticVariables">
     <map>
       <entry key="footer" value="Some company: &lt;b&gt;ACME&lt;/b&gt;" />
@@ -195,14 +207,14 @@ it? Easy:
 
 When used with Spring, Thymeleaf provides additional implementations of `ITemplateResolver` and an associated `IResourceResolver`, fully integrated with Spring's resource resolution mechanism. These are:
 
-  * `org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver` for resolving templates.
-  * `org.thymeleaf.spring3.resourceresolver.SpringResourceResourceResolver`, mostly for internal use.
+  * `org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver` for resolving templates.
+  * `org.thymeleaf.spring4.resourceresolver.SpringResourceResourceResolver`, mostly for internal use.
 
 This template resolver will allow applications to resolve templates using the standard Spring resource resolution syntax. It can be configured like:
 
 ```xml
 <bean id="templateResolver"
-      class="org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver">
+      class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
   <property name="suffix" value=".html" />
   <property name="templateMode" value="HTML5" />
 </bean>
@@ -239,7 +251,7 @@ for knowing which seed was in each cell of the container, so we decided to
 prepare an application using Spring MVC and Thymeleaf to help us catalogue our
 starters: _The Spring Thyme SeedStarter Manager_.
 
-![STSM front page](images/thymeleaf-spring3/stsm-view.png)
+![STSM front page](images/thymeleaf-spring/stsm-view.png)
 
 In a similar way to the Good Thymes Virtual Grocery application we developed in
 the _Using Thymeleaf_ tutorial, the STSM will allow us to exemplify the most
@@ -254,7 +266,7 @@ Spring MVC.
 We will need a very simple business layer for our application. First of all,
 let's have a look at our model entities:
 
-![STSM model](images/thymeleaf-spring3/stsm-model.png)
+![STSM model](images/thymeleaf-spring/stsm-model.png)
 
 A couple of very simple service classes will provide the required business
 methods. Like:
@@ -373,11 +385,11 @@ Resolver instances.
   </bean>
     
   <bean id="templateEngine"
-        class="org.thymeleaf.spring3.SpringTemplateEngine">
+        class="org.thymeleaf.spring4.SpringTemplateEngine">
     <property name="templateResolver" ref="templateResolver" />
   </bean>
    
-  <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
     <property name="templateEngine" ref="templateEngine" />
   </bean>    
 
@@ -1239,7 +1251,7 @@ we created...
 One of the nicest consequences of working with Thymeleaf is that after all this
 functionality we have added to our HTML, we can still use it as a prototype (we say it is a _Natural Template_). Let's open `seedstartermng.html` directly in our browser without executing our application:
 
-![STSM natural templating](images/thymeleaf-spring3/stsm-natural-templating.png)
+![STSM natural templating](images/thymeleaf-spring/stsm-natural-templating.png)
 
 There it is! It's not a working application, it's not real data... but it is a
 perfectly valid prototype made up of perfectly displayable HTML code. Try to do
@@ -1359,10 +1371,10 @@ The most common of these implementations is `org.thymeleaf.standard.fragment.Sta
 11.1 Specifying fragments in view beans
 ----------------------------------------
 
-*View beans* are beans of the `org.thymeleaf.spring3.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
+*View beans* are beans of the `org.thymeleaf.spring4.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
 
 ```xml
-<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+<bean name="content-part" class="org.thymeleaf.spring4.view.ThymeleafView">
   <property name="templateName" value="index" />
   <property name="fragmentSpec">
     <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
@@ -1400,7 +1412,7 @@ public String showContentPart() {
 Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select a fragment in a template without needing any `th:fragment` attributes at all. Let's use the `id` attribute, for example:
 
 ```xml
-<bean name="content-part" class="org.thymeleaf.spring3.view.ThymeleafView">
+<bean name="content-part" class="org.thymeleaf.spring4.view.ThymeleafView">
   <property name="fragmentSpec">
     <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
           c:selectorExpression="#content" />
@@ -1511,7 +1523,7 @@ Note this feature will only be available for Spring versions 3.1 and newer.
 13.1 Basic configuration
 -----------------------
 
-The `thymeleaf–spring3` integration package includes integration with Spring
+The `thymeleaf–spring4` integration package includes integration with Spring
 WebFlow 2.3.x.
 
 WebFlow includes some AJAX capabilities for rendering fragments of the displayed
@@ -1520,8 +1532,8 @@ Thymeleaf to attend these AJAX requests, we will have to use a different `ViewRe
 implementation, configured like this:
 
 ```xml
-<bean id="thymeleafViewResolver" class="org.thymeleaf.spring3.view.AjaxThymeleafViewResolver">
-    <property name="viewClass" value="org.thymeleaf.spring3.view.FlowAjaxThymeleafView" />
+<bean id="thymeleafViewResolver" class="org.thymeleaf.spring4.view.AjaxThymeleafViewResolver">
+    <property name="viewClass" value="org.thymeleaf.spring4.view.FlowAjaxThymeleafView" />
     <property name="templateEngine" ref="templateEngine" />
 </bean>
 ```
