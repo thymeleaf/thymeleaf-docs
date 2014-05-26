@@ -193,7 +193,7 @@ _precedence_ is established. If a processor is considered to be sorted _before_
 another one, this means it has more precedence, and therefore will be executed
 before the latter if they both apply to the same node.
 
-Now for the methods. A procesor's _matcher_ establishes when a processor is
+Now for the methods. A processor's _matcher_ establishes when a processor is
 applicable to a DOM node:
 
 ```java
