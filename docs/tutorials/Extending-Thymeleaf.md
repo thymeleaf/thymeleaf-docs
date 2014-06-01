@@ -82,7 +82,7 @@ not allowed to.
 If you've read the _Using Thymeleaf_ tutorial before getting here –which you
 should have done–, you should know that what you've been learning all this time
 was not exactly _Thymeleaf_, but rather its _Standard Dialect_ (or the _SpringStandard Dialect_,
-if you've also read the _Thymeleaf + Spring 3_ tutorial).
+if you've also read the _Thymeleaf + Spring_ tutorial).
 
 What does that mean? It means that all those `th:x` attributes you learned to
 use are only a standard, out-of-the-box set of features, but you can define your
@@ -906,7 +906,7 @@ Let's see how we'd configure this in our Spring bean configuration files:
 
 ```xml
 <bean id="templateEngine"
-      class="org.thymeleaf.spring3.SpringTemplateEngine">
+      class="org.thymeleaf.spring4.SpringTemplateEngine">
   <property name="templateResolver" ref="templateResolver" />
   <property name="additionalDialects">
     <set>

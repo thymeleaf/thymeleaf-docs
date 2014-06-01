@@ -89,12 +89,13 @@ if they want to define their own processing logic while taking advantage of the
 library's advanced features. A Template Engine can be configured several
 dialects at a time.
 
-> The official thymeleaf-spring3 integration package defines a dialect called
-> the "SpringStandard Dialect", mostly equivalent to the Standard Dialect but
-> with small adaptations to make better use of some features in Spring Framework
-> (for example, by using Spring Expression Language instead of Thymeleaf's
-> standard OGNL). So if you are a Spring MVC user you are not wasting your time,
-> as almost everything you learn here will be of use in your Spring applications.
+> The official thymeleaf-spring3 and thymeleaf-spring4 integration packages 
+> both define a dialect called the "SpringStandard Dialect", mostly equivalent 
+> to the Standard Dialect but with small adaptations to make better use of some 
+> features in Spring Framework (for example, by using Spring Expression Language 
+> instead of Thymeleaf's standard OGNL). So if you are a Spring MVC user you are 
+> not wasting your time, as almost everything you learn here will be of use in 
+> your Spring applications.
 
 The Thymeleaf Standard Dialect can process templates in any mode, but is
 especially suited for web-oriented template modes (XHTML and HTML5 ones).
@@ -3883,7 +3884,7 @@ resolver implementation offered by Thymeleaf core out of the box, although of
 course you can create your own by just implementing the `org.thymeleaf.messageresolver.IMessageResolver`
 interface.
 
-> The thymeleaf-spring3 integration package offers an `IMessageResolver`
+> The Thymeleaf + Spring integration packages offer an `IMessageResolver`
 > implementation which uses the standard Spring way of retrieving externalized
 > messages, by using `MessageSource` objects.
 
@@ -4018,7 +4019,8 @@ Some objects and variable maps are always available to be invoked at variable ex
 
  * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
    `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web). If we are
-   using the _Spring integration module_, it will be an instance of `org.thymeleaf.spring3.context.SpringWebContext`.
+   using the _Spring integration module_, it will be an instance of 
+   `org.thymeleaf.spring[3|4].context.SpringWebContext`.
 
 ```java
 /*
@@ -4158,7 +4160,7 @@ ${#httpSession.lastAccessedTime}
 
 ### Spring context objects
 
-If you are using Thymeleaf from Spring (thymeleaf-spring3 integration module), you can also access these objects:
+If you are using Thymeleaf from Spring, you can also access these objects:
 
  * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
 
