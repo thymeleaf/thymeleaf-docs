@@ -28,6 +28,16 @@ $(document).ready(function() {
 	$('#toc > ul > li > ul > li > ul').addClass('level3');
 	$('#toc > ul > li > ul > li > ul > li > ul').addClass('level4');
 
+    // Languages used for syntax highlight
+	var languages = ['html', 'java', 'javascript', 'xml'];
+
+	// Normalize Pandoc 1.11 and 1.12 outputs
+	for (var i = 0; i < languages.length; i++) {
+		var language = languages[i];
+		$('pre.' + language).addClass('sourceCode');
+		$('pre.' + language + ' > code').addClass('sourceCode').addClass(language);
+	}
+
 	// Remove the markup added by Pandoc for code highlighting so that we can
 	// use a different code highlighter
 	$('code.sourceCode').each(function() {
@@ -37,7 +47,6 @@ $(document).ready(function() {
 
 	// Prep for Prettify
 	$('code.sourceCode').removeClass('sourceCode');
-	var languages = ['html', 'java', 'javascript', 'xml'];
 	for (var i = 0; i < languages.length; i++) {
 		var language = languages[i];
 		$('code.' + language).removeClass(language).addClass('language-' + language);
