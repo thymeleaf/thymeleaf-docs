@@ -19,10 +19,7 @@ import nz.net.ultraq.lesscss.LessCSSCompiler
 import org.apache.tools.ant.filters.*
 import org.gradle.api.plugins.jetty.internal.Monitor
 
-import groovy.xml.MarkupBuilder
-
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Gradle build script for the Thymeleaf Docs project, converts the
@@ -56,7 +53,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.1'
+		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
 	}
 }
 
@@ -133,15 +130,15 @@ task generateDocsHTML(
 		if (conversions[docType].contains('html')) {
 			println "Generating HTML doc for ${docFileBase}..."
 			execute([
-					"pandoc",
-					"--write=html5",
-					"--template=" + file("${srcDirTemplates}/${docType}.html"),
-					"--toc",
-					"--toc-depth=4",
-					"--section-divs",
-					"--no-highlight",	// This doesn't seem to work :(
-					"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
-					"${docFile}"
+				"pandoc",
+				"--write=html5",
+				"--template=" + file("${srcDirTemplates}/${docType}.html"),
+				"--toc",
+				"--toc-depth=4",
+				"--section-divs",
+				"--no-highlight",	// This doesn't seem to work :(
+				"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
+				"${docFile}"
 			])
 		}
 	}
@@ -174,15 +171,15 @@ task generateDocsEbook(
 		if (conversions[docType].contains('ebook')) {
 			println "Generating E-books for ${docFileBase}..."
 			execute([
-					"pandoc",
-					"--write=epub",
-					"--template=" + file("${srcDirTemplates}/${docType}.epub"),
-//					"--data-dir=" + file("${docsDirStyles}"),
-					"--toc",
-					"--toc-depth=4",
-					"--section-divs",
-					"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
-					"${docFile}"
+				"pandoc",
+				"--write=epub",
+				"--template=" + file("${srcDirTemplates}/${docType}.epub"),
+//				"--data-dir=" + file("${docsDirStyles}"),
+				"--toc",
+				"--toc-depth=4",
+				"--section-divs",
+				"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
+				"${docFile}"
 			])
 			execute([
 					"ebook-convert",
