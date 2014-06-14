@@ -260,7 +260,9 @@ task generateDocsPDF(
 				"--margin-bottom",    "15",
 				"--footer-spacing",   "5",
 				"--footer-font-size", "8",
+				"--footer-font-name", "'Open Sans'",
 				"--footer-right",     "Page [page] of [topage]",
+				"--header-font-name", "'Open Sans'",
 				"http://localhost:8080/thymeleaf-docs/${docFile.name}",
 				file("${docsDirPdf}/${docFileBase}.pdf")
 			])
