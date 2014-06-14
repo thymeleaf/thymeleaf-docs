@@ -330,13 +330,14 @@ public class GTVGApplication {
     
     private static void initializeTemplateEngine() {
         
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        // XHTML is the default mode, but we will set it anyway for better understanding of code
+        ServletContextTemplateResolver templateResolver = 
+            new ServletContextTemplateResolver();
+        // XHTML is the default mode, but we set it anyway for better understanding of code
         templateResolver.setTemplateMode("XHTML");
         // This will convert "home" to "/WEB-INF/templates/home.html"
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
-        // Set template cache TTL to 1 hour. If not set, entries would live in cache until expelled by LRU
+        // Template cache TTL=1h. If not set, entries would be cached until expelled by LRU
         templateResolver.setCacheTTLMs(3600000L);
         
         templateEngine = new TemplateEngine();
@@ -373,7 +374,8 @@ public interface ITemplateResolver {
      * Templates are resolved by String name (templateProcessingParameters.getTemplateName())
      * Will return null if template cannot be handled by this template resolver.
      */
-    public TemplateResolution resolveTemplate(TemplateProcessingParameters templateProcessingParameters);
+    public TemplateResolution resolveTemplate(
+            TemplateProcessingParameters templateProcessingParameters);
 
 }
 ```
@@ -476,7 +478,8 @@ title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
   <head>
     <title>Good Thymes Virtual Grocery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+    <link rel="stylesheet" type="text/css" media="all" 
+          href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
   </head>
 
   <body>
@@ -523,7 +526,8 @@ along with no xmlns namespace declarations:
   <head>
     <title>Good Thymes Virtual Grocery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+    <link rel="stylesheet" type="text/css" media="all" 
+          href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
   </head>
 
   <body>
@@ -615,7 +619,8 @@ public class HomeController implements IGTVGController {
             HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, TemplateEngine templateEngine) {
         
-        WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        WebContext ctx = 
+            new WebContext(request, response, servletContext, request.getLocale());
         templateEngine.process("home", ctx, response.getWriter());
         
     }
@@ -785,7 +790,8 @@ public void process(
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
     Calendar cal = Calendar.getInstance();
         
-    WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+    WebContext ctx = 
+        new WebContext(request, response, servletContext, request.getLocale());
     ctx.setVariable("today", dateFormat.format(cal.getTime()));
         
     templateEngine.process("home", ctx, response.getWriter());
@@ -917,14 +923,18 @@ In order to specify a value for our parameter, and given an HTTP session
 attribute called `user`, we would have:
 
 ```html
-<p th:utext="#{home.welcome(${session.user.name})}">Welcome to our grocery store, Sebastian Pepper!</p>
+<p th:utext="#{home.welcome(${session.user.name})}">
+  Welcome to our grocery store, Sebastian Pepper!
+</p>
 ```
 
 If needed, several parameters could be specified, separated by commas. In fact,
 the message key itself could come from a variable:
 
 ```html
-<p th:utext="#{${welcomeMsgKey}(${session.user.name})}">Welcome to our grocery store, Sebastian Pepper!</p>
+<p th:utext="#{${welcomeMsgKey}(${session.user.name})}">
+  Welcome to our grocery store, Sebastian Pepper!
+</p>
 ```
 
 
@@ -955,7 +965,9 @@ But OGNL allows us to create quite more powerful expressions, and that's how
 this:
 
 ```html
-<p th:utext="#{home.welcome(${session.user.name})}">Welcome to our grocery store, Sebastian Pepper!</p>
+<p th:utext="#{home.welcome(${session.user.name})}">
+  Welcome to our grocery store, Sebastian Pepper!
+</p>
 ```
 
 ...does in fact obtain the user name by executing:
@@ -1076,7 +1088,9 @@ templateEngine.process("home", ctx, response.getWriter());
 ...and then perform date formatting in the view layer itself:
 
 ```html
-<p>Today is: <span th:text="${#calendars.format(today,'dd MMMM yyyy')}">13 February 2011</span></p>
+<p>
+  Today is: <span th:text="${#calendars.format(today,'dd MMMM yyyy')}">13 May 2011</span>
+</p>
 ```
 
 
@@ -1173,13 +1187,14 @@ create relative links.
 Let's use this new syntax. Meet the `th:href` attribute:
 
 ```html
-<!-- Will generate something like 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
-<a href="details.html" th:href="@{http://localhost:8080/gtvg/order/details(orderId=${o.id})}">view</a>
+<!-- Will produce 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
+<a href="details.html" 
+   th:href="@{http://localhost:8080/gtvg/order/details(orderId=${o.id})}">view</a>
 
-<!-- Will generate something like '/gtvg/order/details?orderId=3' (plus rewriting) -->
+<!-- Will produce '/gtvg/order/details?orderId=3' (plus rewriting) -->
 <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
 
-<!-- Will generate something like '/gtvg/order/3/details' (plus rewriting) -->
+<!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
 <a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
 ```
 
@@ -1236,7 +1251,9 @@ for some of the other pages in the site?
 Text literals are just character strings specified between single quotes. They can include any character, but you should escape any single quotes inside them as `\'`.
 
 ```html
-<p>Now you are looking at a <span th:text="'working web application'">template file</span>.</p>
+<p>
+  Now you are looking at a <span th:text="'working web application'">template file</span>.
+</p>
 ```
 
 ###Number literals
@@ -1444,7 +1461,10 @@ As with conditional values, they can contain nested expressions between
 parentheses:
 
 ```html
-<p>Name: <span th:text="*{firstName}?: (*{admin}? 'Admin' : #{default.username})">Sebastian</span>.</p>
+<p>
+  Name: 
+  <span th:text="*{firstName}?: (*{admin}? 'Admin' : #{default.username})">Sebastian</span>
+</p>
 ```
 
 
@@ -1560,7 +1580,8 @@ allow you to set an attribute twice in a tag, so `th:attr` will take a
 comma-separated list of assignments, like:
 
 ```html
-<img src="../../images/gtvglogo.png" th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
+<img src="../../images/gtvglogo.png" 
+     th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
 ```
 
 Given the required messages files, this will output:
@@ -1811,19 +1832,22 @@ Specifically:
 For our GTVG home page, this will allow us to substitute this:
 
 ```html
-<img src="../../images/gtvglogo.png" th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
+<img src="../../images/gtvglogo.png" 
+     th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
 ```
 
 ...or this, which is equivalent:
 
 ```html
-<img src="../../images/gtvglogo.png" th:src="@{/images/gtvglogo.png}" th:title="#{logo}" th:alt="#{logo}" />
+<img src="../../images/gtvglogo.png" 
+     th:src="@{/images/gtvglogo.png}" th:title="#{logo}" th:alt="#{logo}" />
 ```
 
 ...by this:
 
 ```html
-<img src="../../images/gtvglogo.png" th:src="@{/images/gtvglogo.png}" th:alt-title="#{logo}" />
+<img src="../../images/gtvglogo.png" 
+     th:src="@{/images/gtvglogo.png}" th:alt-title="#{logo}" />
 ```
 
 
@@ -2920,7 +2944,9 @@ assignments:
 
 ```html
 <div th:with="firstPer=${persons[0]}">
-    <p>The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.</p>
+  <p>
+    The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.
+  </p>
 </div>
 ```
 
@@ -2934,8 +2960,13 @@ assignment syntax:
 
 ```html
 <div th:with="firstPer=${persons[0]},secondPer=${persons[1]}">
-    <p>The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.</p>
-    <p>But the name of the second person is <span th:text="${secondPer.name}">Marcus Antonius</span>.</p>
+  <p>
+    The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.
+  </p>
+  <p>
+    But the name of the second person is 
+    <span th:text="${secondPer.name}">Marcus Antonius</span>.
+  </p>
 </div>
 ```
 
@@ -2949,7 +2980,10 @@ Let's use this in our Grocery's home page! Remember the code we wrote for
 outputting a formatted date?
 
 ```html
-<p>Today is: <span th:text="${#calendars.format(today,'dd MMMM yyyy')}">13 february 2011</span></p>
+<p>
+  Today is: 
+  <span th:text="${#calendars.format(today,'dd MMMM yyyy')}">13 february 2011</span>
+</p>
 ```
 
 Well, what if we wanted that `"dd MMMM yyyy"` to actually depend on the locale?
@@ -2971,7 +3005,7 @@ then use it in our `th:text` expression:
 
 ```html
 <p th:with="df=#{date.format}">
-  Today is: <span th:text="${#calendars.format(today,df)}">13 february 2011</span>
+  Today is: <span th:text="${#calendars.format(today,df)}">13 February 2011</span>
 </p>
 ```
 
@@ -2980,7 +3014,9 @@ That was clean and easy. In fact, given the fact that `th:with` has a higher
 
 ```html
 <p>
-  Today is: <span th:with="df=#{date.format}" th:text="${#calendars.format(today,df)}">13 february 2011</span>
+  Today is: 
+  <span th:with="df=#{date.format}" 
+        th:text="${#calendars.format(today,df)}">13 February 2011</span>
 </p>
 ```
 
@@ -3684,14 +3720,20 @@ syntax:
 
     <div>
       <p><b>Code:</b> <span th:text="*{id}">99</span></p>
-      <p><b>Date:</b> <span th:text="*{#calendars.format(date,'dd MMM yyyy')}">13 jan 2011</span></p>
+      <p>
+        <b>Date:</b>
+        <span th:text="*{#calendars.format(date,'dd MMM yyyy')}">13 jan 2011</span>
+      </p>
     </div>
 
     <h2>Customer</h2>
 
     <div th:object="*{customer}">
       <p><b>Name:</b> <span th:text="*{name}">Frederic Tomato</span></p>
-      <p><b>Since:</b> <span th:text="*{#calendars.format(customerSince,'dd MMM yyyy')}">1 jan 2011</span></p>
+      <p>
+        <b>Since:</b>
+        <span th:text="*{#calendars.format(customerSince,'dd MMM yyyy')}">1 jan 2011</span>
+      </p>
     </div>
   
     <h2>Products</h2>
@@ -3710,7 +3752,8 @@ syntax:
     </table>
 
     <div>
-      <b>TOTAL:</b> <span th:text="*{#aggregates.sum(orderLines.{purchasePrice * amount})}">35.23</span>
+      <b>TOTAL:</b>
+      <span th:text="*{#aggregates.sum(orderLines.{purchasePrice * amount})}">35.23</span>
     </div>
   
     <p>
@@ -4499,8 +4542,8 @@ ${#strings.trim(str)}                             �
 ${#strings.length(str)}                             // also array*, list* and set*
 
 /*
- * Abbreviate text making it have a maximum size of n. If text is bigger, it will be clipped and
- * finished in "..."
+ * Abbreviate text making it have a maximum size of n. If text is bigger, it
+ * will be clipped and finished in "..."
  * Also works with arrays, lists or sets
  */
 ${#strings.abbreviate(str,10)}                      // also array*, list* and set*
@@ -4846,8 +4889,8 @@ ${#messages.setMsgOrNull(messageKeySet)}
  */
 
 /*
- * Normally used in th:id attributes, for appending a counter to the id attribute value so that
- * it remains unique even when involved in an iteration process.
+ * Normally used in th:id attributes, for appending a counter to the id attribute value
+ * so that it remains unique even when involved in an iteration process.
  */
 ${#ids.seq('someId')}
 
@@ -4855,9 +4898,9 @@ ${#ids.seq('someId')}
  * Normally used in th:for attributes in <label> tags, so that these labels can refer to Ids
  * generated by means if the #ids.seq(...) function.
  *
- * Depending on whether the <label> goes before or after the element with the #ids.seq(...) function,
- * the "next" (label goes before "seq") or the "prev" function (label goes after "seq") function should be
- * called.
+ * Depending on whether the <label> goes before or after the element with the #ids.seq(...)
+ * function, the "next" (label goes before "seq") or the "prev" function (label goes after 
+ * "seq") function should be called.
  */
 ${#ids.next('someId')}
 ${#ids.prev('someId')}
