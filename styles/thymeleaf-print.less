@@ -76,6 +76,17 @@ figcaption {
 	font-size: 0.9em;
 }
 
+/* This removes the links at the end of each footnote. These link are         */
+/* rendered by Pandoc with a U+21A9 unicode character, which does not exist   */
+/* in the Open Sans font. This causes WebKit to default to Lucida Sans        */
+/* Unicode for rendering this char, and therefore the entire Lucida Sans      */
+/* Unicode font to be included in the PDF output files, just for rendering    */
+/* one char. Given these links are in fact useless in PDFs, it is better to   */
+/* just remove the links completely by setting display to none.               */
+.footnotes a {
+	display: none;
+}
+
 
 /* Code sections */
 /* -------------------------------------------------------------------------- */
@@ -89,3 +100,4 @@ table > code {
 pre {
 	font-size: 0.9em;
 }
+
