@@ -608,8 +608,9 @@ Like this:
         <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
         <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
         <td th:text="${#strings.arrayJoin(
-                           #messages.arrayMsg(#strings.arrayPrepend(sb.features,'seedstarter.feature.')),
-                           ', ')}">Electric Heating, Turf</td>
+                           #messages.arrayMsg(
+                               #strings.arrayPrepend(sb.features,'seedstarter.feature.')),
+                           ', ')}">Electric Heating, Turf</td>
         <td>
           <table>
             <tbody>
@@ -732,8 +733,9 @@ For achieving this, we create the following code:
 
 ```html
 <td th:text="${#strings.arrayJoin(
-        #messages.arrayMsg(#strings.arrayPrepend(sb.features,'seedstarter.feature.')),
-        ', ')}">Electric Heating, Turf</td>
+                   #messages.arrayMsg(
+                       #strings.arrayPrepend(sb.features,'seedstarter.feature.')),
+                   ', ')}">Electric Heating, Turf</td>
 ```
 
 The last column of our listing will be quite simple, in fact. Even if it has a
@@ -861,7 +863,8 @@ We can see this more easily if we look at such a multi-valued checkbox field:
 <ul>
   <li th:each="feat : ${allFeatures}">
     <input type="checkbox" th:field="*{features}" th:value="${feat}" />
-    <label th:for="${#ids.prev('features')}" th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
+    <label th:for="${#ids.prev('features')}" 
+           th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
   </li>
 </ul>
 ```
@@ -969,7 +972,8 @@ public String addRow(final SeedStarter seedStarter, final BindingResult bindingR
 
 @RequestMapping(value="/seedstartermng", params={"removeRow"})
 public String removeRow(
-        final SeedStarter seedStarter, final BindingResult bindingResult, final HttpServletRequest req) {
+        final SeedStarter seedStarter, final BindingResult bindingResult, 
+        final HttpServletRequest req) {
     final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
     seedStarter.getRows().remove(rowId.intValue());
     return "seedstartermng";
@@ -1105,7 +1109,8 @@ object, the `th:errors` and the `th:errorclass` attributes.
 Let's see how we could set a specific CSS class to a field if it has an error:
 
 ```html
-<input type="text" th:field="*{datePlanted}" th:class="${#fields.hasErrors('datePlanted')}? fieldError" />
+<input type="text" th:field="*{datePlanted}" 
+                   th:class="${#fields.hasErrors('datePlanted')}? fieldError" />
 ```
 
 As you can see, the `#fields.hasErrors(...)` function receives the field
@@ -1542,7 +1547,8 @@ implementation, configured like this:
 like:
 
 ```xml
-<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+<bean id="mvcViewFactoryCreator" 
+      class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
     <property name="viewResolvers" ref="thymeleafViewResolver"/>
 </bean>
 ```
