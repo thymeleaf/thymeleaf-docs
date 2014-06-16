@@ -242,17 +242,21 @@ messages:
 ```java
 public abstract class AbstractProcessor implements IProcessor {
 
-    /* Try to resolve a message first as template message, then if not found as processor message */
+    /* Try to resolve a message first as template message, then if not */
+    /* found as processor message.                                     */
     protected String getMessage(
-                final Arguments arguments, final String messageKey, final Object[] messageParameters) {...}
+                final Arguments arguments, final String messageKey, 
+                final Object[] messageParameters) {...}
 
     /* Try to resolve a message as a template message */
     protected String getMessageForTemplate(
-                final Arguments arguments, final String messageKey, final Object[] messageParameters) {...}
+                final Arguments arguments, final String messageKey, 
+                final Object[] messageParameters) {...}
 
     /* Try to resolve a message as a processor message */
     protected String getMessageForProcessor(
-                final Arguments arguments, final String messageKey, final Object[] messageParameters) {...}
+                final Arguments arguments, final String messageKey, 
+                final Object[] messageParameters) {...}
 
     public abstract int getPrecedence();
 
@@ -425,7 +429,8 @@ attributes:
   <body>
 
     <div>
-      <img src="../../images/extrathymelogo.png" alt="extraThyme logo" title="extraThyme logo"
+      <img src="../../images/extrathymelogo.png" 
+           alt="extraThyme logo" title="extraThyme logo"
            th:src="@{/images/extrathymelogo.png}" th:alt-title="#{title.application}"/>
     </div>
 
@@ -433,7 +438,10 @@ attributes:
 
     <div class="leaguetable">
 
-      <h2 th:text="#{title.leaguetable(${execInfo.now.time})}">League table for 07 July 2011</h2>
+      <h2 th:text="#{title.leaguetable(${execInfo.now.time})}">
+        League table for 07 July 2011
+      </h2>
+      
       <table>
         <thead>
           <tr>
@@ -565,8 +573,9 @@ public class ClassForPositionAttrProcessor
     }
 
     @Override
-    protected ModificationType getModificationType(final Arguments arguments,
-            final Element element, final String attributeName, final String newAttributeName) {
+    protected ModificationType getModificationType(final Arguments arguments, 
+            final Element element, final String attributeName, 
+            final String newAttributeName) {
 
         // Just in case there already is a value set for the 'class' attribute in the
         // tag, we will append our new value (using a whitespace separator) instead
@@ -576,7 +585,8 @@ public class ClassForPositionAttrProcessor
 
     @Override
     protected boolean removeAttributeIfEmpty(final Arguments arguments,
-            final Element element, final String attributeName, final String newAttributeName) {
+            final Element element, final String attributeName, 
+            final String newAttributeName) {
 
         // If the resulting 'class' attribute is empty, do not show it at all.
         return true;
@@ -644,7 +654,8 @@ public class RemarkForPositionAttrProcessor
     }
 
     @Override
-    protected String getText(final Arguments arguments, final Element element, final String attributeName) {
+    protected String getText(
+            final Arguments arguments, final Element element, final String attributeName) {
 
         final Configuration configuration = arguments.getConfiguration();
 
@@ -712,7 +723,8 @@ protected String getMessageForTemplate(
         final String messageKey, final Object[] messageParameters);
 
 protected String getMessageForProcessor(
-        final Arguments arguments, final String messageKey, final Object[] messageParameters);
+        final Arguments arguments, final String messageKey,
+        final Object[] messageParameters);
 ```
 
 `getMessageForTemplate(...)` uses the Template Engine's currently registered
@@ -787,7 +799,8 @@ public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElement
     }
 
     @Override
-    protected List<Node> getMarkupSubstitutes(final Arguments arguments, final Element element) {
+    protected List<Node> getMarkupSubstitutes(
+            final Arguments arguments, final Element element) {
 
         /*
          * Obtain the Spring application context. Being a SpringMVC-based
@@ -802,7 +815,8 @@ public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElement
          * Obtain the HeadlineRepository bean from the application context, and ask
          * it for the current list of headlines.
          */
-        final HeadlineRepository headlineRepository = appCtx.getBean(HeadlineRepository.class);
+        final HeadlineRepository headlineRepository = 
+                appCtx.getBean(HeadlineRepository.class);
         final List<Headline> headlines = headlineRepository.findAllHeadlines();
 
         /*
@@ -819,7 +833,8 @@ public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElement
             headlineText = headlines.get(r).getText();
         } else {
             // Order is "latest", only the latest headline will be shown
-            Collections.sort(headlines); headlineText = headlines.get(headlines.size() - 1).getText();
+            Collections.sort(headlines); headlineText = 
+                    headlines.get(headlines.size() - 1).getText();
         }
 
         /*
