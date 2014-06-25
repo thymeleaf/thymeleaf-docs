@@ -32,7 +32,11 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
+// These two variables should be updated when creating a new version of the docs
 project.version = '2.1.3'
+documentDate = new Date().clearTime()
+documentDate.set(year: 2014, month: Calendar.DECEMBER, date: 31)
+
 project.webAppDirName = "${buildDir}/jetty"
 
 project.ext.conversions = [
@@ -102,7 +106,7 @@ task copyResources() << {
 	}
 
 	// Preprocess the template files to insert the correct document date and project version
-	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
+	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentDate)
 	copy {
 		from(templatesDir) {
 			filter(ReplaceTokens, tokens: [
