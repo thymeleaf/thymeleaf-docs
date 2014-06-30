@@ -1,3 +1,6 @@
+% Getting started with the Standard dialects in 5 minutes
+
+
 Getting started with the Standard dialects in 5 minutes
 =======================================================
 
@@ -49,14 +52,18 @@ Variable expressions are OGNL expressions —or Spring EL if you're using
 *SpringStandard*— executed on the map of context variables —also called
 *model attributes* in Spring jargon. They look like this:
 
+```html
     ${session.user.name}
+```
 
 And you will find them as attribute values or as a part of them,
 depending on the attribute:
 
 ```html
 <span th:text="${book.author.name}">
+```
 
+```html
 <li th:each="book : ${books}">
 ```
 
@@ -66,7 +73,9 @@ Selection expressions are just like variable expressions, except they
 will be executed on a previously selected object instead of the whole
 context variables map. They look like this:
 
+```html
     *{customer.name}
+```
 
 The object they act on is specified by a `th:object` attribute:
 
@@ -85,9 +94,13 @@ retrieve locale-specific messages from external sources (`.properties`
 files), referencing them by a key and (optionally) applying a set of
 parameters.
 
+```html
     #{main.title}
+```
 
+```html
     #{message.entrycreated(${entryId})}
+```
 
 You can find them in templates like:
 
@@ -105,23 +118,31 @@ You can find them in templates like:
 URL expressions are meant to add useful context and session info to the
 URLs, a process usually called *URL rewriting*.
 
+```html
     @{/order/list}
+```
 
 URLs can also take parameters:
 
+```html
     @{/order/details(id=${orderId})}
+```
 
 And be relative (in which case no application context will be added to
 the URL):
 
+```html
     @{../documents/report}
+```
 
 Let's see these expressions in context:
 
 ```html
 <form th:action="@{/createOrder}">
+```
 
-  <a href="main.html" th:href="@{/main}">
+```html
+<a href="main.html" th:href="@{/main}">
 ```
 
 From this last example, see how Thymleaf allows us to set an `href`
@@ -168,7 +189,9 @@ One last thing to know about expressions is there is something called
 *expression preprocessing*, specified between `__`, which looks like
 this:
 
+```html
     #{selection.__${sel.code}__}
+```
 
 What we are seeing there is a variable expression (`${sel.code}`) that
 will be executed first and which result — let's say, "`ALL`" — will be
