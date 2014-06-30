@@ -140,7 +140,7 @@ task generateDocsHTML(
 				"--toc",
 				"--toc-depth=4",
 				"--section-divs",
-				"--no-highlight",	// This doesn't seem to work :(
+				"--no-highlight",
 				"--output=" + file("${docsDirHtml}/${docFileBase}.html"),
 				"${docFile}"
 			])
