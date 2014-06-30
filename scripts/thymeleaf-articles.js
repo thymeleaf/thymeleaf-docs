@@ -55,6 +55,14 @@ $(document).ready(function() {
         });
     }
 
+
+    // Use <kbd> for inlined code samples
+    $('code').replaceWith(function(){
+        return $("<kbd />", {html: $(this).html()});
+    });
+
+
+    // Convert the name of the current article at the breadcrumb into lower case
     var articleTitleNode = $('#breadcrumb > .current');
     var articleTitle = articleTitleNode.text();
     articleTitleNode.text(articleTitle.toLowerCase());
