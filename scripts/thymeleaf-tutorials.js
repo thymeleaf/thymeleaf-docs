@@ -39,7 +39,8 @@ $(document).ready(function() {
 	}
 
 	// Remove the markup added by Pandoc for code highlighting so that we can
-	// use a different code highlighter
+	// use a different code highlighter - this is not needed in Pandoc 1.12 as
+    // the '--no-highlight' option was fixed.
 	$('code.sourceCode').each(function() {
 		var text = $(this).text();
 		$(this).text(text);
