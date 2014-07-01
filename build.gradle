@@ -187,13 +187,12 @@ task generateDocsEbook(
 				"pandoc",
 				"--write=epub",
 				"--template=" + file("${srcDirTemplates}/${docType}.epub"),
-//				"--data-dir=" + file("${docsDirStyles}"),
 				"--toc",
 				"--toc-depth=4",
 				"--section-divs",
 				"--output=" + file("${docsDirEbook}/${docFileBase}.epub"),
 				"${docFile}"
-			])
+			], srcDir)  // We need to set the working dir in order for pandoc to find images
 			execute([
 					"ebook-convert",
 					file("${docsDirEbook}/${docFileBase}.epub"),
@@ -308,9 +307,9 @@ def fileBaseName(file) {
  * 
  * @param command
  */
-def execute(command) {
+def execute(command, workingDir = projectDir) {
 
-	def proc = command.execute(null, projectDir)
+	def proc = command.execute(null, workingDir)
 	proc.waitForProcessOutput(System.out, System.err)
 	if (proc.exitValue() > 0) {
 		println "${proc.err.text}"
