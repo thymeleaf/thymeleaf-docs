@@ -136,7 +136,7 @@ Template `home/homeNotSignedIn.html`
 
 You can open the file directly in a browser:
 
-![Home page when not signed in](images/layouts_homeNotSignedIn.png)
+![Home page when not signed in](images/layouts/homeNotSignedIn.png)
 
 In the above example, we are building a page that consists of page
 header and page footer. In Thymeleaf all fragments can be defined in a
@@ -201,7 +201,7 @@ Template `fragments/header.html`
 
 ...which we can open directly in a browser:
 
-![Footer page](images/layouts_header.png)
+![Header page](images/layouts/header.png)
 
 And template `fragments/footer.html`
 
@@ -643,7 +643,7 @@ We can see several things in the above example. Firstly, the layout is a
 natural template and it is a valid UI design prototype (in this example
 the layout is very simple):
 
-![Layout page](images/layouts_layouttiles.png)
+![Layout page](images/layouts/layouttiles.png)
 
 Secondly, we can mix standard layout (`th:include/th:replace`) with
 Tiles dialect. Thirdly, Thymeleaf has ability to include a template
@@ -729,7 +729,7 @@ The layout file is defined in `/WEB-INF/views/task/layout.html`:
 
 We can open the file directly in a browser:
 
-![Layout page](images/layouts_layoutlayoutdialect.png)
+![Layout page](images/layouts/layoutlayoutdialect.png)
 
 The above file is our decorator for content pages we will be creating in
 the application. The most important thing about the above example is
@@ -777,7 +777,7 @@ The content page looks as follows (`WEB-INF/views/task/list.html`):
 
 And in the browser it looks like this:
 
-![Layout page](images/layouts_layoutlayoutdialectlist.png)
+![Layout page](images/layouts/layoutlayoutdialectlist.png)
 
 Content of this `task/list` view will be decorated by the elements of
 `task/layout` view. Please note `layout:decorator="task/layout"`

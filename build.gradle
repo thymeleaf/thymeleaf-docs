@@ -70,13 +70,14 @@ buildscript {
 task copyResources() << {
 
 	def docsDir      = file("${projectDir}/docs")
-	def imagesDir    = file("${projectDir}/images")
 	def scriptsDir   = file("${projectDir}/scripts")
 	def stylesDir    = file("${projectDir}/styles")
 	def templatesDir = file("${projectDir}/templates")
+    def docTypeNames = [] as Set
 
 	// Copy all .md files into the same directory
 	fileTree(docsDir) { include '**/*.md' }.each { docFile ->
+        docTypeNames.add(docFile.parentFile.name)
 		docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		copy {
 			from docFile
@@ -84,8 +85,16 @@ task copyResources() << {
 		}
 	}
 
+    docTypeNames.each { docTypeName ->
+        def imagesDir = file("${docsDir}/${docTypeName}/images")
+        copy {
+            from imagesDir
+            into "${srcDir}/images"
+        }
+    }
+
 	// Copy all resource directories straight over
-	[imagesDir, scriptsDir].each { dir ->
+	[scriptsDir].each { dir ->
 		copy {
 			from dir
 			into "${srcDir.path}/${dir.name}"

@@ -251,7 +251,7 @@ for knowing which seed was in each cell of the container, so we decided to
 prepare an application using Spring MVC and Thymeleaf to help us catalogue our
 starters: _The Spring Thyme SeedStarter Manager_.
 
-![STSM front page](images/thymeleaf-spring/stsm-view.png)
+![STSM front page](images/thymeleafspring/stsm-view.png)
 
 In a similar way to the Good Thymes Virtual Grocery application we developed in
 the _Using Thymeleaf_ tutorial, the STSM will allow us to exemplify the most
@@ -266,7 +266,7 @@ Spring MVC.
 We will need a very simple business layer for our application. First of all,
 let's have a look at our model entities:
 
-![STSM model](images/thymeleaf-spring/stsm-model.png)
+![STSM model](images/thymeleafspring/stsm-model.png)
 
 A couple of very simple service classes will provide the required business
 methods. Like:
@@ -1256,7 +1256,7 @@ we created...
 One of the nicest consequences of working with Thymeleaf is that after all this
 functionality we have added to our HTML, we can still use it as a prototype (we say it is a _Natural Template_). Let's open `seedstartermng.html` directly in our browser without executing our application:
 
-![STSM natural templating](images/thymeleaf-spring/stsm-natural-templating.png)
+![STSM natural templating](images/thymeleafspring/stsm-natural-templating.png)
 
 There it is! It's not a working application, it's not real data... but it is a
 perfectly valid prototype made up of perfectly displayable HTML code. Try to do

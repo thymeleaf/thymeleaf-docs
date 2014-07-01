@@ -1,3 +1,6 @@
+% Spring MVC view layer: Thymeleaf vs. JSP
+
+
 Spring MVC view layer: Thymeleaf vs. JSP
 ========================================
 
@@ -46,7 +49,7 @@ Doing it with JSP
 
 This is our page:
 
-![](images/thymeleaf-vs-jsp/jsp1.png)
+![The JSP page](images/thvsjsp/jsp1.png)
 
 And this is our JSP code, making use of both JSTL (`core`) and Spring
 (`tags` and `form`) JSP tag libraries:
@@ -111,7 +114,7 @@ Doing it with Thymeleaf
 
 Now, let's do the same with Thymeleaf. This is our page:
 
-![](images/thymeleaf-vs-jsp/th1.png)
+![The Thymeleaf page](images/thvsjsp/th1.png)
 
 And this is our Thymeleaf code:
 
@@ -213,7 +216,7 @@ directly on the browser's DOM, and thus see immediate results.
 **Step 4**: *Make the colour changes*. Probably trying a couple of
 different tones of blue before deciding on the one we like.
 
-![](images/thymeleaf-vs-jsp/jsp2.png)
+![Fine-tuned JSP page](images/thvsjsp/jsp2.png)
 
 **Step 5**: *Copy-paste the changes into our CSS files*.
 
@@ -226,7 +229,7 @@ our browser open it*. Being a Thymeleaf template, it will show just
 fine, only with template/prototype data (note the subscription type
 options):
 
-![](images/thymeleaf-vs-jsp/th2.png)
+![Thymeleaf page - valid as a prototype](images/thvsjsp/th2.png)
 
 **Step 2**: *Open the `.css` file with our favourite text editor*. The
 template file statically links to the CSS in its
@@ -274,7 +277,7 @@ But let's try anyway: of course, we will have to rename our file so that
 its name ends in `.html` instead of `.jsp`, but let's see what happens
 when we open our browser:
 
-![](images/thymeleaf-vs-jsp/jsp3.png)
+![JSP page directly opened on a browser](images/thvsjsp/jsp3.png)
 
 *WHAT? Where's our page gone?* Well, it's still there, but in order to
 make our page work as JSP we had to add lots of JSP tags and features
@@ -285,7 +288,7 @@ undisplayable for a browser.
 Again, let's remind ourselves what the Thymeleaf template looked like
 when we double-clicked on it:
 
-![](images/thymeleaf-vs-jsp/th2.png)
+![Thymeleaf page directly opened on a browser](images/thvsjsp/th2.png)
 
 Definitely not in the same league, right?
 
@@ -360,4 +363,4 @@ prototype —something the `sf:input` tag won't—:
 
 Done!
 
-![](images/thymeleaf-vs-jsp/th3.png)
+![Final result with Thymeleaf](images/thvsjsp/th3.png)

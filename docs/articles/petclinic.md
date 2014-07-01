@@ -1,3 +1,6 @@
+% Bringing Thymeleaf and Natural Templates to the Spring PetClinic
+
+
 Bringing Thymeleaf and Natural Templates to the Spring PetClinic
 ================================================================
 
@@ -18,7 +21,7 @@ original SpringSource version lives in GitHub
 thymeleaf-enabled version lives also in GitHub
 [here](https://github.com/thymeleaf/thymeleafexamples-petclinic).
 
-![PetClinic home page](images/pet-clinic/home.png)
+![PetClinic home page](images/petclinic/home.png)
 
 *Pet Clinic* originally includes a view layer created with JSP, which we
 will replace using Thymeleaf:
@@ -143,7 +146,7 @@ review the original JSP files at the `doc/old_viewlayer` folder.
 
 The *owners/ownersList* page looks like this:
 
-![Owners page](images/pet-clinic/owners.png)
+![Owners page](images/petclinic/owners.png)
 
 In order to convert this page to Thymeleaf, we will:
 
@@ -387,13 +390,13 @@ Well, let's have a look at how the original `owners/ownersList.jsp`
 template looks like when seen statically:
 
 ![Owners list (JSP), statically
-opened](images/pet-clinic/ownerslist_jsp_static.png)
+opened](images/petclinic/ownerslist_jsp_static.png)
 
 ...and now let's have a look at our new Thymeleaf-powered
 `owners/ownersList.html`:
 
 ![Owners list (thymeleaf), statically
-opened](images/pet-clinic/ownerslist_thymeleaf_static.png)
+opened](images/petclinic/ownerslist_thymeleaf_static.png)
 
 There we are. Data is not valid, because it is a prototype. But it looks
 good!

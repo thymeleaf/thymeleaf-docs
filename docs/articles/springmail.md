@@ -1,3 +1,6 @@
+% Rich HTML email in Spring with Thymeleaf
+
+
 Rich HTML email in Spring with Thymeleaf
 ========================================
 
@@ -212,7 +215,7 @@ Let's remark some points:
     just by opening it with your browser. That's much better than
     sending an email to see the result, isn't it?
 
-![](images/spring-mail/inline.png)
+![Image inlined in email](images/springmail/inline.png)
 
 -   We can use all Thymeleaf features. Here for example we have used
     i18n with a parameterized `#{...}` expression, `th:each` to iterate

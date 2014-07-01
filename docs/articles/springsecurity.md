@@ -1,3 +1,6 @@
+% Thymeleaf + Spring Security integration basics
+
+
 Thymeleaf + Spring Security integration basics
 ==============================================
 

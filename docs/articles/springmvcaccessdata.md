@@ -1,3 +1,6 @@
+% Spring MVC and Thymeleaf: how to acess data from templates
+
+
 # Spring MVC and Thymeleaf: how to acess data from templates
 
 In a typical Spring MVC application, `@Controller` classes are responsible for preparing a model map with data and selecting a view to be rendered. This _model map_ allows for the complete abstraction of the view technology and, in the case of Thymeleaf, it is transformed into a `VariablesMap` object (part of the Thymeleaf _template execution context_) that makes all the defined variables available to expressions executed in templates.

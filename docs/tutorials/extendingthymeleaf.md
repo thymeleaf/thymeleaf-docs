@@ -394,7 +394,7 @@ This website will be very simple: just a table with:
 Also, above the league table, a banner will be displaying headlines with the
 results of recent matches.
 
-![Extrathyme league table](images/extending-thymeleaf/extrathyme-league-table.png)
+![Extrathyme league table](images/extendingthymeleaf/extrathyme-league-table.png)
 
 We will use HTML5, Spring MVC and the SpringStandard dialect for our application,
 and we will be extending Thymeleaf by creating a `score` dialect that includes:

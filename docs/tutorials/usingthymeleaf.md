@@ -204,7 +204,7 @@ We will need a quite simple set of model entities for our application: `Products
 which are sold to `Customers` by creating `Orders`. We will also be managing `Comments`
 about those `Products`:
 
-![Example application model](images/using-thymeleaf/gtvg-model.png)
+![Example application model](images/usingthymeleaf/gtvg-model.png)
 
 Our small application will also have a very simple service layer, composed by `Service`
 objects containing methods like:
@@ -291,7 +291,7 @@ interface, retrieving data from the services and processing templates using the
 
 In the end, it will look like this:
 
-![Example application home page](images/using-thymeleaf/gtvg-view.png)
+![Example application home page](images/usingthymeleaf/gtvg-view.png)
 
 But first let's see how that template engine is initialized.
 
