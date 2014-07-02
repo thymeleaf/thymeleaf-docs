@@ -76,7 +76,7 @@ define the DOM nodes that will be processed in your templates and also how they
 will be processed.
 
 An object that applies some logic to a DOM node is called a _processor_, and a
-set of these processors –plus some extra artifacts– is called a dialect, of
+set of these processors ---plus some extra artifacts--- is called a dialect, of
 which Thymeleaf's core library provides one out-of-the-box called the _Standard Dialect_,
 which should be enough for the needs of a big percent of users.
 
@@ -137,11 +137,11 @@ _Natural Templating_.
 ------------------------
 
 Thymeleaf's core is a DOM processing engine. Specifically, it uses its own
-high-performance DOM implementation –not the standard DOM API– for building
+high-performance DOM implementation ---not the standard DOM API--- for building
 in-memory tree representations of your templates, on which it later operates by
 traversing their nodes and executing processors on them that modify the DOM
 according to the current _configuration_ and the set of data that is passed to
-the template for its representation –known as the context.
+the template for its representation ---known as the context.
 
 The use of a DOM template representation makes it very well suited for web
 applications because web documents are very often represented as object trees
@@ -161,7 +161,7 @@ bigger amounts of memory space for each template execution than other template p
 
 > The reason we consider this restriction only applies to data XML files and not
 > web XHTML/HTML5 is that you should never generate web documents so big that
-> your users' browsers set ablaze and/or explode – remember that these browsers
+> your users' browsers set ablaze and/or explode -- remember that these browsers
 > will also have to create DOM trees for your pages!
 
 
@@ -171,7 +171,7 @@ bigger amounts of memory space for each template execution than other template p
 
 Thymeleaf is especially suited for working in web applications. And web
 applications are based on a series of standards that everyone should know very
-well but few do – even if they have been working with them for years.
+well but few do -- even if they have been working with them for years.
 
 With the advent of HTML5, the state of the art in web standards today is more
 confusing than ever... _are we going back from XHTML to HTML? Will we abandon
@@ -213,15 +213,15 @@ objects containing methods like:
 ```java
 public class ProductService {
 
-    ...
+    ...
 
-    public List<Product> findAll() {
-        return ProductRepository.getInstance().findAll();
-    }
+    public List<Product> findAll() {
+        return ProductRepository.getInstance().findAll();
+    }
 
-    public Product findById(Integer id) {
-        return ProductRepository.getInstance().findById(id);
-    }
+    public Product findById(Integer id) {
+        return ProductRepository.getInstance().findById(id);
+    }
     
 }
 ```
@@ -231,44 +231,44 @@ execution to Thymeleaf-enabled commands depending on the request URL:
 
 ```java
 private boolean process(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException {
+        throws ServletException {
         
-    try {
+    try {
             
-        /*
-         * Query controller/URL mapping and obtain the controller
-         * that will process the request. If no controller is available,
-         * return false and let other filters/servlets process the request.
-         */
-        IGTVGController controller = GTVGApplication.resolveControllerForRequest(request);
-        if (controller == null) {
-            return false;
-        }
-        /*
-         * Obtain the TemplateEngine instance.
-         */
-        TemplateEngine templateEngine = GTVGApplication.getTemplateEngine();
+        /*
+         * Query controller/URL mapping and obtain the controller
+         * that will process the request. If no controller is available,
+         * return false and let other filters/servlets process the request.
+         */
+        IGTVGController controller = GTVGApplication.resolveControllerForRequest(request);
+        if (controller == null) {
+            return false;
+        }
+        /*
+         * Obtain the TemplateEngine instance.
+         */
+        TemplateEngine templateEngine = GTVGApplication.getTemplateEngine();
             
-        /*
-         * Write the response headers
-         */
-        response.setContentType("text/html;charset=UTF-8");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
+        /*
+         * Write the response headers
+         */
+        response.setContentType("text/html;charset=UTF-8");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
 
-        /*
-         * Execute the controller and process view template,
-         * writing the results to the response writer.
-         */
-        controller.process(
-                request, response, this.servletContext, templateEngine);
+        /*
+         * Execute the controller and process view template,
+         * writing the results to the response writer.
+         */
+        controller.process(
+                request, response, this.servletContext, templateEngine);
 
-        return true;
+        return true;
             
-    } catch (Exception e) {
-        throw new ServletException(e);
-    }
+    } catch (Exception e) {
+        throw new ServletException(e);
+    }
         
 }    
 ```
@@ -278,9 +278,9 @@ This is our `IGTVGController` interface:
 ```java
 public interface IGTVGController {
 
-    public void process(
-            HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext, TemplateEngine templateEngine);    
+    public void process(
+            HttpServletRequest request, HttpServletResponse response,
+            ServletContext servletContext, TemplateEngine templateEngine);    
     
 }
 ```
@@ -316,36 +316,36 @@ Our `org.thymeleaf.TemplateEngine` object is initialized like this:
 public class GTVGApplication {
   
     
-    ...
-    private static TemplateEngine templateEngine;
-    ...
+    ...
+    private static TemplateEngine templateEngine;
+    ...
     
     
-    static {
-        ...
-        initializeTemplateEngine();
-        ...
-    }
+    static {
+        ...
+        initializeTemplateEngine();
+        ...
+    }
     
     
-    private static void initializeTemplateEngine() {
+    private static void initializeTemplateEngine() {
         
-        ServletContextTemplateResolver templateResolver = 
+        ServletContextTemplateResolver templateResolver = 
             new ServletContextTemplateResolver();
-        // XHTML is the default mode, but we set it anyway for better understanding of code
-        templateResolver.setTemplateMode("XHTML");
-        // This will convert "home" to "/WEB-INF/templates/home.html"
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".html");
-        // Template cache TTL=1h. If not set, entries would be cached until expelled by LRU
-        templateResolver.setCacheTTLMs(3600000L);
+        // XHTML is the default mode, but we set it anyway for better understanding of code
+        templateResolver.setTemplateMode("XHTML");
+        // This will convert "home" to "/WEB-INF/templates/home.html"
+        templateResolver.setPrefix("/WEB-INF/templates/");
+        templateResolver.setSuffix(".html");
+        // Template cache TTL=1h. If not set, entries would be cached until expelled by LRU
+        templateResolver.setCacheTTLMs(3600000L);
         
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
         
-    }
+    }
     
-    ...
+    ...
 
 }
 ```
@@ -368,13 +368,13 @@ API called `org.thymeleaf.templateresolver.ITemplateResolver`:
 ```java
 public interface ITemplateResolver {
 
-    ...
+    ...
   
-    /*
-     * Templates are resolved by String name (templateProcessingParameters.getTemplateName())
-     * Will return null if template cannot be handled by this template resolver.
-     */
-    public TemplateResolution resolveTemplate(
+    /*
+     * Templates are resolved by String name (templateProcessingParameters.getTemplateName())
+     * Will return null if template cannot be handled by this template resolver.
+     */
+    public TemplateResolution resolveTemplate(
             TemplateProcessingParameters templateProcessingParameters);
 
 }
@@ -473,20 +473,20 @@ title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" 
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" 
           href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
-  </head>
+  </head>
 
-  <body>
+  <body>
   
-    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
   
-  </body>
+  </body>
 
 </html>
 ```
@@ -499,7 +499,7 @@ it has a well-formed `DOCTYPE` declaration.
 
 Next, this is also _valid_ XHTML^[Note that, although this template is valid
 XHTML, we earlier selected template mode "XHTML" and not "VALIDXHTML". For now,
-it will be OK for us to just have validation turned off – but at the same time
+it will be OK for us to just have validation turned off -- but at the same time
 we don't want our IDE to complain too much.], because we have specified a
 Thymeleaf DTD which defines attributes like `th:text` so that your templates can
 be considered valid. And even more: once the template is processed (and all `th:*`
@@ -511,7 +511,7 @@ A thymeleaf namespace is also being declared for `th:*` attributes:
 
 ```html
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 ```
 
 Note that, if we hadn't cared about our template's validity or well-formedness
@@ -523,18 +523,18 @@ along with no xmlns namespace declarations:
 
 <html>
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" 
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" 
           href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
-  </head>
+  </head>
 
-  <body>
+  <body>
   
-    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
   
-  </body>
+  </body>
 
 </html>
 ```
@@ -615,15 +615,15 @@ implementing the `IGTVGController` interface we saw before:
 ```java
 public class HomeController implements IGTVGController {
 
-    public void process(
-            HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext, TemplateEngine templateEngine) {
+    public void process(
+            HttpServletRequest request, HttpServletResponse response,
+            ServletContext servletContext, TemplateEngine templateEngine) {
         
-        WebContext ctx = 
+        WebContext ctx = 
             new WebContext(request, response, servletContext, request.getLocale());
-        templateEngine.process("home", ctx, response.getWriter());
+        templateEngine.process("home", ctx, response.getWriter());
         
-    }
+    }
 
 }
 ```
@@ -637,9 +637,9 @@ externalized messages.
 ```java
 public interface IContext {
 
-    public VariablesMap<String,Object> getVariables();
-    public Locale getLocale();
-    ...
+    public VariablesMap<String,Object> getVariables();
+    public Locale getLocale();
+    ...
     
 }
 ```
@@ -649,14 +649,14 @@ There is a specialized extension of this interface, `org.thymeleaf.context.IWebC
 ```java
 public interface IWebContext extends IContext {
     
-    public HttpSerlvetRequest getHttpServletRequest();
-    public HttpSession getHttpSession();
-    public ServletContext getServletContext();
+    public HttpSerlvetRequest getHttpServletRequest();
+    public HttpSession getHttpSession();
+    public ServletContext getServletContext();
     
-    public VariablesMap<String,String[]> getRequestParameters();
-    public VariablesMap<String,Object> getRequestAttributes();
-    public VariablesMap<String,Object> getSessionAttributes();
-    public VariablesMap<String,Object> getApplicationAttributes();
+    public VariablesMap<String,String[]> getRequestParameters();
+    public VariablesMap<String,Object> getRequestAttributes();
+    public VariablesMap<String,Object> getSessionAttributes();
+    public VariablesMap<String,Object> getApplicationAttributes();
     
 }
 ```
@@ -717,17 +717,17 @@ Let's see the results of this using the Spanish locale:
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-    <link rel="stylesheet" type="text/css" media="all" href="/gtvg/css/gtvg.css" />
-  </head>
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/gtvg/css/gtvg.css" />
+  </head>
 
-  <body>
+  <body>
   
-    <p>¡Bienvenido a nuestra tienda de comestibles!</p>
+    <p>¡Bienvenido a nuestra tienda de comestibles!</p>
 
-  </body>
+  </body>
 
 </html>
 ```
@@ -784,17 +784,17 @@ a context variable:
 
 ```java
 public void process(
-        HttpServletRequest request, HttpServletResponse response,
-        ServletContext servletContext, TemplateEngine templateEngine) {
+        HttpServletRequest request, HttpServletResponse response,
+        ServletContext servletContext, TemplateEngine templateEngine) {
         
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+    Calendar cal = Calendar.getInstance();
         
-    WebContext ctx = 
+    WebContext ctx = 
         new WebContext(request, response, servletContext, request.getLocale());
-    ctx.setVariable("today", dateFormat.format(cal.getTime()));
+    ctx.setVariable("today", dateFormat.format(cal.getTime()));
         
-    templateEngine.process("home", ctx, response.getWriter());
+    templateEngine.process("home", ctx, response.getWriter());
       
 }
 ```
@@ -805,9 +805,9 @@ it in our template:
 ```html
 <body>
 
-  <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
+  <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
 
-  <p>Today is: <span th:text="${today}">13 February 2011</span></p>
+  <p>Today is: <span th:text="${today}">13 February 2011</span></p>
   
 </body>
 ```
@@ -1111,9 +1111,9 @@ in our user profile (`userprofile.html`) page:
 
 ```html
   <div th:object="${session.user}">
-    <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
-    <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
-    <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
+    <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
+    <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
+    <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
   </div>
 ```
 
@@ -1121,9 +1121,9 @@ Which is exactly equivalent to:
 
 ```html
 <div>
-  <p>Name: <span th:text="${session.user.firstName}">Sebastian</span>.</p>
-  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
-  <p>Nationality: <span th:text="${session.user.nationality}">Saturn</span>.</p>
+  <p>Name: <span th:text="${session.user.firstName}">Sebastian</span>.</p>
+  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
+  <p>Nationality: <span th:text="${session.user.nationality}">Saturn</span>.</p>
 </div>
 ```
 
@@ -1131,9 +1131,9 @@ Of course, dollar and asterisk syntax can be mixed:
 
 ```html
 <div th:object="${session.user}">
-  <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
-  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
-  <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
+  <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
+  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
+  <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
 </div>
 ```
 
@@ -1142,9 +1142,9 @@ to dollar expressions as the `#object` expression variable:
 
 ```html
 <div th:object="${session.user}">
-  <p>Name: <span th:text="${#object.firstName}">Sebastian</span>.</p>
-  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
-  <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
+  <p>Name: <span th:text="${#object.firstName}">Sebastian</span>.</p>
+  <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
+  <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
 </div>
 ```
 
@@ -1153,9 +1153,9 @@ are exactly equivalent.
 
 ```html
 <div>
-  <p>Name: <span th:text="*{session.user.name}">Sebastian</span>.</p>
-  <p>Surname: <span th:text="*{session.user.surname}">Pepper</span>.</p>
-  <p>Nationality: <span th:text="*{session.user.nationality}">Saturn</span>.</p>
+  <p>Name: <span th:text="*{session.user.name}">Sebastian</span>.</p>
+  <p>Surname: <span th:text="*{session.user.surname}">Pepper</span>.</p>
+  <p>Nationality: <span th:text="*{session.user.nationality}">Saturn</span>.</p>
 </div>
 ```
 
@@ -1234,10 +1234,10 @@ for some of the other pages in the site?
 ```html
 <p>Please select an option</p>
 <ol>
-  <li><a href="product/list.html" th:href="@{/product/list}">Product List</a></li>
-  <li><a href="order/list.html" th:href="@{/order/list}">Order List</a></li>
-  <li><a href="subscribe.html" th:href="@{/subscribe}">Subscribe to our Newsletter</a></li>
-  <li><a href="userprofile.html" th:href="@{/userprofile}">See User Profile</a></li>
+  <li><a href="product/list.html" th:href="@{/product/list}">Product List</a></li>
+  <li><a href="order/list.html" th:href="@{/order/list}">Order List</a></li>
+  <li><a href="subscribe.html" th:href="@{/subscribe}">Subscribe to our Newsletter</a></li>
+  <li><a href="userprofile.html" th:href="@{/userprofile}">See User Profile</a></li>
 </ol>
 ```
 
@@ -1405,7 +1405,7 @@ this time `th:class`):
 
 ```html
 <tr th:class="${row.even}? 'even' : 'odd'">
-  ...
+  ...
 </tr>
 ```
 
@@ -1417,7 +1417,7 @@ Conditional expressions can also be nested using parentheses:
 
 ```html
 <tr th:class="${row.even}? (${row.first}? 'first' : 'even') : 'odd'">
-  ...
+  ...
 </tr>
 ```
 
@@ -1426,7 +1426,7 @@ the condition is false:
 
 ```html
 <tr th:class="${row.even}? 'alt'">
-  ...
+  ...
 </tr>
 ```
 
@@ -1444,8 +1444,8 @@ Let's see it in action in our user profile page:
 
 ```html
 <div th:object="${session.user}">
-  ...
-  <p>Age: <span th:text="*{age}?: '(no age specified)'">27</span>.</p>
+  ...
+  <p>Age: <span th:text="*{age}?: '(no age specified)'">27</span>.</p>
 </div>
 ```
 
@@ -1533,10 +1533,10 @@ with a form:
 
 ```html
 <form action="subscribe.html">
-  <fieldset>
-    <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" />
-  </fieldset>
+  <fieldset>
+    <input type="text" name="email" />
+    <input type="submit" value="Subscribe me!" />
+  </fieldset>
 </form>
 ```
 
@@ -1551,10 +1551,10 @@ attributes of the tags it is set in:
 
 ```html
 <form action="subscribe.html" th:attr="action=@{/subscribe}">
-  <fieldset>
-    <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
-  </fieldset>
+  <fieldset>
+    <input type="text" name="email" />
+    <input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
+  </fieldset>
 </form>
 ```
 
@@ -1564,10 +1564,10 @@ messages files, the result of processing this file will be as expected:
 
 ```html
 <form action="/gtvg/subscribe">
-  <fieldset>
-    <input type="text" name="email" />
-    <input type="submit" value="¡Suscríbeme!"/>
-  </fieldset>
+  <fieldset>
+    <input type="text" name="email" />
+    <input type="submit" value="¡Suscríbeme!"/>
+  </fieldset>
 </form>
 ```
 
@@ -1998,8 +1998,8 @@ obviously yes. And there we go now.
 
 For listing our products in our `/WEB-INF/templates/product/list.html` page we
 will need a table. Each of our products will be displayed in a row (a `<tr>`
-element), and so for our template we will need to create a _template row_ –one
-that will exemplify how we want each product to be displayed– and then instruct
+element), and so for our template we will need to create a _template row_ ---one
+that will exemplify how we want each product to be displayed--- and then instruct
 Thymeleaf to _iterate it_ once for each product.
 
 The Standard Dialect offers us an attribute for exactly that, `th:each`.
@@ -2012,16 +2012,16 @@ products from the service layer and adds it to the template context:
 
 ```java
 public void process(
-        HttpServletRequest request, HttpServletResponse response,
-        ServletContext servletContext, TemplateEngine templateEngine) {
+        HttpServletRequest request, HttpServletResponse response,
+        ServletContext servletContext, TemplateEngine templateEngine) {
 
-    ProductService productService = new ProductService();
-    List<Product> allProducts = productService.findAll(); 
+    ProductService productService = new ProductService();
+    List<Product> allProducts = productService.findAll(); 
 
-    WebContext ctx = new WebContext(request, servletContext, request.getLocale());
-    ctx.setVariable("prods", allProducts);
+    WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+    ctx.setVariable("prods", allProducts);
 
-    templateEngine.process("product/list", ctx, response.getWriter());
+    templateEngine.process("product/list", ctx, response.getWriter());
 }
 ```
 
@@ -2031,37 +2031,37 @@ And then we will use `th:each` in our template to iterate the list of products:
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" 
-          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
-  </head>
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" 
+          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+  </head>
 
-  <body>
+  <body>
 
-    <h1>Product list</h1>
+    <h1>Product list</h1>
   
-    <table>
-      <tr>
-        <th>NAME</th>
-        <th>PRICE</th>
-        <th>IN STOCK</th>
-      </tr>
-      <tr th:each="prod : ${prods}">
-        <td th:text="${prod.name}">Onions</td>
-        <td th:text="${prod.price}">2.41</td>
-        <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-      </tr>
-    </table>
+    <table>
+      <tr>
+        <th>NAME</th>
+        <th>PRICE</th>
+        <th>IN STOCK</th>
+      </tr>
+      <tr th:each="prod : ${prods}">
+        <td th:text="${prod.name}">Onions</td>
+        <td th:text="${prod.price}">2.41</td>
+        <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+      </tr>
+    </table>
   
-    <p>
-      <a href="../home.html" th:href="@{/}">Return to home</a>
-    </p>
+    <p>
+      <a href="../home.html" th:href="@{/}">Return to home</a>
+    </p>
 
-  </body>
+  </body>
 
 </html>
 ```
@@ -2118,16 +2118,16 @@ Let's see how we could use it within the previous example:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-  </tr>
-  <tr th:each="prod,iterStat : ${prods}" th:class="${iterStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+  </tr>
+  <tr th:each="prod,iterStat : ${prods}" th:class="${iterStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+  </tr>
 </table>
 ```
 
@@ -2144,49 +2144,49 @@ Let's have a look at the result of processing our template:
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-    <link rel="stylesheet" type="text/css" media="all" href="/gtvg/css/gtvg.css" />
-  </head>
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/gtvg/css/gtvg.css" />
+  </head>
 
-  <body>
+  <body>
 
-    <h1>Product list</h1>
+    <h1>Product list</h1>
   
-    <table>
-      <tr>
-        <th colspan="1" rowspan="1">NAME</th>
-        <th colspan="1" rowspan="1">PRICE</th>
-        <th colspan="1" rowspan="1">IN STOCK</th>
-      </tr>
-      <tr>
-        <td colspan="1" rowspan="1">Fresh Sweet Basil</td>
-        <td colspan="1" rowspan="1">4.99</td>
-        <td colspan="1" rowspan="1">yes</td>
-      </tr>
-      <tr class="odd">
-        <td colspan="1" rowspan="1">Italian Tomato</td>
-        <td colspan="1" rowspan="1">1.25</td>
-        <td colspan="1" rowspan="1">no</td>
-      </tr>
-      <tr>
-        <td colspan="1" rowspan="1">Yellow Bell Pepper</td>
-        <td colspan="1" rowspan="1">2.50</td>
-        <td colspan="1" rowspan="1">yes</td>
-      </tr>
-      <tr class="odd">
-        <td colspan="1" rowspan="1">Old Cheddar</td>
-        <td colspan="1" rowspan="1">18.75</td>
-        <td colspan="1" rowspan="1">yes</td>
-      </tr>
-    </table>
+    <table>
+      <tr>
+        <th colspan="1" rowspan="1">NAME</th>
+        <th colspan="1" rowspan="1">PRICE</th>
+        <th colspan="1" rowspan="1">IN STOCK</th>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">Fresh Sweet Basil</td>
+        <td colspan="1" rowspan="1">4.99</td>
+        <td colspan="1" rowspan="1">yes</td>
+      </tr>
+      <tr class="odd">
+        <td colspan="1" rowspan="1">Italian Tomato</td>
+        <td colspan="1" rowspan="1">1.25</td>
+        <td colspan="1" rowspan="1">no</td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">Yellow Bell Pepper</td>
+        <td colspan="1" rowspan="1">2.50</td>
+        <td colspan="1" rowspan="1">yes</td>
+      </tr>
+      <tr class="odd">
+        <td colspan="1" rowspan="1">Old Cheddar</td>
+        <td colspan="1" rowspan="1">18.75</td>
+        <td colspan="1" rowspan="1">yes</td>
+      </tr>
+    </table>
   
-    <p>
-      <a href="/gtvg/" shape="rect">Return to home</a>
-    </p>
+    <p>
+      <a href="/gtvg/" shape="rect">Return to home</a>
+    </p>
 
-  </body>
+  </body>
   
 </html>
 ```
@@ -2204,16 +2204,16 @@ one for you by suffixing `Stat` to the name of the iter variable:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-  </tr>
-  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+  </tr>
+  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+  </tr>
 </table>
 ```
 
@@ -2239,23 +2239,23 @@ In order to do this, we would use the `th:if` attribute:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-    <td>
-      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
-      <a href="comments.html" 
-         th:href="@{/product/comments(prodId=${prod.id})}" 
-         th:if="${not #lists.isEmpty(prod.comments)}">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+    <td>
+      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
+      <a href="comments.html" 
+         th:href="@{/product/comments(prodId=${prod.id})}" 
+         th:if="${not #lists.isEmpty(prod.comments)}">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2263,8 +2263,8 @@ Quite a lot of things to see here, so let's focus on the important line:
 
 ```html
 <a href="comments.html"
-   th:href="@{/product/comments(prodId=${prod.id})}" 
-   th:if="${not #lists.isEmpty(prod.comments)}">view</a>
+   th:href="@{/product/comments(prodId=${prod.id})}" 
+   th:if="${not #lists.isEmpty(prod.comments)}">view</a>
 ```
 
 There is little to explain from this code, in fact: We will be creating a link
@@ -2276,46 +2276,46 @@ and `colspan` attributes for a cleaner view):
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr>
-    <td>Fresh Sweet Basil</td>
-    <td>4.99</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Italian Tomato</td>
-    <td>1.25</td>
-    <td>no</td>
-    <td>
-      <span>2</span> comment/s
-      <a href="/gtvg/product/comments?prodId=2">view</a>
-    </td>
-  </tr>
-  <tr>
-    <td>Yellow Bell Pepper</td>
-    <td>2.50</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Old Cheddar</td>
-    <td>18.75</td>
-    <td>yes</td>
-    <td>
-      <span>1</span> comment/s
-      <a href="/gtvg/product/comments?prodId=4">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr>
+    <td>Fresh Sweet Basil</td>
+    <td>4.99</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Italian Tomato</td>
+    <td>1.25</td>
+    <td>no</td>
+    <td>
+      <span>2</span> comment/s
+      <a href="/gtvg/product/comments?prodId=2">view</a>
+    </td>
+  </tr>
+  <tr>
+    <td>Yellow Bell Pepper</td>
+    <td>2.50</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Old Cheddar</td>
+    <td>18.75</td>
+    <td>yes</td>
+    <td>
+      <span>1</span> comment/s
+      <a href="/gtvg/product/comments?prodId=4">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2338,8 +2338,8 @@ in the previous example instead of using a `not` inside the OGNL expression:
 
 ```html
 <a href="comments.html"
-   th:href="@{/comments(prodId=${prod.id})}" 
-   th:unless="${#lists.isEmpty(prod.comments)}">view</a>
+   th:href="@{/comments(prodId=${prod.id})}" 
+   th:unless="${#lists.isEmpty(prod.comments)}">view</a>
 ```
 
 
@@ -2399,15 +2399,15 @@ this code:
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-  <body>
+  <body>
   
-    <div th:fragment="copy">
-      &copy; 2011 The Good Thymes Virtual Grocery
-    </div>
+    <div th:fragment="copy">
+      &copy; 2011 The Good Thymes Virtual Grocery
+    </div>
   
-  </body>
+  </body>
   
 </html>
 ```
@@ -2418,9 +2418,9 @@ our home page using one of the `th:include` or `th:replace` attributes:
 ```html
 <body>
 
-  ...
+  ...
 
-  <div th:include="footer :: copy"></div>
+  <div th:include="footer :: copy"></div>
   
 </body>
 ```
@@ -2466,7 +2466,7 @@ Besides, thanks to the power of DOM Selectors, we can include fragments that do 
 ```html
 ...
 <div id="copy-section">
-  &copy; 2011 The Good Thymes Virtual Grocery
+  &copy; 2011 The Good Thymes Virtual Grocery
 </div>
 ...
 ```
@@ -2476,9 +2476,9 @@ We can use the fragment above simply referencing it by its `id` attribute, in a 
 ```html
 <body>
 
-  ...
+  ...
 
-  <div th:include="footer :: #copy-section"></div>
+  <div th:include="footer :: #copy-section"></div>
   
 </body>
 ```
@@ -2494,7 +2494,7 @@ fragment like this:
 
 ```html
 <footer th:fragment="copy">
-  &copy; 2011 The Good Thymes Virtual Grocery
+  &copy; 2011 The Good Thymes Virtual Grocery
 </footer>
 ```
 
@@ -2503,10 +2503,10 @@ fragment like this:
 ```html
 <body>
 
-  ...
+  ...
 
-  <div th:include="footer :: copy"></div>
-  <div th:replace="footer :: copy"></div>
+  <div th:include="footer :: copy"></div>
+  <div th:replace="footer :: copy"></div>
   
 </body>
 ```
@@ -2516,14 +2516,14 @@ fragment like this:
 ```html
 <body>
 
-  ...
+  ...
 
-  <div>
-    &copy; 2011 The Good Thymes Virtual Grocery
-  </div>
-  <footer>
-    &copy; 2011 The Good Thymes Virtual Grocery
-  </footer>
+  <div>
+    &copy; 2011 The Good Thymes Virtual Grocery
+  </div>
+  <footer>
+    &copy; 2011 The Good Thymes Virtual Grocery
+  </footer>
   
 </body>
 ```
@@ -2580,8 +2580,8 @@ This would be, in fact, equivalent to a combination of `th:include` and `th:with
 <div th:include="::frag" th:with="onevar=${value1},twovar=${value2}">
 ```
 
-**Note** that this specification of local variables for a fragment —no matter whether it 
-has a signature or not— does not cause the context to emptied previously to its 
+**Note** that this specification of local variables for a fragment ---no matter whether it 
+has a signature or not--- does not cause the context to emptied previously to its 
 execution. Fragments will still be able to access every context variable being used at the 
 calling template like they currently are. 
 
@@ -2612,23 +2612,23 @@ Let's revisit the last version of our product list template:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-    <td>
-      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
-      <a href="comments.html" 
-         th:href="@{/product/comments(prodId=${prod.id})}" 
-         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+    <td>
+      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
+      <a href="comments.html" 
+         th:href="@{/product/comments(prodId=${prod.id})}" 
+         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2643,40 +2643,40 @@ So let's add some:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-    <td>
-      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
-      <a href="comments.html" 
-         th:href="@{/product/comments(prodId=${prod.id})}" 
-         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Blue Lettuce</td>
-    <td>9.55</td>
-    <td>no</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr>
-    <td>Mild Cinnamon</td>
-    <td>1.99</td>
-    <td>yes</td>
-    <td>
-      <span>3</span> comment/s
-      <a href="comments.html">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+    <td>
+      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
+      <a href="comments.html" 
+         th:href="@{/product/comments(prodId=${prod.id})}" 
+         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Blue Lettuce</td>
+    <td>9.55</td>
+    <td>no</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr>
+    <td>Mild Cinnamon</td>
+    <td>1.99</td>
+    <td>yes</td>
+    <td>
+      <span>3</span> comment/s
+      <a href="comments.html">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2685,63 +2685,63 @@ happen when we process it with Thymeleaf?:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr>
-    <td>Fresh Sweet Basil</td>
-    <td>4.99</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Italian Tomato</td>
-    <td>1.25</td>
-    <td>no</td>
-    <td>
-      <span>2</span> comment/s
-      <a href="/gtvg/product/comments?prodId=2">view</a>
-    </td>
-  </tr>
-  <tr>
-    <td>Yellow Bell Pepper</td>
-    <td>2.50</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Old Cheddar</td>
-    <td>18.75</td>
-    <td>yes</td>
-    <td>
-      <span>1</span> comment/s
-      <a href="/gtvg/product/comments?prodId=4">view</a>
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Blue Lettuce</td>
-    <td>9.55</td>
-    <td>no</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr>
-    <td>Mild Cinnamon</td>
-    <td>1.99</td>
-    <td>yes</td>
-    <td>
-      <span>3</span> comment/s
-      <a href="comments.html">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr>
+    <td>Fresh Sweet Basil</td>
+    <td>4.99</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Italian Tomato</td>
+    <td>1.25</td>
+    <td>no</td>
+    <td>
+      <span>2</span> comment/s
+      <a href="/gtvg/product/comments?prodId=2">view</a>
+    </td>
+  </tr>
+  <tr>
+    <td>Yellow Bell Pepper</td>
+    <td>2.50</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Old Cheddar</td>
+    <td>18.75</td>
+    <td>yes</td>
+    <td>
+      <span>1</span> comment/s
+      <a href="/gtvg/product/comments?prodId=4">view</a>
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Blue Lettuce</td>
+    <td>9.55</td>
+    <td>no</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr>
+    <td>Mild Cinnamon</td>
+    <td>1.99</td>
+    <td>yes</td>
+    <td>
+      <span>3</span> comment/s
+      <a href="comments.html">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2754,40 +2754,40 @@ We need a way to remove those two rows during template processing. Let's use the
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-    <td th:text="${prod.name}">Onions</td>
-    <td th:text="${prod.price}">2.41</td>
-    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-    <td>
-      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
-      <a href="comments.html" 
-         th:href="@{/product/comments(prodId=${prod.id})}" 
-         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
-    </td>
-  </tr>
-  <tr class="odd" th:remove="all">
-    <td>Blue Lettuce</td>
-    <td>9.55</td>
-    <td>no</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr th:remove="all">
-    <td>Mild Cinnamon</td>
-    <td>1.99</td>
-    <td>yes</td>
-    <td>
-      <span>3</span> comment/s
-      <a href="comments.html">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+    <td th:text="${prod.name}">Onions</td>
+    <td th:text="${prod.price}">2.41</td>
+    <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+    <td>
+      <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
+      <a href="comments.html" 
+         th:href="@{/product/comments(prodId=${prod.id})}" 
+         th:unless="${#lists.isEmpty(prod.comments)}">view</a>
+    </td>
+  </tr>
+  <tr class="odd" th:remove="all">
+    <td>Blue Lettuce</td>
+    <td>9.55</td>
+    <td>no</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr th:remove="all">
+    <td>Mild Cinnamon</td>
+    <td>1.99</td>
+    <td>yes</td>
+    <td>
+      <span>3</span> comment/s
+      <a href="comments.html">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2795,46 +2795,46 @@ Once processed, everything will look again as it should:
 
 ```html
 <table>
-  <tr>
-    <th>NAME</th>
-    <th>PRICE</th>
-    <th>IN STOCK</th>
-    <th>COMMENTS</th>
-  </tr>
-  <tr>
-    <td>Fresh Sweet Basil</td>
-    <td>4.99</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Italian Tomato</td>
-    <td>1.25</td>
-    <td>no</td>
-    <td>
-      <span>2</span> comment/s
-      <a href="/gtvg/product/comments?prodId=2">view</a>
-    </td>
-  </tr>
-  <tr>
-    <td>Yellow Bell Pepper</td>
-    <td>2.50</td>
-    <td>yes</td>
-    <td>
-      <span>0</span> comment/s
-    </td>
-  </tr>
-  <tr class="odd">
-    <td>Old Cheddar</td>
-    <td>18.75</td>
-    <td>yes</td>
-    <td>
-      <span>1</span> comment/s
-      <a href="/gtvg/product/comments?prodId=4">view</a>
-    </td>
-  </tr>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+    <th>COMMENTS</th>
+  </tr>
+  <tr>
+    <td>Fresh Sweet Basil</td>
+    <td>4.99</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Italian Tomato</td>
+    <td>1.25</td>
+    <td>no</td>
+    <td>
+      <span>2</span> comment/s
+      <a href="/gtvg/product/comments?prodId=2">view</a>
+    </td>
+  </tr>
+  <tr>
+    <td>Yellow Bell Pepper</td>
+    <td>2.50</td>
+    <td>yes</td>
+    <td>
+      <span>0</span> comment/s
+    </td>
+  </tr>
+  <tr class="odd">
+    <td>Old Cheddar</td>
+    <td>18.75</td>
+    <td>yes</td>
+    <td>
+      <span>1</span> comment/s
+      <a href="/gtvg/product/comments?prodId=4">view</a>
+    </td>
+  </tr>
 </table>
 ```
 
@@ -2852,44 +2852,44 @@ when prototyping:
 
 ```html
 <table>
-  <thead>
-    <tr>
-      <th>NAME</th>
-      <th>PRICE</th>
-      <th>IN STOCK</th>
-      <th>COMMENTS</th>
-    </tr>
-  </thead>
-  <tbody th:remove="all-but-first">
-    <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
-      <td th:text="${prod.name}">Onions</td>
-      <td th:text="${prod.price}">2.41</td>
-      <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-      <td>
-        <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
-        <a href="comments.html" 
-           th:href="@{/product/comments(prodId=${prod.id})}" 
-           th:unless="${#lists.isEmpty(prod.comments)}">view</a>
-      </td>
-    </tr>
-    <tr class="odd">
-      <td>Blue Lettuce</td>
-      <td>9.55</td>
-      <td>no</td>
-      <td>
-        <span>0</span> comment/s
-      </td>
-    </tr>
-    <tr>
-      <td>Mild Cinnamon</td>
-      <td>1.99</td>
-      <td>yes</td>
-      <td>
-        <span>3</span> comment/s
-        <a href="comments.html">view</a>
-      </td>
-    </tr>
-  </tbody>
+  <thead>
+    <tr>
+      <th>NAME</th>
+      <th>PRICE</th>
+      <th>IN STOCK</th>
+      <th>COMMENTS</th>
+    </tr>
+  </thead>
+  <tbody th:remove="all-but-first">
+    <tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+      <td th:text="${prod.name}">Onions</td>
+      <td th:text="${prod.price}">2.41</td>
+      <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+      <td>
+        <span th:text="${#lists.size(prod.comments)}">2</span> comment/s
+        <a href="comments.html" 
+           th:href="@{/product/comments(prodId=${prod.id})}" 
+           th:unless="${#lists.isEmpty(prod.comments)}">view</a>
+      </td>
+    </tr>
+    <tr class="odd">
+      <td>Blue Lettuce</td>
+      <td>9.55</td>
+      <td>no</td>
+      <td>
+        <span>0</span> comment/s
+      </td>
+    </tr>
+    <tr>
+      <td>Mild Cinnamon</td>
+      <td>1.99</td>
+      <td>yes</td>
+      <td>
+        <span>3</span> comment/s
+        <a href="comments.html">view</a>
+      </td>
+    </tr>
+  </tbody>
 </table>
 ```
 
@@ -2926,7 +2926,7 @@ page:
 
 ```html
 <tr th:each="prod : ${prods}">
-    ...
+    ...
 </tr>
 ```
 
@@ -2944,7 +2944,7 @@ assignments:
 
 ```html
 <div th:with="firstPer=${persons[0]}">
-  <p>
+  <p>
     The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.
   </p>
 </div>
@@ -2960,10 +2960,10 @@ assignment syntax:
 
 ```html
 <div th:with="firstPer=${persons[0]},secondPer=${persons[1]}">
-  <p>
+  <p>
     The name of the first person is <span th:text="${firstPer.name}">Julius Caesar</span>.
   </p>
-  <p>
+  <p>
     But the name of the second person is 
     <span th:text="${secondPer.name}">Marcus Antonius</span>.
   </p>
@@ -3005,7 +3005,7 @@ then use it in our `th:text` expression:
 
 ```html
 <p th:with="df=#{date.format}">
-  Today is: <span th:text="${#calendars.format(today,df)}">13 February 2011</span>
+  Today is: <span th:text="${#calendars.format(today,df)}">13 February 2011</span>
 </p>
 ```
 
@@ -3014,7 +3014,7 @@ That was clean and easy. In fact, given the fact that `th:with` has a higher
 
 ```html
 <p>
-  Today is: 
+  Today is: 
   <span th:with="df=#{date.format}" 
         th:text="${#calendars.format(today,df)}">13 February 2011</span>
 </p>
@@ -3034,7 +3034,7 @@ example:
 
 ```html
 <ul>
-  <li th:each="item : ${items}" th:text="${item.description}">Item description here...</li>
+  <li th:each="item : ${items}" th:text="${item.description}">Item description here...</li>
 </ul>
 ```
 
@@ -3127,7 +3127,7 @@ slightly less readable):
 
 ```html
 <ul>
-  <li th:text="${item.description}" th:each="item : ${items}">Item description here...</li>
+  <li th:text="${item.description}" th:each="item : ${items}">Item description here...</li>
 </ul>
 ```
 
@@ -3302,11 +3302,11 @@ inlined expression/s, any parent tag would do:
 ```html
 <body th:inline="text">
 
-   ...
+   ...
 
-   <p>Hello, [[${session.user.name}]]!</p>
+   <p>Hello, [[${session.user.name}]]!</p>
 
-   ...
+   ...
 
 </body>
 ```
@@ -3349,11 +3349,11 @@ expressions into our scripts, like:
 ```html
 <script th:inline="javascript">
 /*<![CDATA[*/
-    ...
+    ...
 
-    var username = /*[[${session.user.name}]]*/ 'Sebastian';
+    var username = /*[[${session.user.name}]]*/ 'Sebastian';
 
-    ...
+    ...
 /*]]>*/
 </script>
 ```
@@ -3374,11 +3374,11 @@ So, the result of executing this will be:
 ```html
 <script th:inline="javascript">
 /*<![CDATA[*/
-    ...
+    ...
 
-    var username = 'John Apricot';
+    var username = 'John Apricot';
 
-    ...
+    ...
 /*]]>*/
 </script>
 ```
@@ -3389,11 +3389,11 @@ your script to fail when loaded statically:
 ```html
 <script th:inline="javascript">
 /*<![CDATA[*/
-    ...
+    ...
 
-    var username = [[${session.user.name}]];
+    var username = [[${session.user.name}]];
 
-    ...
+    ...
 /*]]>*/
 </script>
 ```
@@ -3414,11 +3414,11 @@ For example, if we had the following code:
 ```html
 <script th:inline="javascript">
 /*<![CDATA[*/
-    ...
+    ...
 
-    var user = /*[[${session.user}]]*/ null;
+    var user = /*[[${session.user}]]*/ null;
 
-    ...
+    ...
 /*]]>*/
 </script>
 ```
@@ -3429,12 +3429,12 @@ Thymeleaf will correctly convert it to Javascript syntax:
 ```html
 <script th:inline="javascript">
 /*<![CDATA[*/
-    ...
+    ...
 
-    var user = {'age':null,'firstName':'John','lastName':'Apricot',
-                'name':'John Apricot','nationality':'Antarctica'};
+    var user = {'age':null,'firstName':'John','lastName':'Apricot',
+                'name':'John Apricot','nationality':'Antarctica'};
 
-    ...
+    ...
 /*]]>*/
 </script>
 ```
@@ -3456,7 +3456,7 @@ var msg  = 'This is a working application';
 +]*/
 
 var f = function() {
-    ...
+    ...
 ```
 
 Will be executed as:
@@ -3596,8 +3596,8 @@ For example, if your template is _XHTML 1.0 Strict_ and looks like this:
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-    ... 
+      xmlns:th="http://www.thymeleaf.org">
+    ... 
 </html>
 ```
 
@@ -3608,7 +3608,7 @@ this:
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-    ... 
+    ... 
 </html>
 ```
 
@@ -3638,42 +3638,42 @@ Let's start by creating an order list page, `/WEB-INF/templates/order/list.html`
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-  <head>
+  <head>
 
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" 
-          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
-  </head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" 
+          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+  </head>
 
-  <body>
+  <body>
 
-    <h1>Order list</h1>
+    <h1>Order list</h1>
   
-    <table>
-      <tr>
-        <th>DATE</th>
-        <th>CUSTOMER</th>
-        <th>TOTAL</th>
-        <th></th>
-      </tr>
-      <tr th:each="o : ${orders}" th:class="${oStat.odd}? 'odd'">
-        <td th:text="${#calendars.format(o.date,'dd/MMM/yyyy')}">13 jan 2011</td>
-        <td th:text="${o.customer.name}">Frederic Tomato</td>
-        <td th:text="${#aggregates.sum(o.orderLines.{purchasePrice * amount})}">23.32</td>
-        <td>
-          <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
-        </td>
-      </tr>
-    </table>
+    <table>
+      <tr>
+        <th>DATE</th>
+        <th>CUSTOMER</th>
+        <th>TOTAL</th>
+        <th></th>
+      </tr>
+      <tr th:each="o : ${orders}" th:class="${oStat.odd}? 'odd'">
+        <td th:text="${#calendars.format(o.date,'dd/MMM/yyyy')}">13 jan 2011</td>
+        <td th:text="${o.customer.name}">Frederic Tomato</td>
+        <td th:text="${#aggregates.sum(o.orderLines.{purchasePrice * amount})}">23.32</td>
+        <td>
+          <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
+        </td>
+      </tr>
+    </table>
   
-    <p>
-      <a href="../home.html" th:href="@{/}">Return to home</a>
-    </p>
+    <p>
+      <a href="../home.html" th:href="@{/}">Return to home</a>
+    </p>
     
-  </body>
+  </body>
   
 </html>
 ```
@@ -3705,62 +3705,62 @@ syntax:
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-  <head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" 
-          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
-  </head>
+  <head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" 
+          href="../../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+  </head>
 
-  <body th:object="${order}">
+  <body th:object="${order}">
 
-    <h1>Order details</h1>
+    <h1>Order details</h1>
 
-    <div>
-      <p><b>Code:</b> <span th:text="*{id}">99</span></p>
-      <p>
+    <div>
+      <p><b>Code:</b> <span th:text="*{id}">99</span></p>
+      <p>
         <b>Date:</b>
         <span th:text="*{#calendars.format(date,'dd MMM yyyy')}">13 jan 2011</span>
       </p>
-    </div>
+    </div>
 
-    <h2>Customer</h2>
+    <h2>Customer</h2>
 
-    <div th:object="*{customer}">
-      <p><b>Name:</b> <span th:text="*{name}">Frederic Tomato</span></p>
-      <p>
+    <div th:object="*{customer}">
+      <p><b>Name:</b> <span th:text="*{name}">Frederic Tomato</span></p>
+      <p>
         <b>Since:</b>
         <span th:text="*{#calendars.format(customerSince,'dd MMM yyyy')}">1 jan 2011</span>
       </p>
-    </div>
+    </div>
   
-    <h2>Products</h2>
+    <h2>Products</h2>
   
-    <table>
-      <tr>
-        <th>PRODUCT</th>
-        <th>AMOUNT</th>
-        <th>PURCHASE PRICE</th>
-      </tr>
-      <tr th:each="ol,row : *{orderLines}" th:class="${row.odd}? 'odd'">
-        <td th:text="${ol.product.name}">Strawberries</td>
-        <td th:text="${ol.amount}" class="number">3</td>
-        <td th:text="${ol.purchasePrice}" class="number">23.32</td>
-      </tr>
-    </table>
+    <table>
+      <tr>
+        <th>PRODUCT</th>
+        <th>AMOUNT</th>
+        <th>PURCHASE PRICE</th>
+      </tr>
+      <tr th:each="ol,row : *{orderLines}" th:class="${row.odd}? 'odd'">
+        <td th:text="${ol.product.name}">Strawberries</td>
+        <td th:text="${ol.amount}" class="number">3</td>
+        <td th:text="${ol.purchasePrice}" class="number">23.32</td>
+      </tr>
+    </table>
 
-    <div>
-      <b>TOTAL:</b>
+    <div>
+      <b>TOTAL:</b>
       <span th:text="*{#aggregates.sum(orderLines.{purchasePrice * amount})}">35.23</span>
-    </div>
+    </div>
   
-    <p>
-      <a href="list.html" th:href="@{/order/list}">Return to order list</a>
-    </p>
+    <p>
+      <a href="list.html" th:href="@{/order/list}">Return to order list</a>
+    </p>
 
-  </body>
+  </body>
   
 </html>
 ```
@@ -3770,14 +3770,14 @@ Not much really new here, except for this nested object selection:
 ```html
 <body th:object="${order}">
 
-  ...
+  ...
 
-  <div th:object="*{customer}">
-    <p><b>Name:</b> <span th:text="*{name}">Frederic Tomato</span></p>
-    ...
-  </div>
+  <div th:object="*{customer}">
+    <p><b>Name:</b> <span th:text="*{name}">Frederic Tomato</span></p>
+    ...
+  </div>
 
-  ...
+  ...
 </body>
 ```
 
@@ -3993,11 +3993,11 @@ log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=TRACE
 =================
 
 Thymeleaf works thanks to a DOM processing engine and a series of processors
-–one for each type of node that needs to apply logic– that modify the document's
+---one for each type of node that needs to apply logic--- that modify the document's
 DOM tree in order to create the results you expect by combining this tree with
 your data.
 
-It also includes –by default– a cache that stores parsed templates, this is, the
+It also includes ---by default--- a cache that stores parsed templates, this is, the
 DOM trees resulting from reading and parsing template files before processing
 them. This is especially useful when working in a web application, and builds on
 the following concepts:
@@ -4239,7 +4239,7 @@ Thymeleaf also allows accessing beans registered at your Spring Application Cont
 /*
  * Null-safe toString()
  */
-${#strings.toString(obj)}                           // also array*, list* and set*
+${#strings.toString(obj)}                           // also array*, list* and set*
 
 /*
  * Format date with the standard locale format
@@ -4263,18 +4263,18 @@ ${#dates.setFormat(datesSet, 'dd/MMM/yyyy HH:mm')}
  * Obtain date properties
  * Also works with arrays, lists or sets
  */
-${#dates.day(date)}                    // also arrayDay(...), listDay(...), etc.
-${#dates.month(date)}                  // also arrayMonth(...), listMonth(...), etc.
-${#dates.monthName(date)}              // also arrayMonthName(...), listMonthName(...), etc.
-${#dates.monthNameShort(date)}         // also arrayMonthNameShort(...), listMonthNameShort(...), etc.
-${#dates.year(date)}                   // also arrayYear(...), listYear(...), etc.
-${#dates.dayOfWeek(date)}              // also arrayDayOfWeek(...), listDayOfWeek(...), etc.
-${#dates.dayOfWeekName(date)}          // also arrayDayOfWeekName(...), listDayOfWeekName(...), etc.
-${#dates.dayOfWeekNameShort(date)}     // also arrayDayOfWeekNameShort(...), listDayOfWeekNameShort(...), etc.
-${#dates.hour(date)}                   // also arrayHour(...), listHour(...), etc.
-${#dates.minute(date)}                 // also arrayMinute(...), listMinute(...), etc.
-${#dates.second(date)}                 // also arraySecond(...), listSecond(...), etc.
-${#dates.millisecond(date)}            // also arrayMillisecond(...), listMillisecond(...), etc.
+${#dates.day(date)}                    // also arrayDay(...), listDay(...), etc.
+${#dates.month(date)}                  // also arrayMonth(...), listMonth(...), etc.
+${#dates.monthName(date)}              // also arrayMonthName(...), listMonthName(...), etc.
+${#dates.monthNameShort(date)}         // also arrayMonthNameShort(...), listMonthNameShort(...), etc.
+${#dates.year(date)}                   // also arrayYear(...), listYear(...), etc.
+${#dates.dayOfWeek(date)}              // also arrayDayOfWeek(...), listDayOfWeek(...), etc.
+${#dates.dayOfWeekName(date)}          // also arrayDayOfWeekName(...), listDayOfWeekName(...), etc.
+${#dates.dayOfWeekNameShort(date)}     // also arrayDayOfWeekNameShort(...), listDayOfWeekNameShort(...), etc.
+${#dates.hour(date)}                   // also arrayHour(...), listHour(...), etc.
+${#dates.minute(date)}                 // also arrayMinute(...), listMinute(...), etc.
+${#dates.second(date)}                 // also arraySecond(...), listSecond(...), etc.
+${#dates.millisecond(date)}            // also arrayMillisecond(...), listMillisecond(...), etc.
 
 /*
  * Create date (java.util.Date) objects from its components
@@ -4329,18 +4329,18 @@ ${#calendars.setFormat(calSet, 'dd/MMM/yyyy HH:mm')}
  * Obtain calendar properties
  * Also works with arrays, lists or sets
  */
-${#calendars.day(date)}                // also arrayDay(...), listDay(...), etc.
-${#calendars.month(date)}              // also arrayMonth(...), listMonth(...), etc.
-${#calendars.monthName(date)}          // also arrayMonthName(...), listMonthName(...), etc.
-${#calendars.monthNameShort(date)}     // also arrayMonthNameShort(...), listMonthNameShort(...), etc.
-${#calendars.year(date)}               // also arrayYear(...), listYear(...), etc.
-${#calendars.dayOfWeek(date)}          // also arrayDayOfWeek(...), listDayOfWeek(...), etc.
-${#calendars.dayOfWeekName(date)}      // also arrayDayOfWeekName(...), listDayOfWeekName(...), etc.
-${#calendars.dayOfWeekNameShort(date)} // also arrayDayOfWeekNameShort(...), listDayOfWeekNameShort(...), etc.
-${#calendars.hour(date)}               // also arrayHour(...), listHour(...), etc.
-${#calendars.minute(date)}             // also arrayMinute(...), listMinute(...), etc.
-${#calendars.second(date)}             // also arraySecond(...), listSecond(...), etc.
-${#calendars.millisecond(date)}        // also arrayMillisecond(...), listMillisecond(...), etc.
+${#calendars.day(date)}                // also arrayDay(...), listDay(...), etc.
+${#calendars.month(date)}              // also arrayMonth(...), listMonth(...), etc.
+${#calendars.monthName(date)}          // also arrayMonthName(...), listMonthName(...), etc.
+${#calendars.monthNameShort(date)}     // also arrayMonthNameShort(...), listMonthNameShort(...), etc.
+${#calendars.year(date)}               // also arrayYear(...), listYear(...), etc.
+${#calendars.dayOfWeek(date)}          // also arrayDayOfWeek(...), listDayOfWeek(...), etc.
+${#calendars.dayOfWeekName(date)}      // also arrayDayOfWeekName(...), listDayOfWeekName(...), etc.
+${#calendars.dayOfWeekNameShort(date)} // also arrayDayOfWeekNameShort(...), listDayOfWeekNameShort(...), etc.
+${#calendars.hour(date)}               // also arrayHour(...), listHour(...), etc.
+${#calendars.minute(date)}             // also arrayMinute(...), listMinute(...), etc.
+${#calendars.second(date)}             // also arraySecond(...), listSecond(...), etc.
+${#calendars.millisecond(date)}        // also arrayMillisecond(...), listMillisecond(...), etc.
 
 /*
  * Create calendar (java.util.Calendar) objects from its components
@@ -4485,39 +4485,39 @@ ${#strings.setDefaultString(textSet,default)}
  * Check whether a fragment is contained in a String
  * Also works with arrays, lists or sets
  */
-${#strings.contains(name,'ez')}                     // also array*, list* and set*
-${#strings.containsIgnoreCase(name,'ez')}           // also array*, list* and set*
+${#strings.contains(name,'ez')}                     // also array*, list* and set*
+${#strings.containsIgnoreCase(name,'ez')}           // also array*, list* and set*
 
 /*
  * Check whether a String starts or ends with a fragment
  * Also works with arrays, lists or sets
  */
-${#strings.startsWith(name,'Don')}                  // also array*, list* and set*
-${#strings.endsWith(name,endingFragment)}           // also array*, list* and set*
+${#strings.startsWith(name,'Don')}                  // also array*, list* and set*
+${#strings.endsWith(name,endingFragment)}           // also array*, list* and set*
 
 /*
  * Substring-related operations
  * Also works with arrays, lists or sets
  */
-${#strings.indexOf(name,frag)}                      // also array*, list* and set*
-${#strings.substring(name,3,5)}                     // also array*, list* and set*
-${#strings.substringAfter(name,prefix)}             // also array*, list* and set*
-${#strings.substringBefore(name,suffix)}            // also array*, list* and set*
-${#strings.replace(name,'las','ler')}               // also array*, list* and set*
+${#strings.indexOf(name,frag)}                      // also array*, list* and set*
+${#strings.substring(name,3,5)}                     // also array*, list* and set*
+${#strings.substringAfter(name,prefix)}             // also array*, list* and set*
+${#strings.substringBefore(name,suffix)}            // also array*, list* and set*
+${#strings.replace(name,'las','ler')}               // also array*, list* and set*
 
 /*
  * Append and prepend
  * Also works with arrays, lists or sets
  */
-${#strings.prepend(str,prefix)}                     // also array*, list* and set*
-${#strings.append(str,suffix)}                      // also array*, list* and set*
+${#strings.prepend(str,prefix)}                     // also array*, list* and set*
+${#strings.append(str,suffix)}                      // also array*, list* and set*
 
 /*
  * Change case
  * Also works with arrays, lists or sets
  */
-${#strings.toUpperCase(name)}                       // also array*, list* and set*
-${#strings.toLowerCase(name)}                       // also array*, list* and set*
+${#strings.toUpperCase(name)}                       // also array*, list* and set*
+${#strings.toLowerCase(name)}                       // also array*, list* and set*
 
 /*
  * Split and join
@@ -4525,49 +4525,49 @@ ${#strings.toLowerCase(name)}                       // al
 ${#strings.arrayJoin(namesArray,',')}
 ${#strings.listJoin(namesList,',')}
 ${#strings.setJoin(namesSet,',')}
-${#strings.arraySplit(namesStr,',')}                // returns String[]
-${#strings.listSplit(namesStr,',')}                 // returns List<String>
-${#strings.setSplit(namesStr,',')}                  // returns Set<String>
+${#strings.arraySplit(namesStr,',')}                // returns String[]
+${#strings.listSplit(namesStr,',')}                 // returns List<String>
+${#strings.setSplit(namesStr,',')}                  // returns Set<String>
 
 /*
  * Trim
  * Also works with arrays, lists or sets
  */
-${#strings.trim(str)}                               // also array*, list* and set*
+${#strings.trim(str)}                               // also array*, list* and set*
 
 /*
  * Compute length
  * Also works with arrays, lists or sets
  */
-${#strings.length(str)}                             // also array*, list* and set*
+${#strings.length(str)}                             // also array*, list* and set*
 
 /*
  * Abbreviate text making it have a maximum size of n. If text is bigger, it
  * will be clipped and finished in "..."
  * Also works with arrays, lists or sets
  */
-${#strings.abbreviate(str,10)}                      // also array*, list* and set*
+${#strings.abbreviate(str,10)}                      // also array*, list* and set*
 
 /*
  * Convert the first character to upper-case (and vice-versa)
  */
-${#strings.capitalize(str)}                         // also array*, list* and set*
-${#strings.unCapitalize(str)}                       // also array*, list* and set*
+${#strings.capitalize(str)}                         // also array*, list* and set*
+${#strings.unCapitalize(str)}                       // also array*, list* and set*
 
 /*
  * Convert the first character of every word to upper-case
  */
-${#strings.capitalizeWords(str)}                    // also array*, list* and set*
-${#strings.capitalizeWords(str,delimiters)}         // also array*, list* and set*
+${#strings.capitalizeWords(str)}                    // also array*, list* and set*
+${#strings.capitalizeWords(str,delimiters)}         // also array*, list* and set*
 
 /*
  * Escape the string
  */
-${#strings.escapeXml(str)}                          // also array*, list* and set*
-${#strings.escapeJava(str)}                         // also array*, list* and set*
-${#strings.escapeJavaScript(str)}                   // also array*, list* and set*
-${#strings.unescapeJava(str)}                       // also array*, list* and set*
-${#strings.unescapeJavaScript(str)}                 // also array*, list* and set*
+${#strings.escapeXml(str)}                          // also array*, list* and set*
+${#strings.escapeJava(str)}                         // also array*, list* and set*
+${#strings.escapeJavaScript(str)}                   // also array*, list* and set*
+${#strings.unescapeJava(str)}                       // also array*, list* and set*
+${#strings.unescapeJavaScript(str)}                 // also array*, list* and set*
 
 /*
  * Null-safe comparison and concatenation

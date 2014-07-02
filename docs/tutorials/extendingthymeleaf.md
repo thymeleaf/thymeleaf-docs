@@ -79,8 +79,8 @@ not allowed to.
 2.1. Dialects
 -------------
 
-If you've read the _Using Thymeleaf_ tutorial before getting here –which you
-should have done–, you should know that what you've been learning all this time
+If you've read the _Using Thymeleaf_ tutorial before getting here ---which you
+should have done---, you should know that what you've been learning all this time
 was not exactly _Thymeleaf_, but rather its _Standard Dialect_ (or the _SpringStandard Dialect_,
 if you've also read the _Thymeleaf + Spring_ tutorial).
 
@@ -135,7 +135,7 @@ changes on it. We will cover processors in more detail in next sections.
 
 _Execution attributes_ are objects that are contributed by the dialect to the
 execution arguments during the processing of templates. These are objects
-–usually utility objects– that will be made available to processors during their
+---usually utility objects--- that will be made available to processors during their
 execution. Note that these objects will not appear at the variable context, and
 will be only visible internally.
 
@@ -188,7 +188,7 @@ public interface IProcessor extends Comparable<IProcessor> {
 }
 ```
 
-First thing we can see is that it extends `Comparable` – and that is the way
+First thing we can see is that it extends `Comparable` -- and that is the way
 _precedence_ is established. If a processor is considered to be sorted _before_
 another one, this means it has more precedence, and therefore will be executed
 before the latter if they both apply to the same node.
@@ -200,11 +200,11 @@ applicable to a DOM node:
     public IProcessorMatcher<? extends Node> getMatcher();
 ```
 
-Matcher objects will examine the node's type, name and/or attributes –if it is
-an _Element_ DOM node– or whichever other node features required to determine
+Matcher objects will examine the node's type, name and/or attributes ---if it is
+an _Element_ DOM node--- or whichever other node features required to determine
 processor applicability. Thymeleaf comes with a predefined set of `IProcessorMatcher`
 implementations so that you do not have to perform usual tasks like matching an
-element –tag– by its name or one of its attributes.
+element ---tag--- by its name or one of its attributes.
 
 Finally, the method that does the real work:
 
@@ -223,8 +223,8 @@ Finally, the method that does the real work:
    in which the processor being executed was actually matched.
    
     > The problem is that the same processor class can be included in several
-    > dialects executing at a time in the same template engine –probably with
-    > different configurations–, but these dialects might use different prefixes.
+    > dialects executing at a time in the same template engine ---probably with
+    > different configurations---, but these dialects might use different prefixes.
     > If so, how can we know the specific dialect for which the processor is
     > being executed? That is the info this `ProcessorMatchingContext` object
     > provides.
@@ -357,7 +357,7 @@ preregistered for every TemplateEngine instance. Their names are:
 
 For parsing templates in these modes, Thymeleaf offers a set of parser
 implementations that live at the `org.thymeleaf.templateparser package.` These
-parsers come in both SAX and DOM flavours –both validating and non-validating–,
+parsers come in both SAX and DOM flavours ---both validating and non-validating---,
 and there's also a nekoHTML-based HTML parser that allows parsing code that is
 not well-formed XML (for example, with unclosed tags).
 
@@ -639,7 +639,7 @@ The next thing to do is creating an attribute processor able to display the rema
  * We will not be setting a value for an attribute in the host tag, but rather the text body (content) of the tag, in the same way a `th:text` attribute does.
  * We need to access the message externalization (internationalization) system from our code so that we can display the text corresponding to the selected locale.
 
-This time we will be using a different convenience abstract class –one especially designed for setting the tag's text content–, `AbstractTextChildModifierAttrProcessor`. And this will be our code:
+This time we will be using a different convenience abstract class ---one especially designed for setting the tag's text content---, `AbstractTextChildModifierAttrProcessor`. And this will be our code:
 
 ```java
 public class RemarkForPositionAttrProcessor
@@ -763,7 +763,7 @@ protected String getMessage(
 This `getMessage(...)` acts as a combination of the other two: first it tries to
 resolve the required message as a template message (defined in the application
 messages files) and if it doesn't exist tries to resolve it as a processor
-message. This way, applications can override –if needed– any messages
+message. This way, applications can override ---if needed--- any messages
  stablished by its dialects' processors.
 
 

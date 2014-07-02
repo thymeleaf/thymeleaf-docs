@@ -10,7 +10,7 @@ composing email messages of several kinds, and we will integrate this
 with Spring's email utilities in order to configure a simple but
 powerful email system.
 
-Note that, although this article —and the corresponding example app—
+Note that, although this article ---and the corresponding example app---
 uses the Spring Framework, Thymeleaf can also be used for processing
 email templates in an application without Spring.
 
@@ -136,9 +136,9 @@ In order to process our templates, we will need to configure our
 ```
 
 Note that we have configured two *template resolvers* for our engine:
-one for the email templates —which come from our resources directory and
-therefore are loaded by a `ClassLoaderTemplateResolver`— and another one
-for the web templates that support the example application itself —which
+one for the email templates ---which come from our resources directory and
+therefore are loaded by a `ClassLoaderTemplateResolver`--- and another one
+for the web templates that support the example application itself ---which
 loads its templates from the *servlet context*, as most Spring web
 applications do.
 
@@ -219,8 +219,8 @@ Let's remark some points:
 -   We can use all Thymeleaf features. Here for example we have used
     i18n with a parameterized `#{...}` expression, `th:each` to iterate
     over a list, `#dates` to format a date...
--   The `img` element has a hardcoded `src` value —nice for
-    prototyping—, which will be substituted at runtime by something like
+-   The `img` element has a hardcoded `src` value ---nice for
+    prototyping---, which will be substituted at runtime by something like
     `cid:image.jpg` matching the attached image filename.
 
 Putting it all together
@@ -272,7 +272,7 @@ image uploaded by the user, which we previously converted into a
 `byte[]`.
 
 You could also make use of `FileSystemResource` to attach a file
-directly from the filesystem —thus avoiding loading it into memory—, or
+directly from the filesystem ---thus avoiding loading it into memory---, or
 `UrlResource` to attach a remote file.
 
 ### The controller

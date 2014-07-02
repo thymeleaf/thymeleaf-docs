@@ -65,11 +65,11 @@ First, we will have to create the attribute processor that will take
 care of displaying our salutation message.
 
 All attribute processors implement the
-`org.thymeleaf.processor.IProcessor` interface —which marks them as
-*processors*— and specify a *matcher* (`IProcessor.getMatcher()`) that
+`org.thymeleaf.processor.IProcessor` interface ---which marks them as
+*processors*--- and specify a *matcher* (`IProcessor.getMatcher()`) that
 implements the `org.thymeleaf.processor.IAttributeNameProcessorMatcher`
-interface —which specifically marks them as *attribute processors* and
-allows the use of several engine optimizations—. However, several
+interface ---which specifically marks them as *attribute processors* and
+allows the use of several engine optimizations---. However, several
 convenience abstract implementations exist that not only implement the
 right interfaces, but also ease the development of each type of
 processor.

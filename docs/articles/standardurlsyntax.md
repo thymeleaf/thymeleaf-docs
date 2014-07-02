@@ -4,10 +4,10 @@
 Standard URL Syntax
 ===================
 
-The Thymeleaf standard dialects —called *Standard* and *SpringStandard*—
+The Thymeleaf standard dialects ---called *Standard* and *SpringStandard*---
 offer a way to easily create URLs in your web applications so that they
 include any required *URL preparation* artifacts. This is done by means
-of the so-called *“at” syntax* of the *standard expressions*: `@{...}`
+of the so-called *"at" syntax* of the *standard expressions*: `@{...}`
 
 
 Absolute URLs
@@ -163,7 +163,7 @@ This is the standard way of supporting URL rewriting operations in Java web
 applications, and allows URLs to:
 
 -   Automatically detect whether the user has cookies enabled or not,
-    and add the `;jsessionid=...` fragment to the URL if not —or if it
+    and add the `;jsessionid=...` fragment to the URL if not ---or if it
     is the first request and cookie configuration is still unknown.
 -   Automatically apply proxy configuration to URLs when needed.
 -   Make use (if configured so) of different CDN (Content Delivery Network)

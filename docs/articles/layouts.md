@@ -499,7 +499,7 @@ public ViewResolver tilesViewResolver() {
 #### Basic view resolver
 
 The basic view resolver will **not** resolve the views whose names start
-with `message/*` — those are our Tiles-based views, and they will be
+with `message/*` -- those are our Tiles-based views, and they will be
 resolved by the previous `ViewResolver` bean. This is very important, if
 we want to have several view resolvers in the application working
 alongside:
@@ -789,7 +789,7 @@ your templates and that's it!
 
 ### Include style approach with Layout Dialect
 
-Layout Dialect supports not only hierarchical approach — it also
+Layout Dialect supports not only hierarchical approach -- it also
 provides a way to use it in an include-style way (`layout:include`).
 Comparing with standard Thymeleaf includes, with Layout Dialect you can
 pass HTML elements to the included page. Useful if you have some HTML

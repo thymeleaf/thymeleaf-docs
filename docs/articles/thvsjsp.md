@@ -169,7 +169,7 @@ And this is our Thymeleaf code:
 
 Things to notice here:
 
--   This looks much more HTML-ish than the JSP version — no strange
+-   This looks much more HTML-ish than the JSP version -- no strange
     tags, just some meaningful attributes.
 -   Variable expressions (`${...}`) are Spring EL and execute on model
     attributes, asterisk expressions (`*{...}`) execute on the form
@@ -295,7 +295,7 @@ Definitely not in the same league, right?
 Got HTML5?
 ----------
 
-But hey — we said at the beginning that our page was going to be HTML5,
+But hey -- we said at the beginning that our page was going to be HTML5,
 so... why don't we use some of the cool new HTML5 form-related features?
 
 For example, there is now an `<input type="email" ...>`, which will make
@@ -355,7 +355,7 @@ will only have to change the `type` of our input and add a
 `placeholder`, and it will work out of the box, correctly binding our
 property and integrating with Spring MVCs *property editors* and more
 importantly, being displayed as a usual `input` box when displayed as a
-prototype —something the `sf:input` tag won't—:
+prototype ---something the `sf:input` tag won't---:
 
 ```html
 <input type="email" th:field="*{email}" placeholder="your@email" />

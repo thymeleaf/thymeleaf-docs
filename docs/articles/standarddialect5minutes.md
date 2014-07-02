@@ -7,7 +7,7 @@ Getting started with the Standard dialects in 5 minutes
 This guide will take you through some of the most important concepts you
 need to know to understand a Thymeleaf template written in the
 *Standard* or *SpringStandard* dialects. It is not a substitute for the
-tutorials — which are much more comprehensive — but it will teach you
+tutorials -- which are much more comprehensive -- but it will teach you
 enough for getting the feel of the technology.
 
 Standard dialects?
@@ -23,7 +23,7 @@ standard dialects* (named *Standard* and *SpringStandard*) that define a
 set of features which should be more than enough for most scenarios. You
 can identify when these standard dialects are being used in a template
 because it will contain attributes starting with the `th` prefix, like
-`<span th:text="...">`.
+`<span th:text="...">`.
 
 Note that the *Standard* and the *SpringStandard* dialects are almost
 identical, except that *SpringStandard* includes specific features for
@@ -48,8 +48,8 @@ dialects they are used in. These can be of four types:
 
 ### Variable expressions
 
-Variable expressions are OGNL expressions —or Spring EL if you're using
-*SpringStandard*— executed on the map of context variables —also called
+Variable expressions are OGNL expressions ---or Spring EL if you're using
+*SpringStandard*--- executed on the map of context variables ---also called
 *model attributes* in Spring jargon. They look like this:
 
 ```html
@@ -194,7 +194,7 @@ this:
 ```
 
 What we are seeing there is a variable expression (`${sel.code}`) that
-will be executed first and which result — let's say, "`ALL`" — will be
+will be executed first and which result -- let's say, "`ALL`" -- will be
 used as a part of the real expression to be executed afterwards, in this
 case an internationalization one (which would look for the message with
 key `selection.ALL`).

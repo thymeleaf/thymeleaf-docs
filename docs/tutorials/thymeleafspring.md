@@ -54,8 +54,8 @@ This specific dialect is based on the Thymeleaf Standard Dialect and is
 implemented in a class called `org.thymeleaf.spring4.dialect.SpringStandardDialect`,
 which in fact extends from `org.thymeleaf.standard.StandardDialect`.
 
-Besides all the features already present in the Standard Dialect – and therefore
-inherited –, the SpringStandard Dialect introduces the following specific
+Besides all the features already present in the Standard Dialect -- and therefore
+inherited --, the SpringStandard Dialect introduces the following specific
 features:
 
  * Use Spring Expression Language (Spring EL) as a variable expression
@@ -78,15 +78,15 @@ An example bean configuration:
 
 ```xml
 <bean id="templateResolver"
-       class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-  <property name="prefix" value="/WEB-INF/templates/" />
-  <property name="suffix" value=".html" />
-  <property name="templateMode" value="HTML5" />
+       class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <property name="prefix" value="/WEB-INF/templates/" />
+  <property name="suffix" value=".html" />
+  <property name="templateMode" value="HTML5" />
 </bean>
     
 <bean id="templateEngine"
-      class="org.thymeleaf.spring4.SpringTemplateEngine">
-  <property name="templateResolver" ref="templateResolver" />
+      class="org.thymeleaf.spring4.SpringTemplateEngine">
+  <property name="templateResolver" ref="templateResolver" />
 </bean>
 ```
 
@@ -122,19 +122,19 @@ control is passed to it for the renderization of HTML.
 > Note that not all pages in our applications have to be defined as Views, but
 > only those which behaviour we wish to be non-standard or configured in a
 > specific way (for example, by wiring some special beans to it. If a
-> ViewResolver is asked a view that has no corresponding bean –which is the
-> common case–, a new View object is created ad hoc and returned.
+> ViewResolver is asked a view that has no corresponding bean ---which is the
+> common case---, a new View object is created ad hoc and returned.
 
 A typical configuration for a JSP+JSTL ViewResolver in a Spring MVC application
 looks like this:
 
 ```xml
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-  <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-  <property name="prefix" value="/WEB-INF/jsps/" />
-  <property name="suffix" value=".jsp" />
-  <property name="order" value="2" />
-  <property name="viewNames" value="*jsp" />
+  <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+  <property name="prefix" value="/WEB-INF/jsps/" />
+  <property name="suffix" value=".jsp" />
+  <property name="order" value="2" />
+  <property name="viewNames" value="*jsp" />
 </bean>
 ```
 
@@ -166,9 +166,9 @@ Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
 
 ```xml
 <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-  <property name="templateEngine" ref="templateEngine" />
-  <property name="order" value="1" />
-  <property name="viewNames" value="*.html,*.xhtml" />
+  <property name="templateEngine" ref="templateEngine" />
+  <property name="order" value="1" />
+  <property name="viewNames" value="*.html,*.xhtml" />
 </bean>
 ```
 
@@ -186,11 +186,11 @@ it? Easy:
 
 ```xml
 <bean name="main" class="org.thymeleaf.spring4.view.ThymeleafView">
-  <property name="staticVariables">
-    <map>
-      <entry key="footer" value="Some company: &lt;b&gt;ACME&lt;/b&gt;" />
-    </map>
-  </property>
+  <property name="staticVariables">
+    <map>
+      <entry key="footer" value="Some company: &lt;b&gt;ACME&lt;/b&gt;" />
+    </map>
+  </property>
 </bean>
 ```
 
@@ -275,16 +275,16 @@ methods. Like:
 @Service
 public class SeedStarterService {
 
-    @Autowired
-    private SeedStarterRepository seedstarterRepository; 
+    @Autowired
+    private SeedStarterRepository seedstarterRepository; 
 
-    public List<SeedStarter> findAll() {
-        return this.seedstarterRepository.findAll();
-    }
+    public List<SeedStarter> findAll() {
+        return this.seedstarterRepository.findAll();
+    }
 
-    public void add(final SeedStarter seedStarter) {
-        this.seedstarterRepository.add(seedStarter);
-    }
+    public void add(final SeedStarter seedStarter) {
+        this.seedstarterRepository.add(seedStarter);
+    }
 
 }
 ```
@@ -295,16 +295,16 @@ And:
 @Service
 public class VarietyService {
 
-    @Autowired
-    private VarietyRepository varietyRepository; 
+    @Autowired
+    private VarietyRepository varietyRepository; 
 
-    public List<Variety> findAll() {
-        return this.varietyRepository.findAll();
-    }
+    public List<Variety> findAll() {
+        return this.varietyRepository.findAll();
+    }
 
-    public Variety findById(final Integer id) {
-        return this.varietyRepository.findById(id);
-    }
+    public Variety findById(final Integer id) {
+        return this.varietyRepository.findById(id);
+    }
 
 }
 ```
@@ -322,23 +322,23 @@ Resolver instances.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/mvc
-                           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-                           http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     
     
-  <!-- **************************************************************** -->
-  <!--  RESOURCE FOLDERS CONFIGURATION                                  -->
-  <!--  Dispatcher configuration for serving static resources           -->
-  <!-- **************************************************************** -->
-  <mvc:resources location="/images/" mapping="/images/**" />
-  <mvc:resources location="/css/" mapping="/css/**" />
+  <!-- **************************************************************** -->
+  <!--  RESOURCE FOLDERS CONFIGURATION                                  -->
+  <!--  Dispatcher configuration for serving static resources           -->
+  <!-- **************************************************************** -->
+  <mvc:resources location="/images/" mapping="/images/**" />
+  <mvc:resources location="/css/" mapping="/css/**" />
     
 
   <!-- **************************************************************** -->
@@ -373,25 +373,25 @@ Resolver instances.
 
 
   <!-- **************************************************************** -->
-  <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
-  <!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
-  <!-- **************************************************************** -->
+  <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
+  <!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
+  <!-- **************************************************************** -->
 
-  <bean id="templateResolver"
-        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-    <property name="prefix" value="/WEB-INF/templates/" />
-    <property name="suffix" value=".html" />
-    <property name="templateMode" value="HTML5" />
-  </bean>
+  <bean id="templateResolver"
+        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+    <property name="prefix" value="/WEB-INF/templates/" />
+    <property name="suffix" value=".html" />
+    <property name="templateMode" value="HTML5" />
+  </bean>
     
-  <bean id="templateEngine"
-        class="org.thymeleaf.spring4.SpringTemplateEngine">
-    <property name="templateResolver" ref="templateResolver" />
-  </bean>
+  <bean id="templateEngine"
+        class="org.thymeleaf.spring4.SpringTemplateEngine">
+    <property name="templateResolver" ref="templateResolver" />
+  </bean>
    
-  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-    <property name="templateEngine" ref="templateEngine" />
-  </bean>    
+  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+    <property name="templateEngine" ref="templateEngine" />
+  </bean>    
 
     
 </beans>
@@ -412,13 +412,13 @@ ones, we will write only one controller class for all the server interactions:
 @Controller
 public class SeedStarterMngController {
 
-    @Autowired
-    private VarietyService varietyService;
+    @Autowired
+    private VarietyService varietyService;
     
-    @Autowired
-    private SeedStarterService seedStarterService;
+    @Autowired
+    private SeedStarterService seedStarterService;
 
-    ...
+    ...
 
 }
 ```
@@ -433,22 +433,22 @@ First we will add some model attributes that we will need in the page:
 ```java
 @ModelAttribute("allTypes")
 public List<Type> populateTypes() {
-    return Arrays.asList(Type.ALL);
+    return Arrays.asList(Type.ALL);
 }
     
 @ModelAttribute("allFeatures")
 public List<Feature> populateFeatures() {
-    return Arrays.asList(Feature.ALL);
+    return Arrays.asList(Feature.ALL);
 }
     
 @ModelAttribute("allVarieties")
 public List<Variety> populateVarieties() {
-    return this.varietyService.findAll();
+    return this.varietyService.findAll();
 }
     
 @ModelAttribute("allSeedStarters")
 public List<SeedStarter> populateSeedStarters() {
-    return this.seedStarterService.findAll();
+    return this.seedStarterService.findAll();
 }
 ```
 
@@ -462,19 +462,19 @@ objects.
 ```java
 @RequestMapping({"/","/seedstartermng"})
 public String showSeedstarters(final SeedStarter seedStarter) {
-    seedStarter.setDatePlanted(Calendar.getInstance().getTime());
-    return "seedstartermng";
+    seedStarter.setDatePlanted(Calendar.getInstance().getTime());
+    return "seedstartermng";
 }
 
 @RequestMapping(value="/seedstartermng", params={"save"})
 public String saveSeedstarter(
-        final SeedStarter seedStarter, final BindingResult bindingResult, final ModelMap model) {
-    if (bindingResult.hasErrors()) {
-        return "seedstartermng";
-    }
-    this.seedStarterService.add(seedStarter);
-    model.clear();
-    return "redirect:/seedstartermng";
+        final SeedStarter seedStarter, final BindingResult bindingResult, final ModelMap model) {
+    if (bindingResult.hasErrors()) {
+        return "seedstartermng";
+    }
+    this.seedStarterService.add(seedStarter);
+    model.clear();
+    return "redirect:/seedstartermng";
 }
 ```
 
@@ -590,41 +590,41 @@ Like this:
 ```html
 <div class="seedstarterlist" th:unless="${#lists.isEmpty(allSeedStarters)}">
     
-  <h2 th:text="#{title.list}">List of Seed Starters</h2>
+  <h2 th:text="#{title.list}">List of Seed Starters</h2>
   
-  <table>
-    <thead>
-      <tr>
-        <th th:text="#{seedstarter.datePlanted}">Date Planted</th>
-        <th th:text="#{seedstarter.covered}">Covered</th>
-        <th th:text="#{seedstarter.type}">Type</th>
-        <th th:text="#{seedstarter.features}">Features</th>
-        <th th:text="#{seedstarter.rows}">Rows</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="sb : ${allSeedStarters}">
-        <td th:text="${{sb.datePlanted}}">13/01/2011</td>
-        <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
-        <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
-        <td th:text="${#strings.arrayJoin(
-                           #messages.arrayMsg(
+  <table>
+    <thead>
+      <tr>
+        <th th:text="#{seedstarter.datePlanted}">Date Planted</th>
+        <th th:text="#{seedstarter.covered}">Covered</th>
+        <th th:text="#{seedstarter.type}">Type</th>
+        <th th:text="#{seedstarter.features}">Features</th>
+        <th th:text="#{seedstarter.rows}">Rows</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="sb : ${allSeedStarters}">
+        <td th:text="${{sb.datePlanted}}">13/01/2011</td>
+        <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
+        <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
+        <td th:text="${#strings.arrayJoin(
+                           #messages.arrayMsg(
                                #strings.arrayPrepend(sb.features,'seedstarter.feature.')),
-                           ', ')}">Electric Heating, Turf</td>
-        <td>
-          <table>
-            <tbody>
-              <tr th:each="row,rowStat : ${sb.rows}">
-                <td th:text="${rowStat.count}">1</td>
-                <td th:text="${row.variety.name}">Thymus Thymi</td>
-                <td th:text="${row.seedsPerCell}">12</td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+                           ', ')}">Electric Heating, Turf</td>
+        <td>
+          <table>
+            <tbody>
+              <tr th:each="row,rowStat : ${sb.rows}">
+                <td th:text="${rowStat.count}">1</td>
+                <td th:text="${row.variety.name}">Thymus Thymi</td>
+                <td th:text="${row.seedsPerCell}">12</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 ```
 
@@ -646,14 +646,14 @@ The next thing to see is a lot of internationalized (externalized) texts, like:
 <h2 th:text="#{title.list}">List of Seed Starters</h2>
 
 <table>
-  <thead>
-    <tr>
-      <th th:text="#{seedstarter.datePlanted}">Date Planted</th>
-      <th th:text="#{seedstarter.covered}">Covered</th>
-      <th th:text="#{seedstarter.type}">Type</th>
-      <th th:text="#{seedstarter.features}">Features</th>
-      <th th:text="#{seedstarter.rows}">Rows</th>
-      …
+  <thead>
+    <tr>
+      <th th:text="#{seedstarter.datePlanted}">Date Planted</th>
+      <th th:text="#{seedstarter.covered}">Covered</th>
+      <th th:text="#{seedstarter.type}">Type</th>
+      <th th:text="#{seedstarter.features}">Features</th>
+      <th th:text="#{seedstarter.rows}">Rows</th>
+      ...
 ```
 
 This being a Spring MVC application, we already defined a `MessageSource` bean
@@ -662,7 +662,7 @@ managing externalized texts in Spring MVC):
 
 ```xml
 <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-  <property name="basename" value="Messages" />
+  <property name="basename" value="Messages" />
 </bean>
 ```
 
@@ -719,8 +719,8 @@ which result we will then use as the message key:
 ```
 
 The most difficult part of this listing is the _features_ column. In it we want
-to display all the features of our container –that come in the form of an array
-of `Feature` enums–, separated by commas. Like _"Electric Heating, Turf"_.
+to display all the features of our container ---that come in the form of an array
+of `Feature` enums---, separated by commas. Like _"Electric Heating, Turf"_.
 
 Note that this is particularly difficult because these enum values also need to
 be externalized, as we did with Types. The flow is then:
@@ -733,9 +733,9 @@ For achieving this, we create the following code:
 
 ```html
 <td th:text="${#strings.arrayJoin(
-                   #messages.arrayMsg(
+                   #messages.arrayMsg(
                        #strings.arrayPrepend(sb.features,'seedstarter.feature.')),
-                   ', ')}">Electric Heating, Turf</td>
+                   ', ')}">Electric Heating, Turf</td>
 ```
 
 The last column of our listing will be quite simple, in fact. Even if it has a
@@ -743,15 +743,15 @@ nested table for showing the contents of each row in the container:
 
 ```html
 <td>
-  <table>
-    <tbody>
-      <tr th:each="row,rowStat : ${sb.rows}">
-        <td th:text="${rowStat.count}">1</td>
-        <td th:text="${row.variety.name}">Thymus Thymi</td>
-        <td th:text="${row.seedsPerCell}">12</td>
-      </tr>
-    </tbody>
-  </table>
+  <table>
+    <tbody>
+      <tr th:each="row,rowStat : ${sb.rows}">
+        <td th:text="${rowStat.count}">1</td>
+        <td th:text="${row.variety.name}">Thymus Thymi</td>
+        <td th:text="${row.seedsPerCell}">12</td>
+      </tr>
+    </tbody>
+  </table>
 </td>
 ```
 
@@ -776,7 +776,7 @@ attribute in your `<form>` tag:
 
 ```html
 <form action="#" th:action="@{/seedstartermng}" th:object="${seedStarter}" method="post">
-    ...
+    ...
 </form>
 ```
 
@@ -841,8 +841,8 @@ our HTML page:
 
 ```html
 <div>
-  <label th:for="${#ids.next('covered')}" th:text="#{seedstarter.covered}">Covered</label>
-  <input type="checkbox" th:field="*{covered}" />
+  <label th:for="${#ids.next('covered')}" th:text="#{seedstarter.covered}">Covered</label>
+  <input type="checkbox" th:field="*{covered}" />
 </div>
 ```
 
@@ -861,11 +861,11 @@ We can see this more easily if we look at such a multi-valued checkbox field:
 
 ```html
 <ul>
-  <li th:each="feat : ${allFeatures}">
-    <input type="checkbox" th:field="*{features}" th:value="${feat}" />
-    <label th:for="${#ids.prev('features')}" 
+  <li th:each="feat : ${allFeatures}">
+    <input type="checkbox" th:field="*{features}" th:value="${feat}" />
+    <label th:for="${#ids.prev('features')}" 
            th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
-  </li>
+  </li>
 </ul>
 ```
 
@@ -876,21 +876,21 @@ Let's see the HTML output generated by this code:
 
 ```html
 <ul>
-  <li>
-    <input id="features1" name="features" type="checkbox" value="SEEDSTARTER_SPECIFIC_SUBSTRATE" />
-    <input name="_features" type="hidden" value="on" />
-    <label for="features1">Seed starter-specific substrate</label>
-  </li>
-  <li>
-    <input id="features2" name="features" type="checkbox" value="FERTILIZER" />
-    <input name="_features" type="hidden" value="on" />
-    <label for="features2">Fertilizer used</label>
-  </li>
-  <li>
-    <input id="features3" name="features" type="checkbox" value="PH_CORRECTOR" />
-    <input name="_features" type="hidden" value="on" />
-    <label for="features3">PH Corrector used</label>
-  </li>
+  <li>
+    <input id="features1" name="features" type="checkbox" value="SEEDSTARTER_SPECIFIC_SUBSTRATE" />
+    <input name="_features" type="hidden" value="on" />
+    <label for="features1">Seed starter-specific substrate</label>
+  </li>
+  <li>
+    <input id="features2" name="features" type="checkbox" value="FERTILIZER" />
+    <input name="_features" type="hidden" value="on" />
+    <label for="features2">Fertilizer used</label>
+  </li>
+  <li>
+    <input id="features3" name="features" type="checkbox" value="PH_CORRECTOR" />
+    <input name="_features" type="hidden" value="on" />
+    <label for="features3">PH Corrector used</label>
+  </li>
 </ul>
 ```
 
@@ -912,14 +912,14 @@ a `checked="checked"` attribute to the corresponding input tags.
 -----------------------
 
 Radio button fields are specified in a similar way to non-boolean (multi-valued)
-checkboxes –except that they are not multivalued, of course:
+checkboxes ---except that they are not multivalued, of course:
 
 ```html
 <ul>
-  <li th:each="ty : ${allTypes}">
-    <input type="radio" th:field="*{type}" th:value="${ty}" />
-    <label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.' + ty}}">Wireframe</label>
-  </li>
+  <li th:each="ty : ${allTypes}">
+    <input type="radio" th:field="*{type}" th:value="${ty}" />
+    <label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.' + ty}}">Wireframe</label>
+  </li>
 </ul>
 ```
 
@@ -939,9 +939,9 @@ Let's re-build the type field as a dropdown select:
 
 ```html
 <select th:field="*{type}">
-  <option th:each="type : ${allTypes}" 
-          th:value="${type}" 
-          th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
+  <option th:each="type : ${allTypes}" 
+          th:value="${type}" 
+          th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
 </select>
 ```
 
@@ -966,17 +966,17 @@ the existence of specific request parameters:
 ```java
 @RequestMapping(value="/seedstartermng", params={"addRow"})
 public String addRow(final SeedStarter seedStarter, final BindingResult bindingResult) {
-    seedStarter.getRows().add(new Row());
-    return "seedstartermng";
+    seedStarter.getRows().add(new Row());
+    return "seedstartermng";
 }
 
 @RequestMapping(value="/seedstartermng", params={"removeRow"})
 public String removeRow(
-        final SeedStarter seedStarter, final BindingResult bindingResult, 
+        final SeedStarter seedStarter, final BindingResult bindingResult, 
         final HttpServletRequest req) {
-    final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
-    seedStarter.getRows().remove(rowId.intValue());
-    return "seedstartermng";
+    final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
+    seedStarter.getRows().remove(rowId.intValue());
+    return "seedstartermng";
 }
 ```
 
@@ -984,35 +984,35 @@ And now we can add a dynamic table to our form:
 
 ```html
 <table>
-  <thead>
-    <tr>
-      <th th:text="#{seedstarter.rows.head.rownum}">Row</th>
-      <th th:text="#{seedstarter.rows.head.variety}">Variety</th>
-      <th th:text="#{seedstarter.rows.head.seedsPerCell}">Seeds per cell</th>
-      <th>
-        <button type="submit" name="addRow" th:text="#{seedstarter.row.add}">Add row</button>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="row,rowStat : *{rows}">
-      <td th:text="${rowStat.count}">1</td>
-      <td>
-        <select th:field="*{rows[__${rowStat.index}__].variety}">
-          <option th:each="var : ${allVarieties}" 
-                  th:value="${var.id}" 
-                  th:text="${var.name}">Thymus Thymi</option>
-        </select>
-      </td>
-      <td>
-        <input type="text" th:field="*{rows[__${rowStat.index}__].seedsPerCell}" />
-      </td>
-      <td>
-        <button type="submit" name="removeRow" 
-                th:value="${rowStat.index}" th:text="#{seedstarter.row.remove}">Remove row</button>
-      </td>
-    </tr>
-  </tbody>
+  <thead>
+    <tr>
+      <th th:text="#{seedstarter.rows.head.rownum}">Row</th>
+      <th th:text="#{seedstarter.rows.head.variety}">Variety</th>
+      <th th:text="#{seedstarter.rows.head.seedsPerCell}">Seeds per cell</th>
+      <th>
+        <button type="submit" name="addRow" th:text="#{seedstarter.row.add}">Add row</button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="row,rowStat : *{rows}">
+      <td th:text="${rowStat.count}">1</td>
+      <td>
+        <select th:field="*{rows[__${rowStat.index}__].variety}">
+          <option th:each="var : ${allVarieties}" 
+                  th:value="${var.id}" 
+                  th:text="${var.name}">Thymus Thymi</option>
+        </select>
+      </td>
+      <td>
+        <input type="text" th:field="*{rows[__${rowStat.index}__].seedsPerCell}" />
+      </td>
+      <td>
+        <button type="submit" name="removeRow" 
+                th:value="${rowStat.index}" th:text="#{seedstarter.row.remove}">Remove row</button>
+      </td>
+    </tr>
+  </tbody>
 </table>
 ```
 
@@ -1022,7 +1022,7 @@ except for one `strange` thing:
 ```html
 <select th:field="*{rows[__${rowStat.index}__].variety}">
 
-    ...
+    ...
 
 </select>
 ```
@@ -1035,7 +1035,7 @@ the row index? Wouldn't it be enough with:
 ```html
 <select th:field="*{rows[rowStat.index].variety}">
 
-    ...
+    ...
 
 </select>
 ```
@@ -1051,42 +1051,42 @@ a couple of times:
 
 ```html
 <tbody>
-  <tr>
-    <td>1</td>
-    <td>
-      <select id="rows0.variety" name="rows[0].variety">
-        <option selected="selected" value="1">Thymus vulgaris</option>
-        <option value="2">Thymus x citriodorus</option>
-        <option value="3">Thymus herba-barona</option>
-        <option value="4">Thymus pseudolaginosus</option>
-        <option value="5">Thymus serpyllum</option>
-      </select>
-    </td>
-    <td>
-      <input id="rows0.seedsPerCell" name="rows[0].seedsPerCell" type="text" value="" />
-    </td>
-    <td>
-      <button name="removeRow" type="submit" value="0">Remove row</button>
-    </td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>
-      <select id="rows1.variety" name="rows[1].variety">
-        <option selected="selected" value="1">Thymus vulgaris</option>
-        <option value="2">Thymus x citriodorus</option>
-        <option value="3">Thymus herba-barona</option>
-        <option value="4">Thymus pseudolaginosus</option>
-        <option value="5">Thymus serpyllum</option>
-      </select>
-    </td>
-    <td>
-      <input id="rows1.seedsPerCell" name="rows[1].seedsPerCell" type="text" value="" />
-    </td>
-    <td>
-      <button name="removeRow" type="submit" value="1">Remove row</button>
-    </td>
-  </tr>
+  <tr>
+    <td>1</td>
+    <td>
+      <select id="rows0.variety" name="rows[0].variety">
+        <option selected="selected" value="1">Thymus vulgaris</option>
+        <option value="2">Thymus x citriodorus</option>
+        <option value="3">Thymus herba-barona</option>
+        <option value="4">Thymus pseudolaginosus</option>
+        <option value="5">Thymus serpyllum</option>
+      </select>
+    </td>
+    <td>
+      <input id="rows0.seedsPerCell" name="rows[0].seedsPerCell" type="text" value="" />
+    </td>
+    <td>
+      <button name="removeRow" type="submit" value="0">Remove row</button>
+    </td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>
+      <select id="rows1.variety" name="rows[1].variety">
+        <option selected="selected" value="1">Thymus vulgaris</option>
+        <option value="2">Thymus x citriodorus</option>
+        <option value="3">Thymus herba-barona</option>
+        <option value="4">Thymus pseudolaginosus</option>
+        <option value="5">Thymus serpyllum</option>
+      </select>
+    </td>
+    <td>
+      <input id="rows1.seedsPerCell" name="rows[1].seedsPerCell" type="text" value="" />
+    </td>
+    <td>
+      <button name="removeRow" type="submit" value="1">Remove row</button>
+    </td>
+  </tr>
 </tbody>
 ```
 
@@ -1510,7 +1510,7 @@ An implementation of `RequestDataValueProcessor` can be easily configured at the
 
   * `th:href` and `th:src` call `RequestDataValueProcessor.processUrl(...)` before rendering the URL.
 
-  * `th:action` calls `RequestDataValueProcessor.processAction(...)` before rendering the form's `action` attribute, and additionally it detects when this attribute is being applied on a `<form>` tag —which should be the only place, anyway—, and in such case calls `RequestDataValueProcessor.getExtraHiddenFields(...)` and adds the returned hidden fields just before the closing `</form>` tag.
+  * `th:action` calls `RequestDataValueProcessor.processAction(...)` before rendering the form's `action` attribute, and additionally it detects when this attribute is being applied on a `<form>` tag ---which should be the only place, anyway---, and in such case calls `RequestDataValueProcessor.getExtraHiddenFields(...)` and adds the returned hidden fields just before the closing `</form>` tag.
 
   * `th:value` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value it refers to, unless there is a `th:field` present in the same tag (in which case `th:field` will take care).
 
@@ -1528,7 +1528,7 @@ Note this feature will only be available for Spring versions 3.1 and newer.
 13.1 Basic configuration
 -----------------------
 
-The `thymeleaf–spring4` integration package includes integration with Spring
+The `thymeleaf-spring4` integration package includes integration with Spring
 WebFlow 2.3.x.
 
 WebFlow includes some AJAX capabilities for rendering fragments of the displayed
@@ -1538,8 +1538,8 @@ implementation, configured like this:
 
 ```xml
 <bean id="thymeleafViewResolver" class="org.thymeleaf.spring4.view.AjaxThymeleafViewResolver">
-    <property name="viewClass" value="org.thymeleaf.spring4.view.FlowAjaxThymeleafView" />
-    <property name="templateEngine" ref="templateEngine" />
+    <property name="viewClass" value="org.thymeleaf.spring4.view.FlowAjaxThymeleafView" />
+    <property name="templateEngine" ref="templateEngine" />
 </bean>
 ```
 
@@ -1549,7 +1549,7 @@ like:
 ```xml
 <bean id="mvcViewFactoryCreator" 
       class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
-    <property name="viewResolvers" ref="thymeleafViewResolver"/>
+    <property name="viewResolvers" ref="thymeleafViewResolver"/>
 </bean>
 ```
 
@@ -1557,7 +1557,7 @@ From here on, you can specify Thymeleaf templates in your view-state's:
 
 ```xml
 <view-state id="detail" view="bookingDetail">
-    ...
+    ...
 </view-state>
 ```
 
@@ -1574,9 +1574,9 @@ tags, like this:
 
 ```xml
 <view-state id="detail" view="bookingDetail">
-    <transition on="updateData">
-        <render fragments="hoteldata"/>
-    </transition>
+    <transition on="updateData">
+        <render fragments="hoteldata"/>
+    </transition>
 </view-state>
 ```
 
@@ -1585,7 +1585,7 @@ fragments specified at the markup with `th:fragment`:
 
 ```xml
 <div id="data" th:fragment="hoteldata">
-    This is a content to be changed
+    This is a content to be changed
 </div>
 ```
 
@@ -1597,9 +1597,9 @@ substituting the markup._
 
 ```html
 <view-state id="detail" view="bookingDetail">
-    <transition on="updateData">
-        <render fragments="[//div[@id='data']]"/>
-    </transition>
+    <transition on="updateData">
+        <render fragments="[//div[@id='data']]"/>
+    </transition>
 </view-state>
 ```
 
@@ -1607,7 +1607,7 @@ substituting the markup._
 
 ```html
 <div id="data">
-    This is a content to be changed
+    This is a content to be changed
 </div>
 ```
 
@@ -1618,14 +1618,14 @@ As for the code that triggers the `updateData` transition, it looks like:
 <script type="text/javascript" th:src="@{/resources/spring/Spring.js}"></script>
 <script type="text/javascript" th:src="@{/resources/spring/Spring-Dojo.js}"></script>
 
-  ...
+  ...
 
 <form id="triggerform" method="post" action="">
-    <input type="submit" id="doUpdate" name="_eventId_updateData" value="Update now!" />
+    <input type="submit" id="doUpdate" name="_eventId_updateData" value="Update now!" />
 </form>
 
 <script type="text/javascript">
-    Spring.addDecoration(
-        new Spring.AjaxEventDecoration({formId:'triggerform',elementId:'doUpdate',event:'onclick'}));
+    Spring.addDecoration(
+        new Spring.AjaxEventDecoration({formId:'triggerform',elementId:'doUpdate',event:'onclick'}));
 </script>
 ```

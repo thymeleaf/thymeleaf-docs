@@ -68,7 +68,7 @@ were left to the browser developers' imagination.
 
 And one of the most interesting ideas that appeared in browsers was
 *client-side interactivity*. This interactivity was achieved by
-executing *scripts* — in languages such as JavaScript — inside the
+executing *scripts* -- in languages such as JavaScript -- inside the
 browser itself, and giving these scripts the ability to handle, modify
 and even execute events on parts of the document being displayed. For
 this, browsers had to model HTML documents as in-memory trees of
@@ -96,8 +96,8 @@ The W3C finally standardized the DOM API and a language for scripting in
 web browsers: JavaScript (although for some complex reasons they
 insisted on calling it ECMAScript). But the damage done by the world of
 tag soups coupled with the slow adoption of these standards in full by
-browser makers — in many cases fearing they would damage backwards
-compatibility — produced effects that are still influencing the way we
+browser makers -- in many cases fearing they would damage backwards
+compatibility -- produced effects that are still influencing the way we
 create web applications today.
 
 Enter XML
@@ -145,7 +145,7 @@ and easier parsing and automated processing of web pages.
 
 As a part of this, XHTML introduced a controversial concept coming
 directly from XML and known as *Draconian Error Handling*, which meant
-that any interpreter of XML — including now a browser — should fail
+that any interpreter of XML -- including now a browser -- should fail
 immediately should any kind of format error be found in the XML document
 being processed. In practice, this meant that XHTML authors would have
 to create perfectly well-formed documents or accept the fact that
@@ -190,7 +190,7 @@ that you cannot use that content type if you want to be able to display
 your web site to IE users. IE9 seems to be on the way to correct that,
 but it is simply too late by now.
 
-Fortunately — or maybe unfortunately — The XHTML 1.0 specification
+Fortunately -- or maybe unfortunately -- The XHTML 1.0 specification
 included an appendix that stated that XHTML 1.0 content could also be
 served using the old `text/html` content type from the HTML times, in
 order to ease the transition. And that's exactly what most of us have
@@ -201,8 +201,8 @@ published in 2000, the *transition* has taken long.
 But the fact is that when you serve content as HTML instead of XHTML
 browsers will use their HTML engines for it, and not the XHTML-specific
 ones. And although their HTML engines have been XHTML-enabled, they
-still have to provide backwards compatibility for old HTML 4 code —
-which makes them very tricky pieces of software — and importantly, they
+still have to provide backwards compatibility for old HTML 4 code ---
+which makes them very tricky pieces of software -- and importantly, they
 lack some of the most XML-ish features of XHTML, starting with...
 Draconian Error Handling.
 
@@ -254,7 +254,7 @@ many years of work done by millions of web authors.
 So these makers (along with other individuals) presented the W3C with
 the idea of evolving HTML in a way that made all (or most) existing HTML
 and XHTML code still valid as *new HTML* while providing powerful new
-features for web applications and — importantly — clearly defining the
+features for web applications and -- importantly -- clearly defining the
 way in which error handling should be done.
 
 This latter point meant that instead of failing on the first error,
@@ -290,7 +290,7 @@ HTML5 was now the *only* future of web standards.
 So what is HTML5?
 -----------------
 
-HTML5 is a set of standards — still under development as of 2011 —
+HTML5 is a set of standards -- still under development as of 2011 ---
 evolving from current HTML 4 and XHTML specifications and aimed at:
 
 -   Adding advanced new capabilities to HTML that effectively move web

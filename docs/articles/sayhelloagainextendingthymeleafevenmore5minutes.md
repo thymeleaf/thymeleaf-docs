@@ -32,7 +32,7 @@ features. For example:
     in the *Spring Thymeleaf Dialect*. For example:
     `hello:sayto="${user.name}"`
 -   Internationalize output: say *Hello* for English, *Hola* for
-    Spanish, *Olá* for Portuguese, etc.
+    Spanish, *Ol&aacute;* for Portuguese, etc.
 
 And we will need all that because we want to be able to create a new
 attribute, called "`saytoplanet`" and salute all the planets in the
@@ -201,8 +201,8 @@ Each of them has a different meaning, let's start by the last two:
         processed.
 
 -   `getMessageForProcessor(...)` uses a message resolution mechanism
-    created for allowing the *componentization* —or, if you prefer,
-    *encapsulation*— of dialects. This mechanism consists in allowing
+    created for allowing the *componentization* ---or, if you prefer,
+    *encapsulation*--- of dialects. This mechanism consists in allowing
     *tag* and *attribute processors* to specify their own messages,
     whichever the application their dialects are used on. These are read
     from `.properties` files with the same name and living in the same
@@ -282,14 +282,14 @@ protected String getText(final Arguments arguments, final Element element,
 And that's it! Let's have a look at the results of executing our
 template with Spanish locale:
 
--   ¡Hola, planeta Mercury!
--   ¡Hola, planeta Venus!
--   ¡Hola, planeta Earth!
--   ¡Hola, planeta Mars!
--   ¡Hola, planeta Jupiter!
--   ¡Hola, planeta Saturn!
--   ¡Hola, planeta Uranus!
--   ¡Hola, planeta Neptune!
+-   &iexcl;Hola, planeta Mercury!
+-   &iexcl;Hola, planeta Venus!
+-   &iexcl;Hola, planeta Earth!
+-   &iexcl;Hola, planeta Mars!
+-   &iexcl;Hola, planeta Jupiter!
+-   &iexcl;Hola, planeta Saturn!
+-   &iexcl;Hola, planeta Uranus!
+-   &iexcl;Hola, planeta Neptune!
 
 Exercise for the reader: internationalize the planet names
 ----------------------------------------------------------
