@@ -1,10 +1,9 @@
 % Thymeleaf + Spring Security integration basics
+% Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>
 
 
 Thymeleaf + Spring Security integration basics
 ==============================================
-
-*By José Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>*
 
 Have you switched to Thymeleaf but your login and error pages are still
 using JSP? \

@@ -1,4 +1,5 @@
 % Spring MVC and Thymeleaf: how to acess data from templates
+% Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl" target="_blank">http://blog.codeleak.pl</a>
 
 
 # Spring MVC and Thymeleaf: how to acess data from templates

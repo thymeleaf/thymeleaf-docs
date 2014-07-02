@@ -1,10 +1,9 @@
 % Bringing Thymeleaf and Natural Templates to the Spring PetClinic
+% Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>
 
 
 Bringing Thymeleaf and Natural Templates to the Spring PetClinic
 ================================================================
-
-*By Soraya Sánchez \<sschz AT users.sourceforge.net\>*
 
 **Note**: The Spring PetClinic application received a major update from
 SpringSource in March 2013, and the *thymeleafexamples-petclinic*

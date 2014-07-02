@@ -1,10 +1,9 @@
 % Rich HTML email in Spring with Thymeleaf
+% Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>
 
 
 Rich HTML email in Spring with Thymeleaf
 ========================================
-
-*By José Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>*
 
 In this article we will show how to use Thymeleaf templates for
 composing email messages of several kinds, and we will integrate this
