@@ -33,9 +33,9 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 // These two variables should be updated when creating a new version of the docs
-project.version = '2.1.3'
+project.version = '2.1.3.RELEASE'
 project.ext.set('documentDate', new Date().clearTime())
-project.documentDate.set(year: 2014, month: Calendar.DECEMBER, date: 31)
+project.documentDate.set(year: 2014, month: Calendar.JULY, date: 2)
 
 project.webAppDirName = "${buildDir}/jetty"
 
