@@ -10,7 +10,7 @@ and another time using JSP, JSTL and the Spring tag libraries.
 
 All the code seen here comes from a working application. You can
 download the source code of such application from the [documentation
-page](documentation.html).
+page](/documentation.html).
 
 Common requirements
 -------------------
@@ -333,7 +333,7 @@ plain-HTML tag work as if an `<sf:email/>` tag existed:
 
 ```html
 <input type="email" id="email" name="email" placeholder="your@email"
-  value="<s:eval expression='subscription.email' />" />
+       value="<s:eval expression='subscription.email' />" />
 ```
 
 #### Since Spring 3.1

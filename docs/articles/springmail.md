@@ -26,7 +26,7 @@ Example application
 -------------------
 
 All the code in this article comes from a working example application
-you can download from the [documentation page](documentation.html).
+you can download from the [documentation page](/documentation.html).
 Downloading this application, executing it and exploring its source code
 is highly recommended *(note that you will have to configure your SMTP
 user name and password at `configuration.properties`)*.
@@ -309,4 +309,4 @@ For the sake of brevity, we have only detailed one of the three types of
 email we want our application to send. However, you can see the source
 code required for creating all three types of emails at the `springmail`
 example application you can download from the [documentation
-page](documentation.html).
+page](/documentation.html).

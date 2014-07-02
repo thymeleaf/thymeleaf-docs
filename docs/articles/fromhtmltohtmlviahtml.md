@@ -39,7 +39,9 @@ served to them in a language called *MIME (Multipurpose Internet Mail
 Extensions)*. And the MIME type used for serving HTML documents was
 `text/html`:
 
+```html
     Content-Type: text/html
+```
 
 HTML also defined a way to check whether a document was *valid*. Being
 valid basically meant that the document was written according to the
@@ -169,7 +171,9 @@ supposed to use for serving XHTML so that browsers knew that they had to
 use their XHTML parser and engine instead of their HTML equivalents.
 This was `application/xhtml+xml`:
 
+```html
     Content-Type: application/xhtml+xml
+```
 
 Crashing down to (XHTML's) reality
 ----------------------------------
@@ -316,7 +320,9 @@ changing your `DOCTYPE` to the HTML5 one:
 
 And by serving your content with content type `text/html`:
 
+```html
     Content-Type: text/html
+```
 
 And here you might be thinking: why does that `DOCTYPE` specify no DTD
 at all? Because there isn't one. HTML5 has no DTD because the rules that
@@ -364,7 +370,9 @@ And what about XHTML5? Does that exist?
 
 In theory, yes. XHTML5 is just HTML5 served with:
 
+```html
     Content-Type: application/xhtml+xml
+```
 
 But again, this content type is not currently supported by IE. So in
 practice, no, it doesn't exist.

@@ -239,5 +239,5 @@ the attributes which values they set:
 Want to know more?
 ------------------
 
-Then the [*"Using Thymeleaf"*](documentation.html) tutorial is what
+Then the [*"Using Thymeleaf"*](/documentation.html) tutorial is what
 you're looking for!

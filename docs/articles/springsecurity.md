@@ -180,4 +180,4 @@ Download example
 ----------------
 
 The full working example code used in this article is available for
-download at the [project's documentation page](documentation.html).
+download at the [project's documentation page](/documentation.html).

@@ -8,7 +8,7 @@ This article is a continuation of [*"Say Hello! Extending Thymeleaf in 5
 minutes"*](sayhelloextendingthymeleaf5minutes.html) and is meant to be
 read after it. Code in this article comes from the same example
 application, which you can download from the
-[documentation](documentation.html) page.
+[documentation](/documentation.html) page.
 
 Some improvements for our 'hello' dialect
 -----------------------------------------
@@ -48,7 +48,6 @@ solar system, with a template like this:
 a model attribute called `planets`:
 
 ```java
-
 @Controller
 public class SayHelloController {
 
@@ -228,7 +227,9 @@ Enough about theory, let's put all this into practice. First we will
 need some `.properties` files, like
 `SayToPlanetAttrProcessor_es.properties` for Spanish:
 
+```html
     msg.helloplanet=&iexcl;Hola, planeta {0}!
+```    
 
 `SayToPlanetAttrProcessor_pt.properties` for Portuguese:
 
@@ -304,7 +305,7 @@ expressions we can use in this attribute now should make this quite
 easy, and there are also some examples in articles like [*"Getting
 started with the Standard Dialect in 5
 minutes"*](standarddialect5minutes.html) and the
-[tutorials](documentation.html) quite similar to this scenario.
+[tutorials](/documentation.html) quite similar to this scenario.
 
 Once you're done (or if you get stuck), you can share your results at
 our [user forums](http://forum.thymeleaf.org).

@@ -9,7 +9,7 @@ it to your template engine. Let's see how.
 
 *(All the code seen here comes from a working application. You can
 download the source code of such application from the [documentation
-page](documentation.html))*
+page](/documentation.html))*
 
 Dialects
 --------
@@ -52,7 +52,7 @@ The simplest dialect ever: Say Hello!
 Let's create a dialect for one of our applications. This will be a
 Spring MVC application, so we will be already using the SpringStandard
 dialect (have a look at the [Thymeleaf + Spring 3
-tutorial](documentation.html) for more details). But we want to add a
+tutorial](/documentation.html) for more details). But we want to add a
 new attribute that allows us to say hello to whoever we want, like this:
 
 ```html

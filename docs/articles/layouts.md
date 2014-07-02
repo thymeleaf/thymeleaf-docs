@@ -409,7 +409,7 @@ Layout](http://www.thymeleaf.org/doc/html/Using-Thymeleaf.html#template-layout).
 
 Natural templating is greatly explained in [Bringing Thymeleaf and
 Natural Templates to the Spring
-PetClinic](http://www.thymeleaf.org/petclinic.html) article in
+PetClinic](petclinic.html) article in
 `And what about the Natural Templates thing?` chapter. The example can
 be found on
 [GitHub](https://github.com/thymeleaf/thymeleafexamples-petclinic/blob/thymeleafexamples-petclinic-20131104/src/main/webapp/WEB-INF/thymeleaf/owners/ownersList.html).

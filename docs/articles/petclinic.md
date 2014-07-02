@@ -36,7 +36,7 @@ will replace using Thymeleaf:
     a browser (*Natural templates*).
 
 All the code of the PetClinic+Thymeleaf application can be obtained at
-the [Thymeleaf Project's Documentation](documentation.html) page. Note
+the [Thymeleaf Project's Documentation](/documentation.html) page. Note
 that the original JSP files and JSP tags have not been removed from the
 source tree but rather moved to the `doc/old_viewlayer` folder at the
 source tree, so that you can still access them in order to compare with
@@ -140,7 +140,7 @@ on `owners/ownerslist.jsp`, which we will convert into
 `owners/ownersList.html`.
 
 Remember you can see all the templates at the source code, downloadable
-from [the documentation page](documentation.html), and also that you can
+from [the documentation page](/documentation.html), and also that you can
 review the original JSP files at the `doc/old_viewlayer` folder.
 
 The *owners/ownersList* page looks like this:
