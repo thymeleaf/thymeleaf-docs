@@ -50,10 +50,11 @@ project.ext.docTypeNames    = [] as Set
 project.ext.docTypes        = [:]
 
 project.ext.docsDir      = file("${projectDir}/docs")
-project.ext.outputDir    = file("${buildDir}/docs")
-project.ext.outputDirHtml  = file("${outputDir}/html")
-project.ext.outputDirEbook = file("${outputDir}/ebook")
-project.ext.outputDirPdf   = file("${outputDir}/pdf")
+project.ext.outputDir    = file("${buildDir}/site")
+project.ext.outputDirDoc    = file("${outputDir}/doc")
+
+project.ext.redirectionsDir      = file("${projectDir}/redirections")
+
 
 buildscript {
 	repositories {
@@ -95,12 +96,10 @@ task copyResources() << {
     }
 
 	// Copy all resource directories straight over
-	[scriptsDir].each { dir ->
-		copy {
-			from dir
-			into "${srcDir.path}/${dir.name}"
-		}
-	}
+    copy {
+        from scriptsDir
+        into "${srcDir.path}/${scriptsDir.name}"
+    }
 
 	// Copy over stylesheets, compiling LessCSS files into CSS
 	copy {
@@ -126,6 +125,18 @@ task copyResources() << {
 		}
 		into srcDirTemplates
 	}
+
+    // Generate output directory structure
+    mkdir outputDir
+    mkdir outputDirDoc
+
+    // Copy all redirections to their definitive position
+    copy {
+        from redirectionsDir
+        into outputDir
+    }
+
+
 }
 
 /**
@@ -134,8 +145,6 @@ task copyResources() << {
 task generateDocsHTML(
 	dependsOn: copyResources,
 	description: "Generate HTML docs from Thymeleaf's markdown docs") << {
-
-	mkdir outputDirHtml
 
 	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile)
@@ -151,7 +160,8 @@ task generateDocsHTML(
 				"--toc-depth=4",
 				"--section-divs",
 				"--no-highlight",
-				"--output=" + file("${outputDirHtml}/${docFileBase}.html"),
+				"--smart",
+				"--output=" + file("${outputDirDoc}/${docFileBase}.html"),
 				"${docFile}"
 			])
 		}
@@ -164,7 +174,7 @@ task generateDocsHTML(
 			include 'scripts/**'
 			include 'styles/**'
 		}
-		into outputDirHtml
+		into outputDirDoc
 	}
 }
 
@@ -174,8 +184,6 @@ task generateDocsHTML(
 task generateDocsEbook(
 	dependsOn: copyResources,
 	description: "Generate e-books from Thymeleaf's markdown docs") << {
-
-	mkdir outputDirEbook
 
 	// Currently only limited to tutorials
 	fileTree(srcDir) { include '**/*.md' }.each { docFile ->
@@ -191,13 +199,14 @@ task generateDocsEbook(
 				"--toc",
 				"--toc-depth=4",
 				"--section-divs",
-				"--output=" + file("${outputDirEbook}/${docFileBase}.epub"),
+				"--smart",
+				"--output=" + file("${outputDirDoc}/${docFileBase}.epub"),
 				"${docFile}"
 			], srcDir)  // We need to set the working dir in order for pandoc to find images
 			execute([
 					"ebook-convert",
-					file("${outputDirEbook}/${docFileBase}.epub"),
-					file("${outputDirEbook}/${docFileBase}.mobi")
+					file("${outputDirDoc}/${docFileBase}.epub"),
+					file("${outputDirDoc}/${docFileBase}.mobi")
 			])
 		}
 	}
@@ -238,7 +247,7 @@ task generateDocsPDF(
 	// Copy over the HTML documents into a directory from which we can host them
 	// using the Jetty server
 	copy {
-		from outputDirHtml
+		from outputDirDoc
 		into webAppDirName
 	}
 
@@ -257,8 +266,6 @@ task generateDocsPDF(
 	jettyRun.execute()
 
 	// Generate the PDF documents from the modified HTML documents
-	mkdir outputDirPdf
-
 	fileTree(webAppDirName) { include '*.html' }.each { docFile ->
 		def docFileBase = fileBaseName(docFile);
 		def docType     = docTypes.get(docFileBase)
@@ -277,7 +284,7 @@ task generateDocsPDF(
 				"--footer-right",     "Page [page] of [topage]",
 				"--header-font-name", "'Open Sans'",
 				"http://localhost:8080/thymeleaf-docs/${docFile.name}",
-				file("${outputDirPdf}/${docFileBase}.pdf")
+				file("${outputDirDoc}/${docFileBase}.pdf")
 			])
 		}
 	}
@@ -316,3 +323,4 @@ def execute(command, workingDir = projectDir) {
 		println "${proc.err.text}"
 	}
 }
+
