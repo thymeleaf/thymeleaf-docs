@@ -120,7 +120,7 @@ public class HomeController {
     if (throwable != null) {
       errorMessage = throwable.getMessage();
     }
-    model.addAttribute("errorMessage", errorMessage.toString());
+    model.addAttribute("errorMessage", errorMessage);
     return "error.html";
   }
 
