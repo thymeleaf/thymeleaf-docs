@@ -4237,11 +4237,6 @@ Thymeleaf also allows accessing beans registered at your Spring Application Cont
  */
 
 /*
- * Null-safe toString()
- */
-${#strings.toString(obj)}                           // also array*, list* and set*
-
-/*
  * Format date with the standard locale format
  * Also works with arrays, lists or sets
  */
@@ -4461,6 +4456,11 @@ ${#numbers.sequence(from,to,step)}
  * See javadoc API for class org.thymeleaf.expression.Strings
  * ======================================================================
  */
+
+/*
+ * Null-safe toString()
+ */
+${#strings.toString(obj)}                           // also array*, list* and set*
 
 /*
  * Check whether a String is empty (or null). Performs a trim() operation before check
