@@ -2199,8 +2199,8 @@ Note that our iteration status variable has worked perfectly, establishing the
 > DTD for the selected _XHTML 1.0 Strict_ standard, that establishes those
 > values as default for those attributes (remember that our template didn't set a value for them). Don't worry about them at all, because they will not affect the display of your page. As an example, if we were using HTML5 (which has no DTD), those attributes would never be added.
 
-If you don't explicitly set an iteration variable, Thymeleaf will always create
-one for you by suffixing `Stat` to the name of the iter variable:
+If you don't explicitly set a status variable, Thymeleaf will always create one
+for you by suffixing `Stat` to the name of the iteration variable:
 
 ```html
 <table>
