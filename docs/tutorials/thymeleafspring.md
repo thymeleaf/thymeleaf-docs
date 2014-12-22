@@ -67,6 +67,7 @@ features:
    selection.
  * An expression object and method, `#themes.code(...)`, which is equivalent
    to the `spring:theme` JSP custom tag.
+ * An expression object and method, `#mvc.uri(...)`, which is equivalent to the `spring:mvcUrl(...)` JSP custom function (only in Spring 4.1+). 
  * New DTDs for validation, including these new attributes, as well as new
    corresponding DOCTYPE translation rules.
 
@@ -1519,6 +1520,28 @@ An implementation of `RequestDataValueProcessor` can be easily configured at the
 Note this feature will only be available for Spring versions 3.1 and newer.
 
 
+12.1 Building URIs to controllers
+---------------------------------
+
+Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the need to know the URIs these controllers are mapped to.
+
+In Thymeleaf, this can be achieved by means of the `#mvc.url(...)` expression method, which allows the specification of controller methods by the capital letters of the controller class they are in, followed by the name of the method itself. This is equivalent to JSP's `spring:mvcUrl(...)` custom function. 
+
+For example, for:
+```java
+public class ExampleController {
+
+    @RequestMapping("/data")
+    public HttpEntity getData(@RequestParam String type) { ... }
+
+}
+```
+The following code will create a link to it:
+```html
+<a th:href="${#mvc.url('EC#getData').arg(0,'internal')}">Get Data</a>
+``` 
+
+You can read more about this mechanism at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
 
 
 13 Spring WebFlow integration
