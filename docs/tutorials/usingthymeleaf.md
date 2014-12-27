@@ -514,6 +514,8 @@ A thymeleaf namespace is also being declared for `th:*` attributes:
       xmlns:th="http://www.thymeleaf.org">
 ```
 
+> Note: at this moment it's not possible to use a namespace prefix other than `th`
+
 Note that, if we hadn't cared about our template's validity or well-formedness
 at all, we could have simply specified a standard `XHTML 1.0 Strict DOCTYPE`,
 along with no xmlns namespace declarations:
