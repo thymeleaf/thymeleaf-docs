@@ -28,6 +28,11 @@ import java.text.SimpleDateFormat
  * @author Emanuel Rabina
  */
 
+/*
+ * NOTE: More information about the MarkDown format and extensions that can be used:
+ * http://johnmacfarlane.net/pandoc/demo/example9/pandocs-markdown.html
+ */
+
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'jetty'
