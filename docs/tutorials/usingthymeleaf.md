@@ -1,5 +1,7 @@
-% Tutorial: Using Thymeleaf
-% The Thymeleaf Team
+---
+title: 'Tutorial: Using Thymeleaf'
+author: The Thymeleaf Team
+---
 
 
 

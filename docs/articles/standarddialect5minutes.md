@@ -1,4 +1,6 @@
-% Getting started with the Standard dialects in 5 minutes
+---
+title: Getting started with the Standard dialects in 5 minutes
+---
 
 
 Getting started with the Standard dialects in 5 minutes

@@ -1,5 +1,7 @@
-% Rich HTML email in Spring with Thymeleaf
-% Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>
+---
+title: Rich HTML email in Spring with Thymeleaf
+author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
+---
 
 
 Rich HTML email in Spring with Thymeleaf

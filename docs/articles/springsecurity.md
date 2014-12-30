@@ -1,5 +1,7 @@
-% Thymeleaf + Spring Security integration basics
-% Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>
+---
+title: Thymeleaf + Spring Security integration basics
+author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
+---
 
 
 Thymeleaf + Spring Security integration basics

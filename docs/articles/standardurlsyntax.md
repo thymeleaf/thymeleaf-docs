@@ -1,4 +1,6 @@
-% Standard URL Syntax
+---
+title: Standard URL Syntax
+---
 
 
 Standard URL Syntax

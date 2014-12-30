@@ -1,5 +1,7 @@
-% Bringing Thymeleaf and Natural Templates to the Spring PetClinic
-% Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>
+---
+title: Bringing Thymeleaf and Natural Templates to the Spring PetClinic
+author: 'Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>'
+---
 
 
 Bringing Thymeleaf and Natural Templates to the Spring PetClinic

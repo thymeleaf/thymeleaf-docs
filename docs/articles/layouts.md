@@ -1,5 +1,7 @@
-% Thymeleaf Page Layouts
-% Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl" target="_blank">http://blog.codeleak.pl</a>
+---
+title: Thymeleaf Page Layouts
+author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl" target="_blank">http://blog.codeleak.pl</a>'
+---
 
 
 Thymeleaf Page Layouts

@@ -1,4 +1,6 @@
-% Say Hello Again! Extending Thymeleaf even more in another 5 minutes
+---
+title: Say Hello Again! Extending Thymeleaf even more in another 5 minutes
+---
 
 
 Say Hello Again! Extending Thymeleaf even more in another 5 minutes

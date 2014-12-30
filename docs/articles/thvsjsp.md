@@ -1,4 +1,6 @@
-% Spring MVC view layer: Thymeleaf vs. JSP
+---
+title: 'Spring MVC view layer: Thymeleaf vs. JSP'
+---
 
 
 Spring MVC view layer: Thymeleaf vs. JSP

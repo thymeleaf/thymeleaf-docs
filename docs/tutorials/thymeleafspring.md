@@ -1,5 +1,7 @@
-% Tutorial: Thymeleaf + Spring
-% The Thymeleaf Team
+---
+title: 'Tutorial: Thymeleaf + Spring'
+author: The Thymeleaf Team
+---
 
 
 
