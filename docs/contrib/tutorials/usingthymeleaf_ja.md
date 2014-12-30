@@ -1,6 +1,7 @@
-% Tutorial: Using Thymeleaf(Ja)
-% The Thymeleaf Team
-
+---
+title: 'Tutorial: Using Thymeleaf (ja)'
+author: The Thymeleaf Team
+---
 
 
 <!--
