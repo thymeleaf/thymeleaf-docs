@@ -1,6 +1,8 @@
 ---
 title: 'Tutorial: Extending Thymeleaf'
 author: The Thymeleaf Team
+version: @documentVersion@
+thymeleafVersion: @projectVersion@
 ---
 
 

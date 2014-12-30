@@ -1,6 +1,8 @@
 ---
 title: 'Tutorial: Using Thymeleaf (ja)'
 author: The Thymeleaf Team
+version: @documentVersion@
+thymeleafVersion: @projectVersion@
 ---
 
 

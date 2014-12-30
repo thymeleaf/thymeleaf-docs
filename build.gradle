@@ -81,13 +81,19 @@ task copyResources() << {
 	def scriptsDir   = file("${projectDir}/scripts")
 	def stylesDir    = file("${projectDir}/styles")
 	def templatesDir = file("${projectDir}/templates")
+	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(project.documentDate)
 
 	// Copy all .md files into the same directory
 	fileTree(docsDir) { include '**/*.md'; exclude 'contrib/**' }.each { docFile ->
         docTypeNames.add(docFile.parentFile.name)
 		docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		copy {
-			from docFile
+			from(docFile) {
+				filter(ReplaceTokens, tokens: [
+						documentVersion: documentVersion,
+						projectVersion:  project.version
+				])
+			}
 			into srcDir
 		}
 	}
@@ -120,14 +126,8 @@ task copyResources() << {
 	}
 
 	// Preprocess the template files to insert the correct document date and project version
-	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(project.documentDate)
 	copy {
-		from(templatesDir) {
-			filter(ReplaceTokens, tokens: [
-					documentVersion: documentVersion,
-					projectVersion:  project.version
-			])
-		}
+		from templatesDir
 		into srcDirTemplates
 	}
 
