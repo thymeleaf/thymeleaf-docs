@@ -83,7 +83,7 @@ task copyResources() << {
 	def templatesDir = file("${projectDir}/templates")
 
 	// Copy all .md files into the same directory
-	fileTree(docsDir) { include '**/*.md' }.each { docFile ->
+	fileTree(docsDir) { include '**/*.md'; exclude 'contrib/**' }.each { docFile ->
         docTypeNames.add(docFile.parentFile.name)
 		docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		copy {
