@@ -1,8 +1,10 @@
 ---
 title: 'Tutorial: Using Thymeleaf (ja)'
 author: The Thymeleaf Team
-version: @documentVersion@
-thymeleafVersion: @projectVersion@
+lang: Japanese
+translator: 'Mitsuyuki Shiiba &lt;email AT domain&gt;'
+version: 20141222 - 22 December 2014
+thymeleafVersion: 2.1.4.RELEASE
 ---
 
 
