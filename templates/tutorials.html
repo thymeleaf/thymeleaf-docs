@@ -47,11 +47,16 @@
 			<img id="doc-banner" class="banner" src="images/header.png" alt="Thymeleaf logo"/>
 			<h1 id="doc-title" class="title">$title$</h1>
 			<div id="doc-info">
+$if(translator)$
+				<div id="doc-translator">
+					<span class="info-header">$lang$ translation contributed by:</span> $translator$
+				</div>
+$endif$
 				<div id="doc-version">
 					<span class="info-header">Document version:</span> $version$
 				</div>
 				<div id="project-version">
-					<span class="info-header">Project Version:</span> $thymeleafVersion$
+					<span class="info-header">Project version:</span> $thymeleafVersion$
 				</div>
 				<div id="project-website">
 					<span class="info-header">Project web site:</span>

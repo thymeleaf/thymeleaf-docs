@@ -25,6 +25,11 @@ $for(author)$
   <h2 class="author">$author$</h2>
 $endfor$
 <div id="doc-info">
+$if(translator)$
+    <div id="doc-translator">
+        <span class="info-header">$lang$ translation contributed by:</span> $translator$
+    </div>
+$endif$
     <div id="doc-version">
         <span class="info-header">Document version:</span> $version$
     </div>
