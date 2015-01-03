@@ -46,32 +46,32 @@ project.documentDate.set(year: 2014, month: Calendar.DECEMBER, date: 22)
 project.webAppDirName = "${buildDir}/jetty"
 
 project.ext.conversions = [
-	articles:  ['html'],
-	tutorials: ['html', 'ebook', 'pdf']
+        articles : ['html'],
+        tutorials: ['html', 'ebook', 'pdf']
 ]
 
 
-project.ext.docsDir             = file("${projectDir}/docs")
-project.ext.scriptsDir          = file("${projectDir}/scripts")
-project.ext.stylesDir           = file("${projectDir}/styles")
-project.ext.templatesDir        = file("${projectDir}/templates")
-project.ext.redirectionsDir     = file("${projectDir}/redirections")
+project.ext.docsDir         = file("${projectDir}/docs")
+project.ext.scriptsDir      = file("${projectDir}/scripts")
+project.ext.stylesDir       = file("${projectDir}/styles")
+project.ext.templatesDir    = file("${projectDir}/templates")
+project.ext.redirectionsDir = file("${projectDir}/redirections")
 
-project.ext.srcDir              = file("${buildDir}/tmp")
-project.ext.outputDir           = file("${buildDir}/site")
+project.ext.srcDir          = file("${buildDir}/tmp")
+project.ext.outputDir       = file("${buildDir}/site")
 
 
-project.ext.docNames            = [] as Set
-project.ext.docTypes            = [:]
+project.ext.docNames = [] as Set
+project.ext.docTypes = [:]
 
 
 buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
-	}
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
+    }
 }
 
 /**
@@ -85,63 +85,63 @@ buildscript {
  */
 task copyResources << {
 
-	def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(project.documentDate)
+    def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(project.documentDate)
 
-	// Copy docs files to the src folder. For markdown files, apply property filtering and build the name-type map
-	copy {
+    // Copy docs files to the src folder. For markdown files, apply property filtering and build the name-type map
+    copy {
 
-		from docsDir
-		into srcDir
+        from docsDir
+        into srcDir
 
-		filesMatching('**/*.md') {
+        filesMatching('**/*.md') {
 
-			// We need a file path relative to the 'docs' folder
-			def docFileName = it.relativePath.toString() - ".md"
-			def docFileType = it.file.parentFile.name
+            // We need a file path relative to the 'docs' folder
+            def docFileName = it.relativePath.toString() - ".md"
+            def docFileType = it.file.parentFile.name
 
-			// The parent folder in some cases might be a version number (e.g. tutorials for 2.1, 3.0...) In
-			// such case, we need to obtain the document type from the parent of the parent. Note three types
-			// of version specifications are allowed: '2.1', '2.1.4', '2.1.x'
-			if (docFileType ==~ /\d+\.\d+(\.\d+)?/ || docFileType ==~ /\d+\.\d+(\.x)?/) {
-				docFileType = it.file.parentFile.parentFile.name
-			}
+            // The parent folder in some cases might be a version number (e.g. tutorials for 2.1, 3.0...) In
+            // such case, we need to obtain the document type from the parent of the parent. Note three types
+            // of version specifications are allowed: '2.1', '2.1.4', '2.1.x'
+            if (docFileType ==~ /\d+\.\d+(\.\d+)?/ || docFileType ==~ /\d+\.\d+(\.x)?/) {
+                docFileType = it.file.parentFile.parentFile.name
+            }
 
-			docNames.add(docFileName)
-			docTypes.put(docFileName, docFileType)
+            docNames.add(docFileName)
+            docTypes.put(docFileName, docFileType)
 
-			// Property filtering, this will replace all @gradle-properties@ (mainly used in markdown metadata)
-			filter(ReplaceTokens, tokens: [
-					documentVersion: documentVersion,
-					projectVersion:  project.version
-			])
+            // Property filtering, this will replace all @gradle-properties@ (mainly used in markdown metadata)
+            filter(ReplaceTokens, tokens: [
+                    documentVersion: documentVersion,
+                    projectVersion : project.version
+            ])
 
-		}
+        }
 
-	}
+    }
 
-	// Copy all resource directories straight over
+    // Copy all resource directories straight over
     copy {
         from scriptsDir
         into "${srcDir.path}/scripts"
     }
 
-	// Copy over stylesheets, compiling LessCSS files into CSS
-	copy {
-		from(stylesDir) {
-			exclude '**/*.less'
-		}
-		into "${srcDir.path}/styles"
-	}
+    // Copy over stylesheets, compiling LessCSS files into CSS
+    copy {
+        from(stylesDir) {
+            exclude '**/*.less'
+        }
+        into "${srcDir.path}/styles"
+    }
 
-	LessCSSCompiler compiler = new LessCSSCompiler()
-	fileTree(stylesDir) { include '**/*.less' }.each { lessFile ->
-		def lessFileBase = lessFile.name - '.less'
-		compiler.compile(lessFile, file("${srcDir.path}/styles/${lessFileBase}.css"))
-	}
+    LessCSSCompiler compiler = new LessCSSCompiler()
+    fileTree(stylesDir) { include '**/*.less' }.each { lessFile ->
+        def lessFileBase = lessFile.name - '.less'
+        compiler.compile(lessFile, file("${srcDir.path}/styles/${lessFileBase}.css"))
+    }
 
     // Generate output directory structure
     mkdir outputDir
-	mkdir "${outputDir.path}/doc"
+    mkdir "${outputDir.path}/doc"
 
     // Copy all redirections to their definitive position
     copy {
@@ -156,41 +156,41 @@ task copyResources << {
  * Generate HTML versions of the Thymeleaf documentation.
  */
 task generateDocsHTML(
-	dependsOn: copyResources,
-	description: "Generate HTML docs from Thymeleaf's markdown docs") << {
+        dependsOn: copyResources,
+        description: "Generate HTML docs from Thymeleaf's markdown docs") << {
 
-	docNames.each { docName ->
+    docNames.each { docName ->
 
-		def docType = docTypes.get(docName)
+        def docType = docTypes.get(docName)
 
-		if (conversions[docType].contains('html')) {
+        if (conversions[docType].contains('html')) {
 
-			println "Generating HTML doc for ${docName} (${docType})..."
+            println "Generating HTML doc for ${docName} (${docType})..."
 
-			def outputFile = file("${outputDir.path}/doc/${docName}.html")
-			file(outputFile.parent).mkdirs()
+            def outputFile = file("${outputDir.path}/doc/${docName}.html")
+            file(outputFile.parent).mkdirs()
 
-			execute([
-				"pandoc",
-				"--write=html5",
-				"--template=" + file("${templatesDir.path}/${docType}.html"),
-				"--toc",
-				"--toc-depth=4",
-				"--section-divs",
-				"--no-highlight",
-				"--smart",
-				"--output=" + outputFile,
-				"${srcDir.path}/${docName}.md"
-			])
-		}
-	}
+            execute([
+                    "pandoc",
+                    "--write=html5",
+                    "--template=" + file("${templatesDir.path}/${docType}.html"),
+                    "--toc",
+                    "--toc-depth=4",
+                    "--section-divs",
+                    "--no-highlight",
+                    "--smart",
+                    "--output=" + outputFile,
+                    "${srcDir.path}/${docName}.md"
+            ])
+        }
+    }
 
-	// Copy over resources needed for the HTML docs
-	copy {
-		from srcDir
-		into "${outputDir.path}/doc"
-		exclude '**/*.md'
-	}
+    // Copy over resources needed for the HTML docs
+    copy {
+        from srcDir
+        into "${outputDir.path}/doc"
+        exclude '**/*.md'
+    }
 
 }
 
@@ -198,43 +198,43 @@ task generateDocsHTML(
  * Generate e-books of the Thymeleaf documentation.
  */
 task generateDocsEbook(
-	dependsOn: copyResources,
-	description: "Generate e-books from Thymeleaf's markdown docs") << {
+        dependsOn: copyResources,
+        description: "Generate e-books from Thymeleaf's markdown docs") << {
 
-	// Currently only limited to tutorials
-	docNames.each { docName ->
+    // Currently only limited to tutorials
+    docNames.each { docName ->
 
-		def docType = docTypes.get(docName)
+        def docType = docTypes.get(docName)
 
-		if (conversions[docType].contains('ebook')) {
+        if (conversions[docType].contains('ebook')) {
 
-			println "Generating E-Book docs for ${docName} (${docType})..."
+            println "Generating E-Book docs for ${docName} (${docType})..."
 
-			def epubOutputFile = file("${outputDir.path}/doc/${docName}.epub")
-			def mobiOutputFile = file("${outputDir.path}/doc/${docName}.mobi")
-			file(epubOutputFile.parent).mkdirs()
+            def epubOutputFile = file("${outputDir.path}/doc/${docName}.epub")
+            def mobiOutputFile = file("${outputDir.path}/doc/${docName}.mobi")
+            file(epubOutputFile.parent).mkdirs()
 
-			def inputFile = file("${srcDir.path}/${docName}.md")
+            def inputFile = file("${srcDir.path}/${docName}.md")
 
-			execute([
-					"pandoc",
-					"--write=epub",
-					"--template=" + file("${templatesDir.path}/${docType}.epub"),
-					"--toc",
-					"--toc-depth=4",
-					"--section-divs",
-					"--smart",
-					"--output=" + epubOutputFile,
-					inputFile
-			], file(inputFile.parent))  // We need to set the working dir in order for pandoc to find images
-			execute([
-					"ebook-convert",
-					epubOutputFile,
-					mobiOutputFile
-			])
+            execute([
+                    "pandoc",
+                    "--write=epub",
+                    "--template=" + file("${templatesDir.path}/${docType}.epub"),
+                    "--toc",
+                    "--toc-depth=4",
+                    "--section-divs",
+                    "--smart",
+                    "--output=" + epubOutputFile,
+                    inputFile
+            ], file(inputFile.parent))  // We need to set the working dir in order for pandoc to find images
+            execute([
+                    "ebook-convert",
+                    epubOutputFile,
+                    mobiOutputFile
+            ])
 
-		}
-	}
+        }
+    }
 
 }
 
@@ -243,21 +243,21 @@ task generateDocsEbook(
  * the bug report here: http://issues.gradle.org/browse/GRADLE-2263
  */
 [jettyRun, jettyStop]*.stopPort = 8081
-[jettyRun, jettyStop]*.stopKey  = 'stop'
+[jettyRun, jettyStop]*.stopKey = 'stop'
 jettyRun.doLast {
 
-	/*
-	 * THIS IS A WORKAROUND! THE CURRENT VERSION OF THIS TASK DOESN'T START A WATCHER IN DAEMON MODE
-	 * 
-	 * If starting the monitor fails, it may be because the jetty task was updated to fix this issue
-	 * When that happens, we shouldn't need the custom task any more
-	 * 
-	 * Copied From: AbstractJettyRunTask
-	 */
- 	if (getStopPort() != null && getStopPort() > 0 && getStopKey() != null) {
-		Monitor monitor = new Monitor(getStopPort(), getStopKey(), server.getProxiedObject());
-		monitor.start();
-	}
+    /*
+     * THIS IS A WORKAROUND! THE CURRENT VERSION OF THIS TASK DOESN'T START A WATCHER IN DAEMON MODE
+     *
+     * If starting the monitor fails, it may be because the jetty task was updated to fix this issue
+     * When that happens, we shouldn't need the custom task any more
+     *
+     * Copied From: AbstractJettyRunTask
+     */
+    if (getStopPort() != null && getStopPort() > 0 && getStopKey() != null) {
+        Monitor monitor = new Monitor(getStopPort(), getStopKey(), server.getProxiedObject());
+        monitor.start();
+    }
 }
 
 /**
@@ -267,85 +267,84 @@ jettyRun.doLast {
  * do some file:// bugs on Windows) and saves them as PDF documents.
  */
 task generateDocsPDF(
-	dependsOn: generateDocsHTML,
-	description: "Generate PDF documents from Thymeleaf's HTML docs") << {
+        dependsOn: generateDocsHTML,
+        description: "Generate PDF documents from Thymeleaf's HTML docs") << {
 
-	// Copy over the HTML documents into a directory from which we can host them
-	// using the Jetty server
-	copy {
-		from "${outputDir.path}/doc"
-		into "${project.webAppDirName}"
-	}
+    // Copy over the HTML documents into a directory from which we can host them
+    // using the Jetty server
+    copy {
+        from "${outputDir.path}/doc"
+        into "${project.webAppDirName}"
+    }
 
-	// Modify the copied HTML docs, removing the Google Analytics script as it
-	// blocks the wkhtmltopdf process
-	// (Note we require at least one folder in depth, and exclude the 'html' folder. This is
-	// in order to avoid modifying the redirections, which are not useful in this case).
-	fileTree(webAppDirName) { include '*/**/*.html'; exclude 'html/**' }.each { docFile ->
-		ant.replaceregexp(
-			file:    docFile,
-			match:   '<!-- Google Analytics script -->.*</script>',
-			replace: '',
-			flags:   'gis'
-		)
-	}
+    // Modify the copied HTML docs, removing the Google Analytics script as it
+    // blocks the wkhtmltopdf process
+    // (Note we require at least one folder in depth, and exclude the 'html' folder. This is
+    // in order to avoid modifying the redirections, which are not useful in this case).
+    fileTree(webAppDirName) { include '*/**/*.html'; exclude 'html/**' }.each { docFile ->
+        ant.replaceregexp(
+                file: docFile,
+                match: '<!-- Google Analytics script -->.*</script>',
+                replace: '',
+                flags: 'gis'
+        )
+    }
 
-	jettyRun.daemon = true
-	jettyRun.execute()
+    jettyRun.daemon = true
+    jettyRun.execute()
 
-	// Generate the PDF documents from the modified HTML documents
-	// (Note we require at least one folder in depth, and exclude the 'html' folder. This is
-	// in order to avoid modifying the redirections, which are not useful in this case).
-	fileTree(webAppDirName) { include '*/**/*.html'; exclude 'html/**' }.each { docFile ->
+    // Generate the PDF documents from the modified HTML documents
+    // (Note we require at least one folder in depth, and exclude the 'html' folder. This is
+    // in order to avoid modifying the redirections, which are not useful in this case).
+    fileTree(webAppDirName) { include '*/**/*.html'; exclude 'html/**' }.each { docFile ->
 
-		def folderBase  = relativePath(file(webAppDirName))
-		def docName     = (relativePath(docFile).substring(folderBase.length() + 1) - ".html")
-		def docType     = docTypes.get(docName)
+        def folderBase = relativePath(file(webAppDirName))
+        def docName = (relativePath(docFile).substring(folderBase.length() + 1) - ".html")
+        def docType = docTypes.get(docName)
 
-		if (conversions[docType].contains('pdf')) {
-			println "Generating PDF doc for ${docName} (${docType})..."
-			execute([
-				"wkhtmltopdf",
-				"--print-media-type",
-				"--dpi",              "150",
-				"--javascript-delay", "2000",
-				"--margin-bottom",    "15",
-				"--footer-spacing",   "5",
-				"--footer-font-size", "8",
-				"--footer-font-name", "'Open Sans'",
-				"--footer-right",     "Page [page] of [topage]",
-				"--header-font-name", "'Open Sans'",
-				"http://localhost:8080/thymeleaf-docs/${docName}.html",
-				file("${outputDir.path}/doc/${docName}.pdf")
-			])
-		}
-	}
+        if (conversions[docType].contains('pdf')) {
+            println "Generating PDF doc for ${docName} (${docType})..."
+            execute([
+                    "wkhtmltopdf",
+                    "--print-media-type",
+                    "--dpi", "150",
+                    "--javascript-delay", "2000",
+                    "--margin-bottom", "15",
+                    "--footer-spacing", "5",
+                    "--footer-font-size", "8",
+                    "--footer-font-name", "'Open Sans'",
+                    "--footer-right", "Page [page] of [topage]",
+                    "--header-font-name", "'Open Sans'",
+                    "http://localhost:8080/thymeleaf-docs/${docName}.html",
+                    file("${outputDir.path}/doc/${docName}.pdf")
+            ])
+        }
+    }
 
-	jettyStop.execute()
+    jettyStop.execute()
 }
 
 /**
  * Generate HTML, E-book and PDF versions of the Thymeleaf documentation.
  */
 task generateDocs(
-	dependsOn: [generateDocsHTML, generateDocsEbook, generateDocsPDF],
-	description: "Generate HTML, E-book and PDF documents from Thymeleaf's markdown docs") {
+        dependsOn: [generateDocsHTML, generateDocsEbook, generateDocsPDF],
+        description: "Generate HTML, E-book and PDF documents from Thymeleaf's markdown docs") {
 
-	// Just an aggregator task
+    // Just an aggregator task
 
 }
 
-
 /**
  * Execute the given command and wait for the process to complete.
- * 
+ *
  * @param command
  */
 def execute(command, workingDir = projectDir) {
-	def proc = command.execute(null, workingDir)
-	proc.waitForProcessOutput(System.out, System.err)
-	if (proc.exitValue() > 0) {
-		println "${proc.err.text}"
-	}
+    def proc = command.execute(null, workingDir)
+    proc.waitForProcessOutput(System.out, System.err)
+    if (proc.exitValue() > 0) {
+        println "${proc.err.text}"
+    }
 }
 
