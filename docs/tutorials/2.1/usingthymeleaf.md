@@ -1199,7 +1199,7 @@ Let's use this new syntax. Meet the `th:href` attribute:
 <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
 
 <!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
-<a href="details.html" th:href="@{/order/${o.id}/details}">view</a>
+<a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
 ```
 
 Some things to note here:
@@ -1210,7 +1210,7 @@ Some things to note here:
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
    The required URL-encoding operations will also be automatically performed.
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
- * Variable templates are also allowed in URL paths, like `@{/order/${o.id}/details}`
+ * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId}}}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
    prefixed the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
