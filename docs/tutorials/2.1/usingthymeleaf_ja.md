@@ -77,7 +77,7 @@ Thymeleafは6種類のテンプレートを処理することができます。�
 <!--
 All of these modes refer to well-formed XML files except the _Legacy HTML5_ mode,
 which allows you to process HTML5 files with features such as standalone (not
-closed) tags, tag attributes without a value or not written between commas. In
+closed) tags, tag attributes without a value or not written between quotes. In
 order to process files in this specific mode, Thymeleaf will first perform a
 transformation that will convert your files to well-formed XML files which are
 still perfectly valid HTML5 (and are in fact the recommended way to create HTML5
@@ -85,7 +85,7 @@ code)^[Given the fact that XHTML5 is just XML-formed HTML5 served with the
 application/xhtml+xml content type, we could also say that Thymeleaf supports
 XHTML5.].
 -->
-_Legacy HTML5_ 以外は整形式XMLです。_Legacy HTML5_ モードでは閉じていないタグ・値がない属性・カンマで囲まれていない属性 ^[訳注: カンマじゃなくてクォートかな？] が許容されていますが、Thymeleafはこのモードのファイルを最初に整形式XMLに変換します。それでもHTML5としては正しい状態です(そして実際こちらがHTML5を書くのに推奨されている方法です) ^[application/xhtml+xmlコンテンツタイプで取り扱われるXML整形式のHTML5はXHTML5と呼ばれるので、ThymeleafはXHTML5をサポートしていると言ってもいいかもしれません。]。
+_Legacy HTML5_ 以外は整形式XMLです。_Legacy HTML5_ モードでは閉じていないタグ・値がない属性・引用符で囲まれていない属性が許容されていますが、Thymeleafはこのモードのファイルを最初に整形式XMLに変換します。それでもHTML5としては正しい状態です(そして実際こちらがHTML5を書くのに推奨されている方法です) ^[application/xhtml+xmlコンテンツタイプで取り扱われるXML整形式のHTML5はXHTML5と呼ばれるので、ThymeleafはXHTML5をサポートしていると言ってもいいかもしれません。]。
 
 <!--
 Also note that validation is only available for XML and XHTML templates.
@@ -614,9 +614,9 @@ the max cache size is reached and it is the oldest entry currently cached.
 
 <!--
 We will learn more about template resolvers later. Now let's have a look at the
-creation of our Template Resolver object.
+creation of our Template Engine object.
 -->
-テンプレートリゾルバーについてのより詳細な説明は後ほど行います。今はテンプレートリゾルバーオブジェクトの生成について見てみましょう ^[訳注:テンプレートエンジンの生成の間違いかも？]。
+テンプレートリゾルバーについてのより詳細な説明は後ほど行います。今はテンプレートエンジンオブジェクトの生成について見てみましょう。
 
 <!--
 ### The Template Engine
@@ -1748,7 +1748,7 @@ Thymeleafでは絶対URLはどんな場合でも使用できますが、相対UR
 <!--
 Let's use this new syntax. Meet the `th:href` attribute:
 -->
-ではこの新しい構文を使ってみましょう。 `th:href` 属性で使用します ^[訳注: 3番目の式は `@{/order/${orderId}/details}` の間違いではないかと思います] :
+ではこの新しい構文を使ってみましょう。 `th:href` 属性で使用します:
 
 ```html
 <!-- Will produce 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
@@ -1759,7 +1759,7 @@ Let's use this new syntax. Meet the `th:href` attribute:
 <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
 
 <!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
-<a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
+<a href="details.html" th:href="@{/order/${o.id}/details}">view</a>
 ```
 
 
@@ -1775,7 +1775,7 @@ Some things to note here:
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
    The required URL-encoding operations will also be automatically performed.
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
- * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId}}}`
+ * Variable templates are also allowed in URL paths, like `@{/order/${o.id}/details}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
    prefixed the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
@@ -1789,7 +1789,7 @@ Some things to note here:
  * `th:href` は属性変更用の属性です: リンクURLを生成し `<a>` タグのhref属性にセットします。
  * URLパラメータを指定することができます(`orderId=${o.id}` の部分です)。自動的にURLエンコーディングされます。
  * 複数のパラメータを指定する場合はカンマ区切りで指定できます `@{/order/process(execId=${execId},execType='FAST')}`
- * URLパス内でも変数式は使用可能です `@{/order/{orderId}/details(orderId=${orderId}}}` ^[訳注: `@{/order/${orderId}/details}` の間違いではないかと思います。]
+ * URLパス内でも変数式は使用可能です `@{/order/${o.id}/details}`
  * `/` で始まる相対URL(`/order/details`)に対しては、自動的にアプリケーションコンテキスト名を前に付けます。
  * クッキーが使用できない場合、またはまだ分からない場合は `";jsessionid=..."` を相対URLの最後につけてセッションをキープできるようにすることがあります。これは _URL Rewriting_ と呼ばれていますが、Thymeleafでは全てのURLに対してサーブレットAPIの `response.encodeURL(...)` のメカニズムを使用して独自リライトフィルタを追加することができます。
  * `th:href` タグを使用する場合、(任意ですが)静的な `href` 属性をテンプレートに同時に指定することができます。そうすることでプロトタイプ用途などで直接テンプレートをブラウザで開いた場合でもリンクを有効にすることができます。
@@ -3769,7 +3769,7 @@ Once processed, everything will look again as it should:
 And what about that `all` value in the attribute, what does it mean? Well, in fact
 `th:remove` can behave in three different ways, depending on its value:
 -->
-この属性に対する `all` という値はどうなっているのでしょう？何を意味するのでしょうか？はい、実際のところ `th:remove` はその値によって、3つの異なる振る舞いをします ^[訳注:5個の間違いかな？]:
+この属性に対する `all` という値はどうなっているのでしょう？何を意味するのでしょうか？はい、実際のところ `th:remove` はその値によって、5つの異なる振る舞いをします:
 
 <!--
  * `all`: Remove both the containing tag and all its children.
