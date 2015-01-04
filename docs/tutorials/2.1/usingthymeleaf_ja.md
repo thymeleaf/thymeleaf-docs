@@ -1775,7 +1775,7 @@ Some things to note here:
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
    The required URL-encoding operations will also be automatically performed.
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
- * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId}}}`
+ * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId})}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
    prefixed the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
@@ -1789,7 +1789,7 @@ Some things to note here:
  * `th:href` は属性変更用の属性です: リンクURLを生成し `<a>` タグのhref属性にセットします。
  * URLパラメータを指定することができます(`orderId=${o.id}` の部分です)。自動的にURLエンコーディングされます。
  * 複数のパラメータを指定する場合はカンマ区切りで指定できます `@{/order/process(execId=${execId},execType='FAST')}`
- * URLパス内でも変数式は使用可能です `@{/order/{orderId}/details(orderId=${orderId}}}`
+ * URLパス内でも変数式は使用可能です `@{/order/{orderId}/details(orderId=${orderId})}`
  * `/` で始まる相対URL(`/order/details`)に対しては、自動的にアプリケーションコンテキスト名を前に付けます。
  * クッキーが使用できない場合、またはまだ分からない場合は `";jsessionid=..."` を相対URLの最後につけてセッションをキープできるようにすることがあります。これは _URL Rewriting_ と呼ばれていますが、Thymeleafでは全てのURLに対してサーブレットAPIの `response.encodeURL(...)` のメカニズムを使用して独自リライトフィルタを追加することができます。
  * `th:href` タグを使用する場合、(任意ですが)静的な `href` 属性をテンプレートに同時に指定することができます。そうすることでプロトタイプ用途などで直接テンプレートをブラウザで開いた場合でもリンクを有効にすることができます。
