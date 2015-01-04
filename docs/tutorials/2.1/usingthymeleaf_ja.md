@@ -2944,10 +2944,10 @@ Note that our iteration status variable has worked perfectly, establishing the
 > colspanとrowspan属性が `<td>` タグに追加されていますが、これは `<a>` のshape属性と同様に、選択されている _XHTML 1.0 Strict_ 標準のDTDに従ってThymeleafが自動的に追加します。 _XHTML 1.0 Strict_ 標準では、これらの値が属性のデフォルト値として策定されています(テンプレートでは値を設定していないことに注意してください)。ページの表示には影響はないので、このことを気にする必要は全然ありません。例えば、HTML5(にはDTDがありませんが)を使用していたら、この属性は決して追加されません。
 
 <!--
-If you don't explicitly set an iteration variable, Thymeleaf will always create
-one for you by suffixing `Stat` to the name of the iter variable:
+If you don't explicitly set a status variable, Thymeleaf will always create one
+for you by suffixing `Stat` to the name of the iteration variable:
 -->
-ステータス変数を明示的に指定しない場合は、繰り返し変数の後ろに `Stat` をつけた変数名をThymeleafはいつでも作成します ^[訳注: 原文では"繰り返し変数を明示的に指定しない場合は"となっていますが、文脈から"ステータス変数"であることが明らかなのでそのように記載します。]:
+ステータス変数を明示的に指定しない場合は、繰り返し変数の後ろに `Stat` をつけた変数名をThymeleafはいつでも作成します:
 
 ```html
 <table>
@@ -5698,11 +5698,6 @@ Thymeleafでは、SpringELによってSpringアプリケーションコンテキ
  */
 
 /*
- * Null-safe toString()
- */
-${#strings.toString(obj)}                           // also array*, list* and set*
-
-/*
  * Format date with the standard locale format
  * Also works with arrays, lists or sets
  */
@@ -5762,11 +5757,6 @@ ${#dates.createToday()}
  * See javadoc API for class org.thymeleaf.expression.Dates
  * ======================================================================
  */
-
-/*
- * Null安全な toString()
- */
-${#strings.toString(obj)}                           // array*, list* and set* にも対応しています
 
 /*
  * 標準ロケールフォーマットで日付をフォーマットします
@@ -6152,6 +6142,11 @@ ${#numbers.sequence(from,to,step)}
  */
 
 /*
+ * Null-safe toString()
+ */
+${#strings.toString(obj)}                           // also array*, list* and set*
+
+/*
  * Check whether a String is empty (or null). Performs a trim() operation before check
  * Also works with arrays, lists or sets
  */
@@ -6278,6 +6273,11 @@ ${#strings.randomAlphanumeric(count)}
  * See javadoc API for class org.thymeleaf.expression.Strings
  * ======================================================================
  */
+
+/*
+ * Null安全な toString()
+ */
+${#strings.toString(obj)}                           // array*, list* and set* にも対応しています
 
 /*
  * 文字列が空(またはnull)かどうかをチェックします。チェック前に trim() 処理をします。
