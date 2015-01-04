@@ -1638,189 +1638,43 @@ exactly this same kind of attributes:
 There are quite a lot of attributes like these, each of them targeting a
 specific XHTML or HTML5 attribute:
 
-<table>
-  <tr>
-    <td>`th:abbr`</td>
-    <td>`th:accept`</td>
-    <td>`th:accept-charset`</td>
-  </tr>
-  <tr>
-    <td>`th:accesskey`</td>
-    <td>`th:action`</td>
-    <td>`th:align`</td>
-  </tr>
-  <tr>
-    <td>`th:alt`</td>
-    <td>`th:archive`</td>
-    <td>`th:audio`</td>
-  </tr>
-  <tr>
-    <td>`th:autocomplete`</td>
-    <td>`th:axis`</td>
-    <td>`th:background`</td>
-  </tr>
-  <tr>
-    <td>`th:bgcolor`</td>
-    <td>`th:border`</td>
-    <td>`th:cellpadding`</td>
-  </tr>
-  <tr>
-    <td>`th:cellspacing`</td>
-    <td>`th:challenge`</td>
-    <td>`th:charset`</td>
-  </tr>
-  <tr>
-    <td>`th:cite`</td>
-    <td>`th:class`</td>
-    <td>`th:classid`</td>
-  </tr>
-  <tr>
-    <td>`th:codebase`</td>
-    <td>`th:codetype`</td>
-    <td>`th:cols`</td>
-  </tr>
-  <tr>
-    <td>`th:colspan`</td>
-    <td>`th:compact`</td>
-    <td>`th:content`</td>
-  </tr>
-  <tr>
-    <td>`th:contenteditable`</td>
-    <td>`th:contextmenu`</td>
-    <td>`th:data`</td>
-  </tr>
-  <tr>
-    <td>`th:datetime`</td>
-    <td>`th:dir`</td>
-    <td>`th:draggable`</td>
-  </tr>
-  <tr>
-    <td>`th:dropzone`</td>
-    <td>`th:enctype`</td>
-    <td>`th:for`</td>
-  </tr>
-  <tr>
-    <td>`th:form`</td>
-    <td>`th:formaction`</td>
-    <td>`th:formenctype`</td>
-  </tr>
-  <tr>
-    <td>`th:formmethod`</td>
-    <td>`th:formtarget`</td>
-    <td>`th:frame`</td>
-  </tr>
-  <tr>
-    <td>`th:frameborder`</td>
-    <td>`th:headers`</td>
-    <td>`th:height`</td>
-  </tr>
-  <tr>
-    <td>`th:high`</td>
-    <td>`th:href`</td>
-    <td>`th:hreflang`</td>
-  </tr>
-  <tr>
-    <td>`th:hspace`</td>
-    <td>`th:http-equiv`</td>
-    <td>`th:icon`</td>
-  </tr>
-  <tr>
-    <td>`th:id`</td>
-    <td>`th:keytype`</td>
-    <td>`th:kind`</td>
-  </tr>
-  <tr>
-    <td>`th:label`</td>
-    <td>`th:lang`</td>
-    <td>`th:list`</td>
-  </tr>
-  <tr>
-    <td>`th:longdesc`</td>
-    <td>`th:low`</td>
-    <td>`th:manifest`</td>
-  </tr>
-  <tr>
-    <td>`th:marginheight`</td>
-    <td>`th:marginwidth`</td>
-    <td>`th:max`</td>
-  </tr>
-  <tr>
-    <td>`th:maxlength`</td>
-    <td>`th:media`</td>
-    <td>`th:method`</td>
-  </tr>
-  <tr>
-    <td>`th:min`</td>
-    <td>`th:name`</td>
-    <td>`th:optimum`</td>
-  </tr>
-  <tr>
-    <td>`th:pattern`</td>
-    <td>`th:placeholder`</td>
-    <td>`th:poster`</td>
-  </tr>
-  <tr>
-    <td>`th:preload`</td>
-    <td>`th:radiogroup`</td>
-    <td>`th:rel`</td>
-  </tr>
-  <tr>
-    <td>`th:rev`</td>
-    <td>`th:rows`</td>
-    <td>`th:rowspan`</td>
-  </tr>
-  <tr>
-    <td>`th:rules`</td>
-    <td>`th:sandbox`</td>
-    <td>`th:scheme`</td>
-  </tr>
-  <tr>
-    <td>`th:scope`</td>
-    <td>`th:scrolling`</td>
-    <td>`th:size`</td>
-  </tr>
-  <tr>
-    <td>`th:sizes`</td>
-    <td>`th:span`</td>
-    <td>`th:spellcheck`</td>
-  </tr>
-  <tr>
-    <td>`th:src`</td>
-    <td>`th:srclang`</td>
-    <td>`th:standby`</td>
-  </tr>
-  <tr>
-    <td>`th:start`</td>
-    <td>`th:step`</td>
-    <td>`th:style`</td>
-  </tr>
-  <tr>
-    <td>`th:summary`</td>
-    <td>`th:tabindex`</td>
-    <td>`th:target`</td>
-  </tr>
-  <tr>
-    <td>`th:title`</td>
-    <td>`th:type`</td>
-    <td>`th:usemap`</td>
-  </tr>
-  <tr>
-    <td>`th:value`</td>
-    <td>`th:valuetype`</td>
-    <td>`th:vspace`</td>
-  </tr>
-  <tr>
-    <td>`th:width`</td>
-    <td>`th:wrap`</td>
-    <td>`th:xmlbase`</td>
-  </tr>
-  <tr>
-    <td>`th:xmllang`</td>
-    <td>`th:xmlspace`</td>
-    <td></td>
-  </tr>
-</table>
-
+|-----------------------+-----------------------+-----------------------|
+|`th:abbr`              |`th:accept`            |`th:accept-charset`    |
+|`th:accesskey`         |`th:action`            |`th:align`             |
+|`th:alt`               |`th:archive`           |`th:audio`             |
+|`th:autocomplete`      |`th:axis`              |`th:background`        |
+|`th:bgcolor`           |`th:border`            |`th:cellpadding`       |
+|`th:cellspacing`       |`th:challenge`         |`th:charset`           |
+|`th:cite`              |`th:class`             |`th:classid`           |
+|`th:codebase`          |`th:codetype`          |`th:cols`              |
+|`th:colspan`           |`th:compact`           |`th:content`           |
+|`th:contenteditable`   |`th:contextmenu`       |`th:data`              |
+|`th:datetime`          |`th:dir`               |`th:draggable`         |
+|`th:dropzone`          |`th:enctype`           |`th:for`               |
+|`th:form`              |`th:formaction`        |`th:formenctype`       |
+|`th:formmethod`        |`th:formtarget`        |`th:frame`             |
+|`th:frameborder`       |`th:headers`           |`th:height`            |
+|`th:high`              |`th:href`              |`th:hreflang`          |
+|`th:hspace`            |`th:http-equiv`        |`th:icon`              |
+|`th:id`                |`th:keytype`           |`th:kind`              |
+|`th:label`             |`th:lang`              |`th:list`              |
+|`th:longdesc`          |`th:low`               |`th:manifest`          |
+|`th:marginheight`      |`th:marginwidth`       |`th:max`               |
+|`th:maxlength`         |`th:media`             |`th:method`            |
+|`th:min`               |`th:name`              |`th:optimum`           |
+|`th:pattern`           |`th:placeholder`       |`th:poster`            |
+|`th:preload`           |`th:radiogroup`        |`th:rel`               |
+|`th:rev`               |`th:rows`              |`th:rowspan`           |
+|`th:rules`             |`th:sandbox`           |`th:scheme`            |
+|`th:scope`             |`th:scrolling`         |`th:size`              |
+|`th:sizes`             |`th:span`              |`th:spellcheck`        |
+|`th:src`               |`th:srclang`           |`th:standby`           |
+|`th:start`             |`th:step`              |`th:style`             |
+|`th:summary`           |`th:tabindex`          |`th:target`            |
+|`th:title`             |`th:type`              |`th:usemap`            |
+|`th:value`             |`th:valuetype`         |`th:vspace`            |
+|`th:width`             |`th:wrap`              |`th:xmlbase`           |
+|`th:xmllang`           |`th:xmlspace`          |                       |
 
 
 5.3 Setting more than one value at a time
@@ -1919,49 +1773,15 @@ set to its fixed value, and if evaluated to false, the attribute will not be set
 
 The following fixed-value boolean attributes exist in the Standard Dialect:
 
-<table>
-  <tr>
-    <td>`th:async`</td>
-    <td>`th:autofocus`</td>
-    <td>`th:autoplay`</td>
-  </tr>
-  <tr>
-    <td>`th:checked`</td>
-    <td>`th:controls`</td>
-    <td>`th:declare`</td>
-  </tr>
-  <tr>
-    <td>`th:default`</td>
-    <td>`th:defer`</td>
-    <td>`th:disabled`</td>
-  </tr>
-  <tr>
-    <td>`th:formnovalidate`</td>
-    <td>`th:hidden`</td>
-    <td>`th:ismap`</td>
-  </tr>
-  <tr>
-    <td>`th:loop`</td>
-    <td>`th:multiple`</td>
-    <td>`th:novalidate`</td>
-  </tr>
-  <tr>
-    <td>`th:nowrap`</td>
-    <td>`th:open`</td>
-    <td>`th:pubdate`</td>
-  </tr>
-  <tr>
-    <td>`th:readonly`</td>
-    <td>`th:required`</td>
-    <td>`th:reversed`</td>
-  </tr>
-  <tr>
-    <td>`th:scoped`</td>
-    <td>`th:seamless`</td>
-    <td>`th:selected`</td>
-  </tr>
-</table>
-
+|-------------------+-------------------+-------------------|
+|`th:async`         |`th:autofocus`     |`th:autoplay`      |
+|`th:checked`       |`th:controls`      |`th:declare`       |
+|`th:default`       |`th:defer`         |`th:disabled`      |
+|`th:formnovalidate`|`th:hidden`        |`th:ismap`         |
+|`th:loop`          |`th:multiple`      |`th:novalidate`    |
+|`th:nowrap`        |`th:open`          |`th:pubdate`       |
+|`th:readonly`      |`th:required`      |`th:reversed`      |
+|`th:scoped`        |`th:seamless`      |`th:selected`      |
 
 
 5.6 Support for HTML5-friendly attribute and element names
@@ -3052,78 +2872,38 @@ as expected.
 So, all Thymeleaf attributes define a numeric precedence, which establishes the
 order in which they are executed in the tag. This order is:
 
-<table>
-  <thead>
-    <th>Order</th>
-    <th>Feature</th>
-    <th>Attributes</th>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Fragment inclusion</td>
-      <td>
-        `th:include`<br/>
-        `th:replace`
-      </td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Fragment iteration</td>
-      <td>`th:each`</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>Conditional evaluation</td>
-      <td>
-        `th:if`<br/>
-        `th:unless`<br/>
-        `th:switch`<br/>
-        `th:case`
-      </td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>Local variable definition</td>
-      <td>
-        `th:object`<br/>
-        `th:with`
-      </td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td>General attribute modification</td>
-      <td>
-        `th:attr`<br/>
-        `th:attrprepend`<br/>
-        `th:attrappend`
-      </td>
-    </tr>
-    <tr>
-      <td>6</td>
-      <td>Specific attribute modification</td>
-      <td>`th:value`, `th:href`, `th:src`, etc.</td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td>Text (tag body modification)</td>
-      <td>
-        `th:text`<br/>
-        `th:utext`
-      </td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>Fragment specification</td>
-      <td>`th:fragment`</td>
-    </tr>
-    <tr>
-      <td>9</td>
-      <td>Fragment removal</td>
-      <td>`th:remove`</td>
-    </tr>
-  </tbody>
-</table>
+-----------------------------------------------------------------
+Order   Feature                            Attributes
+------- ---------------------------------- ----------------------
+      1 Fragment inclusion                 `th:include`\
+                                           `th:replace`
+
+      2 Fragment iteration                 `th:each`
+
+      3 Conditional evaluation             `th:if`\
+                                           `th:unless`\
+                                           `th:switch`\
+                                           `th:case`
+
+      4 Local variable definition          `th:object`\
+                                           `th:with`
+
+      5 General attribute modification     `th:attr`\
+                                           `th:attrprepend`\
+                                           `th:attrappend`
+
+      6 Specific attribute modification    `th:value`\
+                                           `th:href`\
+                                           `th:src`\
+                                           `...`
+
+      7 Text (tag body modification)       `th:text`\
+                                           `th:utext`
+
+      8 Fragment specification             `th:fragment`
+
+      9 Fragment removal                   `th:remove`
+-----------------------------------------------------------------
 
 This precedence mechanism means that the above iteration fragment will give
 exactly the same results if the attribute position is inverted (although it would be
