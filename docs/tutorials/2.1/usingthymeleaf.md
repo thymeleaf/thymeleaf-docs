@@ -53,7 +53,7 @@ which is called a Template Mode:
 
 All of these modes refer to well-formed XML files except the _Legacy HTML5_ mode,
 which allows you to process HTML5 files with features such as standalone (not
-closed) tags, tag attributes without a value or not written between commas. In
+closed) tags, tag attributes without a value or not written between quotes. In
 order to process files in this specific mode, Thymeleaf will first perform a
 transformation that will convert your files to well-formed XML files which are
 still perfectly valid HTML5 (and are in fact the recommended way to create HTML5
@@ -434,7 +434,7 @@ the max cache size is reached and it is the oldest entry currently cached.
 > caches by default.
 
 We will learn more about template resolvers later. Now let's have a look at the
-creation of our Template Resolver object.
+creation of our Template Engine object.
 
 
 ### The Template Engine
@@ -1199,7 +1199,7 @@ Let's use this new syntax. Meet the `th:href` attribute:
 <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
 
 <!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
-<a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
+<a href="details.html" th:href="@{/order/${o.id}/details}">view</a>
 ```
 
 Some things to note here:
@@ -1210,7 +1210,7 @@ Some things to note here:
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
    The required URL-encoding operations will also be automatically performed.
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
- * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId}}}`
+ * Variable templates are also allowed in URL paths, like `@{/order/${o.id}/details}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
    prefixed the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
@@ -2663,7 +2663,7 @@ Once processed, everything will look again as it should:
 ```
 
 And what about that `all` value in the attribute, what does it mean? Well, in fact
-`th:remove` can behave in three different ways, depending on its value:
+`th:remove` can behave in five different ways, depending on its value:
 
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
