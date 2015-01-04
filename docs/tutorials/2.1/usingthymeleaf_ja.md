@@ -1748,7 +1748,7 @@ Thymeleafでは絶対URLはどんな場合でも使用できますが、相対UR
 <!--
 Let's use this new syntax. Meet the `th:href` attribute:
 -->
-ではこの新しい構文を使ってみましょう。 `th:href` 属性で使用します ^[訳注: 3番目の式は `@{/order/${orderId}/details}` の間違いではないかと思います] :
+ではこの新しい構文を使ってみましょう。 `th:href` 属性で使用します:
 
 ```html
 <!-- Will produce 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
@@ -1789,7 +1789,7 @@ Some things to note here:
  * `th:href` は属性変更用の属性です: リンクURLを生成し `<a>` タグのhref属性にセットします。
  * URLパラメータを指定することができます(`orderId=${o.id}` の部分です)。自動的にURLエンコーディングされます。
  * 複数のパラメータを指定する場合はカンマ区切りで指定できます `@{/order/process(execId=${execId},execType='FAST')}`
- * URLパス内でも変数式は使用可能です `@{/order/{orderId}/details(orderId=${orderId}}}` ^[訳注: `@{/order/${orderId}/details}` の間違いではないかと思います。]
+ * URLパス内でも変数式は使用可能です `@{/order/{orderId}/details(orderId=${orderId}}}`
  * `/` で始まる相対URL(`/order/details`)に対しては、自動的にアプリケーションコンテキスト名を前に付けます。
  * クッキーが使用できない場合、またはまだ分からない場合は `";jsessionid=..."` を相対URLの最後につけてセッションをキープできるようにすることがあります。これは _URL Rewriting_ と呼ばれていますが、Thymeleafでは全てのURLに対してサーブレットAPIの `response.encodeURL(...)` のメカニズムを使用して独自リライトフィルタを追加することができます。
  * `th:href` タグを使用する場合、(任意ですが)静的な `href` 属性をテンプレートに同時に指定することができます。そうすることでプロトタイプ用途などで直接テンプレートをブラウザで開いた場合でもリンクを有効にすることができます。
