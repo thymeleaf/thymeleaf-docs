@@ -2,7 +2,7 @@
 title: 'Tutorial: Using Thymeleaf (ja)'
 author: The Thymeleaf Team
 lang: Japanese
-translator: 'Mitsuyuki Shiiba &lt;email AT domain&gt;'
+translator: 'Mitsuyuki Shiiba (<a href="https://twitter.com/bufferings">@bufferings</a>)'
 version: 20141222 - 22 December 2014
 thymeleafVersion: 2.1.4.RELEASE
 ---
