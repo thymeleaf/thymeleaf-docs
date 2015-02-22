@@ -1246,6 +1246,13 @@ for some of the other pages in the site?
 ```
 
 
+### Server root relative URLs
+
+An additional syntax can be used to create server-root-relative (instead of context-root-relative)
+URLs in order to link to different contexts in the same server. These URLs will be specified like
+`@{~/path/to/something}`
+
+
 
 4.5 Literals
 ------------
