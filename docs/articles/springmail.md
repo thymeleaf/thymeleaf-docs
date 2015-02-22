@@ -19,16 +19,17 @@ email templates in an application without Spring.
 Prerequisites
 -------------
 
-This article assumes you are familiar with both Thymeleaf and Spring 3.
+This article assumes you are familiar with both Thymeleaf and Spring 4.
 We will not dive into Spring Mail details, for further information
 please take a look at the [Email chapter at the Spring
-Documentation](http://static.springsource.org/spring/docs/3.1.x/spring-framework-reference/html/mail.html).
+Documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mail).
 
 Example application
 -------------------
 
 All the code in this article comes from a working example application
-you can download from the [documentation page](/documentation.html).
+you can download from the [documentation page](/documentation.html) or
+from [github](https://github.com/thymeleaf/thymeleafexamples-springmail).
 Downloading this application, executing it and exploring its source code
 is highly recommended *(note that you will have to configure your SMTP
 user name and password at `configuration.properties`)*.
@@ -37,21 +38,38 @@ Sending email with Spring
 -------------------------
 
 First, you need to configure a **Mail Sender** object in your Spring
-configuration, as in the following XML (your specific configuration
+configuration, as in the following code (your specific configuration
 needs might differ):
 
-```xml
-<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  <property name="host" value="${mail.server.host}" />
-  <property name="port" value="${mail.server.port}" />
-  <property name="protocol" value="${mail.server.protocol}" />
-  <property name="username" value="${mail.server.username}" />
-  <property name="password" value="${mail.server.password}" />
-  <property name="javaMailProperties">
-    <util:properties location="classpath:javamail.properties" />
-  </property>
-</bean>
+```java
+@Bean
+public JavaMailSender mailSender() throws IOException {
+    Properties properties = configProperties();
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    mailSender.setHost(properties.getProperty(HOST));
+    mailSender.setPort(Integer.parseInt(properties.getProperty(PORT)));
+    mailSender.setProtocol(properties.getProperty(PROTOCOL));
+    mailSender.setUsername(properties.getProperty(USERNAME));
+    mailSender.setPassword(properties.getProperty(PASSWORD));
+    mailSender.setJavaMailProperties(javaMailProperties());
+    return mailSender;
+}
+
+private Properties configProperties() throws IOException {
+    Properties properties = new Properties();
+    properties.load(new ClassPathResource("configuration.properties").getInputStream());
+    return properties;
+}
+
+private Properties javaMailProperties() throws IOException {
+    Properties properties = new Properties();
+    properties.load(new ClassPathResource("javamail.properties").getInputStream());
+    return properties;
+}
 ```
+
+Note that the previous code is getting the configuration from the properties
+files `configuration.properties` and `javamail.properties` on your classpath.
 
 Spring provides a class called `MimeMessageHelper` to ease the creation
 of email messages. Let's see how to use it together with our
@@ -90,51 +108,61 @@ with little or no change in a standalone application with no web UI.
 
 ### Our goals
 
-Our example application will be sending three types of emails:
+Our example application will be sending four types of emails:
 
 1.  Simple HTML (with internationalized greeting).
 2.  HTML text with an attachment.
-3.  HTML text witn an inline image.
+3.  HTML text with an inline image.
+4.  HTML text edited by the user.
 
 ### Spring configuration
 
 In order to process our templates, we will need to configure our
-`TemplateEngine` at `spring-servlet.xml`:
+`TemplateEngine` in our Spring configuration:
 
-```xml
-<!-- THYMELEAF: Template Resolver for email templates -->
-<bean id="emailTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
-  <property name="prefix" value="mail/" />
-  <property name="templateMode" value="HTML5" />
-  <property name="characterEncoding" value="UTF-8" />
-  <property name="order" value="1" />
-</bean>
+```java
+/**
+ * THYMELEAF: View Resolver - implementation of Spring's ViewResolver interface.
+ */
+@Bean
+public ViewResolver viewResolver() {
+    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+    viewResolver.setTemplateEngine(templateEngine());
+    return viewResolver;
+}
 
-<!-- THYMELEAF: Template Resolver for webapp pages   -->
-<!-- (we would not need this if our app was not web) -->
-<bean id="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-  <property name="prefix" value="/WEB-INF/templates/" />
-  <property name="templateMode" value="HTML5" />
-  <property name="characterEncoding" value="UTF-8" />
-  <property name="order" value="2" />
-</bean>
+/**
+ * THYMELEAF: Template Engine (Spring4-specific version).
+ */
+@Bean
+public SpringTemplateEngine templateEngine() {
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.addTemplateResolver(emailTemplateResolver());
+    templateEngine.addTemplateResolver(webTemplateResolver());
+    return templateEngine;
+}
 
-<!-- THYMELEAF: Template Engine (Spring3-specific version) -->
-<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
-  <property name="templateResolvers">
-    <set>
-      <ref bean="emailTemplateResolver" />
-      <ref bean="webTemplateResolver" />
-    </set>
-  </property>
-</bean>
+/**
+ * THYMELEAF: Template Resolver for email templates.
+ */
+private TemplateResolver emailTemplateResolver() {
+    TemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+    templateResolver.setPrefix("/mail/");
+    templateResolver.setTemplateMode("HTML5");
+    templateResolver.setOrder(1);
+    return templateResolver;
+}
 
-<!-- THYMELEAF: View Resolver - implementation of Spring's ViewResolver interface -->
-<!-- (we would not need this if our app was not web)                              -->
-<bean id="viewResolver" class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
-  <property name="templateEngine" ref="templateEngine" />
-  <property name="characterEncoding" value="UTF-8" />
-</bean>
+/**
+ * THYMELEAF: Template Resolver for webapp pages.
+ */
+private TemplateResolver webTemplateResolver() {
+    TemplateResolver templateResolver = new ServletContextTemplateResolver();
+    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setTemplateMode("HTML5");
+    templateResolver.setOrder(2);
+    return templateResolver;
+}
 ```
 
 Note that we have configured two *template resolvers* for our engine:
@@ -307,8 +335,8 @@ model the uploaded file and pass its contents on to the service.
 More examples
 -------------
 
-For the sake of brevity, we have only detailed one of the three types of
+For the sake of brevity, we have only detailed one of the four types of
 email we want our application to send. However, you can see the source
-code required for creating all three types of emails at the `springmail`
+code required for creating all four types of emails at the `springmail`
 example application you can download from the [documentation
 page](/documentation.html).
