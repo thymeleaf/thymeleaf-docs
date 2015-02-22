@@ -46,11 +46,11 @@ needs might differ):
 public JavaMailSender mailSender() throws IOException {
     Properties properties = configProperties();
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    mailSender.setHost(properties.getProperty(HOST));
-    mailSender.setPort(Integer.parseInt(properties.getProperty(PORT)));
-    mailSender.setProtocol(properties.getProperty(PROTOCOL));
-    mailSender.setUsername(properties.getProperty(USERNAME));
-    mailSender.setPassword(properties.getProperty(PASSWORD));
+    mailSender.setHost(properties.getProperty("mail.server.host"));
+    mailSender.setPort(Integer.parseInt(properties.getProperty("mail.server.port")));
+    mailSender.setProtocol(properties.getProperty("mail.server.protocol"));
+    mailSender.setUsername(properties.getProperty("mail.server.username"));
+    mailSender.setPassword(properties.getProperty("mail.server.password"));
     mailSender.setJavaMailProperties(javaMailProperties());
     return mailSender;
 }
