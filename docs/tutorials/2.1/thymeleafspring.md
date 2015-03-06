@@ -1536,13 +1536,17 @@ For example, for:
 public class ExampleController {
 
     @RequestMapping("/data")
-    public HttpEntity getData(@RequestParam String type) { ... }
+    public String getData(Model model) { ... return "template" }
+
+    @RequestMapping("/data")
+    public String getDataParam(@RequestParam String type) { ... return "template" }
 
 }
 ```
 The following code will create a link to it:
 ```html
-<a th:href="${#mvc.url('EC#getData').arg(0,'internal')}">Get Data</a>
+<a th:href="${(#mvc.url('EC#getData')).build()}">Get Data Param</a>
+<a th:href="${(#mvc.url('EC#getDataParam').arg(0,'internal')).build()}">Get Data Param</a>
 ``` 
 
 You can read more about this mechanism at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
