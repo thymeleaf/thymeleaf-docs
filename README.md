@@ -3,7 +3,7 @@ Thymeleaf Docs
 
 Thymeleaf documentation in Markdown format, which is then converted to HTML, EPUB
 (using [Pandoc](http://johnmacfarlane.net/pandoc/)), MOBI (using [Calibre](http://calibre-ebook.com/))
-and PDF (using [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/))
+and PDF (using [wkhtmltopdf](http://wkhtmltopdf.org/))
 formats using the supplied Gradle build script.
 
 The flavour of Markdown used is pandoc's Markdown. It's specifics and extensions can be
