@@ -54,4 +54,21 @@ $(document).ready(function() {
 		$('pre.' + language).removeClass(language).addClass('prettyprint');
 	}
 	prettyPrint();
+
+	// Toggle between show/hide menu actions
+	var menuLink = $('#menu-link');
+	var tocWrapper = $('#toc-wrapper');
+	menuLink.click(function() {
+		var shown = tocWrapper.css('display') === 'none';
+		tocWrapper.css('display', shown ? 'block' : 'none');
+	});
+
+	// Hide the menu when an item is clicked (for smaller screens that show the menu)
+	if (menuLink) {
+		tocWrapper.click(function(event) {
+			if (event.target.tagName.toLowerCase() === 'a') {
+				tocWrapper.css('display', 'none');
+			}
+		});
+	}
 });

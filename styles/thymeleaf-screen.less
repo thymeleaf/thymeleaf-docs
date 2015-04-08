@@ -41,8 +41,10 @@ body {
 
 .tutorial {
 	#title-block-wrapper {
-		margin-left: 25%;
-		padding-left: 1.5em;
+		@media (min-width: 43.75em) {
+			margin-left: 25%;
+			padding-left: 1.5em;
+		}
 	}
 }
 
@@ -62,11 +64,48 @@ body {
 /* Table of contents */
 /* -------------------------------------------------------------------------- */
 
-.tutorial {
-	#toc-wrapper {
+#menu {
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: 0 0 0.5em black;
+	height: 50px;
+	position: fixed;
+	right: -5px;
+	top: 0.5em;
+	width: 50px;
+	z-index: 10;
+
+	@media (min-width: 43.75em) {
+		display: none;
+	}
+}
+
+#menu-link {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+#toc-wrapper {
+	bottom: 0.5em;
+	box-shadow: 0.25em 0.25em 2em fadeout(black, 25%);
+	display: none;
+	left: 0.5em;
+	position: fixed;
+	top: 0.5em;
+	width: 80%;
+	z-index: 5;
+
+	&:target {
+		display: block;
+	}
+
+	@media (min-width: 43.75em) {
 		bottom: 1em;
+		box-shadow: none;
+		display: block;
+		left: 1em;
 		max-width: 20.625em;
-		position: fixed;
 		top: 1em;
 		width: 25%;
 	}
@@ -83,9 +122,10 @@ body {
 
 .tutorial {
 	#content {
-		margin-left: 25%;
-		padding-left: 1.5em;
-
+		@media (min-width: 43.75em) {
+			margin-left: 25%;
+			padding-left: 1.5em;
+		}
 		@media (min-width: 83.75em) {
 			margin-left: 20.125em;
 		}
