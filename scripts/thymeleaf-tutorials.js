@@ -56,6 +56,7 @@ $(document).ready(function() {
 	prettyPrint();
 
 	// Toggle between show/hide menu actions
+	var menu = $('#menu');
 	var menuLink = $('#menu-link');
 	var tocWrapper = $('#toc-wrapper');
 	menuLink.click(function() {
@@ -64,11 +65,9 @@ $(document).ready(function() {
 	});
 
 	// Hide the menu when an item is clicked (for smaller screens that show the menu)
-	if (menuLink) {
-		tocWrapper.click(function(event) {
-			if (event.target.tagName.toLowerCase() === 'a') {
-				tocWrapper.css('display', 'none');
-			}
-		});
-	}
+	tocWrapper.click(function(event) {
+		if (menu.css('display') !== 'none' && event.target.tagName.toLowerCase() === 'a') {
+			tocWrapper.css('display', 'none');
+		}
+	});
 });
