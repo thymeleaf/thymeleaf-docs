@@ -154,7 +154,7 @@ that we are referencing. This can be a file (like in this example) or it
 can reference to the same file either by using the `this` keyword (e.g.
 `this :: header`) or without any keyword (e.g. `:: header`). The
 expression after double colon is a fragment selector (either fragment
-name or *DOM selector*). As you can see also see, the header fragment
+name or *DOM selector*). As you can also see, the header fragment
 contains a markup that is used for static prototyping only.
 
 Header and footer are defined in the following files:
