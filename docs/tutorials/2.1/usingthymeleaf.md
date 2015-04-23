@@ -4363,8 +4363,8 @@ ${#strings.unescapeJavaScript(str)}                 // also array*, list* and se
 /*
  * Null-safe comparison and concatenation
  */
-${#strings.equals(str)}
-${#strings.equalsIgnoreCase(str)}
+${#strings.equals(first, second)}
+${#strings.equalsIgnoreCase(first, second)}
 ${#strings.concat(str)}
 ${#strings.concatReplaceNulls(str)}
 
