@@ -4041,6 +4041,15 @@ ${#dates.listFormat(datesList)}
 ${#dates.setFormat(datesSet)}
 
 /*
+ * Format date with the ISO8601 format
+ * Also works with arrays, lists or sets
+ */
+${#dates.formatISO(date)}
+${#dates.arrayFormatISO(datesArray)}
+${#dates.listFormatISO(datesList)}
+${#dates.setFormatISO(datesSet)}
+
+/*
  * Format date with the specified pattern
  * Also works with arrays, lists or sets
  */
@@ -4105,6 +4114,15 @@ ${#calendars.format(cal)}
 ${#calendars.arrayFormat(calArray)}
 ${#calendars.listFormat(calList)}
 ${#calendars.setFormat(calSet)}
+
+/*
+ * Format calendar with the ISO8601 format
+ * Also works with arrays, lists or sets
+ */
+${#calendars.formatISO(cal)}
+${#calendars.arrayFormatISO(calArray)}
+${#calendars.listFormatISO(calList)}
+${#calendars.setFormatISO(calSet)}
 
 /*
  * Format calendar with the specified pattern
@@ -4367,8 +4385,8 @@ ${#strings.unescapeJavaScript(str)}                 // also array*, list* and se
 /*
  * Null-safe comparison and concatenation
  */
-${#strings.equals(str)}
-${#strings.equalsIgnoreCase(str)}
+${#strings.equals(first, second)}
+${#strings.equalsIgnoreCase(first, second)}
 ${#strings.concat(str)}
 ${#strings.concatReplaceNulls(str)}
 
