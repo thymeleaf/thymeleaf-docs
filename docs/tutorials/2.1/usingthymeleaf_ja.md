@@ -2415,6 +2415,7 @@ specific XHTML or HTML5 attribute:
 -->
 このような属性が非常にたくさん用意されていて、それぞれが特定のXHTMLやHTML5のタグを対象にしています:
 
+<div class="table-wrapper">
 |-----------------------+-----------------------+-----------------------|
 |`th:abbr`              |`th:accept`            |`th:accept-charset`    |
 |`th:accesskey`         |`th:action`            |`th:align`             |
@@ -2452,6 +2453,7 @@ specific XHTML or HTML5 attribute:
 |`th:value`             |`th:valuetype`         |`th:vspace`            |
 |`th:width`             |`th:wrap`              |`th:xmlbase`           |
 |`th:xmllang`           |`th:xmlspace`          |                       |
+</div>
 
 
 <!--
@@ -2603,6 +2605,7 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 -->
 スタンダードダイアレクトには次のような固定値ブール属性があります:
 
+<div class="table-wrapper">
 |-------------------+-------------------+-------------------|
 |`th:async`         |`th:autofocus`     |`th:autoplay`      |
 |`th:checked`       |`th:controls`      |`th:declare`       |
@@ -2612,6 +2615,7 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 |`th:nowrap`        |`th:open`          |`th:pubdate`       |
 |`th:readonly`      |`th:required`      |`th:reversed`      |
 |`th:scoped`        |`th:seamless`      |`th:selected`      |
+</div>
 
 
 <!--

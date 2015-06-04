@@ -36,6 +36,7 @@ body {
 a {
 	color: blue;
 	text-decoration: none;
+	word-wrap: break-word;
 
 	&:hover {
 		text-decoration: underline;
@@ -95,7 +96,15 @@ table {
 }
 
 #doc-info {
-	margin-left: 6em;
+	@media (min-width: 22.5em) {
+		margin-left: 2em;
+	}
+	@media (min-width: 28.125em) {
+		margin-left: 4em;
+	}
+	@media (min-width: 43.75em) {
+		margin-left: 6em;
+	}
 
 	.info-header {
 		font-weight: bold;
@@ -114,12 +123,9 @@ table {
 	background-color: white;
 	border-radius: 0.5em;
 	border-right: 0.25em solid lighten(@thymeleaf-green, 10%);
+	box-sizing: border-box;
 	overflow: hidden;
 	padding: 0.75em 1em;
-
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-	        box-sizing: border-box;
 }
 
 #toc {
@@ -205,6 +211,7 @@ blockquote {
 	background-color: #f0f0f0;
 	border: 1px solid lightgrey;
 	border-radius: 0.5em;
+	margin: 0;
 	padding: 0 1em;
 }
 
@@ -218,6 +225,12 @@ figure {
 figcaption {
 	font-style: italic;
 	text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	code {
+		word-wrap: break-word;
+	}
 }
 
 #setting-value-to-specific-attributes,
@@ -246,6 +259,10 @@ figcaption {
 	font-size: 0.8em;
 }
 
+.table-wrapper {
+	overflow-x: scroll;
+}
+
 
 /* Code sections */
 /* -------------------------------------------------------------------------- */
@@ -253,6 +270,7 @@ figcaption {
 p > code,
 li > code {
 	padding: 0.25em;
+	word-wrap: break-word;
 }
 
 pre, code {

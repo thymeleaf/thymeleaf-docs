@@ -1645,6 +1645,7 @@ exactly this same kind of attributes:
 There are quite a lot of attributes like these, each of them targeting a
 specific XHTML or HTML5 attribute:
 
+<div class="table-wrapper">
 |-----------------------+-----------------------+-----------------------|
 |`th:abbr`              |`th:accept`            |`th:accept-charset`    |
 |`th:accesskey`         |`th:action`            |`th:align`             |
@@ -1682,6 +1683,7 @@ specific XHTML or HTML5 attribute:
 |`th:value`             |`th:valuetype`         |`th:vspace`            |
 |`th:width`             |`th:wrap`              |`th:xmlbase`           |
 |`th:xmllang`           |`th:xmlspace`          |                       |
+</div>
 
 
 5.3 Setting more than one value at a time
@@ -1780,6 +1782,7 @@ set to its fixed value, and if evaluated to false, the attribute will not be set
 
 The following fixed-value boolean attributes exist in the Standard Dialect:
 
+<div class="table-wrapper">
 |-------------------+-------------------+-------------------|
 |`th:async`         |`th:autofocus`     |`th:autoplay`      |
 |`th:checked`       |`th:controls`      |`th:declare`       |
@@ -1789,6 +1792,7 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 |`th:nowrap`        |`th:open`          |`th:pubdate`       |
 |`th:readonly`      |`th:required`      |`th:reversed`      |
 |`th:scoped`        |`th:seamless`      |`th:selected`      |
+</div>
 
 
 5.6 Support for HTML5-friendly attribute and element names
