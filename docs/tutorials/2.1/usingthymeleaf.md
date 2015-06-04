@@ -4199,7 +4199,7 @@ ${#numbers.setFormatInteger(numSet,3)}
 
 /* 
  * Set minimum integer digits and thousands separator: 
- * 'POINT', 'COMMA', 'NONE' or 'DEFAULT' (by locale).
+ * 'POINT', 'COMMA', 'WHITESPACE', 'NONE' or 'DEFAULT' (by locale).
  * Also works with arrays, lists or sets
  */
 ${#numbers.formatInteger(num,3,'POINT')}
