@@ -4387,8 +4387,8 @@ ${#strings.unescapeJavaScript(str)}                 // also array*, list* and se
  */
 ${#strings.equals(first, second)}
 ${#strings.equalsIgnoreCase(first, second)}
-${#strings.concat(str)}
-${#strings.concatReplaceNulls(str)}
+${#strings.concat(values...)}
+${#strings.concatReplaceNulls(nullValue, values...)}
 
 /*
  * Random
