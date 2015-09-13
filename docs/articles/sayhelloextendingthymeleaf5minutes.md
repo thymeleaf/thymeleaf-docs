@@ -9,9 +9,8 @@ Say Hello! Extending Thymeleaf in 5 minutes
 Extending Thymeleaf is easy: you only have to create a dialect and add
 it to your template engine. Let's see how.
 
-*(All the code seen here comes from a working application. You can
-download the source code of such application from the [documentation
-page](/documentation.html))*
+All the code seen here comes from a working application. You can view or
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-sayhello).
 
 Dialects
 --------

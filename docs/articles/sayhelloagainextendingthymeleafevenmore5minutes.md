@@ -8,9 +8,8 @@ Say Hello Again! Extending Thymeleaf even more in another 5 minutes
 
 This article is a continuation of [*"Say Hello! Extending Thymeleaf in 5
 minutes"*](sayhelloextendingthymeleaf5minutes.html) and is meant to be
-read after it. Code in this article comes from the same example
-application, which you can download from the
-[documentation](/documentation.html) page.
+read after it.  Code in this article comes from the same example application,
+which you can view or download from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-sayhello).
 
 Some improvements for our 'hello' dialect
 -----------------------------------------

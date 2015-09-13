@@ -8,9 +8,11 @@ Thymeleaf + Spring Security integration basics
 ==============================================
 
 Have you switched to Thymeleaf but your login and error pages are still
-using JSP? \
- In this article we will see how to configure your Spring application to
-use Thymeleaf for login and error pages.
+using JSP?  In this article we will see how to configure your Spring application
+to use Thymeleaf for login and error pages.
+
+All the code seen here comes from a working application. You can view or
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-springsecurity).
 
 Prerequisites
 -------------
@@ -177,9 +179,3 @@ and roles:
 Logged user: <span sec:authentication="name">Bob</span>
 Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
 ```
-
-Download example
-----------------
-
-The full working example code used in this article is available for
-download at the [project's documentation page](/documentation.html).

@@ -10,9 +10,8 @@ In this article we will compare the same page (a subscription form)
 created twice for the same Spring MVC application: once using Thymeleaf
 and another time using JSP, JSTL and the Spring tag libraries.
 
-All the code seen here comes from a working application. You can
-download the source code of such application from the [documentation
-page](/documentation.html).
+All the code seen here comes from a working application.  You can view or
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-thvsjsp).
 
 Common requirements
 -------------------
