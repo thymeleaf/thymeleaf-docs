@@ -191,6 +191,8 @@ which you can find at this address: [http://www.thymeleaf.org/fromhtmltohtmlviah
 2 The Good Thymes Virtual Grocery
 =================================
 
+The source code for the examples shown in this and future chapters of this guide
+can be found in the [Good Thymes Virtual Grocery GitHub repository](https://github.com/thymeleaf/thymeleafexamples-gtvg).
 
 
 2.1 A website for a grocery
