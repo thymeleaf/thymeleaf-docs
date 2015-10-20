@@ -162,13 +162,10 @@ This is now possible, see [Inlined output expressions](https://github.com/thymel
 
 See [Decouple context from template_resource resolution](https://github.com/thymeleaf/thymeleaf/issues/413)
 
-- Refactoring of the template resolution APIs
+- Refactoring of the core APIs
 
 See [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
-
-
-
-
+See [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
 
 
 
