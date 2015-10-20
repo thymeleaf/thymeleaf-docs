@@ -165,10 +165,10 @@ See [Decouple context from template_resource resolution](https://github.com/thym
 - Refactoring of the core APIs
 
 See [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
+
 See [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
 
-
-
+See [Refactoring of the Message Resolution API](https://github.com/thymeleaf/thymeleaf/issues/421)
 
 
 
