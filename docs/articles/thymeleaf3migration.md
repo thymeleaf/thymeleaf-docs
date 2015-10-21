@@ -1,6 +1,3 @@
-% Thymeleaf 3 five-minute migration guide
-
-
 Thymeleaf 3 five-minute migration guide
 =======================================
 
@@ -77,8 +74,7 @@ We will discuss that in a minute.
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
 
-**FIXME link to example applications "Thymeleaf 3 Hello World" (Spring+XML, Spring+Java, pure Java) **
-
+You can browse and download the source code for this example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example]() and [Thymeleaf 3 example]()
 
 
 Template modes
