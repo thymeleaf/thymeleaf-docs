@@ -74,7 +74,7 @@ We will discuss that in a minute.
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
 
-You can browse and download the source code for this example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example]() and [Thymeleaf 3 example]()
+You can browse and download the source code for this example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example]() and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloword)
 
 
 Template modes
