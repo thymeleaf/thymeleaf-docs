@@ -109,9 +109,7 @@ For an explanation of the new parsing system, see [Full HTML5 support, new parsi
 The inlining mechanism also matches the new template modes and, indeed, make innecesary the `th:inline="text"` attribute.
 If you used it, take a look at the discussion on [Refactoring of the inlining mechanism](https://github.com/thymeleaf/thymeleaf/issues/396)
 
-
-
-**FIXME link to example application "new template modes" **
+You can see a simple example exercising the new template modes at [https://github.com/jmiguelsamper/thymeleaf3-template-modes-example](https://github.com/jmiguelsamper/thymeleaf3-template-modes-example)
 
 
 
