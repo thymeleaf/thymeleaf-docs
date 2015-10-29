@@ -133,9 +133,31 @@ For a technical discussion in the new Thymeleaf 3 architecture, see [New event-b
 New Dialect system
 ------------------
 
-[New Dialect API](https://github.com/thymeleaf/thymeleaf/issues/401)
-[New Pre-Processor and Post-Processor APIs](https://github.com/thymeleaf/thymeleaf/issues/400)
-[New Processor API](https://github.com/thymeleaf/thymeleaf/issues/399)
+Thymeleaf 3 features a brand new dialect system. If you developed a Thymeleaf Dialect for a previous version of Thymeleaf, you will have to rebuild it to make it Thymeleaf 3 compatible.
+
+The new dialect interface is really simple  
+
+```java
+    public interface IDialect {
+
+        public String getName();
+    
+    }
+```
+
+but you can many different features on top of it.
+
+Let's highlight a few enhancements of the Dialect system:
+
+- Now there are not only processors but pre-processors and post-processors, so the template content can be modified before and after being processed. We could, for example, use a pre-processor to serve cached content or a post-processor to minimize the output.
+- The dialect precedence is a new concept which allows the sorting of processors accross dialects. Processor precedences are now considered relative to dialect precedence, so every processor in a specific dialect can be configured to be executed before any processors from a different dialect just by setting the correct values for this dialect precedence.
+- Expression object dialects provide new expression objects or expression utility objects that can be used in expressions anywhere in templates, such as the #strings, #numbers, #dates, etc. provided by the Standard Dialect.
+
+For further explanation of these features, take a look at:
+
+- [New Dialect API](https://github.com/thymeleaf/thymeleaf/issues/401)
+- [New Pre-Processor and Post-Processor APIs](https://github.com/thymeleaf/thymeleaf/issues/400)
+- [New Processor API](https://github.com/thymeleaf/thymeleaf/issues/399)
 
 
 
