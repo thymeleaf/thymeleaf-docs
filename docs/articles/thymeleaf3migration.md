@@ -89,6 +89,7 @@ Thymeleaf 3 replaces the set of template modes from previous versions. The new t
 - TEXT
 - JAVASCRIPT
 - CSS
+- RAW
 
 There are two markup template modes (HTML and XML) and three textual template modes (TEXT, JAVASCRIPT and CSS).
 
