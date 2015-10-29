@@ -94,19 +94,34 @@ The HTML template mode will admit any kind of HTML markup input, including HTML5
 No markup validation of well-formedness check will be performed, and template markup code structure will be respected 
 to the biggest possible extent in output.
 
-The brand new template modes bring to Thymeleaf the ability to output CSS, Javascript and plain text. This is
-handy if you want to use the values of server-side variables in your CSS and Javascript files, or to generate
-plain text content as, for example, in e-mail composing.
-
 For a detailed explanation of the different template modes, please take a look at [Thymeleaf 3.0 Template Mode set](https://github.com/thymeleaf/thymeleaf/issues/391).
 
 For an explanation of the new parsing system, see [Full HTML5 support, new parsing infrastructure](https://github.com/thymeleaf/thymeleaf/issues/390)
 
+### Textual template modes
 
-[New syntax for textual template modes](https://github.com/thymeleaf/thymeleaf/issues/395)
+The brand new template modes bring to Thymeleaf the ability to output CSS, Javascript and plain text. This is
+handy if you want to use the values of server-side variables in your CSS and Javascript files, or to generate
+plain text content as, for example, in e-mail composing.
 
+In order to have all Thymeleaf features avaible for the textual modes, a new syntax has been introduced. For example, you can iterate like:
 
-The inlining mechanism also matches the new template modes and, indeed, make innecesary the `th:inline="text"` attribute.
+```text
+    [# th:each="item : ${items}"]
+        - [# th:utext="${item}" /]
+    [/]
+````
+
+For a full explanation of this new syntax, take a look at [New syntax for textual template modes](https://github.com/thymeleaf/thymeleaf/issues/395)
+
+Also, sometimes it is handy to be able to just display expressions, as in:
+
+```html
+    This product is called [[${product.name}]] and it's great!
+```
+This is now possible, see [Inlined output expressions](https://github.com/thymeleaf/thymeleaf/issues/394) for details.
+
+The existing inlining mechanism also matches the new template modes and, indeed, make innecesary the `th:inline="text"` attribute.
 If you used it, take a look at the discussion on [Refactoring of the inlining mechanism](https://github.com/thymeleaf/thymeleaf/issues/396)
 
 You can see a simple example exercising the new template modes at [https://github.com/jmiguelsamper/thymeleaf3-template-modes-example](https://github.com/jmiguelsamper/thymeleaf3-template-modes-example)
@@ -148,45 +163,29 @@ The new dialect interface is really simple
 but you can many different features on top of it.
 
 Let's highlight a few enhancements of the Dialect system:
-
 - Now there are not only processors but pre-processors and post-processors, so the template content can be modified before and after being processed. We could, for example, use a pre-processor to serve cached content or a post-processor to minimize the output.
 - The dialect precedence is a new concept which allows the sorting of processors accross dialects. Processor precedences are now considered relative to dialect precedence, so every processor in a specific dialect can be configured to be executed before any processors from a different dialect just by setting the correct values for this dialect precedence.
 - Expression object dialects provide new expression objects or expression utility objects that can be used in expressions anywhere in templates, such as the #strings, #numbers, #dates, etc. provided by the Standard Dialect.
 
 For further explanation of these features, take a look at:
-
 - [New Dialect API](https://github.com/thymeleaf/thymeleaf/issues/401)
 - [New Pre-Processor and Post-Processor APIs](https://github.com/thymeleaf/thymeleaf/issues/400)
 - [New Processor API](https://github.com/thymeleaf/thymeleaf/issues/399)
 
 
 
-Miscellaneous improvements
---------------------------
-
-- Inline output expressions
-
-Sometimes it is handy to be able to just display expressions, as in:
-
-```html
-    This product is called [[${product.name}]] and it's great!
-```
-
-This is now possible, see [Inlined output expressions](https://github.com/thymeleaf/thymeleaf/issues/394) for details.
-
-- Decoupled templates
-
-See [Decouple context from template_resource resolution](https://github.com/thymeleaf/thymeleaf/issues/413)
-
-- Refactoring of the core APIs
-
-See [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
-
-See [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
-
-See [Refactoring of the Message Resolution API](https://github.com/thymeleaf/thymeleaf/issues/421)
+Refactoring of the core APIs
+----------------------------
+The core APIs have been refactored heavily, browse the following issues for details:
+- [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
+- [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
+- [Refactoring of the Message Resolution API](https://github.com/thymeleaf/thymeleaf/issues/421)
 
 
 
+Final thoughts
+--------------
 
+Thymeleaf 3 is a major achievement on the Thymeleaf Template Engine project after four years. It comes with many new features and many under-the-hood improvements.
 
+We hope it fits better the needs of your projects. Give it a try!
