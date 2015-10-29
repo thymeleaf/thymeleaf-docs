@@ -7,20 +7,21 @@ First, the good news. Your existing Thymeleaf templates are 100% compatible with
 Thymeleaf 3 so you will only have to do a few modifications in your configuration.
 
 Thymeleaf 3 betas are stable and feature-complete, so we encourage you to migrate to
-Thymeleaf 3 in order to take advantage of its performance improvements and all the 
-new features.
+Thymeleaf 3 in order to take advantage of its performance improvements and new features.
 
 The only downside is that not all Thymeleaf dialects have been migrated to Thymeleaf 3
 at this stage, so if you are using some dialects they may not work with Thymeleaf 3.
-Please check if the dialects needed have a Thymeleaf 3 compatible version.
+Please check if the required dialects have a Thymeleaf 3 compatible version.
+
+
 
 Configuration changes
 ---------------------
 
-We will show an example of the Thymeleaf 3 configuration using the *thymeleaf-spring4*
+Let's show an example of the Thymeleaf 3 configuration using the *thymeleaf-spring4*
 integration package and Java config, are it is the most common choice among Thymeleaf users.
 
-First, the updated Maven dependencies:
+First, the updated Maven dependencies to get Thymeleaf 3 and the Spring 4 integration package:
 
 ```xml
     <dependency>
@@ -67,14 +68,15 @@ Second, the Spring configuration:
     }
 ```
 
-The main difference with the Thymeleaf 2 configuration is the template mode TemplateMode.HTML.
+The main difference with the Thymeleaf 2 configuration is the template mode that has a value of `TemplateMode.HTML`.
 Template modes are not strings anymore and the possible values are quite different from Thymeleaf 2.
-We will discuss that in a minute.
+We will discuss it in a minute.
 
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
 
-You can browse and download the source code for this example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloword) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloword)
+You can browse and download the source code for a simple "Hello World!" example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloword) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloword)
+
 
 
 Template modes
@@ -98,9 +100,10 @@ For a detailed explanation of the different template modes, please take a look a
 
 For an explanation of the new parsing system, see [Full HTML5 support, new parsing infrastructure](https://github.com/thymeleaf/thymeleaf/issues/390)
 
+
 ### Textual template modes
 
-The brand new template modes bring to Thymeleaf the ability to output CSS, Javascript and plain text. This is
+The new textaul template modes bring to Thymeleaf the ability to output CSS, Javascript and plain text. This is
 handy if you want to use the values of server-side variables in your CSS and Javascript files, or to generate
 plain text content as, for example, in e-mail composing.
 
@@ -114,7 +117,7 @@ In order to have all Thymeleaf features avaible for the textual modes, a new syn
 
 For a full explanation of this new syntax, take a look at [New syntax for textual template modes](https://github.com/thymeleaf/thymeleaf/issues/395)
 
-Also, sometimes it is handy to be able to just display expressions, as in:
+Sometimes it is also handy to be able to just display expressions, as in:
 
 ```html
     This product is called [[${product.name}]] and it's great!
@@ -131,13 +134,12 @@ You can see a simple example exercising the new template modes at [https://githu
 Performance improvements
 ------------------------
 
-The main goal of the version 3 of Thymeleaf was the performance improvements.
+The main goal of the version 3 of Thymeleaf was the performance improvement.
 This has been a hot discussion topic in the previous versions, comparing Thymeleaf performance against other text-based template engines.
-Being Thymeleaf an XML-based template engine brought the power of implementing many features but at a performance cost. While Thymeleaf
-rendering time was trivial in most of the projects, this caveat was noticiable in projects with special characteristics (for example, dealing with tables with dozens of thousands rows).
+Being Thymeleaf an XML-based template engine brought the power of implementing many features but at a performance cost.
+While Thymeleaf rendering time was trivial in most of the projects, this caveat was noticiable in projects with special characteristics (for example, dealing with tables with dozens of thousands rows).
 
-Thymeleaf 3 engine has been rewritten from scratch with the main focus on performance. Thymeleaf 3 performs much better than the previous versions 
-so we hope it covers the needs of more and more projects.
+Thymeleaf 3 engine has been rewritten from scratch with the main focus on performance. Thymeleaf 3 performs much better than the previous versions so we hope it covers the needs of more and more projects.
 
 Thymeleaf 3 performance is not only about rendering time, it has been specifically designed to have a low memory footprint and prevent any blocking on high concurrency scenarios.
 
@@ -160,10 +162,10 @@ The new dialect interface is really simple
     }
 ```
 
-but you can many different features on top of it.
+but you can add many different features on top of it.
 
-Let's highlight a few enhancements of the Dialect system:
-- Now there are not only processors but pre-processors and post-processors, so the template content can be modified before and after being processed. We could, for example, use a pre-processor to serve cached content or a post-processor to minimize the output.
+Let's highlight a few enhancements of the new Dialect system:
+- There are not only processors but pre-processors and post-processors, so the template content can be modified before and after being processed. We could, for example, use a pre-processor to serve cached content or a post-processor to minimize and compress the output.
 - The dialect precedence is a new concept which allows the sorting of processors accross dialects. Processor precedences are now considered relative to dialect precedence, so every processor in a specific dialect can be configured to be executed before any processors from a different dialect just by setting the correct values for this dialect precedence.
 - Expression object dialects provide new expression objects or expression utility objects that can be used in expressions anywhere in templates, such as the #strings, #numbers, #dates, etc. provided by the Standard Dialect.
 
@@ -176,6 +178,7 @@ For further explanation of these features, take a look at:
 
 Refactoring of the core APIs
 ----------------------------
+
 The core APIs have been refactored heavily, browse the following issues for details:
 - [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
 - [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
