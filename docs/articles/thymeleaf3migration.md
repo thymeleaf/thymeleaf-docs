@@ -186,6 +186,6 @@ The core APIs have been refactored heavily, browse the following issues for deta
 Final thoughts
 --------------
 
-Thymeleaf 3 is a major achievement on the Thymeleaf Template Engine project after four years. It comes with many new features and many under-the-hood improvements.
+Thymeleaf 3 is a major achievement on the Thymeleaf Template Engine project after four years of existence. It comes with many new features and many under-the-hood improvements.
 
 We hope it fits better the needs of your projects. Give it a try!
