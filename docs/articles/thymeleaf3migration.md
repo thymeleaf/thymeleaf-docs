@@ -86,6 +86,8 @@ make sure that it has a Thymeleaf 3 compatible version.
 
 You can browse and download the source code for a simple "Hello World!" example at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloword) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloword)
 
+You can also find some additional information (links to binaries and javadocs) at [the Thymeleaf Beta 1 announcement](http://forum.thymeleaf.org/Thymeleaf-3-0-0-BETA01-just-published-td4029294.html).
+
 
 
 Template modes
