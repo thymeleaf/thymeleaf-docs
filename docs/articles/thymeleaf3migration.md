@@ -75,11 +75,11 @@ Second, the Spring configuration:
     }
 ```
 
-The first difference with the Thymeleaf 2 configuration is the template mode that has a value of `TemplateMode.HTML`.
+The first difference with the Thymeleaf 2 configuration is that now the preferred template resolver for Spring applications is `SpringResourceTemplateResolver`. It needs a reference to the Spring `ApplicationContext` so the configuration bean have to implement the `ApplicationContextAware` interface.
+
+The second difference is that the template mode that has a value of `TemplateMode.HTML`.
 Template modes are not strings anymore and the possible values are quite different from Thymeleaf 2.
 We will discuss it in a minute.
-
-The second different is that now the preferred template resolver for Spring applications is `SpringResourceTemplateResolver`. It needs a reference to the Spring `ApplicationContext` so the configuration bean have to implement the `ApplicationContextAware` interface.
 
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
