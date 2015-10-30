@@ -42,7 +42,13 @@ Second, the Spring configuration:
     @Configuration
     @EnableWebMvc
     @ComponentScan("com.thymeleafexamples")
-    public class ThymeleafConfig extends WebMvcConfigurerAdapter {
+    public class ThymeleafConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+
+        private ApplicationContext applicationContext;
+
+        public void setApplicationContext(ApplicationContext applicationContext) {
+            this.applicationContext = applicationContext;
+        }
 
         @Bean
         public ViewResolver viewResolver() {
@@ -54,12 +60,13 @@ Second, the Spring configuration:
 
         private TemplateEngine templateEngine() {
             SpringTemplateEngine engine = new SpringTemplateEngine();
-            engine.addTemplateResolver(templateResolver());
+            engine.setTemplateResolver(templateResolver());
             return engine;
         }
 
-        private TemplateResolver templateResolver() {
-            ServletContextTemplateResolver resolver = new ServletContextTemplateResolver();
+        private ITemplateResolver templateResolver() {
+            SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+            resolver.setApplicationContext(applicationContext);
             resolver.setPrefix("/WEB-INF/templates/");
             resolver.setTemplateMode(TemplateMode.HTML);
             return resolver;
@@ -68,9 +75,11 @@ Second, the Spring configuration:
     }
 ```
 
-The main difference with the Thymeleaf 2 configuration is the template mode that has a value of `TemplateMode.HTML`.
+The first difference with the Thymeleaf 2 configuration is the template mode that has a value of `TemplateMode.HTML`.
 Template modes are not strings anymore and the possible values are quite different from Thymeleaf 2.
 We will discuss it in a minute.
+
+The second different is that now the preferred template resolver for Spring applications is `SpringResourceTemplateResolver`. It needs a reference to the Spring `ApplicationContext` so the configuration bean have to implement the `ApplicationContextAware` interface.
 
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
