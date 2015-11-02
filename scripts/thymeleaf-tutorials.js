@@ -48,7 +48,7 @@
 	});
 
 	// Languages used for syntax highlight
-	var languages = ['html', 'java', 'javascript', 'xml'];
+	var languages = ['html', 'java', 'javascript', 'xml', 'css', 'text'];
 
 	// Normalize Pandoc 1.11 and 1.12 outputs
 	languages.forEach(function(language) {
