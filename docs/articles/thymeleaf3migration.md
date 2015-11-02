@@ -149,7 +149,7 @@ plain text content as, for example, in e-mail composing.
 
 In order to have all Thymeleaf features avaible for the textual modes, a new syntax has been introduced. For example, you can iterate like:
 
-```
+```text
     [# th:each="item : ${items}"]
         - [# th:utext="${item}" /]
     [/]
