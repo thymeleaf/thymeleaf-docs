@@ -34,7 +34,7 @@ Configuration changes
 ---------------------
 
 Let's show an example of the Thymeleaf 3 configuration using the *thymeleaf-spring4*
-integration package and Java config, are it is the most common choice among Thymeleaf users.
+integration package and Java config, as it is the most common choice among Thymeleaf users.
 
 First, the updated Maven dependencies to get Thymeleaf 3 and the Spring 4 integration package:
 
@@ -93,7 +93,7 @@ Second, the Spring configuration:
 The first difference with the Thymeleaf 2 configuration is that now the recommended template resolver for Spring applications is `SpringResourceTemplateResolver`. It needs a reference to the Spring `ApplicationContext` so the configuration bean has to implement the `ApplicationContextAware` interface.
 
 The second difference is that the template mode has a value of `TemplateMode.HTML`.
-Template modes are not strings anymore and the possible values are a b different from Thymeleaf 2.
+Template modes are not strings anymore and the possible values are a bit different from Thymeleaf 2.
 We will discuss it in a minute.
 
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
