@@ -24,7 +24,7 @@ Template changes
 
 The only change we *recommend* doing to your templates is removing any `th:inline="text"`
 attributes you might have, because they are not needed anymore in order to have output
-inlined expressions in HTML or XML templates. And it's just a recommendation — templates 
+inlined expressions in HTML or XML templates. And it's just a recommendation &mdash; templates 
 will work anyway. But you will benefit from some extra processing performance if you remove those. 
 
 See more information about this below in the *Improved inlining mechanism* section.
