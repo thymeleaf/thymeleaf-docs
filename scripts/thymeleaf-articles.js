@@ -75,7 +75,7 @@
 	// Use <kbd> for inlined code samples
 	$('code').forEach(function(el) {
 		var kbdEl = document.createElement('kbd');
-		kbdEl.innerHTML = el.innertHTML;
+		kbdEl.innerHTML = el.innerHTML;
 		el.parentElement.insertBefore(kbdEl, el);
 		el.parentElement.removeChild(el);
 	});
