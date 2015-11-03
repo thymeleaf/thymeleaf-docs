@@ -99,7 +99,7 @@ We will discuss it in a minute.
 If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
 
-You can browse and download the source code for simple "Hello World!" examples at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloword), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloword) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloword)
+You can browse and download the source code for simple "Hello World!" examples at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloworld), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloworld) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloworld)
 
 You can also find some additional information (links to binaries and javadocs) at [the Thymeleaf BETA 1 announcement](http://forum.thymeleaf.org/Thymeleaf-3-0-0-BETA01-just-published-td4029294.html).
 
