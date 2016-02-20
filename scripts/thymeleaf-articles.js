@@ -17,54 +17,71 @@
 /**
  * JavaScript for performing post-pandoc modifications on the
  * thymeleaf-docs articles in order to apply the website standard styles.
- *
+ * 
  * @author Daniel Fernandez
  */
-$(document).ready(function() {
+(function() {
+	'use strict';
 
-    // Languages used for syntax highlight
-    var languages = ['html', 'java', 'javascript', 'xml'];
-
-    // Normalize Pandoc 1.11 and 1.12 outputs
-    for (var i = 0; i < languages.length; i++) {
-        var language = languages[i];
-        $('pre.' + language).addClass('sourceCode');
-        $('pre.' + language + ' > code').addClass('sourceCode').addClass(language);
-    }
-
-    // Remove the markup added by Pandoc for code highlighting so that we can
-    // use a different code highlighter - this is not needed in Pandoc 1.12 as
-    // the '--no-highlight' option was fixed.
-    $('code.sourceCode').each(function() {
-        var text = $(this).text();
-        $(this).text(text);
-    });
+	// The following is a copy of the code from https://github.com/ultraq/dumb-query-selector
+	var $ = (function() {
+		var ID_SELECTOR_REGEX = /^#[a-zA-Z][\w-]*$/;
+		return function(query, scope) {
+			return ID_SELECTOR_REGEX.test(query) ?
+				document.getElementById(query.substring(1)) :
+				Array.prototype.slice.call((scope || document).querySelectorAll(query));
+		}
+	})();
 
 
-    // Make the necessary modifications to activate the SyntaxHighlight plugin
-    // (note articles use this, used in other parts of the website, instead of
-    // prettify, which is used in the tutorials).
-    for (var i = 0; i < languages.length; i++) {
-        var language = languages[i];
-        var codeNodes = $('pre.' + language);
-        codeNodes.each(function() {
-            var text = $(this).children('code').text();
-            $(this).text(text);
-            $(this).removeClass('sourceCode').removeClass(language);
-            $(this).addClass('brush:' + language + ';gutter:false');
-        });
-    }
+	// Languages used for syntax highlight
+	var languages = ['html', 'java', 'javascript', 'xml', 'css', 'text'];
 
+	// Normalize Pandoc 1.11 and 1.12 outputs
+	languages.forEach(function(language) {
+		$('pre.' + language).forEach(function(el) {
+			el.classList.add('sourceCode');
+		});
+		$('pre.' + language + ' > code').forEach(function(el) {
+			el.classList.add('sourceCode');
+			el.classList.add(language);
+		});
+	});
 
-    // Use <kbd> for inlined code samples
-    $('code').replaceWith(function(){
-        return $("<kbd />", {html: $(this).html()});
-    });
+	// Remove the markup added by Pandoc for code highlighting so that we can
+	// use a different code highlighter - this is not needed in Pandoc 1.12 as
+	// the '--no-highlight' option was fixed.
+	$('code.sourceCode').forEach(function(el) {
 
+		// We can't shortcut these 2 lines otherwise the JS engine optimizes away
+		// the text processing, making this a no-op.
+		var text = el.textContent;
+		el.textContent = text;
+	});
 
-    // Convert the name of the current article at the breadcrumb into lower case
-    var articleTitleNode = $('#breadcrumb > .current');
-    var articleTitle = articleTitleNode.text();
-    articleTitleNode.text(articleTitle.toLowerCase());
+	// Make the necessary modifications to activate the SyntaxHighlight plugin
+	// (note articles use this, used in other parts of the website, instead of
+	// prettify, which is used in the tutorials).
+	languages.forEach(function(language) {
+		$('pre.' + language).forEach(function(el) {
+			var text = el.querySelector('code').textContent;
+			el.textContent = text;
+			el.classList.remove('sourceCode');
+			el.classList.remove(language);
+			el.classList.add('brush:' + language + ';gutter:false');
+		});
+	});
 
-});
+	// Use <kbd> for inlined code samples
+	$('code').forEach(function(el) {
+		var kbdEl = document.createElement('kbd');
+		kbdEl.innerHTML = el.innerHTML;
+		el.parentElement.insertBefore(kbdEl, el);
+		el.parentElement.removeChild(el);
+	});
+
+	// Convert the name of the current article at the breadcrumb into lower case
+	var articleTitle = $('#breadcrumb > .current')[0];
+	articleTitle.textContent = articleTitle.textContent.toLowerCase();
+
+})();
