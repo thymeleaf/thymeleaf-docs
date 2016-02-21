@@ -3,9 +3,6 @@ title: Thymeleaf 3 five-minute migration guide
 ---
 
 
-Thymeleaf 3 five-minute migration guide
-=======================================
-
 Are you a Thymeleaf 2 user wishing to try the new **Thymeleaf 3**?
 
 First, the good news. Your existing Thymeleaf templates are almost 100% compatible with
@@ -104,7 +101,6 @@ You can browse and download the source code for simple "Hello World!" examples a
 You can also find some additional information (links to binaries and javadocs) at [the Thymeleaf BETA 1 announcement](http://forum.thymeleaf.org/Thymeleaf-3-0-0-BETA01-just-published-td4029294.html).
 
 
-
 Full HTML5 markup support
 -------------------------
 
@@ -140,7 +136,6 @@ For a detailed explanation of the different template modes, please take a look a
 
 You can see a simple example exercising the new template modes at [https://github.com/jmiguelsamper/thymeleaf3-template-modes-example](https://github.com/jmiguelsamper/thymeleaf3-template-modes-example)
 
-
 ### Textual template modes
 
 The new textual template modes bring to Thymeleaf the ability to output **CSS**, **Javascript** and **plain text**. This is
@@ -157,7 +152,6 @@ In order to have all Thymeleaf features avaible for the textual modes, a new syn
 
 For a full explanation of this new syntax, take a look at [New syntax for textual template modes](https://github.com/thymeleaf/thymeleaf/issues/395)
 
-
 ### Improved inlining mechanism
 
 Sometimes it is handy to be able to output data without using extra tags or attributes, as in:
@@ -171,7 +165,6 @@ This capability, called *inlining* has been greatly improved and is now much bet
 The existing inlining mechanism also matches the new template modes and, indeed, make innecesary the `th:inline="text"` attribute because inlining now exists in `HTML` mode itself. Take a look at the discussion on [Refactoring of the inlining mechanism](https://github.com/thymeleaf/thymeleaf/issues/396)
 
 
-
 Performance improvements
 ------------------------
 
@@ -181,7 +174,6 @@ Being Thymeleaf an XML-based template engine up to v2.1 brought the power of imp
 Thymeleaf 3's engine has been rewritten from scratch with the main focus put on performance. Thymeleaf 3 performs much better than the previous versions so we hope it covers the needs of more and more projects. But Thymeleaf 3's performance is not only about rendering time: it has also been specifically designed to have a low memory footprint and help reduce latency in high-concurrency scenarios.
 
 For a technical discussion in the new Thymeleaf 3 architecture, see [New event-based template processing engine](https://github.com/thymeleaf/thymeleaf/issues/389)
-
 
 
 New Dialect system
@@ -214,7 +206,6 @@ For further explanation of these features, take a look at:
 -   [New Processor API](https://github.com/thymeleaf/thymeleaf/issues/399)
 
 
-
 Refactoring of the core APIs
 ----------------------------
 
@@ -223,7 +214,6 @@ The core APIs have been refactored heavily, browse the following issues for deta
 -   [Refactoring of the Template Resolution API](https://github.com/thymeleaf/thymeleaf/issues/419)
 -   [Refactoring of the Context API](https://github.com/thymeleaf/thymeleaf/issues/420)
 -   [Refactoring of the Message Resolution API](https://github.com/thymeleaf/thymeleaf/issues/421)
-
 
 
 Final thoughts

@@ -1,11 +1,8 @@
 ---
 title: Thymeleaf Page Layouts
-author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl" target="_blank">http://blog.codeleak.pl</a>'
+author: 'Rafa&#322; Borowiec &mdash, <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
 ---
 
-
-Thymeleaf Page Layouts
-======================
 
 Introduction
 ------------
@@ -50,12 +47,14 @@ more configuration is needed in order to use them, so the complexity of
 the views is bigger than with Include Style Layouts which are more
 "natural" to use.
 
+
 Example Application
 -------------------
 
 All the samples and code fragments presented in this article are
 available on GitHub at
 [https://github.com/thymeleaf/thymeleafexamples-layouts](https://github.com/thymeleaf/thymeleafexamples-layouts)
+
 
 Thymeleaf Standard Layout System
 --------------------------------
@@ -440,6 +439,7 @@ Thymol documentation and examples can be found on the official project
 site here: [Thymol at
 SourceForge.net](http://sourceforge.net/u/jjbenson/wiki/thymol/).
 
+
 Thymeleaf Tiles Integration
 ---------------------------
 
@@ -649,6 +649,7 @@ Secondly, we can mix standard layout (`th:include/th:replace`) with
 Tiles dialect. Thirdly, Thymeleaf has ability to include a template
 fragment instead of the whole template.
 
+
 Thymeleaf Layout Dialect
 ------------------------
 
@@ -857,6 +858,7 @@ topic very thoroughly. You will definitively find some more advanced
 examples than in this article. You can find the documentation here:
 [Layout Dialect](https://github.com/ultraq/thymeleaf-layout-dialect).
 
+
 Other Layout Options
 --------------------
 
@@ -924,6 +926,7 @@ What will happen?
 The project can be found on
 [GitHub](https://github.com/kolorobot/thymeleaf-custom-layout).
 
+
 Future Plans
 ------------
 
@@ -956,6 +959,7 @@ The Apache Tiles integration module currently only supports Tiles 2
 integration. Tiles 3, although seems to be very alike Tiles 2, has a
 different architecture and therefore a separate module will be created
 in the future.
+
 
 Summary
 -------

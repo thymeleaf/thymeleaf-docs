@@ -1,0 +1,500 @@
+@charset "UTF-8";
+
+/* 
+ * Copyright 2015, The Thymeleaf Project (http://www.thymeleaf.org/)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* 
+ * This is mostly a copy of the Thymeleaf website stylesheet as docs should be
+ * standalone to generate correct PDFs and other file formats.
+ */
+
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
+
+* {
+	box-sizing: inherit;
+}
+
+html {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: white;
+	color: black;
+	font: 1em/1.5em 'Open Sans', sans-serif;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+}
+a:visited {
+	color: blue;
+}
+a:hover,
+a:focus {
+	text-decoration: underline;
+}
+a.url {
+	word-break: break-all;
+}
+a.anchor {
+	display: block;
+	position: relative;
+	top: -4em;
+}
+
+button {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 1em;
+}
+button:hover,
+button:focus {
+	background-color: #99cc33;
+	color: white;
+}
+
+figure {
+	margin: 1em;
+}
+
+figcaption {
+	font-size: 0.85em;
+	font-style: italic;
+	text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Merriweather", serif;
+	line-height: 1.5em;
+	margin: 1em 0;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
+
+h2, h3 {
+	border-left: 0.25em solid #99cc33;
+	padding-left: 0.5em;
+}
+
+img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+}
+
+p {
+	margin: 1em 0;
+}
+
+ol, ul {
+	margin: 1em 0 1em 2em;
+	padding: 0;
+}
+
+section {
+	margin-bottom: 3em;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+thead {
+	border-bottom: 1px dotted black;
+}
+
+th {
+	text-align: left;
+}
+
+th, td {
+	padding: 0.25em;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+
+/* COMMON COMPONENTS */
+/* ========================================================================== */
+
+.fluid-container {
+	padding: 0 1em;
+}
+
+.fluid-block {
+	margin: 0 auto;
+	max-width: 56.25rem;
+}
+
+/* Toolbar component */
+/* -------------------------------------------------------------------------- */
+
+.toolbar-container {
+	background-color: white;
+	padding: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 5;
+}
+
+.toolbar-menu {
+	border-bottom: 1px solid #99cc33;
+	display: flex;
+	justify-content: space-between;
+}
+
+.toolbar-menu-location {
+	padding: 1em;
+}
+
+.toolbar-menu-items {
+	height: 0;
+	overflow: hidden;
+	transition: 200ms height;
+}
+
+.toolbar-menu-items.show-menu {
+	box-shadow: 0 0.5rem 0.5rem 0 rgba(0, 0, 0, 0.6);
+	height: 28.125rem;
+	max-height: calc(95vh - 5.5rem);
+	overflow: auto;
+}
+
+.toolbar a {
+	border-bottom: none;
+	color: inherit;
+}
+.toolbar a:hover,
+.toolbar a:focus,
+.toolbar a:active,
+.toolbar .selected a {
+	background-color: #99cc33;
+	color: white;
+	text-decoration: none;
+}
+
+.toolbar-links {
+	list-style: none;
+	margin: 0;
+}
+
+.toolbar-link {
+	display: block;
+	padding: 1em;
+}
+
+@media (min-width: 43.75rem) {
+
+	.toolbar-container {
+		border-bottom: 1px solid #99cc33;
+	}
+
+	.toolbar-menu {
+		display: none;
+	}
+
+	.toolbar-menu-items {
+		display: flex;
+		height: auto;
+		justify-content: space-between;
+		overflow: auto;
+	}
+
+	.toolbar-links {
+		display: flex;
+	}
+
+	.toolbar a:hover,
+	.toolbar a:focus,
+	.toolbar a:active,
+	.toolbar .selected a {
+		background-color: #99cc33;
+		color: white;
+	}
+}
+
+/* Hero image/title */
+/* -------------------------------------------------------------------------- */
+
+.hero-container {
+	background-color: #f0f0f0;
+	border-bottom: 1px solid #99cc33;
+	margin-bottom: 3em;
+	padding-top: 3em;
+}
+
+.hero-header {
+	padding: 1em;
+	position: relative;
+}
+
+.hero-header-text {
+	margin-bottom: 2em;
+	text-align: center;
+}
+
+.hero-header-title {
+	margin: 0.5em 0;
+}
+
+.hero-header-image {
+	margin: 1em 0;
+	text-align: center;
+}
+
+.hero-header-logo {
+	width: 24rem;
+}
+
+@media (min-width: 45rem) {
+	.hero-header {
+		display: flex;
+		justify-content: space-around;
+	}
+	.hero-header-text {
+		margin-top: 2em;
+		text-align: left;
+	}
+}
+
+/* Page subsections component */
+/* -------------------------------------------------------------------------- */
+
+.subsection {
+	margin: 2em 0 3em 4%;
+}
+
+/* Footer component */
+/* -------------------------------------------------------------------------- */
+
+.footer-container {
+	background-color: #f0f0f0;
+	border-top: 1px solid #99cc33;
+	margin-top: 4em;
+	padding: 1em 1em 2em;
+}
+
+.footer {
+	display: flex;
+	font-size: 0.85rem;
+}
+
+.footer-sections:nth-last-child(n+2) {
+	margin-right: 12.5%;
+}
+
+.footer-sections-links {
+	list-style: none;
+	margin: 0;
+}
+
+.footer-sections-separator {
+	margin: 1em 0;
+}
+
+.copyright {
+	color: grey;
+	font-size: 0.75em;
+	margin-top: 3em;
+	text-align: right;
+}
+
+@media (min-width: 30rem) {
+	.copyright {
+		margin-top: 0;
+	}
+}
+
+
+/* PAGE-SPECIFIC COMPONENTS */
+/* ========================================================================== */
+
+/* Articles */
+/* -------------------------------------------------------------------------- */
+
+.article-author {
+	margin-bottom: 2em;
+	text-align: right;
+}
+
+
+/* ID SELECTORS */
+/* ========================================================================== */
+
+#site-nav-links {
+	border-top: 1px solid lightgrey;
+}
+
+@media (min-width: 43.75rem) {
+	#site-nav-links {
+		border-top: none;
+	}
+}
+
+#footer-issue-tracking {
+	margin-top: 1em;
+}
+
+
+/* CODE SECTIONS */
+/* ========================================================================== */
+
+p > code,
+li > code {
+	padding: 0.25em;
+	word-wrap: break-word;
+}
+
+pre,
+code {
+	font-family: 'Bitstream Vera Sans Mono', 'Courier New', Courier , monospace;
+}
+
+pre {
+	background-color: #352726;
+	border-top: 1px solid #99cc33;
+	border-bottom: 1px solid #99cc33;
+	line-height: 1.25em;
+	overflow: auto;
+	padding: 1em;
+}
+
+pre.line-numbers {
+	counter-reset: linenumber;
+	padding-left: 4em;
+	position: relative;
+}
+
+pre.line-numbers > code {
+	position: relative;
+}
+
+.line-numbers .line-numbers-rows {
+	border-right: 1px solid #b9bdb6;
+	left: -4em;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 3em;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.line-numbers-rows > span {
+	counter-increment: linenumber;
+	display: block;
+	pointer-events: none;
+}
+
+.line-numbers-rows > span:before {
+	color: #b9bdb6;
+	content: counter(linenumber);
+	display: block;
+	padding-right: 0.75em;
+	text-align: right;
+}
+
+pre code {
+	color: #b9bdb6;
+	font-weight: normal;
+	white-space: pre;
+}
+
+table code {
+	font-weight: normal;
+}
+
+code {
+	color: #707070;
+	font-weight: bold;
+}
+code::selection,
+code *::selection {
+	background: #690;
+}
+code::-moz-selection,
+code *::-moz-selection {
+	background: #690;
+}
+
+/*.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+}*/
+
+.token.punctuation {
+	color: #b9bdb6;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #8bd1ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #e0e8ff;
+}
+
+/*.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+}*/
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #99cc33;
+}
+
+/*.token.function {
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+}
+
+.token.important,
+.token.bold {
+}
+
+.token.italic {
+}
+
+.token.entity {
+	cursor: help;
+}*/

@@ -39,4 +39,12 @@
 		});
 	});
 
+	// Run the Prism syntax highlighter
+	Prism.highlightAll();
+
+	// Have the site menu button reveal the site menu on click
+	$('#site-menu-button').addEventListener('click', function(event) {
+		$('#site-menu').classList.toggle('show-menu');
+	});
+
 })();

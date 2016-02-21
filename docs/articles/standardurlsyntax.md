@@ -3,9 +3,6 @@ title: Standard URL Syntax
 ---
 
 
-Standard URL Syntax
-===================
-
 The Thymeleaf standard dialects ---called *Standard* and *SpringStandard*---
 offer a way to easily create URLs in your web applications so that they
 include any required *URL preparation* artifacts. This is done by means
@@ -195,6 +192,7 @@ externalized/internationalized string:
 ```html
 <p th:text="#{orders.explanation('3', @{/order/details(id=3,action='show_all')})}">
 ```
+
 
 Using expressions in URLs
 -------------------------

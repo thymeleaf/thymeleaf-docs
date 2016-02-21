@@ -10,15 +10,14 @@
 	<link rel="shortcut icon" href="../../images/favicon.ico"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Merriweather:400,700"/>
-	<link rel="stylesheet" href="../../styles/normalize.css" media="all"/>
-	<link rel="stylesheet" href="../../styles/thymeleaf.css" media="all"/>
+	<link rel="stylesheet" href="../styles/normalize.css"/>
+	<link rel="stylesheet" href="../styles/thymeleaf-articles.css"/>
 
-	<script src="https://apis.google.com/js/plusone.js">
-		{
-			lang: 'en',
-			parsetags: 'explicit'
-		}
-	</script>
+	<script src="../scripts/dumbqueryselector.js" defer></script>
+	<script src="../scripts/prism.js" defer data-manual></script>
+	<script src="../scripts/thymeleaf-articles.js" defer></script>
+
+	<!-- Google Analytics script -->
 	<script>
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-1276954-9']);
@@ -30,11 +29,6 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
-
-	<script src="../../scripts/prism.js" defer data-manual></script>
-	<script src="../../scripts/dumbqueryselector.js" defer></script>
-	<script src="../scripts/thymeleaf-articles.js" defer></script>
-	<script src="../../scripts/thymeleaf.js" defer></script>
 </head>
 
 <body lang="en" dir="ltr">
@@ -69,20 +63,24 @@
 				<div class="hero-header-subtitle">Java HTML/XML template engine</div>
 			</div>
 			<div class="hero-header-image">
-				<img src="../../images/thymeleaf-big.png" alt="Thymeleaf logo" class="hero-header-logo"/>
+				<img src="../images/thymeleaf-big.png" alt="Thymeleaf logo" class="hero-header-logo"/>
 			</div>
 		</header>
 	</div>
 
 	<div class="fluid-container">
 		<main class="fluid-block article">
-			$if(author)$
-				<p id="author" class="article-author">
-					<i>$author$</i>
-				</p>
-			$endif$
-
-			$body$
+			<article>
+				<header>
+					<h1>$title$</h1>
+					$if(author)$
+						<div class="article-author">
+							Written by $author$
+						</div>
+					$endif$
+				</header>
+				$body$
+			</article>
 		</main>
 	</div>
 

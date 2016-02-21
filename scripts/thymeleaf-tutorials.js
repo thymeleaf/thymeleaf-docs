@@ -22,28 +22,20 @@
 (function() {
 	'use strict';
 
-	// The following is a copy of the code from https://github.com/ultraq/dumb-query-selector
-	var $ = (function() {
-		var ID_SELECTOR_REGEX = /^#[a-zA-Z][\w-]*$/;
-		return function(query, scope) {
-			return ID_SELECTOR_REGEX.test(query) ?
-				document.getElementById(query.substring(1)) :
-				Array.prototype.slice.call((scope || document).querySelectorAll(query));
-		}
-	})();
-
+	var $ = DumbQuerySelector.$;
+	var $$ = DumbQuerySelector.$$;
 
 	// Add class names to the various table-of-contents levels so they're easier to style
-	$('#toc > ul').forEach(function(el) {
+	$$('#toc > ul').forEach(function(el) {
 		el.classList.add('level1');
 	});
-	$('#toc > ul > li > ul').forEach(function(el) {
+	$$('#toc > ul > li > ul').forEach(function(el) {
 		el.classList.add('level2');
 	});
-	$('#toc > ul > li > ul > li > ul').forEach(function(el) {
+	$$('#toc > ul > li > ul > li > ul').forEach(function(el) {
 		el.classList.add('level3');
 	});
-	$('#toc > ul > li > ul > li > ul > li > ul').forEach(function(el) {
+	$$('#toc > ul > li > ul > li > ul > li > ul').forEach(function(el) {
 		el.classList.add('level4');
 	});
 
@@ -52,10 +44,10 @@
 
 	// Normalize Pandoc 1.11 and 1.12 outputs
 	languages.forEach(function(language) {
-		$('pre.' + language).forEach(function(el) {
+		$$('pre.' + language).forEach(function(el) {
 			el.classList.add('sourceCode');
 		});
-		$('pre.' + language + ' > code').forEach(function(el) {
+		$$('pre.' + language + ' > code').forEach(function(el) {
 			el.classList.add('sourceCode');
 			el.classList.add(language);
 		});
@@ -64,7 +56,7 @@
 	// Remove the markup added by Pandoc for code highlighting so that we can
 	// use a different code highlighter - this is not needed in Pandoc 1.12 as
 	// the '--no-highlight' option was fixed.
-	$('code.sourceCode').forEach(function(el) {
+	$$('code.sourceCode').forEach(function(el) {
 
 		// We can't shortcut these 2 lines otherwise the JS engine optimizes away
 		// the text processing, making this a no-op.
@@ -75,11 +67,11 @@
 
 	// Prep for Prettify
 	languages.forEach(function(language) {
-		$('code.' + language).forEach(function(el) {
+		$$('code.' + language).forEach(function(el) {
 			el.classList.remove(language);
 			el.classList.add('language-' + language);
 		});
-		$('pre.' + language).forEach(function(el) {
+		$$('pre.' + language).forEach(function(el) {
 			el.classList.remove(language);
 			el.classList.add('prettyprint');
 		});

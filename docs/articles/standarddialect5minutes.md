@@ -3,14 +3,12 @@ title: Getting started with the Standard dialects in 5 minutes
 ---
 
 
-Getting started with the Standard dialects in 5 minutes
-=======================================================
-
 This guide will take you through some of the most important concepts you
 need to know to understand a Thymeleaf template written in the
 *Standard* or *SpringStandard* dialects. It is not a substitute for the
 tutorials -- which are much more comprehensive -- but it will teach you
 enough for getting the feel of the technology.
+
 
 Standard dialects?
 ------------------
@@ -35,6 +33,7 @@ integrating into Spring MVC applications (like, for example, using
 
 Also note we usually refer to features in the Standard dialects when we
 talk about Thymeleaf without being more specific.
+
 
 Standard Expression syntax
 --------------------------
@@ -201,6 +200,7 @@ used as a part of the real expression to be executed afterwards, in this
 case an internationalization one (which would look for the message with
 key `selection.ALL`).
 
+
 Some basic attributes
 ---------------------
 
@@ -237,6 +237,7 @@ the attributes which values they set:
 ```html
 <a th:href="@{/admin/users}">
 ```
+
 
 Want to know more?
 ------------------

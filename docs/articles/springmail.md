@@ -4,9 +4,6 @@ author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
 ---
 
 
-Rich HTML email in Spring with Thymeleaf
-========================================
-
 In this article we will show how to use Thymeleaf templates for
 composing email messages of several kinds, and we will integrate this
 with Spring's email utilities in order to configure a simple but
@@ -16,6 +13,7 @@ Note that, although this article ---and the corresponding example app---
 uses the Spring Framework, Thymeleaf can also be used for processing
 email templates in an application without Spring.
 
+
 Prerequisites
 -------------
 
@@ -23,6 +21,7 @@ This article assumes you are familiar with both Thymeleaf and Spring 4.
 We will not dive into Spring Mail details, for further information
 please take a look at the [Email chapter at the Spring
 Documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mail).
+
 
 Example application
 -------------------
@@ -32,6 +31,7 @@ view or download the source from [its GitHub repo](https://github.com/thymeleaf/
 Downloading this application, executing it and exploring its source code is
 highly recommended *(note that you will have to configure your SMTP user name
 and password at `configuration.properties`)*.
+
 
 Sending email with Spring
 -------------------------
@@ -83,6 +83,7 @@ message.setSubject("This is the message subject");
 message.setText("This is the message body");
 this.mailSender.send(mimeMessage);
 ```
+
 
 Thymeleaf HTML email templates
 ------------------------------
@@ -252,6 +253,7 @@ Let's remark some points:
     prototyping---, which will be substituted at runtime by something like
     `cid:image.jpg` matching the attached image filename.
 
+
 Putting it all together
 -----------------------
 
@@ -330,6 +332,7 @@ public String sendMailWithInline(
 
 Cannot be easier. Note how we use a Spring MVC `MultipartFile` object to
 model the uploaded file and pass its contents on to the service.
+
 
 More examples
 -------------
