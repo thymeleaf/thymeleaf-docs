@@ -291,6 +291,18 @@ For a technical discussion on the new Thymeleaf 3 architecture, see [New event-b
 
 
 
+
+Independence from the Servlet API
+---------------------------------
+
+Versions prior to Thymeleaf 3.0 were already *independent from the Java Servlet API* in the sense that Thymeleaf allowed *offline execution* of the template engine, i.e. processing templates without the application living in a web container. This was useful in scenarios such as processing email templates.
+
+But Thymeleaf 3.0 includes a series of improvements that can make Thymeleaf truly independent from the Servlet API **in web environments** that do not make use of Java Servlets such as [vert.x](http://vertx.io/), [RatPack](https://ratpack.io/), [Play Framework](https://www.playframework.com/)... which will be now able to integrate with Thymeleaf in an easier and more elegant way.
+
+For more information see: [New extension point: Link Builders](https://github.com/thymeleaf/thymeleaf/issues/458) and [Generalisation of the IEngineContext mechanism](https://github.com/thymeleaf/thymeleaf/issues/459).
+
+
+
 New Dialect system
 ------------------
 
