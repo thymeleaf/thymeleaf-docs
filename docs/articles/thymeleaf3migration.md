@@ -14,7 +14,7 @@ Thymeleaf 3.0 BETA versions are stable and do everything 2.1 did, so we encourag
 
 The only downside is that not all Thymeleaf dialects have been migrated to Thymeleaf 3 at this stage, so if you are using some external dialects they may not work with Thymeleaf 3. Please check if the required dialects have a Thymeleaf 3 compatible version.
 
-Quick pointer: if you already read this *migration guide* for Thymeleaf 3.0.0.BETA01 and you are only interested in the new features in BETA02, you can fast-forward to the new sections on *"Fragment Expressions"*, *"The No-Operation token"*, *"Decoupled Template Logic"*, *"Independence from the Servlet API"* and also check some additional comments at the *"Performance improvements"* section.
+**Quick pointer**: if you already read this *migration guide* for Thymeleaf 3.0.0.BETA01 and you are only interested in the new features in BETA02, you can fast-forward to the new sections on [*"Fragment Expressions"*](#fragment-expressions), [*"The No-Operation token"*](#the-no-operation-token), [*"Decoupled Template Logic"*](#decoupled-template-logic), [*"Independence from the Servlet API"*](#independence-from-the-servlet-api) and also check some additional comments at the [*"Performance improvements"*](#performance-improvements) section.
 
 
 Template changes
@@ -173,9 +173,9 @@ Fragment Expressions
 
 Thymeleaf 3.0 introduces a new type of expression as a part of the general *Thymeleaf Standard Expression* system: *Fragment Expressions*.
 
-They look like this: `~{commons::footer}` and yes, they are extremely similar to the syntax that could be used inside `th:replace` and `th:include` (now `th:insert`) since long ago... because it is exactly *that* syntax, but generalized so that it can now be used in other scopes.
+They look like this: `~{commons::footer}` and yes, they are extremely similar to the syntax that could be used inside `th:replace` and `th:include` (now `th:insert`) since long ago... because they use exactly *that* syntax, but generalized so that it can now be used in other scopes.
 
-What is the advantage of that? well, first and most useful, we can now pass markup fragments as parameters to other fragments. See this `th:replace` below:
+What is the advantage of that? well, first and most useful, we can now pass markup fragments as parameters to other fragments. See the `th:replace` below:
 
 ```html
 ...
@@ -190,7 +190,7 @@ What is the advantage of that? well, first and most useful, we can now pass mark
 ...
 ```
 
-There we are passing our `common_header` fragment two other markup fragments containing our `<title>` and `<link>` tags, which we can then easily use in our `common_header`:
+There we are passing to our `common_header` fragment two other markup fragments containing our `<title>` and `<link>` tags, which can then be easily used in our `common_header`:
 
 ```html
 <head th:fragment="common_header(title,links)">
@@ -217,7 +217,7 @@ But the possibilities don't end here: we can use fragment expressions for much m
 The No-Operation token
 ----------------------
 
-Another new feature of *Thymeleaf Standard Expressions* in Thymeleaf 3.0 is the NO-OP (no-operation) token, written with an underscore symbol (`_`) and which basically means *"do nothing"*.
+Another new feature of *Thymeleaf Standard Expressions* in Thymeleaf 3.0 is the NO-OP (no-operation) token, represented by an underscore symbol (`_`) and which basically means *"do nothing"*.
 
 Using *"do-nothing"* as an expression result is more useful than it might look at first sight. For example, it can help us greatly reduce the complexity of our template code by letting us use our *prototyping code* as *default values*.
 
@@ -227,7 +227,7 @@ See this very simple example:
 <span th:text="${user.name} ?: _">no user authenticated</span>
 ```
 
-In the code above we don't need to specify what exactly should be output if our `user` has no name: in that case, Thymeleaf will do nothing. The result? output will be exactly what we have written as the body of the tag, i.e. `no user authenticated`, which in this case will double as text that will make our template look nice as a prototype and default value for that `th:text` in case there is no user authenticated. Less code, happier developers.
+In the code above we don't need to specify what exactly should be output if our `user` has no name: in that case, Thymeleaf will do nothing. The result? output will be that text we have written as the body of the tag: `no user authenticated`, which in this case will double as text that will make our template look nice as a prototype and default value for that `th:text` in case there is no user authenticated.
 
 Learn more about this new capability here: [The NO-OP token](https://github.com/thymeleaf/thymeleaf/issues/452).
 
@@ -258,7 +258,7 @@ Now markup of a `home.html` template file can be as clean as this:
 </html>
 ```
 
-And the only thing Thymeleaf will need to use that HTML as a template is another file, a `home.th.xml`, by its side, looking like this:
+And the only thing Thymeleaf will need in order to use that HTML as a template is another file by its side, a `home.th.xml`, looking like this:
 
 ```xml
 <?xml version="1.0"?>
