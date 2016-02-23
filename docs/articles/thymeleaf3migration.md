@@ -1,40 +1,33 @@
 ---
-title: Thymeleaf 3 five-minute migration guide
+title: Thymeleaf 3 ten-minute migration guide
 ---
 
 
-Thymeleaf 3 five-minute migration guide
+Thymeleaf 3 ten-minute migration guide
 =======================================
 
 Are you a Thymeleaf 2 user wishing to try the new **Thymeleaf 3**?
 
-First, the good news. Your existing Thymeleaf templates are almost 100% compatible with
-Thymeleaf 3 so you will only have to do a few modifications in your configuration.
+First, the good news. Your existing Thymeleaf templates are almost 100% compatible with Thymeleaf 3 so you will only have to do a few modifications in your configuration.
 
-Thymeleaf 3.0 BETA versions are stable and do everything 2.1 did, so we encourage you to migrate to
-Thymeleaf 3 as soon as possible in order to take advantage of its performance improvements and new features.
+Thymeleaf 3.0 BETA versions are stable and do everything 2.1 did, so we encourage you to migrate to Thymeleaf 3 as soon as possible in order to take advantage of its performance improvements and new features.
 
-The only downside is that not all Thymeleaf dialects have been migrated to Thymeleaf 3
-at this stage, so if you are using some external dialects they may not work with Thymeleaf 3.
-Please check if the required dialects have a Thymeleaf 3 compatible version.
+The only downside is that not all Thymeleaf dialects have been migrated to Thymeleaf 3 at this stage, so if you are using some external dialects they may not work with Thymeleaf 3. Please check if the required dialects have a Thymeleaf 3 compatible version.
 
 
 Template changes
 ----------------
 
-The only change we *recommend* doing to your templates is removing any `th:inline="text"`
-attributes you might have, because they are not needed anymore in order to have output
-inlined expressions in HTML or XML templates. And it's just a recommendation &mdash; templates 
-will work anyway. But you will benefit from some extra processing performance if you remove those. 
+The only change we *recommend* doing to your templates is removing any `th:inline="text"` attributes you might have, because they are not needed anymore in order to have output inlined expressions in HTML or XML templates. And it's just a recommendation &mdash; templates  will work anyway. But you will benefit from some extra processing performance if you remove those. 
 
 See more information about this below in the *Improved inlining mechanism* section.
+
 
 
 Configuration changes
 ---------------------
 
-Let's show an example of the Thymeleaf 3 configuration using the *thymeleaf-spring4*
-integration package and Java config, as it is the most common choice among Thymeleaf users.
+Let's show an example of the Thymeleaf 3 configuration using the *thymeleaf-spring4* integration package and Java config, as it is the most common choice among Thymeleaf users.
 
 First, the updated Maven dependencies to get Thymeleaf 3 and the Spring 4 integration package:
 
@@ -96,7 +89,7 @@ The second difference is that the template mode has a value of `TemplateMode.HTM
 Template modes are not strings anymore and the possible values are a bit different from Thymeleaf 2.
 We will discuss it in a minute.
 
-If you need to add any extra dialect, you can use the `engine.addDialect(...)` method, but first 
+If you need to add any extra dialects, you can use the `engine.addDialect(...)` method, but first 
 make sure that it has a Thymeleaf 3 compatible version.
 
 You can browse and download the source code for simple "Hello World!" examples at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloworld), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloworld) and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloworld)
@@ -116,6 +109,7 @@ So this is now a perfectly processable (yet a bit ugly) Thymeleaf template:
 ```
 
 For an explanation of the new parsing system, see [Full HTML5 support, new parsing infrastructure](https://github.com/thymeleaf/thymeleaf/issues/390)
+
 
 
 Template modes
@@ -166,7 +160,7 @@ Sometimes it is handy to be able to output data without using extra tags or attr
     <p>This product is called [[${product.name}]] and it's great!</p>
 ```
 
-This capability, called *inlining* has been greatly improved and is now much better supported in Thymeleaf 3. See [Inlined output expressions](https://github.com/thymeleaf/thymeleaf/issues/394) for details.
+This capability, called *inlining*, has been greatly improved and is now much better supported in Thymeleaf 3. See [Inlined output expressions](https://github.com/thymeleaf/thymeleaf/issues/394) for details.
 
 The existing inlining mechanism also matches the new template modes and, indeed, make innecesary the `th:inline="text"` attribute because inlining now exists in `HTML` mode itself. Take a look at the discussion on [Refactoring of the inlining mechanism](https://github.com/thymeleaf/thymeleaf/issues/396)
 
@@ -175,12 +169,13 @@ The existing inlining mechanism also matches the new template modes and, indeed,
 Performance improvements
 ------------------------
 
-The main achievement of Thymeleaf's version 3.0 is an improvement in performance, a somewhat common discussion topic with previous versions.
+Even with all the great new features, the main achievement of Thymeleaf 3.0 is a **very significant improvement in performance**, a somewhat common discussion topic with previous versions.
+
 Being Thymeleaf an XML-based template engine up to v2.1 brought the power of implementing many great features, but sometimes at a performance cost. And while Thymeleaf rendering time was negligible for the vast majority of projects, this caveat was noticeable in projects with special characteristics (for example, high-load websites dealing with tables with dozens of thousands of rows).
 
 Thymeleaf 3's engine has been rewritten from scratch with the main focus put on performance. Thymeleaf 3 performs much better than the previous versions so we hope it covers the needs of more and more projects. But Thymeleaf 3's performance is not only about rendering time: it has also been specifically designed to have a low memory footprint and help reduce latency in high-concurrency scenarios.
 
-For a technical discussion in the new Thymeleaf 3 architecture, see [New event-based template processing engine](https://github.com/thymeleaf/thymeleaf/issues/389)
+For a technical discussion on the new Thymeleaf 3 architecture, see [New event-based template processing engine](https://github.com/thymeleaf/thymeleaf/issues/389)
 
 
 
