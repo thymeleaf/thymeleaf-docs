@@ -289,6 +289,9 @@ Thymeleaf 3's engine has been rewritten from scratch with the main focus put on 
 
 For a technical discussion on the new Thymeleaf 3 architecture, see [New event-based template processing engine](https://github.com/thymeleaf/thymeleaf/issues/389)
 
+But performance improvements do not stop at the architectural level: there are also some *performance goodies* in v3.0 like the ability to enable the SpringEL (*Spring Expression Language* or *SpEL*) compiler that, since version 4.2.4 of the Spring Framework, can be used by Thymeleaf in order to give an extra push to template processing performance in Spring-enabled environments. See [Configuring the SpringEL compiler](https://github.com/thymeleaf/thymeleaf-spring/issues/95).
+
+And if you are not using Spring and therefore your expression language is OGNL, we've made some performance improvements there too, even making a couple of contributions to the OGNL codebase that should benefit Thymeleaf's performance in environments such as those based on the new MVC1.0 (JSR371) standard.
 
 
 
