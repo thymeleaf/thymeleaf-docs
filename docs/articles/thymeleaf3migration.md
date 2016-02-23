@@ -14,6 +14,8 @@ Thymeleaf 3.0 BETA versions are stable and do everything 2.1 did, so we encourag
 
 The only downside is that not all Thymeleaf dialects have been migrated to Thymeleaf 3 at this stage, so if you are using some external dialects they may not work with Thymeleaf 3. Please check if the required dialects have a Thymeleaf 3 compatible version.
 
+Quick pointer: if you already read this *migration guide* for Thymeleaf 3.0.0.BETA01 and you are only interested in the new features in BETA02, you can fast-forward to the new sections on *"Fragment Expressions"*, *"The No-Operation token"*, *"Decoupled Template Logic"*, *"Independence from the Servlet API"* and also check some additional comments at the *"Performance improvements"* section.
+
 
 Template changes
 ----------------
