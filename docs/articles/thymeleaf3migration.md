@@ -40,7 +40,7 @@ First, the updated Maven dependencies to get Thymeleaf 3 and the Spring 4 integr
     <dependency>
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf-spring4</artifactId>
-        <version>3.0.0.BETA01</version>
+        <version>3.0.0.BETA02</version>
     </dependency>
 ```
 
