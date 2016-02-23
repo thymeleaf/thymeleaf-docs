@@ -231,6 +231,53 @@ Learn more about this new capability here: [The NO-OP token](https://github.com/
 
 
 
+Decoupled Template Logic
+------------------------
+
+Thymeleaf 3.0 allows the complete (and optional) *decoupling* of template logic from templates themselves in the `HTML` and `XML` template modes, resulting in 100%-Thymeleaf-free, logic-less templates.
+
+Now markup of a `home.html` template file can be as clean as this:
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <table id="usersTable">
+      <tr>
+        <td class="username">Jeremy Grapefruit</td>
+        <td class="usertype">Normal User</td>
+      </tr>
+      <tr>
+        <td class="username">Alice Watermelon</td>
+        <td class="usertype">Administrator</td>
+      </tr>
+    </table>
+  </body>
+</html>
+```
+
+And the only thing Thymeleaf will need to use that HTML as a template is another file, a `home.th.xml`, by its side, looking like this:
+
+```xml
+<?xml version="1.0"?>
+<thlogic>
+  <attr sel="#usersTable" th:remove="all-but-first">
+    <attr sel="/tr[0]" th:each="user : ${users}">
+      <attr sel="td.username" th:text="${user.name}" />
+      <attr sel="td.usertype" th:text="#{|user.type.${user.type}|}" />
+    </attr>
+  </attr>
+</thlogic>
+```
+
+This *decoupled logic* specifies attributes that should be *injected* during parsing into specific parts of the template (selected by the *markup selectors* in their `sel` attributes). The result will be 100% equivalent to a template in which those attributes had been there from the beginning.
+
+Being able to process HTML templates that have no embedded Thymeleaf code can become a huge advantage when using pure-HTML files as design artifacts: now these can be created, modified and/or understood by designers or other people in the team that don't necessarily have Thymeleaf knowledge. But not only that &mdash; it can also allow the processing as templates of markup created by external tools or systems without the need to modify such markup.
+
+For more information, see [Decoupled Template Logic](https://github.com/thymeleaf/thymeleaf/issues/465).
+
+
+
 Performance improvements
 ------------------------
 
