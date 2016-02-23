@@ -212,6 +212,25 @@ But the possibilities don't end here: we can use fragment expressions for much m
 
 
 
+The No-Operation token
+----------------------
+
+Another new feature of *Thymeleaf Standard Expressions* in Thymeleaf 3.0 is the NO-OP (no-operation) token, written with an underscore symbol (`_`) and which basically means *"do nothing"*.
+
+Using *"do-nothing"* as an expression result is more useful than it might look at first sight. For example, it can help us greatly reduce the complexity of our template code by letting us use our *prototyping code* as *default values*.
+
+See this very simple example:
+
+```html
+<span th:text="${user.name} ?: _">no user authenticated</span>
+```
+
+In the code above we don't need to specify what exactly should be output if our `user` has no name: in that case, Thymeleaf will do nothing. The result? output will be exactly what we have written as the body of the tag, i.e. `no user authenticated`, which in this case will double as text that will make our template look nice as a prototype and default value for that `th:text` in case there is no user authenticated. Less code, happier developers.
+
+Learn more about this new capability here: [The NO-OP token](https://github.com/thymeleaf/thymeleaf/issues/452).
+
+
+
 Performance improvements
 ------------------------
 
