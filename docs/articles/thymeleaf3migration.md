@@ -166,6 +166,52 @@ The existing inlining mechanism also matches the new template modes and, indeed,
 
 
 
+Fragment Expressions
+--------------------
+
+Thymeleaf 3.0 introduces a new type of expression as a part of the general *Thymeleaf Standard Expression* system: *Fragment Expressions*.
+
+They look like this: `~{commons::footer}` and yes, they are extremely similar to the syntax that could be used inside `th:replace` and `th:include` (now `th:insert`) since long ago... because it is exactly *that* syntax, but generalized so that it can now be used in other scopes.
+
+What is the advantage of that? well, first and most useful, we can now pass markup fragments as parameters to other fragments. See this `th:replace` below:
+
+```html
+...
+<head th:replace="base :: common_header(~{::title},~{::link})">
+
+  <title>Awesome - Main</title>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
+
+</head>
+...
+```
+
+There we are passing our `common_header` fragment two other markup fragments containing our `<title>` and `<link>` tags, which we can then easily use in our `common_header`:
+
+```html
+<head th:fragment="common_header(title,links)">
+
+  <title th:replace="${title}">The awesome application</title>
+
+  <!-- Common styles and scripts -->
+  <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/awesomeapp.css}">
+  <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+  <script type="text/javascript" th:src="@{/sh/scripts/codebase.js}"></script>
+
+  <!--/* Per-page placeholder for additional links */-->
+  <th:block th:replace="${links}" />
+
+</head>
+```
+
+See how, thanks to this, many **layout** (or **page composition**) techniques have become much easier in Thymeleaf 3.0.
+
+But the possibilities don't end here: we can use fragment expressions for much more, which you can learn about here: [Fragment Expressions](https://github.com/thymeleaf/thymeleaf/issues/451).
+
+
+
 Performance improvements
 ------------------------
 
