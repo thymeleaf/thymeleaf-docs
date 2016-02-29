@@ -187,9 +187,8 @@ th, td {
 
 .toolbar-container {
 	background-color: white;
-	padding: 0;
 	position: fixed;
-	width: 100%;
+	width: calc(100% - 0.25em);
 	z-index: 5;
 }
 
@@ -239,6 +238,12 @@ th, td {
 	padding: 1em;
 }
 
+@media (max-width: 43.75rem) {
+	.toolbar-container {
+		padding: 0;
+	}
+}
+
 @media (min-width: 43.75rem) {
 	.toolbar-container {
 		border-bottom: 1px solid #005f0f;
@@ -257,6 +262,12 @@ th, td {
 
 	.toolbar-links {
 		display: flex;
+	}
+}
+
+@media (min-width: 62.5rem) {
+	.toolbar-container {
+		width: calc(100% - 0.5em);
 	}
 }
 
