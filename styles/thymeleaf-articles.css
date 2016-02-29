@@ -337,6 +337,27 @@ th, td {
 	}
 }
 
+/* Article styles */
+/* -------------------------------------------------------------------------- */
+
+.article {
+	counter-reset: heading;
+}
+
+h2 {
+	counter-reset: subheading;
+}
+
+h2::before {
+	counter-increment: heading;
+	content: counter(heading) " ";
+}
+
+h3::before {
+	counter-increment: subheading;
+	content: counter(heading) "." counter(subheading) " "
+}
+
 /* Footer component */
 /* -------------------------------------------------------------------------- */
 
