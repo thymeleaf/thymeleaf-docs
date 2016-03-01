@@ -275,7 +275,7 @@ th, td {
 /* -------------------------------------------------------------------------- */
 
 .hero-container {
-	background-color: #aea99f;
+	background-color: #ececec;
 	border-bottom: 1px solid #005f0f;
 	margin-bottom: 2em;
 	padding-top: 3em;
@@ -286,7 +286,7 @@ th, td {
 }
 
 .hero-header-text {
-	color: white;
+	color: #333333;
 	margin-bottom: 2em;
 	text-align: center;
 }
@@ -303,10 +303,7 @@ th, td {
 }
 
 .hero-header-logo {
-	background-color: white;
-	border-radius: 0.85em;
-	padding: 0.3em;
-	width: 10rem;
+	width: 9rem;
 }
 
 @media (min-width: 27.5rem) {
@@ -373,7 +370,7 @@ h3::before {
 /* -------------------------------------------------------------------------- */
 
 .footer-container {
-	background-color: #aea99f;
+	background-color: #ececec;
 	border-top: 1px solid #005f0f;
 	margin-top: 4em;
 	padding: 1em 1em 2em;
