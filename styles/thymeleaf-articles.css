@@ -361,12 +361,12 @@ h2 {
 
 h2::before {
 	counter-increment: heading;
-	content: counter(heading) " ";
+	content: counter(heading) ". ";
 }
 
 h3::before {
 	counter-increment: subheading;
-	content: counter(heading) "." counter(subheading) " "
+	content: counter(heading) "." counter(subheading) ". "
 }
 
 /* Footer component */
