@@ -303,7 +303,7 @@ th, td {
 }
 
 .hero-header-logo {
-	width: 9rem;
+	width: 7rem;
 }
 
 @media (min-width: 27.5rem) {
@@ -330,18 +330,6 @@ th, td {
 	}
 	.hero-header-image {
 		margin-right: 1em;
-	}
-}
-
-@media (min-width: 45rem) {
-	.hero-header-title {
-		font-size: 6em;
-	}
-}
-
-@media (min-width: 50rem) {
-	.hero-header-title {
-		font-size: 7em;
 	}
 }
 
