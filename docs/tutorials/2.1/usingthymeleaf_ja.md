@@ -1828,6 +1828,19 @@ for some of the other pages in the site?
 
 
 <!--
+### Server root relative URLs
+-->
+### サーバールート相対URL
+
+<!--
+An additional syntax can be used to create server-root-relative (instead of context-root-relative)
+URLs in order to link to different contexts in the same server. These URLs will be specified like
+`@{~/path/to/something}`
+-->
+追加のシンタックスを使用して、(コンテキストルート相対URLの代わりに)サーバールート相対URLを作成することができます。 `@{~/path/to/something}` のように指定することで、同じサーバーの異なるコンテキストへのリンクを作成することができます。
+
+
+<!--
 4.5 Literals
 -->
 4.5 リテラル
@@ -5711,6 +5724,15 @@ ${#dates.listFormat(datesList)}
 ${#dates.setFormat(datesSet)}
 
 /*
+ * Format date with the ISO8601 format
+ * Also works with arrays, lists or sets
+ */
+${#dates.formatISO(date)}
+${#dates.arrayFormatISO(datesArray)}
+${#dates.listFormatISO(datesList)}
+${#dates.setFormatISO(datesSet)}
+
+/*
  * Format date with the specified pattern
  * Also works with arrays, lists or sets
  */
@@ -5770,6 +5792,15 @@ ${#dates.format(date)}
 ${#dates.arrayFormat(datesArray)}
 ${#dates.listFormat(datesList)}
 ${#dates.setFormat(datesSet)}
+
+/*
+ * ISO8601フォーマットで日付をフォーマットします
+ * 配列、リスト、セットにも対応しています
+ */
+${#dates.formatISO(date)}
+${#dates.arrayFormatISO(datesArray)}
+${#dates.listFormatISO(datesList)}
+${#dates.setFormatISO(datesSet)}
 
 /*
  * 指定されたパターンで日付をフォーマットします
@@ -5845,6 +5876,15 @@ ${#calendars.listFormat(calList)}
 ${#calendars.setFormat(calSet)}
 
 /*
+ * Format calendar with the ISO8601 format
+ * Also works with arrays, lists or sets
+ */
+${#calendars.formatISO(cal)}
+${#calendars.arrayFormatISO(calArray)}
+${#calendars.listFormatISO(calList)}
+${#calendars.setFormatISO(calSet)}
+
+/*
  * Format calendar with the specified pattern
  * Also works with arrays, lists or sets
  */
@@ -5904,6 +5944,15 @@ ${#calendars.format(cal)}
 ${#calendars.arrayFormat(calArray)}
 ${#calendars.listFormat(calList)}
 ${#calendars.setFormat(calSet)}
+
+/*
+ * ISO8601フォーマットでカレンダーをフォーマットします
+ * 配列、リスト、セットにも対応しています
+ */
+${#calendars.formatISO(cal)}
+${#calendars.arrayFormatISO(calArray)}
+${#calendars.listFormatISO(calList)}
+${#calendars.setFormatISO(calSet)}
 
 /*
  * 指定されたパターンでカレンダーをフォーマットします
@@ -5986,7 +6035,7 @@ ${#numbers.setFormatInteger(numSet,3)}
 
 /* 
  * Set minimum integer digits and thousands separator: 
- * 'POINT', 'COMMA', 'NONE' or 'DEFAULT' (by locale).
+ * 'POINT', 'COMMA', 'WHITESPACE', 'NONE' or 'DEFAULT' (by locale).
  * Also works with arrays, lists or sets
  */
 ${#numbers.formatInteger(num,3,'POINT')}
@@ -6070,7 +6119,7 @@ ${#numbers.setFormatInteger(numSet,3)}
 
 /* 
  * 整数の最小桁数と千の位の区切り文字を設定します:
- * 'POINT', 'COMMA', 'NONE' または 'DEFAULT' (ロケールに依存)。
+ * 'POINT', 'COMMA', 'WHITESPACE', 'NONE' または 'DEFAULT' (ロケールに依存)。
  * 配列、リスト、セットにも対応しています
  */
 ${#numbers.formatInteger(num,3,'POINT')}
@@ -6260,10 +6309,10 @@ ${#strings.unescapeJavaScript(str)}                 // also array*, list* and se
 /*
  * Null-safe comparison and concatenation
  */
-${#strings.equals(str)}
-${#strings.equalsIgnoreCase(str)}
-${#strings.concat(str)}
-${#strings.concatReplaceNulls(str)}
+${#strings.equals(first, second)}
+${#strings.equalsIgnoreCase(first, second)}
+${#strings.concat(values...)}
+${#strings.concatReplaceNulls(nullValue, values...)}
 
 /*
  * Random
@@ -6392,10 +6441,10 @@ ${#strings.unescapeJavaScript(str)}                 // also array*, list* and se
 /*
  * Null安全な比較と連結
  */
-${#strings.equals(str)}
-${#strings.equalsIgnoreCase(str)}
-${#strings.concat(str)}
-${#strings.concatReplaceNulls(str)}
+${#strings.equals(first, second)}
+${#strings.equalsIgnoreCase(first, second)}
+${#strings.concat(values...)}
+${#strings.concatReplaceNulls(nullValue, values...)}
 
 /*
  * Random
