@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* 
- * Copyright 2015, The Thymeleaf Project (http://www.thymeleaf.org/)
+ * Copyright 2011-2016, The Thymeleaf Project (http://www.thymeleaf.org/)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,6 +101,7 @@ h1, h2, h3, h4, h5, h6 {
 h2 {
 	background-color: #005f0f;
 	color: white;
+	margin-top: 1.5em;
 	margin-left: -1em;
 	padding-left: 1em;
 	padding-right: 0.5em;
@@ -179,7 +180,7 @@ th, td {
 }
 
 .subsection {
-	margin: 1em 0 2em;
+	margin: 1em 0 1.5em;
 }
 
 /* Toolbar component */
@@ -282,20 +283,19 @@ th, td {
 }
 
 .hero-header {
-	padding: 2em;
+	padding: 1.5em 0em 1em;
 }
 
 .hero-header-text {
 	color: #333333;
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 	text-align: center;
 }
 
 .hero-header-title {
-	font-size: 3em;
+	font-size: 2em;
 	margin: 0;
 	padding: 0;
-	text-transform: lowercase;
 }
 
 .hero-header-image {
@@ -303,12 +303,12 @@ th, td {
 }
 
 .hero-header-logo {
-	width: 7rem;
+	width: 2.5rem;
 }
 
 @media (min-width: 27.5rem) {
 	.hero-header-title {
-		font-size: 4em;
+		font-size: 2em;
 	}
 }
 
@@ -325,7 +325,7 @@ th, td {
 		margin-bottom: 0;
 	}
 	.hero-header-title {
-		font-size: 5em;
+		font-size: 2em;
 		margin-right: 0.5em;
 	}
 	.hero-header-image {
@@ -382,6 +382,11 @@ h3::before {
 	margin: 1em 0;
 }
 
+.license {
+	font-size: 0.75em;
+	text-align: right;
+}
+
 .copyright {
 	font-size: 0.75em;
 	margin-top: 3em;
@@ -389,6 +394,9 @@ h3::before {
 }
 
 @media (min-width: 30rem) {
+	.license {
+		margin-top: 0;
+	}
 	.copyright {
 		margin-top: 0;
 	}
