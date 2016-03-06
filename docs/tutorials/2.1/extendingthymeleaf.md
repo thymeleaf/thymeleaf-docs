@@ -796,7 +796,7 @@ public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElement
 
     private final Random rand = new Random(System.currentTimeMillis());
 
-    public HeadlinesTagProcessor() {
+    public HeadlinesElementProcessor() {
         super("headlines");
     }
 
