@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-/* 
- * This is mostly a copy of the Thymeleaf website stylesheet as docs should be
- * standalone to generate correct PDFs and other file formats.
- */
 
 /* ELEMENT SELECTORS */
 /* ========================================================================== */
@@ -333,33 +329,6 @@ th, td {
 	}
 }
 
-/* Article styles */
-/* -------------------------------------------------------------------------- */
-
-.article {
-	counter-reset: heading;
-}
-
-.article-author {
-	margin-bottom: 2em;
-	font-style: italic;
-	color: #aaaaaa;
-}
-
-h2 {
-	counter-reset: subheading;
-}
-
-h2::before {
-	counter-increment: heading;
-	content: counter(heading) ". ";
-}
-
-h3::before {
-	counter-increment: subheading;
-	content: counter(heading) "." counter(subheading) ". "
-}
-
 /* Footer component */
 /* -------------------------------------------------------------------------- */
 
@@ -409,6 +378,153 @@ h3::before {
 }
 
 
+/* PAGE-SPECIFIC COMPONENTS */
+/* ========================================================================== */
+
+/* News items */
+/* -------------------------------------------------------------------------- */
+
+.news {
+	font-size: 0.85em;
+	font-style: italic;
+	margin-bottom: 2em;
+	max-width: 45rem;
+	text-align: center;
+}
+
+/* Table scroller */
+/* -------------------------------------------------------------------------- */
+/* TODO: I'm not really happy with this solution for squeezing a table down to
+         a mobile device.  I should change how the information is presented
+         instead to be better responsive. */
+
+.table-scroller {
+	overflow-x: auto;
+}
+
+/* Our tools component */
+/* -------------------------------------------------------------------------- */
+
+.our-tools {
+	list-style: none;
+	margin: 0;
+}
+
+.our-tool {
+	margin-bottom: 2em;
+}
+
+.our-tool-logo {
+	padding: 1em;
+}
+
+@media (min-width: 31.25rem) {
+	.our-tool {
+		display: flex;
+	}
+	.our-tool-logo {
+		width: 40%;
+	}
+	.our-tool-blurb {
+		width: 60%;
+	}
+}
+
+@media (min-width: 56.25rem) {
+	.our-tool-logo {
+		width: 30%;
+	}
+	.our-tool-blurb {
+		width: 70%;
+	}
+}
+
+/* Who is using Thymeleaf component */
+/* -------------------------------------------------------------------------- */
+
+.thymeleaf-users,
+.thymeleaf-users-preview {
+	list-style: none;
+	margin: 1em 0;
+}
+
+.thymeleaf-users-preview {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.thymeleaf-user-preview {
+	width: 12.5rem;
+}
+
+.thymeleaf-user-preview img {
+	-webkit-filter: grayscale(100%);
+	        filter: grayscale(100%);
+}
+.thymeleaf-user-preview img:hover {
+	-webkit-filter: none;
+	        filter: none;
+}
+
+.thymeleaf-user-logo {
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	padding: 1em;
+}
+
+.thymeleaf-user-logo a {
+	border-bottom: none;
+}
+
+.thymeleaf-user-logo img {
+	display: block;
+	margin: 0 auto;
+	max-width: 10.5rem;
+}
+
+.thymeleaf-user-blurb {
+	font-style: italic;
+}
+.thymeleaf-user-blurb p:first-child:before {
+	content: "“"
+}
+.thymeleaf-user-blurb p:last-child:after {
+	content: "”";
+}
+
+@media (min-width: 37.5rem) {
+	.thymeleaf-users .thymeleaf-user {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		margin-bottom: 2em;
+	}
+	.thymeleaf-users .thymeleaf-user-logo {
+		order: 1;
+		width: 40%;
+	}
+	.thymeleaf-users .thymeleaf-user-url {
+		order: 3;
+	}
+	.thymeleaf-users .thymeleaf-user-blurb {
+		order: 2;
+		width: 60%;
+	}
+}
+
+@media (min-width: 43.75rem) {
+	.thymeleaf-users .thymeleaf-user-logo {
+		width: 35%;
+	}
+	.thymeleaf-users .thymeleaf-user-blurb {
+		width: 65%;
+	}
+}
+
+
 /* ID SELECTORS */
 /* ========================================================================== */
 
@@ -419,6 +535,31 @@ h3::before {
 @media (min-width: 43.75rem) {
 	#site-nav-links {
 		border-top: none;
+	}
+}
+
+#thymeleaf-home .hero-header-title {
+	font-size: 3em;
+}
+#thymeleaf-home .hero-header-logo {
+	width: 4rem;
+}
+
+@media (min-width: 45rem) {
+	#thymeleaf-home .hero-header-title {
+		font-size: 6em;
+	}
+	#thymeleaf-home .hero-header-logo {
+		width: 8rem;
+	}
+}
+
+@media (min-width: 50rem) {
+	#thymeleaf-home .hero-header-title {
+		font-size: 7em;
+	}
+	#thymeleaf-home .hero-header-logo {
+		width: 9rem;
 	}
 }
 

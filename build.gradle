@@ -56,8 +56,8 @@ def imagesDir    = file("${projectDir}/images")
 def scriptsDir   = file("${projectDir}/scripts")
 def stylesDir    = file("${projectDir}/styles")
 def templatesDir = file("${projectDir}/templates")
-def srcDir    = file("${buildDir}/tmp")
-def outputDir = file("${buildDir}/site")
+def srcDir       = file("${buildDir}/tmp")
+def outputDir    = file("${buildDir}/site")
 
 def docNames = [] as Set
 def docTypes = [:]
@@ -74,12 +74,12 @@ buildscript {
 
 /**
  * Copy all docs and resources to the source dir, from where they will be fed to
- * pandoc. Also, during this copy operation markdown files will be filtered so that
- * gradle properties are resolved in their metadata sections.
- *
- * Note that, for doc files, the name of the folder they are immediately in will be
- * considered their "document type", and this will have an influence on the type of
- * conversions that will be applied to them.
+ * pandoc. Also, during this copy operation markdown files will be filtered so
+ * that Gradle properties are resolved in their metadata sections.
+ * 
+ * Note that, for doc files, the name of the folder they are immediately in will
+ * be considered their "document type", and this will have an influence on the
+ * type of conversions that will be applied to them.
  */
 task copyResources << {
 
