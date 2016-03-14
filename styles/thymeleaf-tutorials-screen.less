@@ -1,12 +1,14 @@
-/*
+@charset "UTF-8";
+
+/* 
  * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,148 +16,112 @@
  * limitations under the License.
  */
 
-@charset "UTF-8";
-
 /**
- * Stylesheet for all Thymeleaf documentation in screen (HTML) form.
- * 
- * @author Emanuel Rabina
+ * Tutorial styles for the screen (HTML) form
  */
 
+@thymeleaf-green: #005f0f;
+@thymeleaf-grey: #ececec;
+
+
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
+
 body {
-	background-color: #f0f0f0;
-}
-
-#documentation-wrapper {
-	margin: 0 auto;
-	padding: 1em;
-}
-
-.tutorial #documentation-wrapper {
-	max-width: 90.625em;
-}
-
-
-/* Title block */
-/* -------------------------------------------------------------------------- */
-
-.tutorial {
-	#title-block-wrapper {
-		@media (min-width: 43.75em) {
-			margin-left: 25%;
-			padding-left: 1.5em;
-		}
+	@media (min-width: 43.75em) {
+		border-left: none;
 	}
 }
 
-#title-block {
-	max-width: 51.4375em;
+section {
+	&.level1 {
+		background-color: white;
+		padding-left: 1.5em;
+		padding-right: 1.5em;
+	}
 }
 
-#doc-title {
-	margin-top: 2em;
-}
 
-#doc-info {
-	font-size: 0.8em;
-}
+/* COMPONENTS */
+/* ========================================================================== */
 
+.tutorial-wrapper {
+	display: flex;
+	height: 100vh;
+}
 
 /* Table of contents */
 /* -------------------------------------------------------------------------- */
 
-#menu {
-	background-color: white;
-	border-radius: 5px;
-	box-shadow: 0 0 0.5em black;
-	height: 50px;
-	position: fixed;
-	right: -5px;
-	top: 0.5em;
-	width: 50px;
-	z-index: 10;
-
-	@media (min-width: 43.75em) {
-		display: none;
-	}
+.toc-wrapper {
+	height: 100vh;
+	overflow-y: auto;
+	padding: 1em;
+	width: 25%;
 }
 
-#menu-link {
-	display: block;
-	height: 100%;
-	width: 100%;
-}
+#toc {
+	font-size: 0.9em;
 
-#toc-wrapper {
-	bottom: 0.5em;
-	box-shadow: 0.25em 0.25em 2em fadeout(black, 25%);
-	display: none;
-	left: 0.5em;
-	position: fixed;
-	top: 0.5em;
-	width: 80%;
-	z-index: 5;
-
-	&:target {
+	a {
+		border-bottom: none;
+		color: #333333;
 		display: block;
-	}
 
-	@media (min-width: 43.75em) {
-		bottom: 1em;
-		box-shadow: none;
-		display: block !important;
-		left: 1em;
-		max-width: 20.625em;
-		top: 1em;
-		width: 25%;
-	}
-}
-
-
-/* Documentation content */
-/* -------------------------------------------------------------------------- */
-
-.article #content {
-	margin: 0 auto;
-	max-width: 51.4375em;
-}
-
-.tutorial {
-	#content {
-		@media (min-width: 43.75em) {
-			margin-left: 25%;
-			padding-left: 1.5em;
-		}
-		@media (min-width: 83.75em) {
-			margin-left: 20.125em;
+		&:hover,
+		&:active {
+			border-bottom: none;
+			text-decoration: underline;
 		}
 	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+	}
+
+	.level1 {
+		padding: 0;
+
+		> li {
+			margin-bottom: 1em;
+
+			> a {
+				border-bottom: 1px solid @thymeleaf-green;
+				margin-bottom: 0.25em;
+				padding-bottom: 0.25em;
+			}
+		}
+	}
+
+	.level2 {
+		font-size: 0.9em;
+		padding-left: 1.5em;
+		text-indent: -1.5em;
+	}
+
+	.level3 {
+		padding-left: 0;
+		text-indent: 0;
+	}
+
+	.level4 {
+		padding-left: 1.5em;
+		text-indent: 0;
+	}
 }
 
-blockquote {
-	font-size: 0.8em;
-}
-
-figcaption {
-	font-size: 0.8em;
-}
-
-
-/* Code sections */
+/* Content */
 /* -------------------------------------------------------------------------- */
 
-p > code,
-li > code,
-table > code {
-	font-size: 0.8em;
-}
+.content-wrapper {
+	background-color: @thymeleaf-grey;
+	border-left: 0.25em solid @thymeleaf-green;
+	height: 100vh;
+	overflow-y: auto;
+	width: 75%;
 
-blockquote p code {
-	font-size: 1em;
-}
-
-pre {
-	font-size: 0.8em;
-	overflow-x: auto;
-	white-space: pre;
+	@media (min-width: 62.5rem) {
+		border-left-width: 0.5em;
+	}
 }

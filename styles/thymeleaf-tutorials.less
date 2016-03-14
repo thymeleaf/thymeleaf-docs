@@ -17,325 +17,93 @@
  */
 
 /**
- * Stylesheet for all Thymeleaf documentation in both screen (HTML) and print
- * (PDF) forms.
- * 
- * @author Emanuel Rabina
+ * Tutorial styles for both screen (HTML) and print (PDF) forms
  */
 
-@thymeleaf-brown: #352726;
-@thymeleaf-green: #99cc33;
-@thymeleaf-light-green: #f0faaa;
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
 
-body {
-	color: black;
-	font: 1em/1.5em 'Open Sans', sans-serif;
-	text-align: left;
+h2 {
+	margin-top: 0.5em;	/* Resets what was done in the main CSS for some reason */
+	margin-left: -1.5em;
+	padding-left: 1.5em;
 }
 
-a {
-	color: blue;
-	text-decoration: none;
-	word-wrap: break-word;
-
-	&:hover {
-		text-decoration: underline;
+section {
+	&:last-child {
+		margin-bottom: 0;
 	}
-}
 
-h1, h2, h3, h4, h5, h6 {
-	line-height: 1.25em;
-
-	a {
-		color: black;
-	}
-}
-
-img {
-	max-width: 100%;
-}
-
-table {
-	width: 100%;
-
-	thead {
-		border-bottom: 1px solid lightgrey;
+	&.level1 {
+		padding-top: 0.5em;
+		padding-bottom: 2em;
 	}
 }
 
 
-/* Title block */
-/* -------------------------------------------------------------------------- */
+/* COMPONENTS */
+/* ========================================================================== */
 
-#title-block {
-	margin: 0 auto;
+.title-container {
+	margin: 1em 0 5em;
 }
 
-.article #title-block {
-	margin-bottom: 5em;
+.tutorial {
+	.hero-header-title {
+		font-size: 3em;
+
+		@media (min-width: 45rem) {
+			font-size: 6em;
+		}
+		@media (min-width: 50rem) {
+			font-size: 7em;
+		}
+	}
+
+	.hero-header-logo {
+		width: 4rem;
+
+		@media (min-width: 45rem) {
+			width: 8rem;
+		}
+		@media (min-width: 50rem) {
+			width: 9em;
+		}
+	}
 }
 
-.tutorial #title-block {
-	margin-bottom: 10em;
-}
-
-#doc-banner {
-	display: block;
-	margin: 0 auto;
-	width: 100%;
-}
-
-#doc-title {
+.tutorial-title {
 	font-size: 3em;
-	margin-bottom: 4em;
+	margin: 1em 0 2.5em;
 	text-align: center;
 }
 
-.article #doc-title {
-	display: none;
+.tutorial-metadata {
+	font-size: 0.9em;
+	margin-left: 8em;
 }
 
-#doc-info {
-	@media (min-width: 22.5em) {
-		margin-left: 2em;
-	}
-	@media (min-width: 28.125em) {
-		margin-left: 4em;
-	}
-	@media (min-width: 43.75em) {
-		margin-left: 6em;
-	}
-
-	.info-header {
-		font-weight: bold;
-	}
-}
-
-#project-version {
-	margin-bottom: 2em;
-}
-
-
-/* Table of contents */
-/* -------------------------------------------------------------------------- */
-
-#toc-wrapper {
-	background-color: white;
-	border-radius: 0.5em;
-	border-right: 0.25em solid lighten(@thymeleaf-green, 10%);
-	box-sizing: border-box;
-	overflow: hidden;
-	padding: 0.75em 1em;
-}
-
-#toc {
-	font: 1em/1.5em 'Source Sans Pro', sans-serif;
-	height: 100%;
-	overflow-y: auto;
-
-	a {
-		color: black;
-		display: block;
-	}
-	ul {
-		list-style-type: none;
-	}
-
-	.level1 {
-		margin: 0;
-		padding: 0;
-
-		> li {
-			margin-bottom: 1em;
-
-			> a {
-				border-bottom: 1px solid lightgrey;
-				margin-bottom: 0.25em;
-				padding-bottom: 0.25em;
-			}
-		}
-	}
-	.level2 {
-		font-size: 0.8em;
-		padding-left: 1.5em;
-		text-indent: -1.5em;
-	}
-	.level3 {
-		padding-left: 0;
-		text-indent: 0;
-	}
-	.level4 {
-		padding-left: 1.5em;
-		text-indent: 0;
-	}
-}
-
-
-/* Documentation content */
-/* -------------------------------------------------------------------------- */
-
-#content {
-	h1 {
-		border-bottom: 1px solid lightgrey;
-		margin: 0.25em 0 0.5em;
-		padding-bottom: 0.75em;
-	}
-
-	section > *:last-child {
-		margin-bottom: 0 !important;
-	}
-
-	> *:last-child {
-		margin-bottom: 0 !important;
-	}
-
-	.level1 {
-		background-color: white;
-		border: 1px solid lightgrey;
-		border-radius: 0.5em;
-		margin-bottom: 4em;
-		padding: 1em;
-	}
-	.level2 {
-		margin: 3em 0;
-	}
-	h1 + .level2 {
-		margin-top: 2em;
-	}
-	.level3 {
-		margin: 2em 0;
-	}
-}
-
-blockquote {
-	background-color: #f0f0f0;
-	border: 1px solid lightgrey;
-	border-radius: 0.5em;
-	margin: 0;
-	padding: 0 1em;
-}
-
-figure {
-	img {
-		display: block;
-		margin: 0 auto;
-	}
-}
-
-figcaption {
-	font-style: italic;
-	text-align: center;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	code {
-		word-wrap: break-word;
-	}
-}
-
-#setting-value-to-specific-attributes,
-#fixed-value-boolean-attributes {
-	> table {
-		td {
-			width: 33.333%;
-		}
-	}
-}
-
-#attribute-precedence {
-	> table {
-		tr:nth-last-child(n+2) {
-			border-bottom: 1px solid lightgrey;
-		}
-		td:first-child {
-			padding-right: 1.5em;
-			text-align: right;
-		}
-	}
-}
-
-.footnotes, .footnotes a {
-	font-family: 'Open Sans', sans-serif;
-	font-size: 0.8em;
-}
-
-.table-wrapper {
-	overflow-x: scroll;
-}
-
-
-/* Code sections */
-/* -------------------------------------------------------------------------- */
-
-p > code,
-li > code {
-	padding: 0.25em;
-	word-wrap: break-word;
-}
-
-pre, code {
-	font-family: 'Bitstream Vera Sans Mono', 'Courier New', Courier , monospace;
-}
-
-code {
-	color: #707070;
+.tutorial-metadata-label {
 	font-weight: bold;
 }
 
-pre code {
-	color: #b9bdb6;
-	font-weight: normal;
-}
+#content {
+	h1 {
+		margin-top: 0.25em;
 
-table code {
-	font-weight: normal;
-}
+		+ .level2 {
+			margin-top: 0;
+		}
+	}
 
-pre {
-	background-color: #352726;
-	border-radius: 0.5em;
-	line-height: 1.25em;
-	padding: 1em !important;
-}
-
-.language-java,
-.language-javascript {
-	.com {
-		color: #b58900;
-	}
-	.kwd {
-		color: #8bd1ff;
-		font-weight: bold;
-	}
-	.typ {
-		color: #b9bdb6;
-	}
-	.lit {
-		color: #8bd1ff;
-	}
-	.str {
-		color: #99cc33;
-	}
-	.pun, .opn, .clo, .pln {
-		color: #b9bdb6;
+	.level2 {
+		margin-top: 2em;
 	}
 }
 
-.language-html,
-.language-xml {
-	.com {
-		color: #b58900;
-	}
-	.dec, .tag {
-		color: #8bd1ff;
-	}
-	.atn {
-		color: #e0e8ff;
-	}
-	.atv {
-		color: #99cc33;
-	}
-	.pun, .opn, .clo, .pln {
-		color: #b9bdb6;
-	}
+/* ID SELECTORS */
+/* ========================================================================== */
+
+#project-version {
+	margin-bottom: 1.5em;
 }
