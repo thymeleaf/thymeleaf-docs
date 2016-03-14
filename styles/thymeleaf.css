@@ -584,8 +584,6 @@ code {
 
 pre {
 	background-color: #333333;
-	border-top: 1px solid #005f0f;
-	border-bottom: 1px solid #005f0f;
 	line-height: 1.25em;
 	overflow: auto;
 	padding: 1em;
