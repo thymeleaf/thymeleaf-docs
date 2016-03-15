@@ -41,51 +41,54 @@
 
 <body class="tutorial">
 
-	<div class="tutorial-wrapper">
-
-		<div class="toc-wrapper">
-			<nav id="toc">
-				$toc$
-			</nav>
+	<div class="toc-wrapper toolbar-container">
+		<div class="toolbar-menu">
+			<div id="toolbar-location" class="toolbar-menu-location"></div>
+			<button id="site-menu-button" type="button" class="toolbar-menu-button">Doc Contents</button>
 		</div>
+		<nav id="toc">
+			$toc$
+		</nav>
+	</div>
 
-		<div class="content-wrapper">
+	<div class="content-wrapper">
 
-			<div class="title-container">
-				<header class="hero-header fluid-block">
-					<div class="hero-header-text">
-						<h1 class="hero-header-title">Thymeleaf</h1>
+		<div class="title-container">
+			<header class="hero-header fluid-block">
+				<div class="hero-header-text">
+					<h1 class="hero-header-title">Thymeleaf</h1>
+				</div>
+				<div class="hero-header-image">
+					<img src="../../images/thymeleaf.png" alt="Thymeleaf logo" class="hero-header-logo"/>
+				</div>
+			</header>
+
+			<div class="tutorial-info fluid-block">
+				<h1 id="tutorial-title" class="tutorial-title">$title$</h1>
+				$if(translator)$
+					<div id="tutorial-translator" class="tutorial-metadata">
+						<span class="tutorial-metadata-label">$lang$ translation contributed by:</span> $translator$
 					</div>
-					<div class="hero-header-image">
-						<img src="../../images/thymeleaf.png" alt="Thymeleaf logo" class="hero-header-logo"/>
-					</div>
-				</header>
-
-				<div class="tutorial-info fluid-block">
-					<h1 id="tutorial-title" class="tutorial-title">$title$</h1>
-					$if(translator)$
-						<div id="tutorial-translator" class="tutorial-metadata">
-							<span class="tutorial-metadata-label">$lang$ translation contributed by:</span> $translator$
-						</div>
-					$endif$
-					<div id="tutorial-version" class="tutorial-metadata">
+				$endif$
+				<div class="tutorial-metadata">
+					<div id="tutorial-version">
 						<span class="tutorial-metadata-label">Document version:</span> $version$
 					</div>
-					<div id="project-version" class="tutorial-metadata">
+					<div id="project-version">
 						<span class="tutorial-metadata-label">Project version:</span> $thymeleafVersion$
 					</div>
-					<div id="project-website" class="tutorial-metadata">
+					<div id="project-website">
 						<span class="tutorial-metadata-label">Project web site:</span>
 						<a href="http://www.thymeleaf.org">http://www.thymeleaf.org</a>
 					</div>
 				</div>
 			</div>
-
-			<div id="content" class="fluid-block">
-				$body$
-			</div>
-
 		</div>
+
+		<div id="content" class="fluid-block">
+			$body$
+		</div>
+
 	</div>
 
 </body>

@@ -35,8 +35,11 @@ section {
 	}
 
 	&.level1 {
-		padding-top: 0.5em;
-		padding-bottom: 2em;
+		padding: 0.5em 1em 1em 0.75em;
+
+		@media (min-width: 75rem) {
+			padding: 0.5em 1em 1em;
+		}
 	}
 }
 
@@ -44,43 +47,58 @@ section {
 /* COMPONENTS */
 /* ========================================================================== */
 
+.toolbar-container {
+	@media (min-width: 43.75rem) {
+		border-bottom: none;
+	}
+}
+
 .title-container {
-	margin: 1em 0 5em;
+	margin-bottom: 3em;
+
+	@media (min-width: 43.75rem) {
+		margin-bottom: 5em;
+	}
 }
 
 .tutorial {
 	.hero-header-title {
 		font-size: 3em;
 
-		@media (min-width: 45rem) {
-			font-size: 6em;
+		@media (min-width: 43.75rem) {
+			font-size: 4em;
 		}
 		@media (min-width: 50rem) {
-			font-size: 7em;
+			font-size: 5em;
+		}
+		@media (min-width: 56.25rem) {
+			font-size: 6em;
 		}
 	}
 
 	.hero-header-logo {
 		width: 4rem;
 
-		@media (min-width: 45rem) {
-			width: 8rem;
+		@media (min-width: 43.75rem) {
+			width: 6rem;
 		}
 		@media (min-width: 50rem) {
-			width: 9em;
+			width: 7rem;
+		}
+		@media (min-width: 56.25rem) {
+			width: 8em;
 		}
 	}
 }
 
 .tutorial-title {
-	font-size: 3em;
-	margin: 1em 0 2.5em;
 	text-align: center;
 }
 
 .tutorial-metadata {
-	font-size: 0.9em;
-	margin-left: 8em;
+	font-size: 0.8em;
+	margin: 0 auto;
+	max-width: 19.375rem;
 }
 
 .tutorial-metadata-label {
@@ -103,7 +121,3 @@ section {
 
 /* ID SELECTORS */
 /* ========================================================================== */
-
-#project-version {
-	margin-bottom: 1.5em;
-}

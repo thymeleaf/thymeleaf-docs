@@ -56,4 +56,22 @@
 	// Run the Prism syntax highlighter
 	Prism.highlightAll();
 
+	// Have the site menu button reveal the site menu on click
+	var toc = $('#toc');
+	$('#site-menu-button').addEventListener('click', function(event) {
+		toc.classList.toggle('show-toc');
+	});
+
+	$$('#toc a').forEach(function(link) {
+		link.addEventListener('click', function(event) {
+			if (toc.classList.contains('show-toc')) {
+				window.addEventListener('hashchange', function offset() {
+					window.scrollBy(0, -50);
+					toc.classList.remove('show-toc');
+					window.removeEventListener('hashchange', offset);
+				});
+			}
+		});
+	});
+
 })();

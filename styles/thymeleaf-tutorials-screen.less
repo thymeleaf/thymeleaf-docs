@@ -36,8 +36,6 @@ body {
 section {
 	&.level1 {
 		background-color: white;
-		padding-left: 1.5em;
-		padding-right: 1.5em;
 	}
 }
 
@@ -45,33 +43,70 @@ section {
 /* COMPONENTS */
 /* ========================================================================== */
 
-.tutorial-wrapper {
-	display: flex;
-	height: 100vh;
+.tutorial {
+	@media (min-width: 43.75rem) {
+		display: flex;
+		height: 100vh;
+	}
+}
+
+.tutorial-title {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+
+	@media (min-width: 43.75rem) {
+		font-size: 2.5em;
+		margin-top: 1em;
+		margin-bottom: 2em;
+	}
+	@media (min-width: 50rem) {
+		font-size: 3em;
+	}
 }
 
 /* Table of contents */
 /* -------------------------------------------------------------------------- */
 
 .toc-wrapper {
-	height: 100vh;
-	overflow-y: auto;
-	padding: 1em;
-	width: 25%;
+	max-width: 26.25rem;
+
+	@media (min-width: 43.75rem) {
+		height: 100vh;
+		overflow-y: auto;
+		position: static;
+		width: 25%;
+	}
 }
 
 #toc {
 	font-size: 0.9em;
+	height: 0;
+	overflow: hidden;
+	transition: 200ms height;
+
+	@media (min-width: 43.75rem) {
+		height: auto;
+		overflow: auto;
+	}
+
+	&.show-toc {
+		box-shadow: 0 0.5rem 0.5rem 0 rgba(0, 0, 0, 0.6);
+		height: 28.125rem;
+		max-height: calc(95vh - 5.5rem);
+		overflow: auto;
+	}
 
 	a {
 		border-bottom: none;
 		color: #333333;
 		display: block;
+		padding: 0.5em;
 
 		&:hover,
 		&:active {
+			background-color: @thymeleaf-green;
 			border-bottom: none;
-			text-decoration: underline;
+			color: white;
 		}
 	}
 
@@ -84,30 +119,23 @@ section {
 		padding: 0;
 
 		> li {
-			margin-bottom: 1em;
-
-			> a {
-				border-bottom: 1px solid @thymeleaf-green;
-				margin-bottom: 0.25em;
-				padding-bottom: 0.25em;
-			}
+			border-bottom: 1px solid @thymeleaf-grey;
+			margin-bottom: 0.5em;
+			padding-bottom: 0.5em;
 		}
 	}
 
 	.level2 {
 		font-size: 0.9em;
-		padding-left: 1.5em;
-		text-indent: -1.5em;
+		padding-left: 0.75em;
 	}
 
 	.level3 {
-		padding-left: 0;
-		text-indent: 0;
+		padding-left: 0.75em;
 	}
 
 	.level4 {
-		padding-left: 1.5em;
-		text-indent: 0;
+		padding-left: 0.75em;
 	}
 }
 
@@ -116,10 +144,15 @@ section {
 
 .content-wrapper {
 	background-color: @thymeleaf-grey;
-	border-left: 0.25em solid @thymeleaf-green;
-	height: 100vh;
-	overflow-y: auto;
-	width: 75%;
+	padding-top: 3em;
+
+	@media (min-width: 43.75rem) {
+		border-left: 0.25em solid @thymeleaf-green;
+		height: 100vh;
+		overflow-y: auto;
+		padding-top: 0;
+		width: 75%;
+	}
 
 	@media (min-width: 62.5rem) {
 		border-left-width: 0.5em;
