@@ -63,6 +63,12 @@ a.anchor {
 	top: -4em;
 }
 
+blockquote {
+	background-color: #ececec;
+	margin: 0;
+	padding: 0.5em 1.5em;
+}
+
 button {
 	background-color: transparent;
 	border: none;
