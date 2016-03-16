@@ -45,6 +45,7 @@ a {
 	border-bottom: 1px dotted;
 	color: #005f0f;
 	text-decoration: none;
+	word-wrap: break-word;
 }
 a:visited {
 	color: #005f0f;
@@ -52,9 +53,6 @@ a:visited {
 a:hover,
 a:focus {
 	border-bottom-style: solid;
-}
-a.url {
-	word-break: break-all;
 }
 a.anchor {
 	border-bottom: none;
