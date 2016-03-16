@@ -1647,7 +1647,7 @@ exactly this same kind of attributes:
 There are quite a lot of attributes like these, each of them targeting a
 specific XHTML or HTML5 attribute:
 
-<div class="table-wrapper">
+<div class="table-scroller">
 |-----------------------+-----------------------+-----------------------|
 |`th:abbr`              |`th:accept`            |`th:accept-charset`    |
 |`th:accesskey`         |`th:action`            |`th:align`             |
@@ -1784,7 +1784,7 @@ set to its fixed value, and if evaluated to false, the attribute will not be set
 
 The following fixed-value boolean attributes exist in the Standard Dialect:
 
-<div class="table-wrapper">
+<div class="table-scroller">
 |-------------------+-------------------+-------------------|
 |`th:async`         |`th:autofocus`     |`th:autoplay`      |
 |`th:checked`       |`th:controls`      |`th:declare`       |
@@ -2885,6 +2885,7 @@ as expected.
 So, all Thymeleaf attributes define a numeric precedence, which establishes the
 order in which they are executed in the tag. This order is:
 
+<div class="table-scroller">
 -----------------------------------------------------------------
 Order   Feature                            Attributes
 ------- ---------------------------------- ----------------------
@@ -2917,6 +2918,7 @@ Order   Feature                            Attributes
 
       9 Fragment removal                   `th:remove`
 -----------------------------------------------------------------
+</div>
 
 This precedence mechanism means that the above iteration fragment will give
 exactly the same results if the attribute position is inverted (although it would be
