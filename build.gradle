@@ -260,17 +260,6 @@ task generateDocsPDF(
 		into "${project.webAppDirName}"
 	}
 
-	// Modify the copied HTML docs, removing the Google Analytics script as it
-	// blocks the wkhtmltopdf process
-	fileTree(webAppDirName) { include '*/**/*.html' }.each { docFile ->
-		ant.replaceregexp(
-			file: docFile,
-			match: '<!-- Google Analytics script -->.*</script>',
-			replace: '',
-			flags: 'gis'
-		)
-	}
-
 	jettyRun.daemon = true
 	jettyRun.execute()
 
@@ -287,14 +276,12 @@ task generateDocsPDF(
 			execute([
 				"wkhtmltopdf",
 				"--print-media-type",
-				"--dpi", "150",
-				"--javascript-delay", "2000",
+				"--javascript-delay", "1000",
 				"--margin-bottom", "15",
 				"--footer-spacing", "5",
 				"--footer-font-size", "8",
-				"--footer-font-name", "'Open Sans'",
+				"--footer-font-name", "'Ubuntu'",
 				"--footer-right", "Page [page] of [topage]",
-				"--header-font-name", "'Open Sans'",
 				"http://localhost:8080/thymeleaf-docs/${docName}.html",
 				file("${outputDir.path}/doc/${docName}.pdf")
 			])

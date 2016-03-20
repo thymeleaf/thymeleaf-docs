@@ -20,9 +20,49 @@
  * Tutorial styles for the print (PDF) form
  */
 
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
+
 body {
-	background-color: white;
-	font-size: 12px;
+	border-left: none;
+	font-size: 0.75em;
+}
+
+blockquote {
+	page-break-inside: avoid;
+}
+
+
+/* COMPONENTS */
+/* ========================================================================== */
+
+.hero-header-title {
+	font-size: 6em;
+}
+
+.hero-header-logo {
+	width: 8em;
+}
+
+.toc-wrapper {
+	display: none;
+}
+
+.tutorial-title {
+	font-size: 4em !important;
+}
+
+.tutorial-metadata {
+	font-size: 1em;
+}
+
+/* Content */
+/* -------------------------------------------------------------------------- */
+
+#content {
+	.level1 {
+		page-break-before: always;
+	}
 }
 
 /**

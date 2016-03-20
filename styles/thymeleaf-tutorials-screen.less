@@ -50,6 +50,34 @@ section {
 	}
 }
 
+.hero-header-title {
+	font-size: 3em;
+
+	@media (min-width: 43.75rem) {
+		font-size: 4em;
+	}
+	@media (min-width: 50rem) {
+		font-size: 5em;
+	}
+	@media (min-width: 56.25rem) {
+		font-size: 6em;
+	}
+}
+
+.hero-header-logo {
+	width: 4rem;
+
+	@media (min-width: 43.75rem) {
+		width: 6rem;
+	}
+	@media (min-width: 50rem) {
+		width: 7rem;
+	}
+	@media (min-width: 56.25rem) {
+		width: 8em;
+	}
+}
+
 .tutorial-title {
 	margin-left: 0.5em;
 	margin-right: 0.5em;
@@ -68,8 +96,6 @@ section {
 /* -------------------------------------------------------------------------- */
 
 .toc-wrapper {
-	max-width: 26.25rem;
-
 	@media (min-width: 43.75rem) {
 		height: 100vh;
 		overflow-y: auto;
@@ -127,15 +153,27 @@ section {
 
 	.level2 {
 		font-size: 0.9em;
-		padding-left: 0.75em;
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
 	}
 
 	.level3 {
-		padding-left: 0.75em;
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
 	}
 
 	.level4 {
-		padding-left: 0.75em;
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
 	}
 }
 
