@@ -283,6 +283,7 @@ task generateDocsPDF(
 				"--footer-font-size", "8",
 				"--footer-font-name", "'Ubuntu'",
 				"--footer-right", "Page [page] of [topage]",
+				"--quiet",
 				"http://localhost:8080/thymeleaf-docs/${docName}.html",
 				file("${outputDir.path}/doc/${docName}.pdf")
 			])
