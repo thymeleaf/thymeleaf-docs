@@ -93,7 +93,7 @@ task copyResources << {
 		filesMatching('**/*.md') {
 
 			// We need a file path relative to the 'docs' folder
-			def docFileName = it.relativePath.toString() - ".md"
+			def docFileName = (it.relativePath.toString() - ".md").replace('\\', '/')
 			def docFileType = it.file.parentFile.name
 
 			// The parent folder in some cases might be a version number (e.g. tutorials for 2.1, 3.0...) In
@@ -276,6 +276,7 @@ task generateDocsPDF(
 			execute([
 				"wkhtmltopdf",
 				"--print-media-type",
+				"--dpi", "300",
 				"--javascript-delay", "1000",
 				"--margin-bottom", "15",
 				"--footer-spacing", "5",
