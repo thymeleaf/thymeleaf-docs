@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
 
 <head>
 	<title>$pagetitle$</title>
@@ -67,7 +67,7 @@
 				<h1 id="tutorial-title" class="tutorial-title">$title$</h1>
 				$if(translator)$
 					<div id="tutorial-translator" class="tutorial-metadata">
-						<span class="tutorial-metadata-label">$lang$ translation contributed by:</span> $translator$
+						<span class="tutorial-metadata-label">$language$ translation by:</span> $translator$
 					</div>
 				$endif$
 				<div class="tutorial-metadata">
