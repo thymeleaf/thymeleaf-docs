@@ -1,6 +1,6 @@
 ---
 title: 'Spring MVC and Thymeleaf: how to access data from templates'
-author: 'Rafa&#322; Borowiec &mdash, <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
+author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
 ---
 
 

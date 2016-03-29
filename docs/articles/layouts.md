@@ -1,6 +1,6 @@
 ---
 title: Thymeleaf Page Layouts
-author: 'Rafa&#322; Borowiec, <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
+author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
 ---
 
 
