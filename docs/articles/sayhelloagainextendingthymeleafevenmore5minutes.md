@@ -3,14 +3,11 @@ title: Say Hello Again! Extending Thymeleaf even more in another 5 minutes
 ---
 
 
-Say Hello Again! Extending Thymeleaf even more in another 5 minutes
-===================================================================
-
 This article is a continuation of [*"Say Hello! Extending Thymeleaf in 5
 minutes"*](sayhelloextendingthymeleaf5minutes.html) and is meant to be
-read after it. Code in this article comes from the same example
-application, which you can download from the
-[documentation](/documentation.html) page.
+read after it.  Code in this article comes from the same example application,
+which you can view or download from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-sayhello).
+
 
 Some improvements for our 'hello' dialect
 -----------------------------------------
@@ -72,6 +69,7 @@ public class SayHelloController {
 }
 ```
 
+
 Adding a new processor to our dialect
 -------------------------------------
 
@@ -99,6 +97,7 @@ public class HelloDialect extends AbstractDialect {
 
 }
 ```
+
 
 Using expressions as attribute values
 -------------------------------------
@@ -161,6 +160,7 @@ Note that, as we did in the previous article, we used the
 `AbstractTextChildModifierAttrProcessor` convenience abstract class in
 order to simplify the development of our processor, simply computing the
 text that will be inserted as body of the processed tag.
+
 
 Adding internationalization
 ---------------------------
@@ -293,6 +293,7 @@ template with Spanish locale:
 -   &iexcl;Hola, planeta Saturn!
 -   &iexcl;Hola, planeta Uranus!
 -   &iexcl;Hola, planeta Neptune!
+
 
 Exercise for the reader: internationalize the planet names
 ----------------------------------------------------------

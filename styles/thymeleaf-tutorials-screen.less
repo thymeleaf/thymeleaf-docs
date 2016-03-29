@@ -1,0 +1,198 @@
+@charset "UTF-8";
+
+/* 
+ * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Tutorial styles for the screen (HTML) form
+ */
+
+@thymeleaf-green: #005f0f;
+@thymeleaf-grey: #ececec;
+
+
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
+
+body {
+	@media (min-width: 43.75em) {
+		border-left: none;
+	}
+}
+
+section {
+	&.level1 {
+		background-color: white;
+	}
+}
+
+
+/* COMPONENTS */
+/* ========================================================================== */
+
+.tutorial {
+	@media (min-width: 43.75rem) {
+		display: flex;
+		height: 100vh;
+	}
+}
+
+.hero-header-title {
+	font-size: 3em;
+
+	@media (min-width: 43.75rem) {
+		font-size: 4em;
+	}
+	@media (min-width: 50rem) {
+		font-size: 5em;
+	}
+	@media (min-width: 56.25rem) {
+		font-size: 6em;
+	}
+}
+
+.hero-header-logo {
+	width: 4rem;
+
+	@media (min-width: 43.75rem) {
+		width: 6rem;
+	}
+	@media (min-width: 50rem) {
+		width: 7rem;
+	}
+	@media (min-width: 56.25rem) {
+		width: 8em;
+	}
+}
+
+.tutorial-title {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+
+	@media (min-width: 43.75rem) {
+		font-size: 2.5em;
+		margin-top: 1em;
+		margin-bottom: 2em;
+	}
+	@media (min-width: 50rem) {
+		font-size: 3em;
+	}
+}
+
+/* Table of contents */
+/* -------------------------------------------------------------------------- */
+
+.toc-wrapper {
+	@media (min-width: 43.75rem) {
+		height: 100vh;
+		overflow-y: auto;
+		position: static;
+		width: 25%;
+	}
+}
+
+#toc {
+	font-size: 0.9em;
+	height: 0;
+	overflow: hidden;
+	transition: 200ms height;
+
+	@media (min-width: 43.75rem) {
+		height: auto;
+		overflow: auto;
+	}
+
+	&.show-toc {
+		box-shadow: 0 0.5rem 0.5rem 0 rgba(0, 0, 0, 0.6);
+		height: 28.125rem;
+		max-height: calc(95vh - 5.5rem);
+		overflow: auto;
+	}
+
+	a {
+		border-bottom: none;
+		color: #333333;
+		display: block;
+		padding: 0.5em;
+
+		&:hover,
+		&:active {
+			background-color: @thymeleaf-green;
+			border-bottom: none;
+			color: white;
+		}
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+	}
+
+	.level1 {
+		padding: 0;
+
+		> li {
+			border-bottom: 1px solid @thymeleaf-grey;
+			margin-bottom: 0.5em;
+			padding-bottom: 0.5em;
+		}
+	}
+
+	.level2 {
+		font-size: 0.9em;
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
+	}
+
+	.level3 {
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
+	}
+
+	.level4 {
+		padding-left: 0.5em;
+
+		@media (min-width: 62.5em) {
+			padding-left: 1em;
+		}
+	}
+}
+
+/* Content */
+/* -------------------------------------------------------------------------- */
+
+.content-wrapper {
+	background-color: @thymeleaf-grey;
+	padding-top: 3em;
+
+	@media (min-width: 43.75rem) {
+		border-left: 0.25em solid @thymeleaf-green;
+		height: 100vh;
+		overflow-y: auto;
+		padding-top: 0;
+		width: 75%;
+	}
+
+	@media (min-width: 62.5rem) {
+		border-left-width: 0.5em;
+	}
+}

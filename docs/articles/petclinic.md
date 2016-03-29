@@ -4,12 +4,10 @@ author: 'Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>'
 ---
 
 
-Bringing Thymeleaf and Natural Templates to the Spring PetClinic
-================================================================
-
 **Note**: The Spring PetClinic application received a major update from
 SpringSource in March 2013, and the *thymeleafexamples-petclinic*
 application has been updated consequently, along with this article.
+
 
 The Spring PetClinic application
 --------------------------------
@@ -69,6 +67,7 @@ when converting the view layer to Thymeleaf:
         anyway, even if those contents were in the page, as pages
         contain JSP and JSTL tags, we wouldn't be able to see a real
         prototype.
+
 
 Configuration
 -------------
@@ -132,6 +131,7 @@ Spring beans configuration file, `mvc-view-config.xml`:
 Note that, as a difference from the original application, our templates
 will live at the `/WEB-INF/thymeleaf` folder instead of the original
 `/WEB-INF/jsp`.
+
 
 From JSP to Thymeleaf
 ---------------------
@@ -378,6 +378,7 @@ Which we will replace with:
     *understandable by browsers*, which will allow us to use this
     template as a *static prototype*. Again, we will see the advantages
     of this in the next section.
+
 
 And what about the *Natural Templates* thing?
 ---------------------------------------------

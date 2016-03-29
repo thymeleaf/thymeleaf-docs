@@ -3,9 +3,6 @@ title: From HTML to HTML (via HTML)
 ---
 
 
-From HTML to HTML (via HTML)
-============================
-
 Knowing the internals of the HTML family of web standards is quite
 important when you are using software such as Thymeleaf. At least if you
 want to understand what you are doing.
@@ -23,6 +20,7 @@ HTML tag soup considered harmful?*
 
 So let's take a step back, and see how we arrived where we are now, and
 why.
+
 
 Back in the 90s, there was HTML...
 ----------------------------------
@@ -60,6 +58,7 @@ line, the *Document Type Declaration* or `DOCTYPE` clause:
 ```html
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 ```
+
 
 The Document Object Model and the tag soup
 ------------------------------------------
@@ -104,6 +103,7 @@ browser makers -- in many cases fearing they would damage backwards
 compatibility -- produced effects that are still influencing the way we
 create web applications today.
 
+
 Enter XML
 ---------
 
@@ -126,6 +126,7 @@ technology-agnostic format (as opposed to binary), XML became especially
 suited for the cross-platform interchange of data across the internet.
 In fact, it led to the birth of the now-ubiquitous *Web Services*
 technologies.
+
 
 HTML + XML = XHTML
 ------------------
@@ -176,6 +177,7 @@ This was `application/xhtml+xml`:
 ```html
     Content-Type: application/xhtml+xml
 ```
+
 
 Crashing down to (XHTML's) reality
 ----------------------------------
@@ -231,6 +233,7 @@ mythological creature as Nessie. Almost no one ever used it.
 
 In 2009, the W3C allowed again the use of `text/html` with XHTML 1.1
 but, again, it was too late.
+
 
 Towards HTML5: A divorce story
 ------------------------------
@@ -293,6 +296,7 @@ specification.
 
 HTML5 was now the *only* future of web standards.
 
+
 So what is HTML5?
 -----------------
 
@@ -346,6 +350,7 @@ DOCTYPE clause is needed in order to make browsers display documents in
 `<!DOCTYPE html>` is the minimum valid DOCTYPE declaration possible, and
 that is exactly all we need. It just acts as a switch.
 
+
 Can I use HTML5 already?
 ------------------------
 
@@ -367,6 +372,7 @@ But anyway, one thing is for sure: you can switch your DOCTYPE to
 HTML5's and you will be doing HTML5. And that is something you can do
 today if you feel the need to.
 
+
 And what about XHTML5? Does that exist?
 ---------------------------------------
 
@@ -384,6 +390,7 @@ content type and *only* the content type, because an XML-formed HTML5
 document is in fact a perfectly valid HTML5 document. This is quite
 different to the relation between HTML4 and XHTML 1.0/1.1, which were
 incompatible languages.
+
 
 OK. The history lesson was great. Now, how does this relate to Thymeleaf?
 -------------------------------------------------------------------------

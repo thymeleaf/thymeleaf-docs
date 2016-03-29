@@ -377,6 +377,8 @@ package.
 4 Creating our own Dialect
 ==========================
 
+The source code for the examples shown in this and future chapters of this guide
+can be found in the [ExtraThyme GitHub repository](https://github.com/thymeleaf/thymeleafexamples-extrathyme).
 
 
 4.1. Extrathyme: a website for Thymeland's football league

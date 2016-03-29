@@ -3,16 +3,13 @@ title: 'Spring MVC view layer: Thymeleaf vs. JSP'
 ---
 
 
-Spring MVC view layer: Thymeleaf vs. JSP
-========================================
-
 In this article we will compare the same page (a subscription form)
 created twice for the same Spring MVC application: once using Thymeleaf
 and another time using JSP, JSTL and the Spring tag libraries.
 
-All the code seen here comes from a working application. You can
-download the source code of such application from the [documentation
-page](/documentation.html).
+All the code seen here comes from a working application.  You can view or
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-thvsjsp).
+
 
 Common requirements
 -------------------
@@ -45,6 +42,7 @@ We will have the following classes in our model:
 If you want to know implementation details for the controller code or
 Spring configuration, check the source code in the downloadable
 package)*
+
 
 Doing it with JSP
 -----------------
@@ -110,6 +108,7 @@ And this is our JSP code, making use of both JSTL (`core`) and Spring
 
 </html>
 ```
+
 
 Doing it with Thymeleaf
 -----------------------
@@ -187,6 +186,7 @@ Things to notice here:
 -   We have even been able to add an `<li>` for a second radiobutton
     just for prototyping pleasure. It will be removed when Thymeleaf
     executes our page.
+
 
 Let's change the page style!
 ----------------------------
@@ -293,6 +293,7 @@ when we double-clicked on it:
 ![Thymeleaf page directly opened on a browser](images/thvsjsp/th2.png)
 
 Definitely not in the same league, right?
+
 
 Got HTML5?
 ----------

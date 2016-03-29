@@ -242,6 +242,8 @@ Note that this Spring-based resource resolver will never be used by default. It 
 5 Spring Thyme Seed Starter Manager
 ===================================
 
+The source code for the examples shown in this and future chapters of this guide
+can be found in the [Spring Thyme Seed Starter Manager GitHub repository](https://github.com/thymeleaf/thymeleafexamples-stsm).
 
 
 5.1 The Concept

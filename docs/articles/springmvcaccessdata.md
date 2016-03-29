@@ -1,13 +1,11 @@
 ---
 title: 'Spring MVC and Thymeleaf: how to access data from templates'
-author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl" target="_blank">http://blog.codeleak.pl</a>'
+author: 'Rafa&#322; Borowiec &mdash, <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
 ---
 
 
-Spring MVC and Thymeleaf: how to access data from templates
-==========================================================
-
 In a typical Spring MVC application, `@Controller` classes are responsible for preparing a model map with data and selecting a view to be rendered. This _model map_ allows for the complete abstraction of the view technology and, in the case of Thymeleaf, it is transformed into a `VariablesMap` object (part of the Thymeleaf _template execution context_) that makes all the defined variables available to expressions executed in templates.
+
 
 Spring model attributes
 -----------------------
@@ -59,6 +57,7 @@ You can access model attributes in views with Thymeleaf as follows:
         <td th:text="${message.text}">Text ...</td>
     </tr>
 ```
+
 
 Request parameters
 ------------------
@@ -120,6 +119,7 @@ Similarly to the request parameters, session attributes can be access by using t
 
 Or by using `#httpSession`, that gives you direct access to the `javax.servlet.http.HttpSession` object.
 
+
 ServletContext attributes
 -------------------------
 
@@ -143,6 +143,7 @@ The ServletContext attributes are shared between requests and sessions. In order
             </tr>
         </table>
 ```
+
 
 Spring beans
 ------------
@@ -170,6 +171,7 @@ In the above example, `@urlService` refers to a Spring Bean registered at your c
 ```
 
 This is fairly easy and useful in some scenarios.
+
 
 References
 ----------

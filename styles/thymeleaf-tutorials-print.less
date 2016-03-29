@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+/* 
+ * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Tutorial styles for the print (PDF) form
+ */
+
+/* ELEMENT SELECTORS */
+/* ========================================================================== */
+
+body {
+	border-left: none;
+	font-size: 0.75em;
+}
+
+blockquote {
+	page-break-inside: avoid;
+}
+
+
+/* COMPONENTS */
+/* ========================================================================== */
+
+.hero-header-title {
+	font-size: 6em;
+}
+
+.hero-header-logo {
+	width: 8em;
+}
+
+.toc-wrapper {
+	display: none;
+}
+
+.tutorial-title {
+	font-size: 4em !important;
+}
+
+.tutorial-metadata {
+	font-size: 1em;
+}
+
+/* Content */
+/* -------------------------------------------------------------------------- */
+
+#content {
+	.level1 {
+		page-break-before: always;
+	}
+}
+
+/**
+ * This removes the links at the end of each footnote. These link are rendered
+ * by Pandoc with a U+21A9 unicode character, which does not exist in the
+ * downloaded fonts. This causes WebKit to default to Lucida Sans Unicode for
+ * rendering this char, and therefore the entire Lucida Sans Unicode font to be
+ * included in the PDF output files, just for rendering one char. Given these
+ * links are in fact useless in PDFs, it is better to just remove the links
+ * completely by setting display to none.
+ */
+.footnotes a {
+	display: none;
+}

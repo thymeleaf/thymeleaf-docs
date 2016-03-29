@@ -1,10 +1,11 @@
 ---
 title: 'Tutorial: Using Thymeleaf (ja)'
 author: The Thymeleaf Team
-lang: Japanese
-translator: 'Mitsuyuki Shiiba (<a href="https://twitter.com/bufferings">@bufferings</a>)'
 version: 20141222 - 22 December 2014
 thymeleafVersion: 2.1.4.RELEASE
+language: Japanese
+lang: ja
+translator: 'Mitsuyuki Shiiba (<a href="https://twitter.com/bufferings">@bufferings</a>)'
 ---
 
 
@@ -2428,7 +2429,7 @@ specific XHTML or HTML5 attribute:
 -->
 このような属性が非常にたくさん用意されていて、それぞれが特定のXHTMLやHTML5のタグを対象にしています:
 
-<div class="table-wrapper">
+<div class="table-scroller">
 |-----------------------+-----------------------+-----------------------|
 |`th:abbr`              |`th:accept`            |`th:accept-charset`    |
 |`th:accesskey`         |`th:action`            |`th:align`             |
@@ -2618,7 +2619,7 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 -->
 スタンダードダイアレクトには次のような固定値ブール属性があります:
 
-<div class="table-wrapper">
+<div class="table-scroller">
 |-------------------+-------------------+-------------------|
 |`th:async`         |`th:autofocus`     |`th:autoplay`      |
 |`th:checked`       |`th:controls`      |`th:declare`       |
@@ -4105,6 +4106,7 @@ Order   Feature                            Attributes
 
       9 Fragment removal                   `th:remove`
 -->
+<div class="table-scroller">
 -----------------------------------------------------------------
 順番    機能                               属性
 ------- ---------------------------------- ----------------------
@@ -4137,6 +4139,7 @@ Order   Feature                            Attributes
 
      9  フラグメントの削除                          `th:remove`
 -----------------------------------------------------------------
+</div>
 
 <!--
 This precedence mechanism means that the above iteration fragment will give

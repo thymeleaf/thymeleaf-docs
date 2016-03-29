@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
 
 <head>
 	<title>$pagetitle$</title>
@@ -9,78 +9,70 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="format-detection" content="telephone=no"/>
 
-	<link rel="icon" href="images/icon.png"/>
-	<link rel="stylesheet" href="../../styles/fonts/open-sans.css"/>
-	<link rel="stylesheet" href="../../styles/fonts/source-sans-pro.css"/>
+	<link rel="icon" href="../../images/favicon.ico"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic"/>
 	<link rel="stylesheet" href="../../styles/normalize.css"/>
 	<link rel="stylesheet" href="../../styles/thymeleaf.css"/>
-	<link rel="stylesheet" href="../../styles/thymeleaf-screen.css" media="screen"/>
-	<link rel="stylesheet" href="../../styles/thymeleaf-print.css" media="print"/>
+	<link rel="stylesheet" href="../../styles/thymeleaf-tutorials.css"/>
+	<link rel="stylesheet" href="../../styles/thymeleaf-tutorials-screen.css" media="screen"/>
+	<link rel="stylesheet" href="../../styles/thymeleaf-tutorials-print.css" media="print"/>
 
-	<script src="../../scripts/prettify.min.js" defer></script>
+	<script src="../../scripts/dumbqueryselector.js" defer></script>
+	<script src="../../scripts/prism.js" defer data-manual></script>
 	<script src="../../scripts/thymeleaf-tutorials.js" defer></script>
-
-	<!-- Google Analytics script -->
-	<script>
-		var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-1276954-9']);
-			_gaq.push(['_trackPageview']);
-		(function() {
-			var ga = document.createElement('script');
-				ga.type = 'text/javascript';
-				ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-				s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
 
 </head>
 
 <body class="tutorial">
 
-	<div id="documentation-wrapper">
-
-	<div id="title-block-wrapper">
-		<header id="title-block">
-			<img id="doc-banner" class="banner" src="images/header.png" alt="Thymeleaf logo"/>
-			<h1 id="doc-title" class="title">$title$</h1>
-			<div id="doc-info">
-$if(translator)$
-				<div id="doc-translator">
-					<span class="info-header">$lang$ translation contributed by:</span> $translator$
-				</div>
-$endif$
-				<div id="doc-version">
-					<span class="info-header">Document version:</span> $version$
-				</div>
-				<div id="project-version">
-					<span class="info-header">Project version:</span> $thymeleafVersion$
-				</div>
-				<div id="project-website">
-					<span class="info-header">Project web site:</span>
-					<a href="http://www.thymeleaf.org">http://www.thymeleaf.org</a>
-				</div>
-			</div>
-		</header>
-	</div>
-
-	<div id="menu">
-		<a id="menu-link" href="javascript:void(0);">
-			<img id="menu-image" src="images/logo.png" alt="Menu logo"/>
-		</a>
-	</div>
-	<div id="toc-wrapper">
+	<div class="toc-wrapper toolbar-container">
+		<div class="toolbar-menu">
+			<div id="toolbar-location" class="toolbar-menu-location"></div>
+			<button id="site-menu-button" type="button" class="toolbar-menu-button">Doc Contents</button>
+		</div>
 		<nav id="toc">
-$toc$
+			$toc$
 		</nav>
 	</div>
 
-	<div id="content-wrapper">
-		<div id="content">
-$body$
+	<div class="content-wrapper">
+
+		<div class="title-container">
+			<header class="hero-header fluid-block">
+				<div class="hero-header-text">
+					<h1 class="hero-header-title">Thymeleaf</h1>
+				</div>
+				<div class="hero-header-image">
+					<img src="../../images/thymeleaf.png" alt="Thymeleaf logo" class="hero-header-logo"/>
+				</div>
+			</header>
+
+			<div class="tutorial-info fluid-block">
+				<h1 id="tutorial-title" class="tutorial-title">$title$</h1>
+				$if(translator)$
+					<div id="tutorial-translator" class="tutorial-metadata">
+						<span class="tutorial-metadata-label">$language$ translation by:</span> $translator$
+					</div>
+				$endif$
+				<div class="tutorial-metadata">
+					<div id="tutorial-version">
+						<span class="tutorial-metadata-label">Document version:</span> $version$
+					</div>
+					<div id="project-version">
+						<span class="tutorial-metadata-label">Project version:</span> $thymeleafVersion$
+					</div>
+					<div id="project-website">
+						<span class="tutorial-metadata-label">Project web site:</span>
+						<a href="http://www.thymeleaf.org">http://www.thymeleaf.org</a>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
+
+		<div id="content" class="fluid-block">
+			$body$
+		</div>
 
 	</div>
 
