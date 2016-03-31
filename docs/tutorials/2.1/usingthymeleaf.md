@@ -183,7 +183,8 @@ XML syntax? Why is nobody talking about XHTML 2.0 anymore?_
 
 So before going any further in this tutorial, you are strongly advised to read
 an article on Thymeleaf's web site called _"From HTML to HTML (via HTML)"_,
-which you can find at this address: [http://www.thymeleaf.org/fromhtmltohtmlviahtml.html](http://www.thymeleaf.org/doc/fromhtmltohtmlviahtml.html)
+which you can find at this address:
+[http://www.thymeleaf.org/doc/articles/fromhtmltohtmlviahtml.html](http://www.thymeleaf.org/doc/articles/fromhtmltohtmlviahtml.html)
 
 
 
