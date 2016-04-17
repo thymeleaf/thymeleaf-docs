@@ -161,7 +161,7 @@ In the above example, `@urlService` refers to a Spring Bean registered at your c
     public class MyConfiguration {
         @Bean(name = "urlService")
         public UrlService urlService() {
-            return new FixedUrlService("somedomain.com/myapp); // some implementation
+            return new FixedUrlService("somedomain.com/myapp"); // some implementation
         }
     }
     
