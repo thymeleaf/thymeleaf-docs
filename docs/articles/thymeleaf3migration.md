@@ -18,15 +18,6 @@ Thymeleaf 3 at this stage, so if you are using some external dialects they may
 not work with Thymeleaf 3. Please check if the required dialects have a
 Thymeleaf 3 compatible version.
 
-**Quick pointer**: if you already read this *migration guide* for Thymeleaf
-3.0.0.BETA01 and you are only interested in the new features in BETA02, you can
-fast-forward to the new sections on [*"Fragment Expressions"*](#fragment-expressions),
-[*"The No-Operation token"*](#the-no-operation-token),
-[*"Decoupled Template Logic"*](#decoupled-template-logic),
-[*"Independence from the Servlet API"*](#independence-from-the-servlet-api) and
-also check some additional comments at the [*"Performance improvements"*](#performance-improvements)
-section.
-
 
 Template changes
 ----------------
@@ -55,12 +46,12 @@ integration package:
 <dependency>
   <groupId>org.thymeleaf</groupId>
   <artifactId>thymeleaf</artifactId>
-  <version>3.0.0.BETA02</version>
+  <version>3.0.0.BETA03</version>
 </dependency>
 <dependency>
   <groupId>org.thymeleaf</groupId>
   <artifactId>thymeleaf-spring4</artifactId>
-  <version>3.0.0.BETA02</version>
+  <version>3.0.0.BETA03</version>
 </dependency>
 ```
 
@@ -119,7 +110,7 @@ at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamp
 and [Thymeleaf 3 + Servlet 3 example](https://github.com/jmiguelsamper/thymeleaf3-servlet-helloworld)
 
 You can also find some additional information (links to binaries and javadocs)
-at [the Thymeleaf BETA 2 announcement](http://forum.thymeleaf.org/Thymeleaf-3-0-0-BETA02-just-published-td4029538.html).
+at [the Thymeleaf 3.0.0.BETA03 announcement](http://forum.thymeleaf.org/Thymeleaf-3-0-0-BETA03-just-published-td4029622.html).
 
 
 Full HTML5 markup support
