@@ -370,12 +370,36 @@ container. This was useful in scenarios such as processing email templates.
 
 But Thymeleaf 3.0 includes a series of improvements that can make Thymeleaf
 truly independent from the Servlet API **in web environments** that do not make
-use of Java Servlets such as [vert.x](http://vertx.io/), [RatPack](https://ratpack.io/),
-[Play Framework](https://www.playframework.com/)... which will be now able to
+use of Java Servlets such as many of the *reactive* frameworks available today
+(more on this in the next section), which will be now able to
 integrate with Thymeleaf in an easier and more elegant way.
 
 For more information see: [New extension point: Link Builders](https://github.com/thymeleaf/thymeleaf/issues/458)
 and [Generalisation of the IEngineContext mechanism](https://github.com/thymeleaf/thymeleaf/issues/459).
+
+
+Integration into Reactive Frameworks and Architectures
+------------------------------------------------------
+
+*Reactive* is one of the key buzzwords of the moment, and reactive architectures
+have nowadays many (great) actors in the Java scene: [vert.x](http://vertx.io/), 
+[RatPack](https://ratpack.io/), [Play Framework](https://www.playframework.com/), 
+and the upcoming [Spring Reactive](https://spring.io/blog/2016/02/09/reactive-spring).
+
+Thymeleaf 3.0 vastly improves the integration possibilities for these frameworks, not
+only by providing a higher independence from the Servlet API as seen above, but also
+by means of a new capability called [engine throttling](https://github.com/thymeleaf/thymeleaf/issues/487).
+
+Engine throttling allows the Thymeleaf engine to execute *partially* and *on-demand*
+answering *back-pressure* requests from the output channels and sending buffers to them
+filled with template output as a result. All of this operating single-threaded.
+
+But not only that: the new Thymeleaf engine can also apply *throttling* in a
+*data-driven* manner, by identifying a context variable as a *publisher* of data
+(implementations might vary depending on the host framework) and producing partial output
+as a response to data-publishing events coming from this publisher. This effectively
+turns Thymeleaf into a highly efficient way of publishing reactively-generated,
+data-oriented markup from the server side.
 
 
 New Dialect system
