@@ -382,9 +382,9 @@ Integration into Reactive Frameworks and Architectures
 ------------------------------------------------------
 
 *Reactive* is one of the key buzzwords of the moment, and reactive architectures
-have nowadays many (great) actors in the Java scene: [vert.x](http://vertx.io/), 
+have nowadays many (great) actors in the Java scene, like [vert.x](http://vertx.io/), 
 [RatPack](https://ratpack.io/), [Play Framework](https://www.playframework.com/), 
-and the upcoming [Spring Reactive](https://spring.io/blog/2016/02/09/reactive-spring).
+or the upcoming [Spring Reactive](https://spring.io/blog/2016/02/09/reactive-spring).
 
 Thymeleaf 3.0 vastly improves the integration possibilities for these frameworks, not
 only by providing a higher independence from the Servlet API as seen above, but also
