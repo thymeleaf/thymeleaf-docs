@@ -750,16 +750,16 @@ public interface ITextStructureHandler {
 ==========================
 
 The source code for the examples shown in this and future chapters of this guide
-can be found in the [ExtraThyme GitHub repository](https://github.com/thymeleaf/thymeleafexamples-extrathyme).
+can be found in the [extraThyme GitHub repository](https://github.com/thymeleaf/thymeleafexamples-extrathyme).
 
 
-3.1. ExtraThyme: a website for Thymeland's football league
+3.1. extraThyme: a website for Thymeland's football league
 ----------------------------------------------------------
 
 Football is a popular sport in Thymeland^[European football, of course ;-)].
 There is a 10-team league going on
 there each season, and its organizers have just asked us to create a website for
-it called "Extrathyme".
+it called "extraThyme".
 
 This website will be very simple: just a table with:
 
@@ -769,10 +769,13 @@ This website will be very simple: just a table with:
    higher-level competitions next year or else mean their relegation to regional
    leagues.
 
-Also, above the league table, a banner will be displaying headlines with the
-results of recent matches.
+Above the league table, a banner will be displaying headlines with the
+results of recent matches, and also there will be a clearly visible banner 
+that warns users every Sunday that Sundays are match days, and therefore 
+they should be going to the stadium instead of browsing the internet.
 
-![Extrathyme league table](images/extendingthymeleaf/extrathyme-league-table.png)
+
+![extraThyme league table](images/extendingthymeleaf/extrathyme-league-table.png)
 
 We will use HTML5, Spring MVC and the SpringStandard dialect for our application,
 and we will be extending Thymeleaf by creating a `score` dialect that includes:
@@ -788,6 +791,9 @@ and we will be extending Thymeleaf by creating a `score` dialect that includes:
    results of recent matches. This tag should support an order attribute with
    values random (for showing a randomly selected match) and `latest` (default,
    for showing only the last match).
+ * A `score:match-day-today` attribute that can be added to the league table
+   header in order to (conditionally, if it is Sunday) add a banner warning the
+   user that today is a match day.
 
 Our markup will therefore look like this, making use of both `th` and `score`
 attributes:
@@ -795,6 +801,8 @@ attributes:
 ```html
 <!DOCTYPE html>
 
+<!--/* Note the xmlns:* here are completely optional and only meant to     */-->
+<!--/* avoid IDEs from complaining about tags/attributes they may not know */-->
 <html xmlns:th="http://www.thymeleaf.org" xmlns:score="http://thymeleafexamples">
 
   <head>
@@ -816,7 +824,7 @@ attributes:
 
     <div class="leaguetable">
 
-      <h2 th:text="#{title.leaguetable(${execInfo.now.time})}">
+      <h2 score:match-day-today th:text="#{title.leaguetable(${execInfo.now.time})}">
         League table for 07 July 2011
       </h2>
       
@@ -868,43 +876,53 @@ attributes:
 </html>
 ```      
 
-_(Note that we've added a second and third rows to our table, surrounded by parser-level comments `<!--/* ... */-->` so that our template shows nicely as a prototype when directly opened in a browser.)_
+_(Note that we've added a second and third rows to our table, surrounded by parser-level comments `<!--/* ... */-->` so 
+that our template shows nicely as a prototype when directly opened in a browser.)_
 
 
 
 3.2. Changing the CSS class by team position
 --------------------------------------------
 
-The first attribute processor we will develop will be `ClassForPositionAttrProcessor`, which we will implement as a subclass of a convenience abstract class provided by Thymeleaf called `AbstractAttributeModifierAttrProcessor`.
+The first attribute processor we will develop will be `ClassForPositionAttrProcessor`, which we will implement as a 
+subclass of a convenience abstract class provided by Thymeleaf called `AbstractAttributeTagProcessor`.
 
-This abstract class is already oriented towards creating attribute processors
-that set or modify the value of attributes in their host tags, which is exactly
-what we need (we will set a value to the `<tr>`'s `class` attribute.
+This abstract class is the base for all tag processors (i.e. processors that act on *tag* events and not *models*) 
+which match (i.e. are selected for execution) based on the existence of a specific attribute
+in such tag. In this case, `score:classforposition`.
+
+The idea is that we will use this processor for setting a new value to the `class` attribute of the tag
+`score:classforposition` is living in.
 
 Let's have a look at our code:
 
 ```java
-public class ClassForPositionAttrProcessor
-        extends AbstractAttributeModifierAttrProcessor {
+public class ClassForPositionAttributeTagProcessor extends AbstractAttributeTagProcessor {
 
-    public ClassForPositionAttrProcessor() {
-        super("classforposition");
+    private static final String ATTR_NAME = "classforposition";
+    private static final int PRECEDENCE = 10000;
+
+
+    public ClassForPositionAttributeTagProcessor(final String dialectPrefix) {
+        super(
+            TemplateMode.HTML, // This processor will apply only to HTML mode
+            dialectPrefix,     // Prefix to be applied to name for matching
+            null,              // No tag name: match any tag name
+            false,             // No prefix to be applied to tag name
+            ATTR_NAME,         // Name of the attribute that will be matched
+            true,              // Apply dialect prefix to attribute name
+            PRECEDENCE,        // Precedence (inside dialect's own precedence)
+            true);             // Remove the matched attribute afterwards
     }
 
-    public int getPrecedence() {
-        return 12000;
-    }
 
     @Override
-    protected Map<String, String> getModifiedAttributeValues(
-            final Arguments arguments, final Element element, final String attributeName) {
+    protected void doProcess(
+            final ITemplateContext context, final IProcessableElementTag tag,
+            final AttributeName attributeName, final String attributeValue,
+            final IElementTagStructureHandler structureHandler) {
 
-        final Configuration configuration = arguments.getConfiguration();
-
-        /*
-         * Obtain the attribute value
-         */
-        final String attributeValue = element.getAttributeValue(attributeName);
+        final IEngineConfiguration configuration = context.getConfiguration();
 
         /*
          * Obtain the Thymeleaf Standard Expression parser
@@ -915,14 +933,12 @@ public class ClassForPositionAttrProcessor
         /*
          * Parse the attribute value as a Thymeleaf Standard Expression
          */
-        final IStandardExpression expression =
-                parser.parseExpression(configuration, arguments, attributeValue);
+        final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 
         /*
          * Execute the expression just parsed
          */
-        final Integer position =
-                (Integer) expression.execute(configuration, arguments);
+        final Integer position = (Integer) expression.execute(context);
 
         /*
          * Obtain the remark corresponding to this position in the league table.
@@ -930,60 +946,38 @@ public class ClassForPositionAttrProcessor
         final Remark remark = RemarkUtil.getRemarkForPosition(position);
 
         /*
-         * Apply the corresponding CSS class to the element.
+         * Select the adequate CSS class for the element.
          */
-        final Map<String,String> values = new HashMap<String, String>();
-        if (remark != null) {
-            switch (remark) {
-                case WORLD_CHAMPIONS_LEAGUE:
-                    values.put("class", "wcl");
-                    break;
-                case CONTINENTAL_PLAYOFFS:
-                    values.put("class", "cpo");
-                    break;
-                case RELEGATION:
-                    values.put("class", "rel");
-                    break;
+        final String newValue;
+        if (remark == Remark.WORLD_CHAMPIONS_LEAGUE) {
+            newValue = "wcl";
+        } else if (remark == Remark.CONTINENTAL_PLAYOFFS) {
+            newValue = "cpo";
+        } else if (remark == Remark.RELEGATION) {
+            newValue = "rel";
+        } else {
+            newValue = null;
+        }
+
+        /*
+         * Set the new value into the 'class' attribute (maybe appending to an existing value)
+         */
+        if (newValue != null) {
+            if (attributeValue != null) {
+                structureHandler.setAttribute("class", attributeValue + " " + newValue);
+            } else {
+                structureHandler.setAttribute("class", newValue);
             }
         }
 
-        return values;
     }
 
-    @Override
-    protected ModificationType getModificationType(final Arguments arguments, 
-            final Element element, final String attributeName, 
-            final String newAttributeName) {
-
-        // Just in case there already is a value set for the 'class' attribute in the
-        // tag, we will append our new value (using a whitespace separator) instead
-        // of simply substituting it.
-        return ModificationType.APPEND_WITH_SPACE;
-    }
-
-    @Override
-    protected boolean removeAttributeIfEmpty(final Arguments arguments,
-            final Element element, final String attributeName, 
-            final String newAttributeName) {
-
-        // If the resulting 'class' attribute is empty, do not show it at all.
-        return true;
-    }
-
-    @Override
-    protected boolean recomputeProcessorsAfterExecution(final Arguments arguments,
-            final Element element, final String attributeName) {
-
-        // There is no need to recompute the element after this processor has executed
-        return false;
-    }
 }
 ```
 
-As you can see, in this case the convenience abstract class we are using
-abstracts from us any direct modification on the DOM object tree, and instead we
-just have to create and return a Map with all the new attribute values to be set
-in the tag.
+The basic logic flow is easy to see and understand: get the value of the attribute, use it
+for computing what we need, and finally use the `structureHandler` to instruct the engine
+about the modifications needed as a result.
 
 It is important to note that we are creating this attribute with the ability of
 executing expressions written in the Standard Syntax (used by both the _Standard_
@@ -1000,47 +994,65 @@ In order to evaluate these expressions (also called _Thymeleaf Standard Expressi
 final IStandardExpressionParser parser =
         StandardExpressions.getExpressionParser(configuration);
 
-final IStandardExpression expression =
-        parser.parseExpression(configuration, arguments, attributeValue);
+final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 
-final Integer position =
-        (Integer) expression.execute(configuration, arguments);
+final Integer position = (Integer) expression.execute(context);
 ```
 
+It's also interesting the way we use the `structureHandler` to add a new attribute to the
+host tag (remember the `tag` object is immutable):
+
+```java
+if (newValue != null) {
+    if (attributeValue != null) {
+        structureHandler.setAttribute("class", attributeValue + " " + newValue);
+    } else {
+        structureHandler.setAttribute("class", newValue);
+    }
+}
+```
 
 
 3.3. Displaying an internationalized remark
 -------------------------------------------
 
-The next thing to do is creating an attribute processor able to display the remark text. This will be very similar to the `ClassForPositionAttrProcessor`, but with a couple of important differences:
+The next thing to do is creating an attribute processor able to display the remark text. This 
+will be very similar to the `ClassForPositionAttrProcessor`, but with a couple of important differences:
 
- * We will not be setting a value for an attribute in the host tag, but rather the text body (content) of the tag, in the same way a `th:text` attribute does.
- * We need to access the message externalization (internationalization) system from our code so that we can display the text corresponding to the selected locale.
+ * We will not be setting a value for an attribute in the host tag, but rather the text body (content) of 
+   the tag, in the same way a `th:text` attribute does.
+ * We need to access the message externalization (internationalization) system from our code so that we 
+   can display the text corresponding to the selected locale.
 
-This time we will be using a different convenience abstract class ---one especially designed for setting the tag's text content---, `AbstractTextChildModifierAttrProcessor`. And this will be our code:
+We will be using the same `AbstractAttributeTagProcessor` base class. And this will be our code:
 
 ```java
-public class RemarkForPositionAttrProcessor
-        extends AbstractTextChildModifierAttrProcessor {
+public class RemarkForPositionAttributeTagProcessor extends AbstractAttributeTagProcessor {
 
-    public RemarkForPositionAttrProcessor() {
-        super("remarkforposition");
+    private static final String ATTR_NAME = "remarkforposition";
+    private static final int PRECEDENCE = 12000;
+
+
+    public RemarkForPositionAttributeTagProcessor(final String dialectPrefix) {
+        super(
+            TemplateMode.HTML, // This processor will apply only to HTML mode
+            dialectPrefix,     // Prefix to be applied to name for matching
+            null,              // No tag name: match any tag name
+            false,             // No prefix to be applied to tag name
+            ATTR_NAME,         // Name of the attribute that will be matched
+            true,              // Apply dialect prefix to attribute name
+            PRECEDENCE,        // Precedence (inside dialect's precedence)
+            true);             // Remove the matched attribute afterwards
     }
 
-    public int getPrecedence() {
-        return 12000;
-    }
 
     @Override
-    protected String getText(
-            final Arguments arguments, final Element element, final String attributeName) {
+    protected void doProcess(
+            final ITemplateContext context, final IProcessableElementTag tag,
+            final AttributeName attributeName, final String attributeValue,
+            final IElementTagStructureHandler structureHandler) {
 
-        final Configuration configuration = arguments.getConfiguration();
-
-        /*
-         * Obtain the attribute value
-         */
-        final String attributeValue = element.getAttributeValue(attributeName);
+        final IEngineConfiguration configuration = context.getConfiguration();
 
         /*
          * Obtain the Thymeleaf Standard Expression parser
@@ -1052,33 +1064,47 @@ public class RemarkForPositionAttrProcessor
          * Parse the attribute value as a Thymeleaf Standard Expression
          */
         final IStandardExpression expression =
-                parser.parseExpression(configuration, arguments, attributeValue);
+                parser.parseExpression(context, attributeValue);
 
         /*
          * Execute the expression just parsed
          */
-        final Integer position =
-                (Integer) expression.execute(configuration, arguments);
+        final Integer position = (Integer) expression.execute(context);
 
         /*
-         * Obtain the remark corresponding to this position in the leaguh table.
+         * Obtain the remark corresponding to this position in the league table
          */
         final Remark remark = RemarkUtil.getRemarkForPosition(position);
-
+        
         /*
-         * If no remark is to be applied, just return an empty message
+         * If no remark is to be applied, just set an empty body to this tag
          */
         if (remark == null) {
-            return "";
+            structureHandler.setBody("", false); // false == 'non-processable'
+            return;
         }
+        
+        /*
+         * Message should be internationalized, so we ask the engine to resolve
+         * the message 'remarks.{REMARK}' (e.g. 'remarks.RELEGATION'). No
+         * parameters are needed for this message.
+         *
+         * Also, we will specify to "use absent representation" so that, if this
+         * message entry didn't exist in our resource bundles, an absent-message
+         * label will be shown.
+         */
+        final String i18nMessage =
+                context.getMessage(
+                        RemarkForPositionAttributeTagProcessor.class, 
+                        "remarks." + remark.toString(), 
+                        new Object[0], 
+                        true);
 
         /*
-         * Message should be internationalized, so we ask the engine to resolve the message
-         * 'remarks.{REMARK}' (e.g. 'remarks.RELEGATION'). No parameters are needed for this
-         * message.
+         * Set the computed message as the body of the tag
          */
-        return getMessage(arguments, "remarks." + remark.toString(), new Object[0]);
-
+        structureHandler.setBody(i18nMessage, false); // false == 'non-processable'
+        
     }
 
 }
@@ -1087,132 +1113,124 @@ public class RemarkForPositionAttrProcessor
 Note that we are accessing the message externalization system with:
 
 ```java
-return getMessage(arguments, "remarks." + remark.toString(), new Object[0]);
+final String i18nMessage =
+        context.getMessage(
+                RemarkForPositionAttributeTagProcessor.class, 
+                "remarks." + remark.toString(), 
+                new Object[0], 
+                true);
 ```
 
-But this in fact is not the only way. As previously mentioned in this guide, the
-`AbstractProcessor` class offers three methods for obtaining externalized
-messages from attribute processors. The first two make a difference between _template messages_
-and _processor messages_:
+This will call the message resolution mechanism configured at the engine, passing
+not only the specific key we are interested on and its parameters (none, in this case), but
+also two other pieces of information:
 
-```java
-protected String getMessageForTemplate(
-        final Arguments arguments, final TemplateResolution templateResolution,
-        final String messageKey, final Object[] messageParameters);
+  * The *origin* to be assigned to the message: `RemarkForPositionAttributeTagProcessor.class`
+  * Whether an *absent message representation* should be used (`true`)
 
-protected String getMessageForProcessor(
-        final Arguments arguments, final String messageKey,
-        final Object[] messageParameters);
-```
+Message resolution is an **extension point** in Thymeleaf (`IMessageResolver` interface), and
+therefore how these parameters are treated depends on the specific implementation being used.
+The default implementation in non-Spring-enabled applications (`StandardMessageResolver`) 
+will do the following:
 
-`getMessageForTemplate(...)` uses the Template Engine's currently registered
-externalization mechanisms to look for the desired message. For example:
+  * First look for `.properties` files with the same name as the template file + the locale. So
+    if the template is `/views/main.html` and locale is `gl_ES`, it will look for
+    `/views/main_gl_ES.properties`, then `/views/main_gl.properties` and last
+    `/views/main.properties`.
+  * If not found, then use the *origin* class (which could have been specified `null`) and look
+    for `.properties` files in classpath with the name of the class specified there (the
+    processor's own class): `classpath:thymeleafexamples/extrathyme/dialects/score/RemarkForPositionAttributeTagProcessor_gl_ES.properties`,
+    etc. This allows the *componentization* or processors and dialects with their whole set of
+    i18n resource bundles in plain old `.jar` files.
+  * If none of these are found, have a look at the *absent message representation* flag. If `false`,
+    simply return `null`. If `true`, create some kind of text that will allow the developer or user
+    to quickly identify the fact that an i18n resource is missing: `??remarks.rel_gl_ES??`.
 
- * In a Spring application, we will probably be using specific Message Resolvers
-   that query the Spring MessageSource objects registered for the application.
- * When not in a Spring application, we will probably be using Thymeleaf's
-   Standard Message Resolver that looks for `.properties` files with the same
-   name as the template being processed.
+_(Note that, in Spring-enabled applications, this message resolution mechanism will be replaced by default
+with Spring's own, based on the `MessageSource` beans declared at the Spring Application Context.)_
 
-`getMessageForProcessor(...)` uses a message resolution mechanism created for
-allowing the componentization -or, if you prefer, encapsulation- of dialects.
-This mechanism consists in allowing tag and attribute processors to specify
-their own messages, whichever the application their dialects are used on. These
-are read from `.properties` files with the same name and living in the same
-package as the processor class (or any of its superclasses). For example, the
-`thymeleafexamples.extrathyme.dialects.score` package in our example could
-contain:
-
- * `RemarkForPositionAttrProcessor.java`: the attribute processor.
- * `RemarkForPositionAttrProcessor_en_GB.properties`: externalized messages for
-   English (UK) language.
- * `RemarkForPositionAttrProcessor_en.properties`: externalized messages for
-   English (rest of countries) language.
- * `RemarkForPositionAttrProcessor.properties`: default externalized messages.
-
-Finally, there is a third method, the one we used in our code:
-
-```java
-protected String getMessage(
-        final Arguments arguments, final TemplateResolution templateResolution,
-        final String messageKey, final Object[] messageParameters);
-```
-
-This `getMessage(...)` acts as a combination of the other two: first it tries to
-resolve the required message as a template message (defined in the application
-messages files) and if it doesn't exist tries to resolve it as a processor
-message. This way, applications can override ---if needed--- any messages
- stablished by its dialects' processors.
 
 
 
 3.4. An element processor for our headlines
 -------------------------------------------
 
-The third and last processor we will have to write is an element (tag) processor.
-As their name implies, element processors are triggered by element names instead
-of attribute names, and they have one advantage and also one disadvantage with
-respect to attribute processors:
+The third processor we will write is an element (tag) processor. Note we call this an *element tag processor*
+in contrast with the two previous processors, which were *attribute tag processors*. The reason is, in this case
+we want our processor to match (i.e. to be selected for execution) based on the **name of the tag**, not
+on the name of one of its attributes.
 
- * Advantage: elements can contain multiple attributes, and so your element processors can receive a richer and more complex set of configuration parameters.
- * Disadvantage: custom elements/tags are unknown to browsers, and so if you are developing a web application using custom tags you might have to sacrifice one of the most interesting features of Thymeleaf: the ability to statically display templates as prototypes (something called _natural templating_)
+This kind of tag processors have one advantage and also one disadvantage with
+respect to attribute tag processors:
 
-This processor will extend `org.thymeleaf.processor.element.AbstractElementProcessor`,
-but as we did with our attribute processors, instead of extending it directly, we will use a more specialized abstract convenience class as a base for our processor class: `AbstractMarkupSubstitutionElementProcessor`. This is a base element processor that simply expects you to generate the DOM nodes that will
-substitute the host tag when the template is processed.
+ * Advantage: elements can contain multiple attributes, and so your element processors can receive a richer and 
+   more complex set of configuration parameters.
+ * Disadvantage: custom elements/tags are unknown to browsers, and so if you are developing a web application 
+   using custom tags you might have to sacrifice one of the most interesting features of Thymeleaf: the ability 
+   to statically display templates as prototypes (_natural templating_).
 
-And this is our code:
+This processor will extend `AbstractElementTagProcessor`, the base class to be used for tag processors that
+do not match on a specific attribute:
 
 ```java
-public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElementProcessor {
+public class HeadlinesElementTagProcessor extends AbstractElementTagProcessor {
+
+    private static final String TAG_NAME = "headlines";
+    private static final int PRECEDENCE = 1000;
+
 
     private final Random rand = new Random(System.currentTimeMillis());
 
-    public HeadlinesElementProcessor() {
-        super("headlines");
+
+    public HeadlinesElementTagProcessor(final String dialectPrefix) {
+        super(
+            TemplateMode.HTML, // This processor will apply only to HTML mode
+            dialectPrefix,     // Prefix to be applied to name for matching
+            TAG_NAME,          // Tag name: match specifically this tag
+            true,              // Apply dialect prefix to tag name
+            null,              // No attribute name: will match by tag name
+            false,             // No prefix to be applied to attribute name
+            PRECEDENCE);       // Precedence (inside dialect's own precedence)
     }
 
-    public int getPrecedence() {
-        return 1000;
-    }
 
     @Override
-    protected List<Node> getMarkupSubstitutes(
-            final Arguments arguments, final Element element) {
+    protected void doProcess(
+            final ITemplateContext context, final IProcessableElementTag tag,
+            final IElementTagStructureHandler structureHandler) {
 
         /*
-         * Obtain the Spring application context. Being a SpringMVC-based
-         * application, we know that the IContext implementation being
-         * used is SpringWebContext, and so we can directly cast and ask it
-         * to return the AppCtx.
+         * Obtain the Spring application context.
          */
-        final ApplicationContext appCtx =
-            ((SpringWebContext)arguments.getContext()).getApplicationContext();
+        final ApplicationContext appCtx = SpringContextUtils.getApplicationContext(context);
 
         /*
          * Obtain the HeadlineRepository bean from the application context, and ask
          * it for the current list of headlines.
          */
-        final HeadlineRepository headlineRepository = 
-                appCtx.getBean(HeadlineRepository.class);
+        final HeadlineRepository headlineRepository = appCtx.getBean(HeadlineRepository.class);
         final List<Headline> headlines = headlineRepository.findAllHeadlines();
 
         /*
-         * Read the 'order' attribute from the tag. This optional attribute in our tag
+         * Read the 'order' attribute from the tag. This optional attribute in our tag 
          * will allow us to determine whether we want to show a random headline or
          * only the latest one ('latest' is default).
          */
-        final String order = element.getAttributeValue("order");
+        final String order = tag.getAttributeValue("order");
 
         String headlineText = null;
         if (order != null && order.trim().toLowerCase().equals("random")) {
-            // Order is random
+            // Order is random 
+
             final int r = this.rand.nextInt(headlines.size());
             headlineText = headlines.get(r).getText();
+            
         } else {
             // Order is "latest", only the latest headline will be shown
-            Collections.sort(headlines); headlineText = 
-                    headlines.get(headlines.size() - 1).getText();
+            
+            Collections.sort(headlines);
+            headlineText = headlines.get(headlines.size() - 1).getText();
+            
         }
 
         /*
@@ -1220,60 +1238,240 @@ public class HeadlinesElementProcessor extends AbstractMarkupSubstitutionElement
          * The headline will be shown inside a '<div>' tag, and so this must
          * be created first and then a Text node must be added to it.
          */
-        final Element container = new Element("div");
-        container.setAttribute("class", "headlines");
+        final IModelFactory modelFactory = context.getModelFactory();
 
-        final Text text = new Text(headlineText);
-        container.addChild(text);
+        final IModel model = modelFactory.createModel();
+
+        model.add(modelFactory.createOpenElementTag("div", "class", "headlines"));
+        model.add(modelFactory.createText(headlineText));
+        model.add(modelFactory.createCloseElementTag("div"));
 
         /*
-         * The abstract IAttrProcessor implementation we are using defines
-         * that a list of nodes will be returned, and that these nodes
-         * will substitute the tag we are processing.
+         * Instruct the engine to replace this entire element with the specified model.
          */
-        final List<Node> nodes = new ArrayList<Node>();
-        nodes.add(container); return nodes;
-
+        structureHandler.replaceWith(model, false);
+        
     }
 
 }
 ```
 
-Not much new to see here, except for the fact that we are accessing Spring's `ApplicationContext`
-in order to obtain one of our beans from it (the `HeadlineRepository`).
-
-Note also how we can access the custom tag's order attribute as we would with
-any other DOM element:
+The first interesting part of the code above is showing how to access Spring's `ApplicationContext`
+in order to obtain one of our beans from it (the `HeadlineRepository`):
 
 ```java
-final String order = element.getAttributeValue("order");
+final ApplicationContext appCtx = SpringContextUtils.getApplicationContext(context);
+```
+
+Also, this processor is different to the previous ones in that we will need to *create markup* as 
+a result of its execution: we are going to replace the original `<score:headlines .../>` tag with
+a `<div>...</div>` fragment, so we will need to make use of the **model factory**.
+
+
+### The Model Factory
+
+The model factory is a special object available to processors (and other structures such as pre-processors,
+post-processors, etc.) able to create new instances of the *events* that conform *models* (fragments of templates), 
+and also new instances of *models* themselves.
+
+It is therefore the tool we will use for creating new markup, like we can see in the code above:
+
+```java
+final IModelFactory modelFactory = context.getModelFactory();
+
+final IModel model = modelFactory.createModel();
+
+model.add(modelFactory.createOpenElementTag("div", "class", "headlines"));
+model.add(modelFactory.createText(headlineText));
+model.add(modelFactory.createCloseElementTag("div"));
+```
+
+Note how markup events needs to be created *one event at a time*, and how the open and close tags for the same `div`
+element have to be created separately and in the correct order. This is because models are *sequences of
+events* and not nodes in a Document Object Model (DOM).
+
+The model factory offers a quite complete set of methods for creating all types of events: tags, texts, DOCTYPEs... and
+also useful methods for modifying the attributes in a tag (by creating a new `tag` instance, given they are immutable),
+such as:
+
+```java
+final IOpenElemenTag newTag = modelFactory.setAttribute(tag, "class", "newvalue");
+```
+
+Also, the model factory is able to create `IModel` instances from scratch (like the `modelFactory.createModel()` above),
+from a single existing event, and also from a piece of markup that we want to convert into its corresponding sequence
+of events by *parsing* it:
+
+```java
+final IModel model = modelFactory.parse(context.getTemplateData().getTemplate(), "<div class='headlines'>Some headlines</div>");
 ```
 
 
 
-3.5. Declaring it all: the Dialect
+
+3.5. A model processor for our "Match Day Today" banner
+-------------------------------------------------------
+
+The last processor we will include in our dialect is of a different nature than the ones we've seen so
+far: it is a **model processor**, not a *tag processor*.
+
+As already mentioned in a previous section, model processors do not execute on a specific tag event,
+but on the complete sequence of events (i.e. the *model*) that conforms the entire element they
+are matching.
+
+So if we have a model processor that matches `<p>` tags with attribute `score:matcher`, and a fragment of
+template such as:
+
+```html
+<p score:matcher="whatever">
+    This is some body
+</p>
+```
+
+That *model processor* will receive as an argument of its `doProcess()` method
+an `IModel` containing 3 events: `<p score:matcher="whatever">` (open tag), 
+`\n    This is some body\n` (text) and `</p>` (close tag).
+
+
+So back to our requirements: we wanted a model processor matching a
+`scrore:match-day-today`, that we can apply to the league table header and 
+make it display, below this header, a banner warning the user that sundays are match days:
+
+```html
+<h2 score:match-day-today th:text="#{title.leaguetable(${execInfo.now.time})}">
+    League table for 07 July 2011
+</h2>
+```
+
+Note that we don't need a value for this `score:match-day-today` attribute, so
+we can just ignore it. Our code will like like this:
+
+
+```java
+public class MatchDayTodayModelProcessor extends AbstractAttributeModelProcessor {
+
+    private static final String ATTR_NAME = "match-day-today";
+    private static final int PRECEDENCE = 100;
+
+
+    public MatchDayTodayModelProcessor(final String dialectPrefix) {
+        super(
+            TemplateMode.HTML, // This processor will apply only to HTML mode
+            dialectPrefix,     // Prefix to be applied to name for matching
+            null,              // No tag name: match any tag name
+            false,             // No prefix to be applied to tag name
+            ATTR_NAME,         // Name of the attribute that will be matched
+            true,              // Apply dialect prefix to attribute name
+            PRECEDENCE,        // Precedence (inside dialect's own precedence)
+            true);             // Remove the matched attribute afterwards
+    }
+
+
+    protected void doProcess(
+            final ITemplateContext context, final IModel model,
+            final AttributeName attributeName, final String attributeValue,
+            final IElementModelStructureHandler structureHandler) {
+
+
+        if (!checkPositionInMarkup(context)) {
+            throw new TemplateProcessingException(
+                    "The " + ATTR_NAME + " attribute can only be used inside a " +
+                    "markup element with class \"leaguetable\"");
+        }
+
+        final Calendar now = Calendar.getInstance(context.getLocale());
+        final int dayOfWeek = now.get(Calendar.DAY_OF_WEEK);
+
+        // Sundays are Match Days!!
+        if (dayOfWeek == Calendar.SUNDAY) {
+
+            // The Model Factory will allow us to create new events
+            final IModelFactory modelFactory = context.getModelFactory();
+
+            // We will be adding the "Today is Match Day" banner just after
+            // the element we are processing for:
+            //
+            // <h4 class="matchday">Today is MATCH DAY!</h4>
+            //
+            model.add(modelFactory.createOpenElementTag("h4", "class", "matchday")); //
+            model.add(modelFactory.createText("Today is MATCH DAY!"));
+            model.add(modelFactory.createCloseElementTag("h4"));
+
+        }
+
+    }
+
+
+    private static boolean checkPositionInMarkup(final ITemplateContext context) {
+
+        /*
+         * We want to make sure this processor is being applied inside a container tag which has
+         * class="leaguetable". So we need to check the second-to-last entry in the element stack
+         * (the last entry is the tag being processed itself).
+         */
+
+        final List<IProcessableElementTag> elementStack = context.getElementStack();
+        if (elementStack.size() < 2) {
+            return false;
+        }
+
+        final IProcessableElementTag container = elementStack.get(elementStack.size() - 2);
+        if (!(container instanceof IOpenElementTag)) {
+            return false;
+        }
+
+        final String classValue = container.getAttributeValue("class");
+        return classValue != null && classValue.equals("leaguetable");
+
+    }
+
+
+}
+```
+
+The first thing to note is that we are performing a check on the position the attribute
+is being used at: we will only allow it inside a container with `class="leaguetable"`. So
+our `checkPositionInMarkup(...)` method makes use of the *element stack* in order to
+know the list of tags that had to be processed in order to process the current one.
+
+
+Also, regarding the way the new banner element is created (an `<h4>`) notice how what
+we are doing is modifying the `model` attribute passed as an argument to `doProcess(...)`.
+No new model object is being created:
+
+```java
+final IModelFactory modelFactory = context.getModelFactory();
+
+model.add(modelFactory.createOpenElementTag("h4", "class", "matchday")); //
+model.add(modelFactory.createText("Today is MATCH DAY!"));
+model.add(modelFactory.createCloseElementTag("h4"));
+```
+
+
+
+3.6. Declaring it all: the Dialect
 ----------------------------------
 
 The last step we need to take in order to complete our dialect is, of course,
 the dialect class itself.
 
-Dialect classes must implement the `org.thymeleaf.dialect.IDialect` interface,
-but again we will here use an abstract convenience implementation that allows us
-to only implement the methods we need, returning a default (empty) value for the
-rest of them.
+As seen in a previous section, dialects might implement different interfaces
+depending on what they provide to the template engine. In this case, our dialect
+is only providing processors so it will be implementing `IProcessorDialect`.
 
-Here's the code, quite easy to follow by now:
+In fact, we will extend an abstract convenience implementation that will ease
+the implementation of the interface: `AbstractDialectProcessor`:
 
 ```java
-public class ScoreDialect extends AbstractDialect {
+public class ScoreDialect extends AbstractProcessorDialect {
 
-    /*
-     * Default prefix: this is the prefix that will be used for this dialect
-     * unless a different one is specified when adding the dialect to
-     * the Template Engine.
-     */
-    public String getPrefix() {
-        return "score";
+    private static final String DIALECT_NAME = "Score Dialect";
+
+
+    public ScoreDialect() {
+        // We will set this dialect the same "dialect processor" precedence as
+        // the Standard Dialect, so that processor executions can interleave.
+        super(DIALECT_NAME, "score", StandardDialect.PROCESSOR_PRECEDENCE);
     }
 
     /*
@@ -1281,33 +1479,34 @@ public class ScoreDialect extends AbstractDialect {
      * 'remarkforposition'. Also one element processor: the 'headlines'
      * tag.
      */
-    @Override
-    public Set<IProcessor> getProcessors() {
+    public Set<IProcessor> getProcessors(final String dialectPrefix) {
         final Set<IProcessor> processors = new HashSet<IProcessor>();
-        processors.add(new ClassForPositionAttrProcessor());
-        processors.add(new RemarkForPositionAttrProcessor());
-        processors.add(new HeadlinesElementProcessor());
+        processors.add(new ClassForPositionAttributeTagProcessor(dialectPrefix));
+        processors.add(new RemarkForPositionAttributeTagProcessor(dialectPrefix));
+        processors.add(new HeadlinesElementTagProcessor(dialectPrefix));
+        processors.add(new MatchDayTodayModelProcessor(dialectPrefix));
         return processors;
     }
+
 
 }
 ```
 
-Once our dialect is created, we will need to declare it for use from our Template Engine. We will use the `additionalDialects` property in the template engine so that we add our dialect to the Spring Standard one (declared by default). 
+Once our dialect is created, we will need to add it to our Template Engine object
+in order to use it:
 
-Let's see how we'd configure this in our Spring bean configuration files:
-
-```xml
-<bean id="templateEngine"
-      class="org.thymeleaf.spring4.SpringTemplateEngine">
-  <property name="templateResolver" ref="templateResolver" />
-  <property name="additionalDialects">
-    <set>
-      <bean class="thymeleafexamples.extrathyme.dialects.score.ScoreDialect" />
-    </set>
-  </property>
-</bean>
+```java
+@Bean
+public SpringTemplateEngine templateEngine(){
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver());
+    templateEngine.addDialect(new ScoreDialect());
+    return templateEngine;
+}
 ```
+
+Note that the `addDialect(...)` call there will add the Score Dialect to the one
+already configured by default in a `SpringTemplateEngine`: the SpringStandard dialect.
 
 And that's it! Our dialect is ready to run now, and our league table will
 display in exactly the way we wanted.
