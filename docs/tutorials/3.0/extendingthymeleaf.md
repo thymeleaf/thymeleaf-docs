@@ -21,8 +21,7 @@ for doing this:
 
 
 
-1.1. Scenario 1: adding features to the Standard dialects
----------------------------------------------------------
+**Scenario 1: adding features to the Standard dialects**
 
 Say your application uses the _SpringStandard_ dialect and that it needs to show
 an alert text box in blue or red background depending on the user's role (admin
@@ -38,8 +37,7 @@ the `th` prefix (same as the _SpringStandard_ one) and you'll now be able to use
 
 
 
-1.2. Scenario 2: view-layer components
---------------------------------------
+**Scenario 2: view-layer components**
 
 Let's say your company uses Thymeleaf extensively, and you want to create a
 repository of common functionalities (tags and/or attributes) that you can use
@@ -57,8 +55,7 @@ with JSP.
 
 
 
-1.3. Scenario 3: creating your own template system
---------------------------------------------------
+**Scenario 3: creating your own template system**
 
 Now imagine your are creating a public website that allows users to create their
 own design templates for showing their content. Of course, you don't want your
@@ -105,9 +102,9 @@ public interface IDialect {
 ```
 
 The only core requirement of a dialect is to have a name that can be used for its
-identification. But there are of course several kinds of dialects depending
-on what they provide to the Thymeleaf engine, and each of them should implement
-at least one of a set of different subinterface of `IDialect`:
+identification. But this alone is of little use, so dialects will normally implement
+one or several subinterfaces of `IDialect`, depending
+on what they provide to the Thymeleaf engine:
 
   * `IProcessorDialect` for dialects that provide *processors*.
   * `IPreProcessorDialect` for dialects that provide *pre-processors*.
@@ -134,7 +131,7 @@ public interface IProcessorDialect extends IDialect {
 in Thymeleaf templates, and possibly the most important Thymeleaf extension
 artifact. We will cover processors in more detail in next sections.
 
-This dialect only defines three artifacts:
+This dialect only defines three items:
 
   * The *prefix*, which is the prefix or namespace that should be applied
     *by default* to the elements and attributes matched by the dialect's
@@ -288,8 +285,8 @@ public interface IExecutionAttributeDialect extends IDialect {
 
 Processors are objects implementing the `org.thymeleaf.processor.IProcessor`
 interface, and they contain the real logic to be applied on the different parts
-of a template (which we will call **events**). This
-interface looks like this:
+of a template (which we will represent as **events**, given Thymeleaf is an
+event-based engine). This interface looks like this:
 
 ```java
 public interface IProcessor {
@@ -303,8 +300,7 @@ public interface IProcessor {
 As with dialects, this is a very simple interface that only specified the template
 mode in which the processor can be applied and its precedence.
 
-But there are several types of *events*, and there is actually one type of processor
-for each type of event:
+But there are several types of *processor*, one for each possible type of event:
 
   * Template start/end
   * Element Tags
@@ -347,12 +343,11 @@ public interface IElementProcessor extends IProcessor {
 ```
 
 Note however that element processor implementations are not meant to directly implement 
-this interface. Instead, element processors should fall into one of two categories, 
-already mentioned above:
+this interface. Instead, element processors should fall into one of two categories:
 
   * **Element Tag Processors**, implementing the `IElementTagProcessor` interface. 
     These processors execute on *open/standalone tag events only* (no processors 
-    can be applied to *close tags*), and have no (direct) access to the element body.
+    can be applied to *close tags*), and have no direct access to the element body.
   * **Element Model Processors**, implementing the `IElementModelProcessor` interface. 
     These processors execute on *complete elements*, including their bodies, in the 
     form of `IModel` objects.
@@ -360,7 +355,7 @@ already mentioned above:
 We should have a look at each of these interfaces separately:
 
 
-#### Element Tag Processors: `IElementTagProcessor`
+### Element Tag Processors: `IElementTagProcessor`
 
 Element Tag Processors, as explained, execute on the single *open element* or 
 *standalone element* tag that matches its matching configuration (seen in 
@@ -536,14 +531,12 @@ Thymeleaf offers two basic implementations of `IElementTagProcessor` that proces
 implement for convenience:
 
   * `org.thymeleaf.processor.element.AbstractElementTagProcessor`, meant for processors that 
-    match element events by their element name (i.e. without looking at attributes). Similar 
-    to *element processors* in Thymeleaf 2.1.
+    match element events by their element name (i.e. without looking at attributes).
   * `org.thymeleaf.processor.element.AbstractAttributeTagProcessor`, meant for processors that 
-    match element events by one of their attributes (and optionally also the element name). 
-    Similar to *attribute processors* in Thymeleaf 2.1.
+    match element events by one of their attributes (and optionally also the element name).
 
 
-#### Element Model Processors: `IElementModelProcessor`
+### Element Model Processors: `IElementModelProcessor`
 
 Element Model Processors execute on the entire elements they match –including their bodies–, 
 in the form of an `IModel` object that contains the complete sequence of events that models 
@@ -640,11 +633,9 @@ Thymeleaf offers two basic implementations of `IElementModelProcessor` that proc
 for convenience:
 
   * `org.thymeleaf.processor.element.AbstractElementModelProcessor`, meant for processors that match 
-    element events by their element name (i.e. without looking at attributes). Similar to *element 
-    processors* in Thymeleaf 2.1.
+    element events by their element name (i.e. without looking at attributes).
   * `org.thymeleaf.processor.element.AbstractAttributeModelProcessor`, meant for processors that match 
-    element events by one of their attributes (and optionally also the element name). Similar to 
-    *attribute processors* in Thymeleaf 2.1.
+    element events by one of their attributes (and optionally also the element name).
 
 
 ### Template start/end Processors: `ITemplateBoundariesProcessor`
@@ -1012,6 +1003,10 @@ if (newValue != null) {
 }
 ```
 
+Last, note that **HTML-escaping texts and attribute is our responsibility**, but in this case
+we know all the possible values of the `newValue` variable and they require no escaping, so
+for the sake of simplicity we are skipping that operation.
+
 
 3.3. Displaying an internationalized remark
 -------------------------------------------
@@ -1101,14 +1096,17 @@ public class RemarkForPositionAttributeTagProcessor extends AbstractAttributeTag
                         true);
 
         /*
-         * Set the computed message as the body of the tag
+         * Set the computed message as the body of the tag, HTML-escaped and
+         * non-processable (hence the 'false' argument)
          */
-        structureHandler.setBody(i18nMessage, false); // false == 'non-processable'
+        structureHandler.setBody(HtmlEscape.escapeHtml5(i18nMessage), false);
         
     }
 
 }
 ```
+
+### Accessing i18n messages
 
 Note that we are accessing the message externalization system with:
 
@@ -1150,6 +1148,15 @@ _(Note that, in Spring-enabled applications, this message resolution mechanism w
 with Spring's own, based on the `MessageSource` beans declared at the Spring Application Context.)_
 
 
+### HTML-escaping content
+
+Also, in this processor we are performing the required HTML-escaping of the content we are setting
+by using the `HtmlEscape` class from the [Unbescape](http://unbescape.org) library, used for this
+purpose throughout Thymeleaf:
+
+```java
+structureHandler.setBody(HtmlEscape.escapeHtml5(i18nMessage), false);
+```
 
 
 3.4. An element processor for our headlines
@@ -1243,7 +1250,7 @@ public class HeadlinesElementTagProcessor extends AbstractElementTagProcessor {
         final IModel model = modelFactory.createModel();
 
         model.add(modelFactory.createOpenElementTag("div", "class", "headlines"));
-        model.add(modelFactory.createText(headlineText));
+        model.add(modelFactory.createText(HtmlEscape.escapeHtml5(headlineText)));
         model.add(modelFactory.createCloseElementTag("div"));
 
         /*
@@ -1282,7 +1289,7 @@ final IModelFactory modelFactory = context.getModelFactory();
 final IModel model = modelFactory.createModel();
 
 model.add(modelFactory.createOpenElementTag("div", "class", "headlines"));
-model.add(modelFactory.createText(headlineText));
+model.add(modelFactory.createText(HtmlEscape.escapeHtml5(headlineText)));
 model.add(modelFactory.createCloseElementTag("div"));
 ```
 
@@ -1303,7 +1310,10 @@ from a single existing event, and also from a piece of markup that we want to co
 of events by *parsing* it:
 
 ```java
-final IModel model = modelFactory.parse(context.getTemplateData().getTemplate(), "<div class='headlines'>Some headlines</div>");
+final IModel model = 
+        modelFactory.parse(
+                context.getTemplateData().getTemplate(), 
+                "<div class='headlines'>Some headlines</div>");
 ```
 
 
@@ -1460,7 +1470,7 @@ depending on what they provide to the template engine. In this case, our dialect
 is only providing processors so it will be implementing `IProcessorDialect`.
 
 In fact, we will extend an abstract convenience implementation that will ease
-the implementation of the interface: `AbstractDialectProcessor`:
+the implementation of the interface: `AbstractProcessorDialect`:
 
 ```java
 public class ScoreDialect extends AbstractProcessorDialect {
@@ -1493,7 +1503,8 @@ public class ScoreDialect extends AbstractProcessorDialect {
 ```
 
 Once our dialect is created, we will need to add it to our Template Engine object
-in order to use it:
+in order to use it. This being a Spring-enabled application, we will modify
+the declared template engine bean:
 
 ```java
 @Bean
