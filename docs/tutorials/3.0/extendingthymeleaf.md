@@ -81,7 +81,7 @@ not allowed to.
 -------------
 
 If you've read the _Using Thymeleaf_ tutorial before getting here ---which you
-should have done---, you should know that what you've been learning all this time
+should have done--- you should know that what you've been learning all this time
 was not exactly _Thymeleaf_, but rather its _Standard Dialect_ (or the _SpringStandard Dialect_,
 if you've also read the _Thymeleaf + Spring_ tutorial).
 
@@ -538,7 +538,7 @@ implement for convenience:
 
 ### Element Model Processors: `IElementModelProcessor`
 
-Element Model Processors execute on the entire elements they match –including their bodies–, 
+Element Model Processors execute on the entire elements they match –including their bodies–
 in the form of an `IModel` object that contains the complete sequence of events that models 
 such element and its contents. The `IElementModelProcessor` is very similar to the one seen 
 above for *tag processors*:
@@ -590,7 +590,8 @@ while (n-- != 0) {
 ```
 
 Note also that the `IModel` interface includes an `accept(IModelVisitor visitor)` method, useful 
-for traversing an entire model looking for specific nodes or relevant data the *Visitor* pattern.
+for traversing an entire model looking for specific nodes or relevant data using the *Visitor*
+pattern.
 
 
 **Using the `structureHandler`**
@@ -640,7 +641,7 @@ for convenience:
 
 ### Template start/end Processors: `ITemplateBoundariesProcessor`
 
-Template Boundaries Processors are a kind of processors that execute on the *template start* and 
+Template Boundaries Processors are a kind of processor that executes on the *template start* and 
 *template end* events fired during template processing. They allow to perform any kind of initialization 
 or disposal of resources at beginning or end of the template processing operation. Note that these events 
 are **only fired for the first-level template**, and not for each of the fragments that might be parsed 
@@ -664,10 +665,12 @@ public interface ITemplateBoundariesProcessor extends IProcessor {
 }
 ```
 
-This time the interface offers two `process*(...)` methods, one for the *template start* and another one for 
-the *template end* events. Their signature follows the same patter as the other `process(...)` methods we 
-saw before, receiving the context, the event object, and the structure handler. Structure handler that, in 
-this case, implements a quite simple `ITemplateBoundariesStructureHandler` interface:
+This time the interface offers two `process*(...)` methods, one for the
+*template start* and another one for the *template end* events. Their signature
+follows the same pattern as the other `process(...)` methods we saw before,
+receiving the context, the event object, and the structure handler. Structure
+handler that, in this case, implements a quite simple `ITemplateBoundariesStructureHandler`
+interface:
 
 ```java
 public interface ITemplateBoundariesStructureHandler {
@@ -771,7 +774,7 @@ they should be going to the stadium instead of browsing the internet.
 We will use HTML5, Spring MVC and the SpringStandard dialect for our application,
 and we will be extending Thymeleaf by creating a `score` dialect that includes:
 
- * A `score:remarkforposition` attribute that outputs an internationalized text
+ * A `score:remarkforposition` attribute that outputs internationalized text
    for the Remarks column in the table. This text should explain whether the
    team's position in the table qualifies it for the World Champions League, the
    Continental Play-Offs, or relegates it to the Regional League.
@@ -875,8 +878,9 @@ that our template shows nicely as a prototype when directly opened in a browser.
 3.2. Changing the CSS class by team position
 --------------------------------------------
 
-The first attribute processor we will develop will be `ClassForPositionAttrProcessor`, which we will implement as a 
-subclass of a convenience abstract class provided by Thymeleaf called `AbstractAttributeTagProcessor`.
+The first attribute processor we will develop will be `ClassForPositionAttributeTagProcessor`,
+which we will implement as a subclass of a convenience abstract class provided
+by Thymeleaf called `AbstractAttributeTagProcessor`.
 
 This abstract class is the base for all tag processors (i.e. processors that act on *tag* events and not *models*) 
 which match (i.e. are selected for execution) based on the existence of a specific attribute
@@ -1167,7 +1171,7 @@ in contrast with the two previous processors, which were *attribute tag processo
 we want our processor to match (i.e. to be selected for execution) based on the **name of the tag**, not
 on the name of one of its attributes.
 
-This kind of tag processors have one advantage and also one disadvantage with
+This kind of tag processor has one advantage and also one disadvantage with
 respect to attribute tag processors:
 
  * Advantage: elements can contain multiple attributes, and so your element processors can receive a richer and 
@@ -1277,11 +1281,13 @@ a `<div>...</div>` fragment, so we will need to make use of the **model factory*
 
 ### The Model Factory
 
-The model factory is a special object available to processors (and other structures such as pre-processors,
-post-processors, etc.) able to create new instances of the *events* that conform *models* (fragments of templates), 
-and also new instances of *models* themselves.
+The model factory is a special object available to processors (and other
+structures such as pre-processors, post-processors, etc.) that can create new
+instances of *events* as *models* (fragments of templates), and also new
+instances of *models* themselves.
 
-It is therefore the tool we will use for creating new markup, like we can see in the code above:
+It is therefore the tool for creating new markup, like we can see in the code
+above:
 
 ```java
 final IModelFactory modelFactory = context.getModelFactory();
@@ -1325,9 +1331,9 @@ final IModel model =
 The last processor we will include in our dialect is of a different nature than the ones we've seen so
 far: it is a **model processor**, not a *tag processor*.
 
-As already mentioned in a previous section, model processors do not execute on a specific tag event,
-but on the complete sequence of events (i.e. the *model*) that conforms the entire element they
-are matching.
+As already mentioned in a previous section, model processors do not execute on a
+specific tag event, but on the complete sequence of events (i.e. the *model*)
+that contains the entire element they are matching.
 
 So if we have a model processor that matches `<p>` tags with attribute `score:matcher`, and a fragment of
 template such as:
