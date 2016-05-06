@@ -594,6 +594,7 @@ pre {
 	background-color: #333333;
 	line-height: 1.25em;
 	overflow: auto;
+	padding: 1em;
 	white-space: pre;
 }
 
@@ -638,7 +639,6 @@ pre.line-numbers > code {
 pre code {
 	color: #b9bdb6;
 	font-weight: normal;
-	padding: 1em;
 }
 
 table code {
