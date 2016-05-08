@@ -3,20 +3,14 @@ title: Thymeleaf 3 ten-minute migration guide
 ---
 
 
-Are you a Thymeleaf 2 user wishing to try the new **Thymeleaf 3**?
+Are you a Thymeleaf 2 user wishing to try the new **Thymeleaf 3.0**?
 
-First, the good news. Your existing Thymeleaf templates are almost 100%
+First, we have good news: Your existing Thymeleaf templates are almost 100%
 compatible with Thymeleaf 3 so you will only have to do a few modifications in
 your configuration.
 
-Thymeleaf 3.0 BETA versions are stable and do everything 2.1 did, so we
-encourage you to migrate to Thymeleaf 3 as soon as possible in order to take
-advantage of its performance improvements and new features.
-
-The only downside is that not all Thymeleaf dialects have been migrated to
-Thymeleaf 3 at this stage, so if you are using some external dialects they may
-not work with Thymeleaf 3. Please check if the required dialects have a
-Thymeleaf 3 compatible version.
+Let's have a quick look at each of the important new concepts and features this
+new version brings:
 
 
 Template changes
@@ -39,19 +33,23 @@ Let's show an example of the Thymeleaf 3 configuration using the *thymeleaf-spri
 integration package and Java config, as it is the most common choice among
 Thymeleaf users.
 
-First, the updated Maven dependencies to get Thymeleaf 3 and the Spring 4
-integration package:
+First, the updated Maven dependencies to get Thymeleaf 3 (core):
 
 ```xml
 <dependency>
   <groupId>org.thymeleaf</groupId>
   <artifactId>thymeleaf</artifactId>
-  <version>3.0.0.BETA03</version>
+  <version>3.0.0.RELEASE</version>
 </dependency>
+```
+
+And the Spring 4 integration package (which might be everything you need in a Spring app):
+
+```xml
 <dependency>
   <groupId>org.thymeleaf</groupId>
   <artifactId>thymeleaf-spring4</artifactId>
-  <version>3.0.0.BETA03</version>
+  <version>3.0.0.RELEASE</version>
 </dependency>
 ```
 
@@ -79,6 +77,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
   private TemplateEngine templateEngine() {
     SpringTemplateEngine engine = new SpringTemplateEngine();
+    engine.setEnableSpringELCompiler(true);
     engine.setTemplateResolver(templateResolver());
     return engine;
   }
@@ -103,7 +102,11 @@ Template modes are not strings anymore and the possible values are a bit
 different from Thymeleaf 2.  We will discuss it in a minute.
 
 If you need to add any extra dialects, you can use the `engine.addDialect(...)`
-method, but first make sure that it has a Thymeleaf 3 compatible version.
+method, but first make sure that it already has a Thymeleaf 3 compatible version.
+
+Also, note how now we can enable the SpEL (Spring Expression Language) compiler when
+Spring 4.2.4 or newer is used, which will positively affect the performance of our
+Spring applications.
 
 You can browse and download the source code for simple "Hello World!" examples
 at [Thymeleaf 3 + Spring 4 + Java config example](https://github.com/jmiguelsamper/thymeleaf3-spring-helloworld), [Thymeleaf 3 + Spring 4 + XML config example](https://github.com/jmiguelsamper/thymeleaf3-spring-xml-helloworld)
