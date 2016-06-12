@@ -16,25 +16,23 @@ thymeleafVersion: @projectVersion@
 1.1 What is Thymeleaf?
 ----------------------
 
-Thymeleaf is a Java library. It is an XML/XHTML/HTML5 template engine able to
-apply a set of transformations to template files in order to display data and/or
-text produced by your applications.
+Thymeleaf is a Java library. It is a server-side Java template engine for 
+HTML, XML, JavaScript, CSS and even plain text. 
 
-It is better suited for serving XHTML/HTML5 in web applications, but it can
-process any XML file, be it in web or in standalone applications.
+It is best suited for serving web content in web applications (Servlet-based 
+or not), but it can process template files offline too in applications that
+are not web-based.
 
-The main goal of Thymeleaf is to provide an elegant and well-formed way of
-creating templates. In order to achieve this, it is based on XML tags and
-attributes that define the execution of predefined logic on the _DOM (Document Object Model)_,
-instead of explicitly writing that logic as code inside the template.
+The main goal of Thymeleaf is to provide an elegant and highly-maintainable
+way of creating templates. To achieve this, it builds on the concept
+of *Natural Templates* in order to inject its logic into template files
+in a way that doesn't affect the templates' capabilities to be used as
+design prototypes. This improves communication of design and bridges the
+gap between design and development teams.
 
-Its architecture allows a fast processing of templates, relying on intelligent
-caching of parsed files in order to use the least possible amount of I/O
-operations during execution.
-
-And last but not least, Thymeleaf has been designed from the beginning with XML
-and Web standards in mind, allowing you to create fully validating templates if
-that is a need for you.
+Also, Thymeleaf has been designed from the beginning with Web Standards in 
+mind --especially HTML5--, allowing you to create fully validating 
+templates if that is a need for you.
 
 
 
@@ -42,32 +40,53 @@ that is a need for you.
 -------------------------------------------------
 
 Out-of-the-box, Thymeleaf allows you to process six kinds of templates, each of
-which is called a Template Mode:
+which is called a **Template Mode**:
 
+ * HTML
  * XML
- * Valid XML
- * XHTML
- * Valid XHTML
- * HTML5
- * Legacy HTML5
+ * TEXT
+ * JAVASCRIPT
+ * CSS
+ * RAW
 
-All of these modes refer to well-formed XML files except the _Legacy HTML5_ mode,
-which allows you to process HTML5 files with features such as standalone (not
-closed) tags, tag attributes without a value or not written between quotes. In
-order to process files in this specific mode, Thymeleaf will first perform a
-transformation that will convert your files to well-formed XML files which are
-still perfectly valid HTML5 (and are in fact the recommended way to create HTML5
-code)^[Given the fact that XHTML5 is just XML-formed HTML5 served with the
-application/xhtml+xml content type, we could also say that Thymeleaf supports
-XHTML5.].
+There are two *markup* template modes (`HTML` and `XML`), three *textual* template 
+modes (`TEXT`, `JAVASCRIPT` and `CSS`) and a *no-op* template mode (`RAW`).
 
-Also note that validation is only available for XML and XHTML templates.
+The **`HTML`** template mode will allow any kind of HTML markup input, including 
+HTML5, HTML 4 and XHTML. No markup validation of well-formedness check will be 
+performed, and template markup code structure will be respected to the biggest 
+possible extent in output.
 
-Nevertheless, these are not the only types of template that Thymeleaf can
-process, and the user is always able to define his/her own mode by specifying
-both a way to _parse_ templates in this mode and a way to _write_ the results.
-This way, anything that can be modelled as a DOM tree (be it XML or not) could
-effectively be processed as a template by Thymeleaf.
+The **`XML`** template mode will allow XML input. In this case, code is expected 
+to be well-formed from the XML standpoint: no unclosed tags, no unquoted 
+attributes, etc. and the parser will issue exceptions if well-formedness violations 
+are found. Note however that no *validation* (DTD, XML Schema) will be performed.
+
+The **`TEXT`** template mode will allow the use of a specific non-markup syntax 
+in order to process templates that are not written in markup form. Examples of 
+such templates might be text emails or templated documentation. Note that HTML 
+or XML templates can be also processed as `TEXT`, in which case they will not 
+be parsed as markup and every tag, DOCTYPE, comment, etc. will be treated as 
+mere text.
+
+The **`JAVASCRIPT`** template mode will allow the templated processing of JavaScript 
+files involved in a thymeleaf-powered application. This will allow the use of model 
+data inside those JavaScript files in the same way it can be done in HTML files, 
+but with JavaScript-specific integrations such as specialized escaping or 
+*natural scripting*. The `JAVASCRIPT` template mode is considered a *textual* mode 
+and therefore uses the same non-markup processing syntax as the `TEXT` template mode.
+
+The **`CSS`** template mode will allow the templated processing of CSS files involved 
+in a thymeleaf-powered application. Similar to the `JAVASCRIPT` mode, the `CSS` 
+template mode is also a *textual* mode and uses the non-markup processing syntax 
+from the `TEXT` template mode.
+
+The **`RAW`** template mode will simply not process the template at all. It is meant 
+to be used mainly for inserting untouched resources (files, URL responses, etc.) 
+into the templates being processed. For example, using this mode external, 
+uncontrolled resources in HTML format could be included into application templates 
+safely knowing that any thymeleaf code that these resources might include will not 
+be executed.
 
 
 
