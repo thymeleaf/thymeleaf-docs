@@ -31,7 +31,7 @@ design prototypes. This improves communication of design and bridges the
 gap between design and development teams.
 
 Also, Thymeleaf has been designed from the beginning with Web Standards in 
-mind --especially HTML5--, allowing you to create fully validating 
+mind --especially **HTML5**--, allowing you to create fully validating 
 templates if that is a need for you.
 
 
@@ -94,14 +94,18 @@ be executed.
 ----------------------------------
 
 Thymeleaf is an extremely extensible template engine (in fact it should be
-better called a _template engine framework_) that allows you to completely
-define the DOM nodes that will be processed in your templates and also how they
-will be processed.
+better called a _template engine framework_) that allows you to define and
+customized the way your templates will be processed to a fine level of detail.
 
-An object that applies some logic to a DOM node is called a _processor_, and a
-set of these processors ---plus some extra artifacts--- is called a dialect, of
-which Thymeleaf's core library provides one out-of-the-box called the _Standard Dialect_,
-which should be enough for the needs of a big percent of users.
+An object that applies some logic to a markup artifact (a tag, a text, a comment...
+of a mere placeholder if templates are not markup) is called a _processor_, and a
+set of these processors ---plus perhaps some extra artifacts--- is what normally
+conforms a **dialect**, of which Thymeleaf's core library provides one 
+out-of-the-box called the **Standard Dialect**,
+which should be enough for the needs of a big percent of users. 
+
+*Note dialects can actually have no processors and be entirely conformed of other 
+kinds of artifacts, but processors is definitely the most usual.*
 
 _The Standard Dialect is the dialect this tutorial covers_. Every attribute and
 syntax feature you will learn about in the following pages is defined by this
@@ -116,18 +120,12 @@ dialects at a time.
 > both define a dialect called the "SpringStandard Dialect", mostly equivalent 
 > to the Standard Dialect but with small adaptations to make better use of some 
 > features in Spring Framework (for example, by using Spring Expression Language 
-> instead of Thymeleaf's standard OGNL). So if you are a Spring MVC user you are 
+> or SpringEL instead of the default OGNL). So if you are a Spring MVC user you are 
 > not wasting your time, as almost everything you learn here will be of use in 
 > your Spring applications.
 
-The Thymeleaf Standard Dialect can process templates in any mode, but is
-especially suited for web-oriented template modes (XHTML and HTML5 ones).
-Besides HTML5, it specifically supports and validates the following XHTML
-specifications: _XHTML 1.0 Transitional_, _XHTML 1.0 Strict_, _XHTML 1.0 Frameset_,
-and _XHTML 1.1_.
-
 Most of the processors of the Standard Dialect are _attribute processors_. This
-allows browsers to correctly display XHTML/HTML5 template files even before
+allows browsers to correctly display HTML template files even before
 being processed, because they will simply ignore the additional attributes. For
 example, while a JSP using tag libraries could include a fragment of code not
 directly displayable by a browser like:
@@ -151,7 +149,7 @@ during Thymeleaf processing of the template.
 
 If needed, this will allow your designer and developer to work on the very same
 template file and reduce the effort required to transform a static prototype
-into a working template file. The ability to do this is a feature usually called
+into a working template file. The ability to do this is a feature called
 _Natural Templating_.
 
 
