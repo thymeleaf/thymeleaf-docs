@@ -154,57 +154,6 @@ _Natural Templating_.
 
 
 
-1.4 Overall Architecture
-------------------------
-
-Thymeleaf's core is a DOM processing engine. Specifically, it uses its own
-high-performance DOM implementation ---not the standard DOM API--- for building
-in-memory tree representations of your templates, on which it later operates by
-traversing their nodes and executing processors on them that modify the DOM
-according to the current _configuration_ and the set of data that is passed to
-the template for its representation ---known as the context.
-
-The use of a DOM template representation makes it very well suited for web
-applications because web documents are very often represented as object trees
-(in fact DOM trees are the way browsers represent web pages in memory). Also,
-building on the idea that most web applications use only a few dozen templates,
-that these are not big files and that they don't normally change while the
-application is running, Thymeleaf's usage of an in-memory cache of parsed
-template DOM trees allows it to be fast in production environments, because very
-little I/O is needed (if any) for most template processing operations. 
-
-> If you want more detail, later in this tutorial there is an entire chapter
-> dedicated to caching and to the way Thymeleaf optimizes memory and resource
-> usage for faster operation.
-
-Nevertheless, there is a restriction: this architecture also requires the use of
-bigger amounts of memory space for each template execution than other template parsing/processing approaches, which means that you should not use the library for creating big data XML documents (as opposed to web documents). As a general rule of thumb (and always depending on the memory size of your JVM), if you are generating XML files with sizes around the tens of megabytes in a single template execution, you probably should not be using Thymeleaf.
-
-> The reason we consider this restriction only applies to data XML files and not
-> web XHTML/HTML5 is that you should never generate web documents so big that
-> your users' browsers set ablaze and/or explode -- remember that these browsers
-> will also have to create DOM trees for your pages!
-
-
-
-1.5 Before going any further, you should read...
-------------------------------------------------
-
-Thymeleaf is especially suited for working in web applications. And web
-applications are based on a series of standards that everyone should know very
-well but few do -- even if they have been working with them for years.
-
-With the advent of HTML5, the state of the art in web standards today is more
-confusing than ever... _are we going back from XHTML to HTML? Will we abandon
-XML syntax? Why is nobody talking about XHTML 2.0 anymore?_
-
-So before going any further in this tutorial, you are strongly advised to read
-an article on Thymeleaf's web site called _"From HTML to HTML (via HTML)"_,
-which you can find at this address:
-[http://www.thymeleaf.org/doc/articles/fromhtmltohtmlviahtml.html](http://www.thymeleaf.org/doc/articles/fromhtmltohtmlviahtml.html)
-
-
-
 
 2 The Good Thymes Virtual Grocery
 =================================
@@ -218,7 +167,7 @@ can be found in the [Good Thymes Virtual Grocery GitHub repository](https://gith
 
 In order to better explain the concepts involved in processing templates with
 Thymeleaf, this tutorial will use a demo application you can download from the
-project web site.
+project's web site.
 
 This application represents the web site of an imaginary virtual grocery, and
 will provide us with the adequate scenarios to exemplify diverse Thymeleaf
@@ -250,29 +199,38 @@ public class ProductService {
 }
 ```
 
-Finally, at the web layer our application will have a filter that will delegate
+At the web layer our application will have a filter that will delegate
 execution to Thymeleaf-enabled commands depending on the request URL:
 
 ```java
 private boolean process(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
-        
+    
     try {
-            
+
+        // This prevents triggering engine executions for resource URLs
+        if (request.getRequestURI().startsWith("/css") ||
+                request.getRequestURI().startsWith("/images") ||
+                request.getRequestURI().startsWith("/favicon")) {
+            return false;
+        }
+
+        
         /*
          * Query controller/URL mapping and obtain the controller
          * that will process the request. If no controller is available,
          * return false and let other filters/servlets process the request.
          */
-        IGTVGController controller = GTVGApplication.resolveControllerForRequest(request);
+        IGTVGController controller = this.application.resolveControllerForRequest(request);
         if (controller == null) {
             return false;
         }
+
         /*
          * Obtain the TemplateEngine instance.
          */
-        TemplateEngine templateEngine = GTVGApplication.getTemplateEngine();
-            
+        ITemplateEngine templateEngine = this.application.getTemplateEngine();
+
         /*
          * Write the response headers
          */
@@ -283,18 +241,23 @@ private boolean process(HttpServletRequest request, HttpServletResponse response
 
         /*
          * Execute the controller and process view template,
-         * writing the results to the response writer.
+         * writing the results to the response writer. 
          */
         controller.process(
                 request, response, this.servletContext, templateEngine);
-
+        
         return true;
-            
+        
     } catch (Exception e) {
+        try {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (final IOException ignored) {
+            // Just ignore this
+        }
         throw new ServletException(e);
     }
-        
-}    
+    
+}
 ```
 
 This is our `IGTVGController` interface:
@@ -304,14 +267,14 @@ public interface IGTVGController {
 
     public void process(
             HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext, TemplateEngine templateEngine);    
+            ServletContext servletContext, ITemplateEngine templateEngine);    
     
 }
 ```
 
 All we have to do now is create implementations of the `IGTVGController`
 interface, retrieving data from the services and processing templates using the
-`TemplateEngine` object.
+`ITemplateEngine` object.
 
 In the end, it will look like this:
 
@@ -327,12 +290,13 @@ But first let's see how that template engine is initialized.
 The _process(...)_ method in our filter contained this sentence:
 
 ```java
-TemplateEngine templateEngine = GTVGApplication.getTemplateEngine();
+ITemplateEngine templateEngine = this.application.getTemplateEngine();
 ```
 
 Which means that the _GTVGApplication_ class is in charge of creating and
 configuring one of the most important objects in a Thymeleaf-enabled
-application: The `TemplateEngine` instance.
+application: The `TemplateEngine` instance (implementation of the
+`ITemplateEngine` interface).
 
 Our `org.thymeleaf.TemplateEngine` object is initialized like this:
 
@@ -345,31 +309,31 @@ public class GTVGApplication {
     ...
     
     
-    static {
-        ...
-        initializeTemplateEngine();
-        ...
-    }
-    
-    
-    private static void initializeTemplateEngine() {
-        
+    public GTVGApplication(final ServletContext servletContext) {
+
+        super();
+
         ServletContextTemplateResolver templateResolver = 
-            new ServletContextTemplateResolver();
-        // XHTML is the default mode, but we set it anyway for better understanding of code
-        templateResolver.setTemplateMode("XHTML");
+                new ServletContextTemplateResolver(servletContext);
+        
+        // HTML is the default mode, but we set it anyway for better understanding of code
+        templateResolver.setTemplateMode(TemplateMode.HTML);
         // This will convert "home" to "/WEB-INF/templates/home.html"
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         // Template cache TTL=1h. If not set, entries would be cached until expelled by LRU
-        templateResolver.setCacheTTLMs(3600000L);
+        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
         
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        // Cache is set to true by default. Set to false if you want templates to
+        // be automatically updated when modified.
+        templateResolver.setCacheable(true);
         
+        this.templateEngine = new TemplateEngine();
+        this.templateEngine.setTemplateResolver(templateResolver);
+        
+        ...
+
     }
-    
-    ...
 
 }
 ```
@@ -383,7 +347,8 @@ now these few lines of code will teach us enough about the steps needed.
 Let's start with the Template Resolver:
 
 ```java
-ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+ServletContextTemplateResolver templateResolver = 
+        new ServletContextTemplateResolver(servletContext);
 ```
 
 Template Resolvers are objects that implement an interface from the Thymeleaf
@@ -395,12 +360,14 @@ public interface ITemplateResolver {
     ...
   
     /*
-     * Templates are resolved by String name (templateProcessingParameters.getTemplateName())
+     * Templates are resolved by their name (or content) and also (optionally) their 
+     * owner template in case we are trying to resolve a fragment for another template.
      * Will return null if template cannot be handled by this template resolver.
      */
     public TemplateResolution resolveTemplate(
-            TemplateProcessingParameters templateProcessingParameters);
-
+            final IEngineConfiguration configuration,
+            final String ownerTemplate, final String template,
+            final Map<String, Object> templateResolutionAttributes);
 }
 ```
 
@@ -412,14 +379,13 @@ object that exists in every Java web application, and that resolves resources
 considering the web application root as the root for resource paths.
 
 But that's not all we can say about the template resolver, because we can set
-some configuration parameters on it. First, the template mode, one of the
-standard ones:
+some configuration parameters on it. First, the template mode:
 
 ```java
-templateResolver.setTemplateMode("XHTML");
+templateResolver.setTemplateMode(TemplateMode.HTML);
 ```
 
-XHTML is the default template mode for `ServletContextTemplateResolver`, but it
+HTML is the default template mode for `ServletContextTemplateResolver`, but it
 is good practice to establish it anyway so that our code documents clearly what
 is going on.
 
@@ -459,8 +425,9 @@ creation of our Template Engine object.
 
 ### The Template Engine
 
-Template Engine objects are of class _org.thymeleaf.TemplateEngine_, and these
-are the lines that created our engine in the current example:
+Template Engine objects are implementations of the `org.thymeleaf.ITemplateEngine`
+interface. One of these implementations is offered by the Thymeleaf core:
+`org.thymeleaf.TemplateEngine`, and we create an instance of it here:
 
 ```java
 templateEngine = new TemplateEngine();
@@ -470,7 +437,7 @@ templateEngine.setTemplateResolver(templateResolver);
 Rather simple, isn't it? All we need is to create an instance and set the
 Template Resolver to it.
 
-A template resolver is the only required parameter a `TemplateEngine` needs,
+A template resolver is the only *required* parameter a `TemplateEngine` needs,
 although of course there are many others that will be covered later (message
 resolvers, cache sizes, etc). For now, this is all we need.
 
@@ -494,10 +461,9 @@ The first version we will write of this page will be extremely simple: just a
 title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
   <head>
     <title>Good Thymes Virtual Grocery</title>
@@ -515,35 +481,30 @@ title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
 </html>
 ```
 
-The first thing you will notice here is that this file is XHTML that can be
-correctly displayed by any browser, because it does not include any non-XHTML
+The first thing you will notice here is that this file is HTML5 that can be
+correctly displayed by any browser, because it does not include any non-HTML
 tags (and browsers ignore all attributes they don't understand, like `th:text`).
-Also, browsers will display it in standards mode (not in quirks mode), because
-it has a well-formed `DOCTYPE` declaration.
 
-Next, this is also _valid_ XHTML^[Note that, although this template is valid
-XHTML, we earlier selected template mode "XHTML" and not "VALIDXHTML". For now,
-it will be OK for us to just have validation turned off -- but at the same time
-we don't want our IDE to complain too much.], because we have specified a
-Thymeleaf DTD which defines attributes like `th:text` so that your templates can
-be considered valid. And even more: once the template is processed (and all `th:*`
-attributes are removed), Thymeleaf will automatically substitute that DTD
-declaration in the `DOCTYPE` clause by a standard `XHTML 1.0 Strict` one (we
-will leave this DTD translation features for a later chapter).
-
-A thymeleaf namespace is also being declared for `th:*` attributes:
+But you may also notice that this template is not really a _valid_ HTML5 document, because 
+these non-standard attributes we are using in the `th:*` form are not allowed 
+by the HTML5 specification. In fact, we are even adding an `xmlns:th` 
+attribute to our `<html>` tag, something absolutely non-HTML5-ish:
 
 ```html
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 ```
 
-Note that, if we hadn't cared about our template's validity or well-formedness
-at all, we could have simply specified a standard `XHTML 1.0 Strict DOCTYPE`,
-along with no xmlns namespace declarations:
+...which has no influence at all in template processing, but works as an
+*incantation* that prevents our IDE to complain about the lack of a namespace
+definition for all those `th:*` attributes.
+
+So what if we wanted to make this template **HTML5-valid**? That would be easy:
+all we would need to do is switch to Thymeleaf's fully-HTML5-valid syntax, based
+on applying the `data-` prefix to attribute names and using hyphen (`-`)
+separators instead of semi-colon (`:`):
 
 ```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
 <html>
 
@@ -551,24 +512,27 @@ along with no xmlns namespace declarations:
     <title>Good Thymes Virtual Grocery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" media="all" 
-          href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+          href="../../css/gtvg.css" data-th-href="@{/css/gtvg.css}" />
   </head>
 
   <body>
   
-    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+    <p data-th-text="#{home.welcome}">Welcome to our grocery store!</p>
   
   </body>
 
 </html>
 ```
 
-...and this would still be perfectly processable by Thymeleaf in the XHTML mode
-(although probably our IDE would make our life quite miserable showing warnings
-everywhere).
+Custom `data-` prefixed attributes are allowed by the HTML5 specification so,
+with this code above, our template would be a *valid HTML5 document*.
 
-But enough about validation. Now for the really interesting part of the template:
-let's see what that `th:text` attribute is about.
+> Both notations are completely equivalent and interchangeable, but note 
+> that for the sake of simplicity and compactness of the code samples, 
+> throughout this tutorial we will use the *namespaced notation* (`th:*`). Also,
+> the `th:*` notation is more general and allowed in every Thymeleaf template
+> mode (`XML`, `TEXT`...) whereas the `data-` notation is only
+> allowed in `HTML` mode.
 
 
 ### Using th:text and externalizing text
