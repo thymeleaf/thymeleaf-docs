@@ -539,11 +539,11 @@ with this code above, our template would be a *valid HTML5 document*.
 
 Externalizing text is extracting fragments of template code out of template
 files so that they can be kept in specific separate files (typically `.properties`
-files) and that they can be easily substituted by equivalent texts written in
+files) and that they can be easily replaced with equivalent texts written in
 other languages (a process called internationalization or simply _i18n_).
-Externalized fragments of text are usually called "messages".
+Externalized fragments of text are usually called *"messages"*.
 
-Messages have always a key that identifies them, and Thymeleaf allows you to
+Messages always have a key that identifies them, and Thymeleaf allows you to
 specify that a text should correspond to a specific message with the `#{...}`
 syntax:
 
@@ -555,10 +555,10 @@ What we can see here are in fact two different features of the Thymeleaf
 Standard Dialect:
 
  * The `th:text` attribute, which evaluates its value expression and sets the
-   result of this evaluation as the body of the tag it is in, effectively
-   substituting that "Welcome to our grocery store!" text we see in the code.
+   result of this evaluation as the body of the host tag, effectively
+   replacing that "Welcome to our grocery store!" text we see in the code.
  * The `#{home.welcome}` expression, specified in the _Standard Expression Syntax_,
-   specifying that the text to be used by the `th:text` attribute should be the
+   instructing that the text to be used by the `th:text` attribute should be the
    message with the `home.welcome` key corresponding to whichever locale we are
    processing the template with.
 
@@ -604,11 +604,13 @@ implementing the `IGTVGController` interface we saw before:
 public class HomeController implements IGTVGController {
 
     public void process(
-            HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext, TemplateEngine templateEngine) {
+            final HttpServletRequest request, final HttpServletResponse response,
+            final ServletContext servletContext, final ITemplateEngine templateEngine)
+            throws Exception {
         
         WebContext ctx = 
-            new WebContext(request, response, servletContext, request.getLocale());
+                new WebContext(request, response, servletContext, request.getLocale());
+        
         templateEngine.process("home", ctx, response.getWriter());
         
     }
@@ -617,7 +619,7 @@ public class HomeController implements IGTVGController {
 ```
 
 The first thing we can see here is the creation of a context. A Thymeleaf
-context is an object implementing the `org.thymeleaf.context.IContext` interface.
+*context* is an object implementing the `org.thymeleaf.context.IContext` interface.
 Contexts should contain all the data required for an execution of the Template
 Engine in a variables map, and also reference the Locale that must be used for
 externalized messages.
@@ -625,26 +627,24 @@ externalized messages.
 ```java
 public interface IContext {
 
-    public VariablesMap<String,Object> getVariables();
     public Locale getLocale();
-    ...
+    public boolean containsVariable(final String name);
+    public Set<String> getVariableNames();
+    public Object getVariable(final String name);
     
 }
 ```
 
-There is a specialized extension of this interface, `org.thymeleaf.context.IWebContext`:
+There is a specialized extension of this interface, `org.thymeleaf.context.IWebContext`,
+meant to be used in ServletAPI-based web applications (like e.g. SpringMVC).
 
 ```java
 public interface IWebContext extends IContext {
     
-    public HttpSerlvetRequest getHttpServletRequest();
-    public HttpSession getHttpSession();
+    public HttpServletRequest getRequest();
+    public HttpServletResponse getResponse();
+    public HttpSession getSession();
     public ServletContext getServletContext();
-    
-    public VariablesMap<String,String[]> getRequestParameters();
-    public VariablesMap<String,Object> getRequestAttributes();
-    public VariablesMap<String,Object> getSessionAttributes();
-    public VariablesMap<String,Object> getApplicationAttributes();
     
 }
 ```
@@ -659,33 +659,22 @@ In fact we have to, because the use of a `ServletContextTemplateResolver`
 requires that we use a context implementing `IWebContext`.
 
 ```java
-WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 ```
 
-Only two of those three constructor arguments are required, because the default
+Only three of those four constructor arguments are required, because the default
 locale for the system will be used if none is specified (although you should
 never let this happen in real applications).
 
 From the interface definition we can tell that `WebContext` will offer
 specialized methods for obtaining the request parameters and request, session
-and application attributes . But in fact `WebContext` will do a little bit more
-than just that:
+and application attributes, which we will be able to easily integrate into
+our application's expressions. For example:
 
- * Add all the request attributes to the context variables map.
- * Add a context variable called `param` containing all the request parameters.
- * Add a context variable called `session` containing all the session attributes.
- * Add a context variable called `application` containing all the ServletContext attributes.
-
-Just before execution, a special variable is set into all context objects 
-(implementations of `IContext`), including both `Context` and `WebContext`, 
-called the execution info (`execInfo`). This variable contains two pieces of data that can
-be used from within your templates:
-
- * The template name (`${execInfo.templateName}`), the name specified for engine
-   execution, and corresponding to the template being executed.
- * The current date and time (`${execInfo.now}`), a `Calendar` object
-   corresponding to the moment the template engine started its execution for
-   this template.
+  * `${x}` will return a variable `x` stored into the Thymeleaf or as a *request attribute*.
+  * `${param.x}` will return a *request parameter* called `x` (which might be multivalued).
+  * `${session.x}` will return a *session attribute* called `x`.
+  * `${application.x}` will return a *servlet context attribute* called `x`.
 
 
 ### Executing the template engine
@@ -701,9 +690,9 @@ templateEngine.process("home", ctx, response.getWriter());
 Let's see the results of this using the Spanish locale:
 
 ```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
   <head>
     <title>Good Thymes Virtual Grocery</title>
@@ -746,12 +735,16 @@ Which is not exactly what we expected, because our `<b>` tag has been escaped
 and therefore it will be displayed at the browser.
 
 This is the default behaviour of the th:text attribute. If we want Thymeleaf to
-respect our XHTML tags and not escape them, we will have to use a different
+respect our HTML tags and not escape them, we will have to use a different
 attribute: `th:utext` (for "unescaped text"):
 
 ```html
 <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
+```
+
 This will output our message just like we wanted it:
+
+```html
 <p>Welcome to our <b>fantastic</b> grocery store!</p>
 ```
 
@@ -772,18 +765,19 @@ a context variable:
 
 ```java
 public void process(
-        HttpServletRequest request, HttpServletResponse response,
-        ServletContext servletContext, TemplateEngine templateEngine) {
+            final HttpServletRequest request, final HttpServletResponse response,
+            final ServletContext servletContext, final ITemplateEngine templateEngine)
+            throws Exception {
         
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
     Calendar cal = Calendar.getInstance();
         
     WebContext ctx = 
-        new WebContext(request, response, servletContext, request.getLocale());
+            new WebContext(request, response, servletContext, request.getLocale());
     ctx.setVariable("today", dateFormat.format(cal.getTime()));
         
     templateEngine.process("home", ctx, response.getWriter());
-      
+        
 }
 ```
 
@@ -801,11 +795,11 @@ it in our template:
 ```
 
 As you can see, we are still using the `th:text` attribute for the job (and
-that's correct, because we want to substitute the tag's body), but the syntax is
+that's correct, because we want to replace the tag's body), but the syntax is
 a little bit different this time and instead of a `#{...}` expression value, we
-are using a `${...}` one. This is a variable expression value, and it contains
+are using a `${...}` one. This is a **variable expression** value, and it contains
 an expression in a language called _OGNL (Object-Graph Navigation Language)_
-that will be executed on the context variables map.
+that will be executed on the context variables map we talked about before.
 
 The `${today}` expression simply means "get the variable called today", but
 these expressions could be more complex (like `${user.name}` for "get the
@@ -843,6 +837,7 @@ Standard Expression features:
     * Selection Variable Expressions: `*{...}`
     * Message Expressions: `#{...}`
     * Link URL Expressions: `@{...}`
+    * Fragment Expressions: `~{...}`
  * Literals
     * Text literals: `'one text'`, `'Another one!'`,...
     * Number literals: `0`, `34`, `3.0`, `12.3`,...
@@ -865,6 +860,8 @@ Standard Expression features:
     * If-then: `(if) ? (then)`
     * If-then-else: `(if) ? (then) : (else)`
     * Default: `(value) ?: (defaultvalue)`
+ * Special tokens:
+    * No-Operation: `_`
 
 All these features can be combined and nested:
 
@@ -4005,6 +4002,9 @@ Thymeleaf also allows accessing beans registered at your Spring Application Cont
 
 18 Appendix B: Expression Utility Objects
 =========================================
+
+**TODO**: Add #execInfo and maybe some other new ones
+
 
 ### Dates
 
