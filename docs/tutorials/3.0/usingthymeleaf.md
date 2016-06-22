@@ -931,8 +931,12 @@ We already mentioned that `${...}` expressions are in fact OGNL (Object-Graph
 Navigation Language) expressions executed on the map of variables contained in
 the context.
 
-> For detailed info about OGNL syntax and features, you should read the OGNL
-> Language Guide at: [http://commons.apache.org/ognl/](http://commons.apache.org/ognl/)
+> For detailed info about OGNL syntax and features, you should read the 
+> [OGNL Language Guide](http://commons.apache.org/ognl/)
+>
+> Also note that in Spring MVC-enabled applications OGNL will be replaced with **SpringEL**,
+> but its syntax is very similar to that of OGNL (actually, exactly the same for
+> most common cases).
 
 From OGNL's syntax, we know that this:
 
@@ -943,7 +947,7 @@ From OGNL's syntax, we know that this:
 ...is in fact equivalent to this:
 
 ```java
-ctx.getVariables().get("today");
+ctx.getVariable("today");
 ```
 
 But OGNL allows us to create quite more powerful expressions, and that's how
@@ -958,7 +962,7 @@ this:
 ...does in fact obtain the user name by executing:
 
 ```java
-((User) ctx.getVariables().get("session").get("user")).getName();
+((User) ctx.getVariable("session").get("user")).getName();
 ```
 
 But getter method navigation is just one of OGNL's features. Let's see some more:
@@ -1005,8 +1009,10 @@ referenced (per OGNL standard) starting with the `#` symbol:
  * `#ctx`: the context object.
  * `#vars:` the context variables.
  * `#locale`: the context locale.
- * `#httpServletRequest`: (only in Web Contexts) the `HttpServletRequest` object.
- * `#httpSession`: (only in Web Contexts) the `HttpSession` object.
+ * `#request`: (only in Web Contexts) the `HttpServletRequest` object.
+ * `#response`: (only in Web Contexts) the `HttpServletResponse` object.
+ * `#session`: (only in Web Contexts) the `HttpSession` object.
+ * `#servletContext`: (only in Web Contexts) the `ServletContext` object.
 
 So we can do this:
 
@@ -1023,6 +1029,9 @@ You can read the full reference of these objects in the
 Besides these basic objects, Thymeleaf will offer us a set of utility objects
 that will help us perform common tasks in our expressions.
 
+ * `#execInfo`: 
+ * `#conversions`:
+ * `#uris`:
  * `#dates`: utility methods for `java.util.Date` objects: formatting, component
    extraction, etc.
  * `#calendars`: analogous to `#dates`, but for `java.util.Calendar` objects.
