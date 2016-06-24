@@ -1029,9 +1029,11 @@ You can read the full reference of these objects in the
 Besides these basic objects, Thymeleaf will offer us a set of utility objects
 that will help us perform common tasks in our expressions.
 
- * `#execInfo`: 
- * `#conversions`:
- * `#uris`:
+ * `#execInfo`: utility information about the template being processed.
+ * `#messages`: utility methods for obtaining externalized messages inside
+   variables expressions, in the same way as they would be obtained using #{...} syntax.
+ * `#uris`: utility methods for escaping parts of URLs/URIs
+ * `#conversions`: utility methods for executing the configured *conversion service* (if any).
  * `#dates`: utility methods for `java.util.Date` objects: formatting, component
    extraction, etc.
  * `#calendars`: analogous to `#dates`, but for `java.util.Calendar` objects.
@@ -1046,8 +1048,6 @@ that will help us perform common tasks in our expressions.
  * `#maps`: utility methods for maps.
  * `#aggregates`: utility methods for creating aggregates on arrays or
    collections.
- * `#messages`: utility methods for obtaining externalized messages inside
-   variables expressions, in the same way as they would be obtained using #{...} syntax.
  * `#ids`: utility methods for dealing with id attributes that might be repeated
    (for example, as a result of an iteration).
 
@@ -1073,7 +1073,8 @@ templateEngine.process("home", ctx, response.getWriter());
 ...we can do just this:
 
 ```java
-WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+WebContext ctx = 
+    new WebContext(request, response, servletContext, request.getLocale());
 ctx.setVariable("today", Calendar.getInstance());
 
 templateEngine.process("home", ctx, response.getWriter());
@@ -1173,10 +1174,16 @@ There are different types of URLs:
       another context (= application) in the same server.
     * Protocol-relative URLs, like `//code.jquery.com/jquery-2.0.3.min.js`
 
-Thymeleaf can handle absolute URLs in any situation, but for relative ones it
-will require you to use a context object that implements the `IWebContext`
-interface, which contains some info coming from the HTTP request and needed to
-create relative links.
+The real processing of these expressions and their conversion to the URLs that will
+be actually output will be done by implementations of the 
+`org.thymeleaf.linkbuilder.ILinkBuilder` interface that are registered into the 
+`ITemplateEngine` object being used.
+
+By default, a single implementation of this interface is registered of class
+`org.thymeleaf.linkbuilder.StandardLinkBuilder`, which is enough for both offline
+(non-web) and also web scenarios based on the Servlet API. Other scenarios (like integration
+with non-ServletAPI web frameworks) might need specific implementations of the link
+builder interface.
 
 Let's use this new syntax. Meet the `th:href` attribute:
 
@@ -1195,10 +1202,10 @@ Let's use this new syntax. Meet the `th:href` attribute:
 Some things to note here:
 
  * `th:href` is an attribute modifier attribute: once processed, it will compute
-   the link URL to be used and set the href attribute of the `<a>` tag to this
-   URL.
+   the link URL to be used and set the value of the href attribute of the `<a>` tag 
+   to this URL.
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
-   The required URL-encoding operations will also be automatically performed.
+   The required URL-parameter-encoding operations will also be automatically performed.
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
  * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId})}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
