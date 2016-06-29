@@ -1251,7 +1251,53 @@ URLs in order to link to different contexts in the same server. These URLs will 
 
 
 
-4.5 Literals
+4.5 Fragments
+-------------
+
+Fragment expressions are an easy way to represent fragments of markup and move them around templates. This
+allows us to replicate them, pass them to other templates as arguments, etc.
+
+The most common use is for fragment insertion using `th:insert` or `th:replace` (more on these in
+a later section):
+
+```html
+<div th:insert="~{commons :: main}">...</div>
+```
+
+But they can be used anywhere, just as any other variable:
+
+```html
+<div th:with="frag=~{footer :: #main/text()}">
+  <p th:insert="${frag}">
+</div>
+```
+
+And they are powerful arguments to fragments, so that these fragments can be enriched with markup from
+the calling templates:
+
+```html
+...
+<head th:replace="base :: common_header(~{::title},~{::link})">
+
+  <title>Awesome - Main</title>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
+
+</head>
+...
+```
+
+Also, there is a special fragment expression called the *empty fragment* (`~{}`) which can be used for
+specifying *no markup*:
+
+```html
+<div th:insert="base :: main_block(~{})">...</div>
+```
+
+
+
+4.6 Literals
 ------------
 
 ###Text literals
@@ -1322,7 +1368,8 @@ instead of:
 
 
 
-4.6 Appending texts
+
+4.7 Appending texts
 -------------------
 
 Texts, no matter whether they are literals or the result of evaluating variable or message expressions, can be easily appended using the `+` operator:
@@ -1334,7 +1381,7 @@ th:text="'The name of the user is ' + ${user.name}"
 
 
 
-4.7 Literal substitutions
+4.8 Literal substitutions
 -------------------------
 
 Literal substitutions allow the easy formatting of strings containing values from variables without the need to append literals with `'...' + '...'`.
@@ -1362,7 +1409,7 @@ Literal substitutions can be combined with other types of expressions:
 
 
 
-4.8 Arithmetic operations
+4.9 Arithmetic operations
 -------------------------
 
 Some arithmetic operations are also available: `+`, `-`, `*`, `/` and `%`.
@@ -1382,8 +1429,8 @@ th:with="isEven=${prodStat.count % 2 == 0}"
 Note that textual aliases exist for some of these operators: `div` (`/`), `mod` (`%`).
 
 
-4.9 Comparators and Equality
-----------------------------
+4.10 Comparators and Equality
+-----------------------------
 
 Values in expressions can be compared with the `>`, `<`, `>=` and `<=` symbols,
 as usual, and also the `==` and `!=` operators can be used to check equality (or
@@ -1401,7 +1448,7 @@ Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`
 
 
 
-4.10 Conditional expressions
+4.11 Conditional expressions
 ---------------------------
 
 _Conditional expressions_ are meant to evaluate only one of two expressions
@@ -1440,7 +1487,7 @@ the condition is false:
 
 
 
-4.11 Default expressions (Elvis operator)
+4.12 Default expressions (Elvis operator)
 -----------------------------------------
 
 A _default expression_ is a special kind of conditional value without a _then_
@@ -1477,7 +1524,80 @@ parentheses:
 
 
 
-4.12 Preprocessing
+4.13 The No-Operation token
+---------------------------
+
+The No-Operation token is represented by an underscore symbol (`_`).
+
+The idea behind this token is to specify that the desired result for an expression is 
+to actually *do nothing*, i.e. do exactly as if the processable attribute was not 
+there at all:
+
+For instance, imagine we had a complex fragment expression such as this, which inserts 
+a specific tag with `id="base_{TYPE}"` depending on the type of user and defaults 
+to a *no operaton* if such fragment does not exist:
+
+```html
+<div th:insert="~{commons :: |#base_${user.type}|} ?: _">some text here</div>
+```
+
+What will the result of this be if there is no such fragment for our user type? This:
+
+```html
+<div>some text here</div>
+```
+
+Note how the `some text here` body is preserved. Because what happened was that 
+the `th:insert` simply acted as if it simply didn't exist.
+
+
+###Using prototypes for default values
+
+This no-op token allows developers to use prototyping text as default values. For example, instead of:
+```html
+<span th:text="${user.name} ?: 'no user authenticated'">...</span>
+```
+...we can directly use *'no user authenticated'* as a prototyping text, which results in code that 
+is both more concise and versatile from a design standpoint:
+
+```html
+<span th:text="${user.name} ?: _">no user authenticated</span>
+```
+
+###Using no-op as a fragment parameter
+
+The no-op can be also used as a parameter to a fragment, if we just want to let our fragment use 
+its current markup as a default value:
+
+```html
+<!DOCTYPE html>
+<head th:replace="~{commons :: header (title=_)}">
+  ...
+</head>
+```
+
+And then at `commons.html`:
+
+```html
+<head th:fragment="header (title)">
+  <title th:text="${title}">The Awesome Application</title>
+</head>
+```
+
+This combination will just use *"The Awesome Application"* for our page's title:
+
+```html
+<!DOCTYPE html>
+<head>
+  <title>The Awesome Application</title>
+</head>
+```
+
+
+
+
+
+4.14 Preprocessing
 ------------------
 
 In addition to all these features for expression processing, Thymeleaf offers to
