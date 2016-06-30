@@ -1550,13 +1550,14 @@ What will the result of this be if there is no such fragment for our user type? 
 Note how the `some text here` body is preserved. Because what happened was that 
 the `th:insert` simply acted as if it simply didn't exist.
 
-
 ###Using prototypes for default values
 
 This no-op token allows developers to use prototyping text as default values. For example, instead of:
+
 ```html
 <span th:text="${user.name} ?: 'no user authenticated'">...</span>
 ```
+
 ...we can directly use *'no user authenticated'* as a prototyping text, which results in code that 
 is both more concise and versatile from a design standpoint:
 
@@ -2348,10 +2349,9 @@ pages, and for that we define a `/WEB-INF/templates/footer.html` file containing
 this code:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
   <body>
   
@@ -2365,55 +2365,76 @@ this code:
 ```
 
 The code above defines a fragment called `copy` that we can easily include in
-our home page using one of the `th:include` or `th:replace` attributes:
+our home page using one of the `th:insert` or `th:replace` attributes (and also
+`th:include`, though its use is no longer recommended since Thymeleaf 3.0):
 
 ```html
 <body>
 
   ...
 
-  <div th:include="footer :: copy"></div>
+  <div th:insert="~{footer :: copy}"></div>
   
 </body>
 ```
 
-The syntax for both these inclusion attributes is quite straightforward. There
-are three different formats:
+Note that `th:insert` expects a *fragment expression* (`~{...}`), or more specifically
+*an expression that results in a fragment*. But in the former case (a non-complex
+*fragment expression*) like the code above, the (`~{`,`}`) enclosing is completely optional, so 
+the code above would be equivalent to:
 
- * `"templatename::domselector"` or the equivalent `templatename::[domselector]` Includes the fragment resulting from executing the specified DOM Selector on the template named `templatename`.
-    * Note that `domselector` can be a mere fragment name, so you could specify something as simple as `templatename::fragmentname` like in the `footer :: copy` above.
+```html
+<body>
 
-   > DOM Selector syntax is similar to XPath expressions and CSS selectors, see the [Appendix C](#appendix-c-dom-selector-syntax) for more info on this syntax.
+  ...
+
+  <div th:insert="footer :: copy></div>
+  
+</body>
+```
+
+
+### Fragment specification syntax
+
+The syntax of fragment expressions is quite straightforward. There are three different formats:
+
+ * `"templatename::selector"` Includes the fragment resulting from applying the specified Markup Selector on the template named `templatename`.
+    * Note that `selector` can be a mere fragment name, so you could specify something as simple as `templatename::fragmentname` like in the `footer :: copy` above. More on the syntax of markup selectors below.
+
+   > Markup Selector syntax is defined by the underlying AttoParser parsing library, and is similar to 
+   > XPath expressions or CSS selectors, see the [Appendix C](#appendix-c-markup-selector-syntax) for more info.
 
  * `"templatename"` Includes the complete template named `templatename`.
 
-   > Note that the template name you use in `th:include`/`th:replace` tags
+   > Note that the template name you use in `th:insert`/`th:replace` tags
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
- * `::domselector"` or `"this::domselector"` Includes a fragment from the same template.
+ * `::selector"` or `"this::selector"` Includes a fragment from the same template.
 
-Both `templatename` and `domselector` in the above examples
+Both `templatename` and `selector` in the above examples
 can be fully-featured expressions (even conditionals!) like:
 
 ```html
-<div th:include="footer :: (${user.isAdmin}? #{footer.admin} : #{footer.normaluser})"></div>
+<div th:insert="footer :: (${user.isAdmin}? #{footer.admin} : #{footer.normaluser})"></div>
 ```
 
-Fragments can include any `th:* attributes`. These attributes will be evaluated
-once the fragment is included into the target template (the one with the `th:include`/`th:replace`
+Fragments can include any `th:*` attributes. These attributes will be evaluated
+once the fragment is included into the target template (the one with the `th:insert`/`th:replace`
 attribute), and they will be able to reference any context variables defined in
 this target template.
 
 > A big advantage of this approach to fragments is that you can write your
 > fragments' code in pages that are perfectly displayable by a browser, with a
-> complete and even validating XHTML structure, while still retaining the
+> complete and even *valid* markup structure, while still retaining the
 > ability to make Thymeleaf include them into other templates.
 
 
 ### Referencing fragments without `th:fragment`
 
-Besides, thanks to the power of DOM Selectors, we can include fragments that do not use any `th:fragment` attributes. It can even be markup code coming from a different application with no knowledge of Thymeleaf at all:
+Thanks to the power of Markup Selectors, we can include fragments that do not use any 
+`th:fragment` attributes. It can even be markup code coming from a different application 
+with no knowledge of Thymeleaf at all:
 
 ```html
 ...
@@ -2430,19 +2451,27 @@ We can use the fragment above simply referencing it by its `id` attribute, in a 
 
   ...
 
-  <div th:include="footer :: #copy-section"></div>
+  <div th:insert="~{footer :: #copy-section}"></div>
   
 </body>
 ```
 
 
 
-### Difference between `th:include` and `th:replace` 
+### Difference between `th:insert` and `th:replace` (and `th:include`)
 
-And what is the difference between `th:include` and `th:replace`? Whereas `th:include`
-will include the contents of the fragment into its host tag, `th:replace`
-will actually substitute the host tag by the fragment's. So that an HTML5
-fragment like this:
+And what is the difference between `th:insert`, `th:replace` and `th:include` (not
+recommended since 3.0)? 
+
+  * `th:insert` is the simplest: it will simply insert the specified fragment as the body
+  of its host tag.
+
+  * `th:replace` actually *replaces* its host tag with the specified fragment.
+
+  * `th:include` is similar to `th:insert`, but instead of inserting the fragment it only 
+  inserts the *contents*
+
+So that an HTML fragment like this:
 
 ```html
 <footer th:fragment="copy">
@@ -2450,15 +2479,18 @@ fragment like this:
 </footer>
 ```
 
-...included twice in host `<div>` tags, like this:
+...included three times in host `<div>` tags, like this:
 
 ```html
 <body>
 
   ...
 
-  <div th:include="footer :: copy"></div>
+  <div th:insert="footer :: copy"></div>
+
   <div th:replace="footer :: copy"></div>
+
+  <div th:include="footer :: copy"></div>
   
 </body>
 ```
@@ -2471,16 +2503,21 @@ fragment like this:
   ...
 
   <div>
-    &copy; 2011 The Good Thymes Virtual Grocery
+    <footer>
+      &copy; 2011 The Good Thymes Virtual Grocery
+    </footer>
   </div>
+
   <footer>
     &copy; 2011 The Good Thymes Virtual Grocery
   </footer>
+
+  <div>
+    &copy; 2011 The Good Thymes Virtual Grocery
+  </div>
   
 </body>
 ```
-
-The `th:substituteby` attribute can also be used as an alias for `th:replace`, but the latter is recommended. Note that `th:substituteby` might be deprecated in future versions.
 
 
 
@@ -2500,17 +2537,20 @@ This requires the use of one of these two syntaxes to call the fragment from `th
 `th:replace`:
 
 ```html
-<div th:include="::frag (${value1},${value2})">...</div>
-<div th:include="::frag (onevar=${value1},twovar=${value2})">...</div>
+<div th:replace="::frag (${value1},${value2})">...</div>
+<div th:replace="::frag (onevar=${value1},twovar=${value2})">...</div>
 ```
 
 Note that order is not important in the last option:
 
 ```html
-<div th:include="::frag (twovar=${value2},onevar=${value1})">...</div>
+<div th:replace="::frag (twovar=${value2},onevar=${value1})">...</div>
 ```
 
-###Fragment local variables without fragment signature
+
+
+8.2 Parameterizable fragment signatures
+---------------------------------------
 
 Even if fragments are defined without signature, like this:
 
@@ -2523,20 +2563,19 @@ Even if fragments are defined without signature, like this:
 We could use the second syntax specified above to call them (and only the second one):
 
 ```html	
-<div th:include="::frag (onevar=${value1},twovar=${value2})">
+<div th:replace="::frag (onevar=${value1},twovar=${value2})">
 ```
 
-This would be, in fact, equivalent to a combination of `th:include` and `th:with`:
+This would be, in fact, equivalent to a combination of `th:replace` and `th:with`:
 
 ```html	
-<div th:include="::frag" th:with="onevar=${value1},twovar=${value2}">
+<div th:replace="::frag" th:with="onevar=${value1},twovar=${value2}">
 ```
 
 **Note** that this specification of local variables for a fragment ---no matter whether it 
 has a signature or not--- does not cause the context to emptied previously to its 
 execution. Fragments will still be able to access every context variable being used at the 
 calling template like they currently are. 
-
 
 
 ###th:assert for in-template assertions
@@ -2556,8 +2595,138 @@ This comes in handy for validating parameters at a fragment signature:
 
 
 
+8.3 Flexible layouts: beyond mere fragment insertion
+----------------------------------------------------
 
-8.3 Removing template fragments
+Thanks to *fragment expressions*, we can specify parameters for fragments that are not texts,
+numbers, bean objects... but instead fragments of markup.
+
+This allows us to create our fragments in a way such that they can be *enriched* wich markup
+coming from the calling templates, resulting in a very flexible **template layout mechanism**. 
+
+Note the use of the `title` and `links` variables in the fragment below:
+
+```html
+<head th:fragment="common_header(title,links)">
+
+  <title th:replace="${title}">The awesome application</title>
+
+  <!-- Common styles and scripts -->
+  <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/awesomeapp.css}">
+  <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+  <script type="text/javascript" th:src="@{/sh/scripts/codebase.js}"></script>
+
+  <!--/* Per-page placeholder for additional links */-->
+  <th:block th:replace="${links}" />
+
+</head>
+```
+
+We can now call this fragment like:
+
+```html
+...
+<head th:replace="base :: common_header(~{::title},~{::link})">
+
+  <title>Awesome - Main</title>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
+
+</head>
+...
+```
+
+...and the result will use the actual `<title>` and `<link>` tags from our calling
+template as the values of the `title` and `links` variables, resulting in
+our fragment being customized during insertion:
+
+```html
+...
+<head>
+
+  <title>Awesome - Main</title>
+
+  <!-- Common styles and scripts -->
+  <link rel="stylesheet" type="text/css" media="all" href="/awe/css/awesomeapp.css">
+  <link rel="shortcut icon" href="/awe/images/favicon.ico">
+  <script type="text/javascript" src="/awe/sh/scripts/codebase.js"></script>
+
+  <link rel="stylesheet" href="/awe/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/awe/themes/smoothness/jquery-ui.css">
+
+</head>
+...
+```
+
+
+### Using the empty fragment 
+
+A special fragment expression, the *empty fragment* (`~{}`), can be used for
+specifying *no markup*:
+
+```html
+<head th:replace="base :: common_header(~{::title},~{})">
+
+  <title>Awesome - Main</title>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
+
+</head>
+...
+```
+
+Note how the second parameter of the fragment (`links`) is set to the *empty
+fragment* and therefore nothing is written in the `<th:block th:replace="${links}" />`.
+
+```html
+...
+<head>
+
+  <title>Awesome - Main</title>
+
+  <!-- Common styles and scripts -->
+  <link rel="stylesheet" type="text/css" media="all" href="/awe/css/awesomeapp.css">
+  <link rel="shortcut icon" href="/awe/images/favicon.ico">
+  <script type="text/javascript" src="/awe/sh/scripts/codebase.js"></script>
+
+</head>
+...
+```
+
+
+
+
+8.4 Using the No-Op token in template layouts
+---------------------------------------------
+
+At this point we can revisit two useful concepts of Thymeleaf expressions: the empty fragment and
+the *no-operation* token.
+
+Remember the *empty fragment* (`~{}`) which can be used for specifying *no markup*, which can be
+convenient in fragment insertion expressions. For example, we might not want to specify any 
+`<link>` tags for the 
+
+```html
+<head th:replace="base :: common_header(~{::title},~{})">...</head>
+```
+
+
+
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+
+
+8.5 Removing template fragments
 -------------------------------
 
 Let's revisit the last version of our product list template:
@@ -4843,8 +5012,8 @@ ${#ids.prev('someId')}
 
 
 
-19 Appendix C: DOM Selector syntax
-==================================
+19 Appendix C: Markup Selector syntax
+=====================================
 
 DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
 
