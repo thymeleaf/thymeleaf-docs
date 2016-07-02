@@ -1272,29 +1272,8 @@ But they can be used anywhere, just as any other variable:
 </div>
 ```
 
-And they are powerful arguments to fragments, so that these fragments can be enriched with markup from
-the calling templates:
-
-```html
-...
-<head th:replace="base :: common_header(~{::title},~{::link})">
-
-  <title>Awesome - Main</title>
-
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
-
-</head>
-...
-```
-
-Also, there is a special fragment expression called the *empty fragment* (`~{}`) which can be used for
-specifying *no markup*:
-
-```html
-<div th:insert="base :: main_block(~{})">...</div>
-```
-
+Later in this tutorial there is an entire section devoted to Template Layout, including
+deeper explanation of fragment expressions.
 
 
 4.6 Literals
@@ -1530,29 +1509,11 @@ parentheses:
 The No-Operation token is represented by an underscore symbol (`_`).
 
 The idea behind this token is to specify that the desired result for an expression is 
-to actually *do nothing*, i.e. do exactly as if the processable attribute was not 
-there at all:
+to actually *do nothing*, i.e. do exactly as if the processable attribute (e.g. `th:text`) was not 
+there at all.
 
-For instance, imagine we had a complex fragment expression such as this, which inserts 
-a specific tag with `id="base_{TYPE}"` depending on the type of user and defaults 
-to a *no operaton* if such fragment does not exist:
-
-```html
-<div th:insert="~{commons :: |#base_${user.type}|} ?: _">some text here</div>
-```
-
-What will the result of this be if there is no such fragment for our user type? This:
-
-```html
-<div>some text here</div>
-```
-
-Note how the `some text here` body is preserved. Because what happened was that 
-the `th:insert` simply acted as if it simply didn't exist.
-
-###Using prototypes for default values
-
-This no-op token allows developers to use prototyping text as default values. For example, instead of:
+Among other possibilities, this allows developers to use prototyping text as default values. For 
+example, instead of:
 
 ```html
 <span th:text="${user.name} ?: 'no user authenticated'">...</span>
@@ -1564,36 +1525,6 @@ is both more concise and versatile from a design standpoint:
 ```html
 <span th:text="${user.name} ?: _">no user authenticated</span>
 ```
-
-###Using no-op as a fragment parameter
-
-The no-op can be also used as a parameter to a fragment, if we just want to let our fragment use 
-its current markup as a default value:
-
-```html
-<!DOCTYPE html>
-<head th:replace="~{commons :: header (title=_)}">
-  ...
-</head>
-```
-
-And then at `commons.html`:
-
-```html
-<head th:fragment="header (title)">
-  <title th:text="${title}">The Awesome Application</title>
-</head>
-```
-
-This combination will just use *"The Awesome Application"* for our page's title:
-
-```html
-<!DOCTYPE html>
-<head>
-  <title>The Awesome Application</title>
-</head>
-```
-
 
 
 
@@ -2547,12 +2478,9 @@ Note that order is not important in the last option:
 <div th:replace="::frag (twovar=${value2},onevar=${value1})">...</div>
 ```
 
+###Fragment local variables without fragment arguments
 
-
-8.2 Parameterizable fragment signatures
----------------------------------------
-
-Even if fragments are defined without signature, like this:
+Even if fragments are defined without arguments, like this:
 
 ```html	
 <div th:fragment="frag">
@@ -2573,7 +2501,7 @@ This would be, in fact, equivalent to a combination of `th:replace` and `th:with
 ```
 
 **Note** that this specification of local variables for a fragment ---no matter whether it 
-has a signature or not--- does not cause the context to emptied previously to its 
+has an argument signature or not--- does not cause the context to emptied previously to its 
 execution. Fragments will still be able to access every context variable being used at the 
 calling template like they currently are. 
 
@@ -2663,22 +2591,20 @@ our fragment being customized during insertion:
 ### Using the empty fragment 
 
 A special fragment expression, the *empty fragment* (`~{}`), can be used for
-specifying *no markup*:
+specifying *no markup*. Using the previous example:
 
 ```html
 <head th:replace="base :: common_header(~{::title},~{})">
 
   <title>Awesome - Main</title>
 
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
-
 </head>
 ...
 ```
 
 Note how the second parameter of the fragment (`links`) is set to the *empty
-fragment* and therefore nothing is written in the `<th:block th:replace="${links}" />`.
+fragment* and therefore nothing is written for the `<th:block th:replace="${links}" />`
+block:
 
 ```html
 ...
@@ -2696,40 +2622,57 @@ fragment* and therefore nothing is written in the `<th:block th:replace="${links
 ```
 
 
+### Using the no-operation token
 
-
-8.4 Using the No-Op token in template layouts
----------------------------------------------
-
-At this point we can revisit two useful concepts of Thymeleaf expressions: the empty fragment and
-the *no-operation* token.
-
-Remember the *empty fragment* (`~{}`) which can be used for specifying *no markup*, which can be
-convenient in fragment insertion expressions. For example, we might not want to specify any 
-`<link>` tags for the 
+The no-op can be also used as a parameter to a fragment, if we just want to let our fragment use 
+its current markup as a default value. Again, using the `common_header` example:
 
 ```html
-<head th:replace="base :: common_header(~{::title},~{})">...</head>
+...
+<head th:replace="base :: common_header(_,~{::link})">
+
+  <title>Awesome - Main</title>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/themes/smoothness/jquery-ui.css}">
+
+</head>
+...
+```
+
+See how the `title` argument (first argument of the `common_header` fragment) is set to *no-op* (`_`),
+which results in this part of the fragment not being executed at all (`title` = *no-operation*):
+
+```html
+  <title th:replace="${title}">The awesome application</title>
+```
+
+So the result is:
+
+```html
+...
+<head>
+
+  <title>The awesome application</title>
+
+  <!-- Common styles and scripts -->
+  <link rel="stylesheet" type="text/css" media="all" href="/awe/css/awesomeapp.css">
+  <link rel="shortcut icon" href="/awe/images/favicon.ico">
+  <script type="text/javascript" src="/awe/sh/scripts/codebase.js"></script>
+
+  <link rel="stylesheet" href="/awe/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/awe/themes/smoothness/jquery-ui.css">
+
+</head>
+...
 ```
 
 
 
-
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
-
-
-8.5 Removing template fragments
+8.4 Removing template fragments
 -------------------------------
 
-Let's revisit the last version of our product list template:
+Back to the example application, let's revisit the last version of our product list template:
 
 ```html
 <table>
