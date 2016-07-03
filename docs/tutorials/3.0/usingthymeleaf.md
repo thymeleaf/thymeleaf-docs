@@ -1600,10 +1600,10 @@ with a form:
 </form>
 ```
 
-It looks quite OK, but the fact is that this file looks more like a static XHTML
-page than a template for a web application. First, the action attribute in our
+It looks quite OK, but the fact is that this file looks more like a static HTML
+page than a template for a web application. First, the `action` attribute in our
 form statically links to the template file itself, so that there is no place
-for useful URL rewriting. Second, the value attribute in the submit button makes
+for useful URL rewriting. Second, the `value` attribute in the submit button makes
 it display a text in English, but we'd like it to be internationalized.
 
 Enter then the `th:attr` attribute, and its ability to change the value of
@@ -1692,7 +1692,7 @@ exactly this same kind of attributes:
 ```
 
 There are quite a lot of attributes like these, each of them targeting a
-specific XHTML or HTML5 attribute:
+specific HTML5 attribute:
 
 <div class="table-scroller">
 |-----------------------+-----------------------+-----------------------|
@@ -1709,29 +1709,52 @@ specific XHTML or HTML5 attribute:
 |`th:datetime`          |`th:dir`               |`th:draggable`         |
 |`th:dropzone`          |`th:enctype`           |`th:for`               |
 |`th:form`              |`th:formaction`        |`th:formenctype`       |
-|`th:formmethod`        |`th:formtarget`        |`th:frame`             |
-|`th:frameborder`       |`th:headers`           |`th:height`            |
-|`th:high`              |`th:href`              |`th:hreflang`          |
-|`th:hspace`            |`th:http-equiv`        |`th:icon`              |
-|`th:id`                |`th:keytype`           |`th:kind`              |
-|`th:label`             |`th:lang`              |`th:list`              |
-|`th:longdesc`          |`th:low`               |`th:manifest`          |
-|`th:marginheight`      |`th:marginwidth`       |`th:max`               |
-|`th:maxlength`         |`th:media`             |`th:method`            |
-|`th:min`               |`th:name`              |`th:optimum`           |
-|`th:pattern`           |`th:placeholder`       |`th:poster`            |
-|`th:preload`           |`th:radiogroup`        |`th:rel`               |
-|`th:rev`               |`th:rows`              |`th:rowspan`           |
-|`th:rules`             |`th:sandbox`           |`th:scheme`            |
-|`th:scope`             |`th:scrolling`         |`th:size`              |
-|`th:sizes`             |`th:span`              |`th:spellcheck`        |
-|`th:src`               |`th:srclang`           |`th:standby`           |
-|`th:start`             |`th:step`              |`th:style`             |
-|`th:summary`           |`th:tabindex`          |`th:target`            |
-|`th:title`             |`th:type`              |`th:usemap`            |
-|`th:value`             |`th:valuetype`         |`th:vspace`            |
-|`th:width`             |`th:wrap`              |`th:xmlbase`           |
-|`th:xmllang`           |`th:xmlspace`          |                       |
+|`th:formmethod`        |`th:formtarget`        |`th:fragment`          |
+|`th:frame`             |`th:frameborder`       |`th:headers`           |
+|`th:height`            |`th:high`              |`th:href`              |
+|`th:hreflang`          |`th:hspace`            |`th:http-equiv`        |
+|`th:icon`              |`th:id`                |`th:inline`            |
+|`th:keytype`           |`th:kind`              |`th:label`             |
+|`th:lang`              |`th:list`              |`th:longdesc`          |
+|`th:low`               |`th:manifest`          |`th:marginheight`      |
+|`th:marginwidth`       |`th:max`               |`th:maxlength`         |
+|`th:media`             |`th:method`            |`th:min`               |
+|`th:name`              |`th:onabort`           |`th:onafterprint`      |
+|`th:onbeforeprint`     |`th:onbeforeunload`    |`th:onblur`            |
+|`th:oncanplay`         |`th:oncanplaythrough`  |`th:onchange`          |
+|`th:onclick`           |`th:oncontextmenu`     |`th:ondblclick`        |
+|`th:ondrag`            |`th:ondragend`         |`th:ondragenter`       |
+|`th:ondragleave`       |`th:ondragover`        |`th:ondragstart`       |
+|`th:ondrop`            |`th:ondurationchange`  |`th:onemptied`         |
+|`th:onended`           |`th:onerror`           |`th:onfocus`           |
+|`th:onformchange`      |`th:onforminput`       |`th:onhashchange`      |
+|`th:oninput`           |`th:oninvalid`         |`th:onkeydown`         |
+|`th:onkeypress`        |`th:onkeyup`           |`th:onload`            |
+|`th:onloadeddata`      |`th:onloadedmetadata`  |`th:onloadstart`       |
+|`th:onmessage`         |`th:onmousedown`       |`th:onmousemove`       |
+|`th:onmouseout`        |`th:onmouseover`       |`th:onmouseup`         |
+|`th:onmousewheel`      |`th:onoffline`         |`th:ononline`          |
+|`th:onpause`           |`th:onplay`            |`th:onplaying`         |
+|`th:onpopstate`        |`th:onprogress`        |`th:onratechange`      |
+|`th:onreadystatechange`|`th:onredo`            |`th:onreset`           |
+|`th:onresize`          |`th:onscroll`          |`th:onseeked`          |
+|`th:onseeking`         |`th:onselect`          |`th:onshow`            |
+|`th:onstalled`         |`th:onstorage`         |`th:onsubmit`          |
+|`th:onsuspend`         |`th:ontimeupdate`      |`th:onundo`            |
+|`th:onunload`          |`th:onvolumechange`    |`th:onwaiting`         |
+|`th:optimum`           |`th:pattern`           |`th:placeholder`       |
+|`th:poster`            |`th:preload`           |`th:radiogroup`        |
+|`th:rel`               |`th:rev`               |`th:rows`              |
+|`th:rowspan`           |`th:rules`             |`th:sandbox`           |
+|`th:scheme`            |`th:scope`             |`th:scrolling`         |
+|`th:size`              |`th:sizes`             |`th:span`              |
+|`th:spellcheck`        |`th:src`               |`th:srclang`           |
+|`th:standby`           |`th:start`             |`th:step`              |
+|`th:style`             |`th:summary`           |`th:tabindex`          |
+|`th:target`            |`th:title`             |`th:type`              |
+|`th:usemap`            |`th:value`             |`th:valuetype`         |
+|`th:vspace`            |`th:width`             |`th:wrap`              |
+|`th:xmlbase`           |`th:xmllang`           |`th:xmlspace`          |
 </div>
 
 
@@ -1844,7 +1867,30 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 </div>
 
 
-5.6 Support for HTML5-friendly attribute and element names
+
+5.6 Setting the value of any attribute (default attribute processor)
+--------------------------------------------------------------------
+
+Besides everything we have just seen about ways of setting attribute with specific
+processors such as `th:value`, `th:disabled` etc. Thymeleaf offers a *default
+attribute processor* that allows us to set the value of *any* attribute even
+if no specific `th:*` processor has been defined for it at the Standard Dialect.
+
+So something like:
+
+```html
+<span th:whatever="${user.name}">...</span>
+```
+
+Will result in:
+
+```html
+<span whatever="John Apricot">...</span>
+```
+
+
+
+5.7 Support for HTML5-friendly attribute and element names
 ----------------------------------------------------------
 
 It is also possible to use a completely different syntax to apply processors to your templates, more HTML5-friendly.
