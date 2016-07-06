@@ -1932,7 +1932,7 @@ element), and so for our template we will need to create a _template row_ ---one
 that will exemplify how we want each product to be displayed--- and then instruct
 Thymeleaf to _iterate it_ once for each product.
 
-The Standard Dialect offers us an attribute for exactly that, `th:each`.
+The Standard Dialect offers us an attribute for exactly that: `th:each`.
 
 
 ### Using th:each
@@ -1942,26 +1942,27 @@ products from the service layer and adds it to the template context:
 
 ```java
 public void process(
-        HttpServletRequest request, HttpServletResponse response,
-        ServletContext servletContext, TemplateEngine templateEngine) {
-
+        final HttpServletRequest request, final HttpServletResponse response,
+        final ServletContext servletContext, final ITemplateEngine templateEngine)
+        throws Exception {
+    
     ProductService productService = new ProductService();
     List<Product> allProducts = productService.findAll(); 
-
-    WebContext ctx = new WebContext(request, servletContext, request.getLocale());
+    
+    WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
     ctx.setVariable("prods", allProducts);
-
+    
     templateEngine.process("product/list", ctx, response.getWriter());
+    
 }
 ```
 
 And then we will use `th:each` in our template to iterate the list of products:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
   <head>
     <title>Good Thymes Virtual Grocery</title>
@@ -2015,9 +2016,12 @@ fact, there is a quite complete set of objects that are considered _iterable_
 by a `th:each` attribute:
 
  * Any object implementing `java.util.Iterable`
+ * Any object implementing `java.util.Enumeration`.
+ * Any object implementing `java.util.Iterator`, which values will be used as
+   they are returned by the iterator, without the need to cache all values in memory.
  * Any object implementing `java.util.Map`. When iterating maps, iter variables
    will be of class `java.util.Map.Entry`.
- * Any array
+ * Any array.
  * Any other object will be treated as if it were a single-valued list
    containing the object itself.
 
@@ -2070,9 +2074,9 @@ attribute.
 Let's have a look at the result of processing our template:
 
 ```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
   <head>
     <title>Good Thymes Virtual Grocery</title>
@@ -2086,29 +2090,29 @@ Let's have a look at the result of processing our template:
   
     <table>
       <tr>
-        <th colspan="1" rowspan="1">NAME</th>
-        <th colspan="1" rowspan="1">PRICE</th>
-        <th colspan="1" rowspan="1">IN STOCK</th>
-      </tr>
-      <tr>
-        <td colspan="1" rowspan="1">Fresh Sweet Basil</td>
-        <td colspan="1" rowspan="1">4.99</td>
-        <td colspan="1" rowspan="1">yes</td>
+        <th>NAME</th>
+        <th>PRICE</th>
+        <th>IN STOCK</th>
       </tr>
       <tr class="odd">
-        <td colspan="1" rowspan="1">Italian Tomato</td>
-        <td colspan="1" rowspan="1">1.25</td>
-        <td colspan="1" rowspan="1">no</td>
+        <td>Fresh Sweet Basil</td>
+        <td>4.99</td>
+        <td>yes</td>
       </tr>
       <tr>
-        <td colspan="1" rowspan="1">Yellow Bell Pepper</td>
-        <td colspan="1" rowspan="1">2.50</td>
-        <td colspan="1" rowspan="1">yes</td>
+        <td>Italian Tomato</td>
+        <td>1.25</td>
+        <td>no</td>
       </tr>
       <tr class="odd">
-        <td colspan="1" rowspan="1">Old Cheddar</td>
-        <td colspan="1" rowspan="1">18.75</td>
-        <td colspan="1" rowspan="1">yes</td>
+        <td>Yellow Bell Pepper</td>
+        <td>2.50</td>
+        <td>yes</td>
+      </tr>
+      <tr>
+        <td>Old Cheddar</td>
+        <td>18.75</td>
+        <td>yes</td>
       </tr>
     </table>
   
@@ -2122,12 +2126,7 @@ Let's have a look at the result of processing our template:
 ```
 
 Note that our iteration status variable has worked perfectly, establishing the
-`odd` CSS class only to odd rows (row counting starts with 0).
-
-> All those colspan and rowspan attributes in the `<td>` tags, as well as the
-> shape one in `<a>` are automatically added by Thymeleaf in accordance with the
-> DTD for the selected _XHTML 1.0 Strict_ standard, that establishes those
-> values as default for those attributes (remember that our template didn't set a value for them). Don't worry about them at all, because they will not affect the display of your page. As an example, if we were using HTML5 (which has no DTD), those attributes would never be added.
+`odd` CSS class only to odd rows.
 
 If you don't explicitly set a status variable, Thymeleaf will always create one
 for you by suffixing `Stat` to the name of the iteration variable:
@@ -2146,6 +2145,18 @@ for you by suffixing `Stat` to the name of the iteration variable:
   </tr>
 </table>
 ```
+
+
+
+6.3 Optimizing through lazy retrieval of data
+---------------------------------------------
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
@@ -2201,8 +2212,7 @@ There is little to explain from this code, in fact: We will be creating a link
 to the comments page (with URL `/product/comments`) with a `prodId` parameter
 set to the `id` of the product, but only if the product has any comments.
 
-Let's have a look at the resulting markup (getting rid of the defaulted `rowspan`
-and `colspan` attributes for a cleaner view):
+Let's have a look at the resulting markup:
 
 ```html
 <table>
