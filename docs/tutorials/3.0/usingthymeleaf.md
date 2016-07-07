@@ -1354,7 +1354,7 @@ instead of:
 Texts, no matter whether they are literals or the result of evaluating variable or message expressions, can be easily appended using the `+` operator:
 
 ```html
-th:text="'The name of the user is ' + ${user.name}"
+<span th:text="'The name of the user is ' + ${user.name}">
 ```
 
 
@@ -1394,7 +1394,7 @@ Literal substitutions can be combined with other types of expressions:
 Some arithmetic operations are also available: `+`, `-`, `*`, `/` and `%`.
 
 ```html
-th:with="isEven=(${prodStat.count} % 2 == 0)"
+<div th:with="isEven=(${prodStat.count} % 2 == 0)">
 ```
 
 Note that these operators can also be applied inside OGNL variable expressions
@@ -1402,7 +1402,7 @@ themselves (and in that case will be executed by OGNL instead of the Thymeleaf
 Standard Expression engine):
 
 ```html
-th:with="isEven=${prodStat.count % 2 == 0}"
+<div th:with="isEven=${prodStat.count % 2 == 0}">
 ```
 
 Note that textual aliases exist for some of these operators: `div` (`/`), `mod` (`%`).
@@ -1418,8 +1418,8 @@ not be used in attribute values, and so they should be substituted by `&lt;` and
 `&gt;`.
 
 ```html
-th:if="${prodStat.count} &gt; 1"
-th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')"
+<div th:if="${prodStat.count} &gt; 1">
+<span th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')">
 ```
 
 Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
@@ -3200,7 +3200,7 @@ order in which they are executed in the tag. This order is:
 -----------------------------------------------------------------
 Order   Feature                            Attributes
 ------- ---------------------------------- ----------------------
-      1 Fragment inclusion                 `th:include`\
+      1 Fragment inclusion                 `th:insert`\
                                            `th:replace`
 
       2 Fragment iteration                 `th:each`
