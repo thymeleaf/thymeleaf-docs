@@ -3188,11 +3188,10 @@ example:
 ```
 
 Of course, we would expect that `th:each` attribute to execute before the `th:text`
-so that we get the results we want, but given the fact that the DOM (Document
-Object Model) standard does not give any kind of meaning to the order in which
-the attributes of a tag are written, a _precedence_ mechanism has to be
-established in the attributes themselves in order to be sure that this will work
-as expected.
+so that we get the results we want, but given the fact that the HTML or XML standards 
+do not give any kind of meaning to the order in which the attributes in a tag are 
+written, a _precedence_ mechanism has to be established in the attributes themselves 
+in order to be sure that this will work as expected.
 
 So, all Thymeleaf attributes define a numeric precedence, which establishes the
 order in which they are executed in the tag. This order is:
