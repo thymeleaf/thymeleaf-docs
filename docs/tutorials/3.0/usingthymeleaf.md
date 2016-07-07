@@ -2198,7 +2198,7 @@ if `condition` evaluates to `false` in code such as:
 7.1 Simple conditionals: "if" and "unless"
 ------------------------------------------
 
-Sometimes you will need a fragment of your template only to appear in the result
+Sometimes you will need a fragment of your template to only appear in the result
 if a certain condition is met. 
 
 For example, imagine we want to show in our product table a column with the
@@ -2302,7 +2302,7 @@ expression as `true` following these rules:
     * If value is not a boolean, a number, a character or a String.
  * (If value is null, th:if will evaluate to false).
 
-Also, `th:if` has a negative counterpart, `th:unless`, which we could have used
+Also, `th:if` has an inverse counterpart, `th:unless`, which we could have used
 in the previous example instead of using a `not` inside the OGNL expression:
 
 ```html
