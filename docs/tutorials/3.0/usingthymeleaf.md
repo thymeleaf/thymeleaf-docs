@@ -2030,7 +2030,7 @@ by a `th:each` attribute:
 6.2 Keeping iteration status
 ----------------------------
 
-When using `th:each,` Thymeleaf offers a mechanism useful for keeping track of
+When using `th:each`, Thymeleaf offers a mechanism useful for keeping track of
 the status of your iteration: the _status variable_.
 
 Status variables are defined within a `th:each` attribute and contain the
@@ -2151,13 +2151,42 @@ for you by suffixing `Stat` to the name of the iteration variable:
 6.3 Optimizing through lazy retrieval of data
 ---------------------------------------------
 
+Sometimes we might want to optimize the retrieval of collections of data (e.g. from a database)
+so that these collections are only retrieved if they are really going to be used. 
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
+> Actually, this is something that can be applied to *any* piece of data, but given the size
+> that in-memory collections might have, retrieving collections that are meant to be iterated
+> is the most common case for this scenario.
 
+In order to support this, Thymeleaf offers a mechanism to *lazily load context variables*.
+Context variables that implement the `ILazyContextVariable` interface --most probably by
+extending its `LazyContextVariable` default implementation-- will be resolved in 
+the moment of being executed. For example:
+
+```java
+context.setVariable(
+     "users",
+     new LazyContextVariable<List<User>>() {
+         @Override
+         protected List<User> loadValue() {
+             return databaseRepository.findAllUsers();
+         }
+     });
+```
+This variable can be used without noticing its *lazyness*, in code such as:
+```html
+<ul>
+  <li th:each="u : ${users}" th:text="${u.name}">user name</li>
+</ul>
+```
+But at the same time, will never be initialized (its `loadValue()` method will never be called) 
+if `condition` evaluates to `false` in code such as:
+
+```html
+<ul th:if="${condition}">
+  <li th:each="u : ${users}" th:text="${u.name}">user name</li>
+</ul>
+```
 
 
 
