@@ -3084,7 +3084,7 @@ Specifically:
 
  * It will be available for any other `th:*` attributes executing in that tag
    with less _precedence_ than `th:each` (which means they will execute after `th:each`).
- * It will be available for any child element of the `<tr>` tag, such as `<td>`
+ * It will be available for any child element of the `<tr>` tag, such as any `<td>`
    elements.
 
 Thymeleaf offers you a way to declare local variables without iteration. It is
