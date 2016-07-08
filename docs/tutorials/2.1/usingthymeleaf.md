@@ -1649,43 +1649,44 @@ There are quite a lot of attributes like these, each of them targeting a
 specific XHTML or HTML5 attribute:
 
 <div class="table-scroller">
-|-----------------------+-----------------------+-----------------------|
-|`th:abbr`              |`th:accept`            |`th:accept-charset`    |
-|`th:accesskey`         |`th:action`            |`th:align`             |
-|`th:alt`               |`th:archive`           |`th:audio`             |
-|`th:autocomplete`      |`th:axis`              |`th:background`        |
-|`th:bgcolor`           |`th:border`            |`th:cellpadding`       |
-|`th:cellspacing`       |`th:challenge`         |`th:charset`           |
-|`th:cite`              |`th:class`             |`th:classid`           |
-|`th:codebase`          |`th:codetype`          |`th:cols`              |
-|`th:colspan`           |`th:compact`           |`th:content`           |
-|`th:contenteditable`   |`th:contextmenu`       |`th:data`              |
-|`th:datetime`          |`th:dir`               |`th:draggable`         |
-|`th:dropzone`          |`th:enctype`           |`th:for`               |
-|`th:form`              |`th:formaction`        |`th:formenctype`       |
-|`th:formmethod`        |`th:formtarget`        |`th:frame`             |
-|`th:frameborder`       |`th:headers`           |`th:height`            |
-|`th:high`              |`th:href`              |`th:hreflang`          |
-|`th:hspace`            |`th:http-equiv`        |`th:icon`              |
-|`th:id`                |`th:keytype`           |`th:kind`              |
-|`th:label`             |`th:lang`              |`th:list`              |
-|`th:longdesc`          |`th:low`               |`th:manifest`          |
-|`th:marginheight`      |`th:marginwidth`       |`th:max`               |
-|`th:maxlength`         |`th:media`             |`th:method`            |
-|`th:min`               |`th:name`              |`th:optimum`           |
-|`th:pattern`           |`th:placeholder`       |`th:poster`            |
-|`th:preload`           |`th:radiogroup`        |`th:rel`               |
-|`th:rev`               |`th:rows`              |`th:rowspan`           |
-|`th:rules`             |`th:sandbox`           |`th:scheme`            |
-|`th:scope`             |`th:scrolling`         |`th:size`              |
-|`th:sizes`             |`th:span`              |`th:spellcheck`        |
-|`th:src`               |`th:srclang`           |`th:standby`           |
-|`th:start`             |`th:step`              |`th:style`             |
-|`th:summary`           |`th:tabindex`          |`th:target`            |
-|`th:title`             |`th:type`              |`th:usemap`            |
-|`th:value`             |`th:valuetype`         |`th:vspace`            |
-|`th:width`             |`th:wrap`              |`th:xmlbase`           |
-|`th:xmllang`           |`th:xmlspace`          |                       |
+---------------------- ---------------------- -----------------------
+`th:abbr`              `th:accept`            `th:accept-charset`    
+`th:accesskey`         `th:action`            `th:align`             
+`th:alt`               `th:archive`           `th:audio`             
+`th:autocomplete`      `th:axis`              `th:background`        
+`th:bgcolor`           `th:border`            `th:cellpadding`       
+`th:cellspacing`       `th:challenge`         `th:charset`           
+`th:cite`              `th:class`             `th:classid`           
+`th:codebase`          `th:codetype`          `th:cols`              
+`th:colspan`           `th:compact`           `th:content`           
+`th:contenteditable`   `th:contextmenu`       `th:data`              
+`th:datetime`          `th:dir`               `th:draggable`         
+`th:dropzone`          `th:enctype`           `th:for`               
+`th:form`              `th:formaction`        `th:formenctype`       
+`th:formmethod`        `th:formtarget`        `th:frame`             
+`th:frameborder`       `th:headers`           `th:height`            
+`th:high`              `th:href`              `th:hreflang`          
+`th:hspace`            `th:http-equiv`        `th:icon`              
+`th:id`                `th:keytype`           `th:kind`              
+`th:label`             `th:lang`              `th:list`              
+`th:longdesc`          `th:low`               `th:manifest`          
+`th:marginheight`      `th:marginwidth`       `th:max`               
+`th:maxlength`         `th:media`             `th:method`            
+`th:min`               `th:name`              `th:optimum`           
+`th:pattern`           `th:placeholder`       `th:poster`            
+`th:preload`           `th:radiogroup`        `th:rel`               
+`th:rev`               `th:rows`              `th:rowspan`           
+`th:rules`             `th:sandbox`           `th:scheme`            
+`th:scope`             `th:scrolling`         `th:size`              
+`th:sizes`             `th:span`              `th:spellcheck`        
+`th:src`               `th:srclang`           `th:standby`           
+`th:start`             `th:step`              `th:style`             
+`th:summary`           `th:tabindex`          `th:target`            
+`th:title`             `th:type`              `th:usemap`            
+`th:value`             `th:valuetype`         `th:vspace`            
+`th:width`             `th:wrap`              `th:xmlbase`           
+`th:xmllang`           `th:xmlspace`                                 
+---------------------- ---------------------- -----------------------
 </div>
 
 
@@ -1786,15 +1787,16 @@ set to its fixed value, and if evaluated to false, the attribute will not be set
 The following fixed-value boolean attributes exist in the Standard Dialect:
 
 <div class="table-scroller">
-|-------------------+-------------------+-------------------|
-|`th:async`         |`th:autofocus`     |`th:autoplay`      |
-|`th:checked`       |`th:controls`      |`th:declare`       |
-|`th:default`       |`th:defer`         |`th:disabled`      |
-|`th:formnovalidate`|`th:hidden`        |`th:ismap`         |
-|`th:loop`          |`th:multiple`      |`th:novalidate`    |
-|`th:nowrap`        |`th:open`          |`th:pubdate`       |
-|`th:readonly`      |`th:required`      |`th:reversed`      |
-|`th:scoped`        |`th:seamless`      |`th:selected`      |
+------------------- ------------------- -------------------
+`th:async`          `th:autofocus`      `th:autoplay`      
+`th:checked`        `th:controls`       `th:declare`       
+`th:default`        `th:defer`          `th:disabled`      
+`th:formnovalidate` `th:hidden`         `th:ismap`         
+`th:loop`           `th:multiple`       `th:novalidate`    
+`th:nowrap`         `th:open`           `th:pubdate`       
+`th:readonly`       `th:required`       `th:reversed`      
+`th:scoped`         `th:seamless`       `th:selected`      
+------------------- ------------------- -------------------
 </div>
 
 
