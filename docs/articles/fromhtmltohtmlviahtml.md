@@ -391,38 +391,3 @@ document is in fact a perfectly valid HTML5 document. This is quite
 different to the relation between HTML4 and XHTML 1.0/1.1, which were
 incompatible languages.
 
-
-OK. The history lesson was great. Now, how does this relate to Thymeleaf?
--------------------------------------------------------------------------
-
-Out-of-the-box (it is extensible), Thymeleaf allows you to create web
-templates according to three specifications:
-
--   XHTML 1.0 (Strict, Transitional and Frameset)
--   XHTML 1.1
--   HTML5
-
-Support for HTML5 has a tricky part, though: Thymeleaf will make you
-decide whether your HTML5 templates are XML-formed code or not, and
-strongly suggest you that they are.
-
-The main reason for this is that at the heart of the default
-configuration of Thymeleaf lie an XML parser and a DOM processor, and so
-Thymeleaf will always need XML input. If your HTML5 templates are
-well-formed XML they will be parsed just as fine as any other XHTML
-template; but if they aren't, Thymeleaf will need to execute a previous
-conversion (basically a tag balancing operation) to convert your HTML
-into XML before parsing. Obviously, this will not be the end of the
-world, but in some high-load scenarios it could affect template
-processing performance.
-
-Anyway, truth be told, that should not happen very often. The main
-reason HTML5 allows non-XML syntax is legacy integration, and there is
-no good reason why you should not be closing your tags and escaping your
-attributes in new applications being developed these days, voluntarily
-making them difficult to parse and work with (unless you are Google and
-transferring the extra bytes in attribute values over the net would
-*really* make a difference to you). Remember that *with power comes
-responsibility*. You do not want to voluntarily go back to the olden
-days of tag soup by relying on how well browsers implement standardized
-error handling, do you?
