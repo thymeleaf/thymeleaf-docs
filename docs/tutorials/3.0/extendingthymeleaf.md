@@ -1318,7 +1318,7 @@ of events by *parsing* it:
 ```java
 final IModel model = 
         modelFactory.parse(
-                context.getTemplateData().getTemplate(), 
+                context.getTemplateData(), 
                 "<div class='headlines'>Some headlines</div>");
 ```
 
