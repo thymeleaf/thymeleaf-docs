@@ -3396,39 +3396,29 @@ this:
 <p>Hello, <span th:text="${session.user.name}">Sebastian</span>!</p>
 ```
 
-Expressions between `[[...]]` are considered expression inlining in Thymeleaf,
-and in them you can use any kind of expression that would also be valid in a
-`th:text` attribute.
+Expressions between `[[...]]` or `[(...)]` are considered **expression inlining** in Thymeleaf,
+and in them we can use any kind of expression that would also be valid in a
+`th:text` or `th:utext` attribute.
 
-In order for inlining to work, we must activate it by using the `th:inline`
-attribute, which has three possible values or modes (`text`, `javascript` and `none`).
-Let's try `text`:
+Text inlining is active by default in the body of every tag in our markup –not the tags
+themselves–, there is nothing we need to do to to enable it.
 
-```html
-<p th:inline="text">Hello, [[${session.user.name}]]!</p>
-```
+Actually, *text inlining* is a mechanism equivalent to processing the bodies of the tags as
+if they were templates in the `TEXT` template mode. The same will be true for other 
+(non-text) inlining modes such as `javascript` or `css`, each one corresponding to an existing
+template mode (`JAVASCRIPT`, `CSS`).
 
-The tag holding the `th:inline` does not have to be the one containing the
-inlined expression/s, any parent tag would do:
 
-```html
-<body th:inline="text">
+###Inlining vs natural templates
 
-   ...
+So now, especially if you come from other template engines in which this way of
+outputting text is much more common, you might be asking: _Why aren't we doing 
+this from the beginning? It's less code than all those_ `th:text` _attributes!_ 
 
-   <p>Hello, [[${session.user.name}]]!</p>
-
-   ...
-
-</body>
-```
-
-So you might now be asking: _Why aren't we doing this from the beginning? It's
-less code than all those_ `th:text` _attributes!_ Well, be careful there,
-because although you might find inlining quite interesting, you should always
-remember that inlined expressions will be displayed verbatim in your HTML files
-when you open them statically, so you probably won't be able to use them as
-prototypes anymore!
+Well, be careful there, because although you might find inlining quite 
+interesting, you should always remember that inlined expressions will be 
+displayed verbatim in your HTML files when you open them statically, so you 
+probably won't be able to use them as prototypes anymore!
 
 The difference between how a browser would statically display our fragment of
 code without using inlining...
@@ -3446,72 +3436,140 @@ Hello, [[${session.user.name}]]!
 ...is quite clear.
 
 
+###Disabling inlining
 
-12.2 Script inlining (JavaScript and Dart)
-------------------------------------------
-
-Thymeleaf offers a series of "scripting" modes for its inlining capabilities, so
-that you can integrate your data inside scripts created in some script languages.
-
-Current scripting modes are `javascript` (`th:inline="javascript"`) and `dart` (`th:inline="dart"`).
-
-The first thing we can do with script inlining is writing the value of
-expressions into our scripts, like:
+This mechanism can be disabled though, because there might actually be occasions in
+which we do want to output the `[[...]]` or  `[()]` sequences without its contents
+being processed as an expression. For that, we will use `th:inline="none"`:
 
 ```html
-<script th:inline="javascript">
-/*<![CDATA[*/
-    ...
-
-    var username = /*[[${session.user.name}]]*/ 'Sebastian';
-
-    ...
-/*]]>*/
-</script>
+<p th:inline="none">A double array looks like this: [[1, 2, 3], [4, 5]]!</p>
 ```
 
-The `/*[[...]]*/` syntax, instructs Thymeleaf to evaluate the contained
-expression. But there are more implications here:
-
- * Being a javascript comment (`/*...*/`), our expression will be ignored when
-   displaying the page statically in a browser.
- * The code after the inline expression (`'Sebastian'`) will be executed when
-   displaying the page statically.
- * Thymeleaf will execute the expression and insert the result, but it will also
-   remove all the code in the line after the inline expression itself (the part
-   that is executed when displayed statically).
-
-So, the result of executing this will be:
+This will result in:
 
 ```html
-<script th:inline="javascript">
-/*<![CDATA[*/
-    ...
-
-    var username = 'John Apricot';
-
-    ...
-/*]]>*/
-</script>
+<p>A double array looks like this: [[1, 2, 3], [4, 5]]!</p>
 ```
 
-You can also do it without comments with the same effects, but that will make
-your script to fail when loaded statically:
+
+12.2 JavaScript inlining
+------------------------
+
+JavaScript inlining allows for a better integration of Thymeleaf output expressions
+into JavaScript scripts in templates being processed in the `HTML` template mode.
+
+As happens with *text inlining*, this is actually equivalent to processing the
+scripts' contents as if they were templates in the `JAVASCRIPT` template mode. Note
+however that JavaScript inlining is more *intelligent* than text inlining, and will
+perform more operations than mere text output (see below).
+
+This mode has to be explicitly enabled using `th:inline="javascript"`:
 
 ```html
 <script th:inline="javascript">
-/*<![CDATA[*/
     ...
-
     var username = [[${session.user.name}]];
-
     ...
-/*]]>*/
 </script>
 ```
 
-Note that this evaluation is intelligent and not limited to Strings. Thymeleaf
-will correctly write in Javascript/Dart syntax the following kinds of objects:
+This will result in:
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = 'Sebastian O\'Connor';
+    ...
+</script>
+```
+
+Two important things to note in the code above: 
+
+*First*, that JavaScript inlining will not only output the required text, but 
+also surround it with single quotes and JavaScript-escape its contents, so 
+that the expression results are output as a well-formed JavaScript literal.
+
+*Second, that this is happening because we are outputting the
+`${session.user.name}` expression as **escaped**, i.e. using a double-bracket
+expression: `[[${session.user.name}]]`. If instead we used *unescaped* like:
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = [(${session.user.name})];
+    ...
+</script>
+```
+
+The result would look like:
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = Sebastian O'Connor;
+    ...
+</script>
+```
+
+...which is malformed JavaScript code. But outputting something
+unescaped might be actually what we need if we are building parts of our
+script by means of inlined expressions, so it's good to have this tool
+at hand.
+
+
+###JavaScript natural templates
+
+The mentioned *intelligence* of the JavaScript inlining mechanism goes much
+further than just applying JavaScript-specific escaping and outputting
+expression results as valid literals.
+
+For example, we can wrap our (escaped) inlined expressions in a JavaScript
+comment like:
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = /*[[${session.user.name}]]*/ 'Gertrud Kiwifruit';
+    ...
+</script>
+```
+
+And Thymeleaf will ignore everything we have written *after the comment and
+before the semicolon* (in this case ` 'Gertrud Kiwifruit'`), so the result 
+of executing this will look exactly like when we were not using the 
+wrapping comments:
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = 'Sebastian O\'Connor';
+    ...
+</script>
+```
+
+But have another careful look at the original template code:
+
+
+```html
+<script th:inline="javascript">
+    ...
+    var username = /*[[${session.user.name}]]*/ 'Gertrud Kiwifruit';
+    ...
+</script>
+```
+
+Note how this is **valid JavaScript** code. And it will perfectly execute when
+you open your template file in a static manner (without executing it at a server).
+
+So what we have here is a way to do **JavaScript natural templates**!
+
+
+### Advanced inlined expression evaluation
+
+An important thing to note regarding JavaScript inlining is that this 
+expression evaluation is intelligent and not limited to Strings. Thymeleaf
+will correctly write in Javascript syntax the following kinds of objects:
 
  * Strings
  * Numbers
@@ -3525,13 +3583,9 @@ For example, if we had the following code:
 
 ```html
 <script th:inline="javascript">
-/*<![CDATA[*/
     ...
-
     var user = /*[[${session.user}]]*/ null;
-
     ...
-/*]]>*/
 </script>
 ```
 
@@ -3540,21 +3594,17 @@ Thymeleaf will correctly convert it to Javascript syntax:
 
 ```html
 <script th:inline="javascript">
-/*<![CDATA[*/
     ...
-
     var user = {'age':null,'firstName':'John','lastName':'Apricot',
                 'name':'John Apricot','nationality':'Antarctica'};
-
     ...
-/*]]>*/
 </script>
 ```
 
 
 ### Adding code
 
-An additional feature when using javascript inlining is the ability to include
+An additional feature when using JavaScript inlining is the ability to include
 code between a special comment syntax `/*[+...+]*/` so that Thymeleaf will
 automatically uncomment that code when processing the template:
 
@@ -3617,115 +3667,73 @@ var f = function() {
 ```
 
 
+12.3 CSS inlining
+-----------------
 
-
-13 Validation and Doctypes
-==========================
-
-
-
-13.1 Validating templates
--------------------------
-
-As mentioned before, Thymeleaf offers us out-of-the-box two standard template
-modes that validate our templates before processing them: `VALIDXML` and `VALIDXHTML.`
-These modes require our templates to be not only _well-formed XML_ (which they
-should always be), but in fact valid according to the specified `DTD`.
-
-The problem is that if we use the `VALIDXHTML` mode with templates including a `DOCTYPE`
-clause such as this:
+Thymeleaf also allows the use of inlining in CSS `<style>` tags, such as:
 
 ```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<style th:inline="css">
+  ...
+</style>
 ```
 
-...we are going to obtain validation errors because the `th:*` tags do not exist
-according to that `DTD.` That's perfectly normal, as the W3C obviously has no
-reason to include Thymeleaf's features in their standards but, how do we solve
-it? By changing the `DTD.` 
+For example, say we have two variables set to two different `String` values:
 
-Thymeleaf includes a set of `DTD` files that mirror the original ones from the
-XHTML standards, but adding all the available `th:*` attributes from the
-Standard Dialect. That's why we have been using this in our templates:
+```
+classname = 'main elems'
+align = 'center'
+```
+
+We could use them just like:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<style th:inline="css">
+    .[[${classname}]] {
+      text-align: [[${align}]];
+    }
+</style>
 ```
 
-That `SYSTEM` identifier instructs the Thymeleaf parser to resolve the special
-Thymeleaf-enabled `XHTML 1.0 Strict DTD` file and use it for validating our
-template. And don't worry about that `http` thing, because that is only an
-identifier, and the `DTD` file will be locally read from Thymeleaf's jar files.
-
-> Note that because this DOCTYPE declaration is a perfectly valid one, if we
-> open a browser to statically display our template as a prototype it will be
-> rendered in _Standards Mode_.
-
-Here you have the complete set of Thymeleaf-enabled `DTD` declarations for all
-the supported flavours of XHTML:
+And the result would be:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-transitional-thymeleaf-4.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-frameset-thymeleaf-4.dtd">
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-4.dtd">
+<style th:inline="css">
+    .main\ elems {
+      text-align: center;
+    }
+</style>
 ```
 
-Also note that, in order for your IDE to be happy, and even if you are not
-working in a validating mode, you will need to declare the `th` namespace in
-your `html` tag:
+Note how CSS inlining also bears some *intelligence*, just like JavaScript's. Specifically,
+expressions output via *escaped* expressions like `[[${classname}]]` will be escaped as
+**CSS identifiers**. That is why our `classname = 'main elems'` has turned into `main\ elems`
+in the fragment of code above.
+
+
+### Advanced features: CSS natural templates, etc.
+
+In an equivalent way to what was explained before for JavaScript, CSS inlining also 
+allows for our `<style>` tags to work both statically and dynamically, i.e. to work
+as **CSS natural templates** by means of wrapping inlined expressions in comments. See:
 
 ```html
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<style th:inline="css">
+    .main\ elems {
+      text-align: /*[[${align}]]*/ left;
+    }
+</style>
 ```
 
+All other variants can also be applied: adding/removing code, etc.
 
 
-13.2 Doctype translation
-------------------------
 
-It is fine for our templates to have a `DOCTYPE` like:
+13 Textual template modes
+=========================
 
-```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-```
+XXXXXXXXXXXXXXXXXXXXXX
 
-But it would not be fine for our web applications to send XHTML documents with
-this `DOCTYPE` to client browsers, because:
-
- * They are not `PUBLIC` (they are `SYSTEM DOCTYPE`s), and therefore our web
-   would not be validatable with the W3C Validators.
- * They are not needed, because once processed, all `th:*` tags will have
-   dissapeared.
-
-That's why Thymeleaf includes a mechanism for _DOCTYPE translation_, which will
-automatically translate your thymeleaf-specific XHTML `DOCTYPE`s into standard `DOCTYPE`s.
-
-For example, if your template is _XHTML 1.0 Strict_ and looks like this:
-
-```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-    ... 
-</html>
-```
-
-After making Thymeleaf process the template, your resulting XHTML will look like
-this:
-
-```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-    ... 
-</html>
-```
-
-You don't have to do anything for these transformations to take place: Thymeleaf
-will take care of them automatically.
 
 
 
