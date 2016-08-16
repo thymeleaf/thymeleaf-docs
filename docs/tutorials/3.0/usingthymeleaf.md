@@ -3759,12 +3759,41 @@ All other variants can also be applied: adding/removing code, etc.
 
 
 
+
 13 Textual template modes
 =========================
 
-XXXXXXXXXXXXXXXXXXXXXX
+Three of the Thymeleaf *template modes* are considered **textual**: `TEXT`, `JAVASCRIPT` and `CSS`.
+This differentiates them from the markup template modes: `HTML` and `XML`.
 
+The key difference between *textual* template modes and the markup ones is that in a textual
+template there are no tags into which to insert logic in the form of attributes, so we have to
+rely on other mechanisms for inserting logic.
 
+The first and most basic of these mechanisms is **inlining**, which we have already detailed in
+the previous chapter. Inlining syntax is the most simple way to output results of expressions
+in textual template mode, so this is a perfectly valid template for a text email.
+
+```
+  Dear [(${name})],
+
+  Please find attached the results of the report you requested
+  with name "[(${report.name})]".
+
+  Sincerely,
+    The Reporter.
+```
+
+Note there are no tags at all in the code above, even if it is a complete and valid Thymeleaf
+template that can be executed in the `TEXT` template mode. So here we are not applying *text
+inlining* in a markup template, but instead directly executing a template in the `TEXT` template
+mode.
+
+Note then that, when we apply `th:inline` in our `HTML` or `XML` templates, what we do is in fact
+process the bodies of the tags affected by `th:inline` as if they were templates in the template
+mode corresponding to the inlining mode we have just selected.
+
+### 
 
 
 
