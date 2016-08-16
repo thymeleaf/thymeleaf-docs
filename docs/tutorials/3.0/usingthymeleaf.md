@@ -3378,8 +3378,8 @@ Note how this solution allows templates to be valid HTML (no need to add forbidd
 
 
 
-12.1 Text inlining
-------------------
+12.1 Expression inlining
+------------------------
 
 Although the Standard Dialect allows us to do almost everything we might need by
 using tag attributes, there are situations in which we could prefer writing
@@ -3396,23 +3396,44 @@ this:
 <p>Hello, <span th:text="${session.user.name}">Sebastian</span>!</p>
 ```
 
-Expressions between `[[...]]` or `[(...)]` are considered **expression inlining** in Thymeleaf,
+Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions** in Thymeleaf,
 and in them we can use any kind of expression that would also be valid in a
 `th:text` or `th:utext` attribute.
 
-Text inlining is active by default in the body of every tag in our markup –not the tags
-themselves–, there is nothing we need to do to to enable it.
+Note that, while `[[...]]` corresponds to `th:text` (i.e. result will be *HTML-escaped*), 
+`[(...)]` corresponds to `th:utext` and will not perform any HTML-escaping at all. So
+with a variable such as `msg = 'This is <b>great!</b>'`, given this fragment:
 
-Actually, *text inlining* is a mechanism equivalent to processing the bodies of the tags as
-if they were templates in the `TEXT` template mode. The same will be true for other 
-(non-text) inlining modes such as `javascript` or `css`, each one corresponding to an existing
-template mode (`JAVASCRIPT`, `CSS`).
+```html
+<p>The message is "[(${msg})]"</p>
+```
+
+The result will have those `<b>` tags unescaped, so:
+
+```html
+<p>The message is "This is <b>great!</b>"</p>
+```
+
+Whereas if escaped like:
+
+```html
+<p>The message is "[[${msg}]]"</p>
+```
+
+The result will be HTML-escaped:
+
+```html
+<p>The message is "This is &lt;b&gt;great!&lt;/b&gt;"</p>
+```
+
+Note that **text inlining is active by default** in the body of every tag in our markup –not the tags
+themselves–, there is nothing we need to do to to enable it.
 
 
 ###Inlining vs natural templates
 
 So now, especially if you come from other template engines in which this way of
-outputting text is much more common, you might be asking: _Why aren't we doing 
+outputting text is the usual thing, you might be asking: _Why aren't we doing 
 this from the beginning? It's less code than all those_ `th:text` _attributes!_ 
 
 Well, be careful there, because although you might find inlining quite 
@@ -3453,7 +3474,16 @@ This will result in:
 ```
 
 
-12.2 JavaScript inlining
+12.2 Text inlining
+------------------
+
+We have to note that there is a possible `text` value for `th:inline`, which not
+only enables the same *inlined expressions* as we saw before, but in fact processes tag bodies
+as if they were templates processed in the `TEXT` template mode (more about this in the
+next chapter about the *textual template modes*).
+
+
+12.3 JavaScript inlining
 ------------------------
 
 JavaScript inlining allows for a better integration of Thymeleaf output expressions
@@ -3667,7 +3697,7 @@ var f = function() {
 ```
 
 
-12.3 CSS inlining
+12.4 CSS inlining
 -----------------
 
 Thymeleaf also allows the use of inlining in CSS `<style>` tags, such as:
