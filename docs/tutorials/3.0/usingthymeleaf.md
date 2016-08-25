@@ -3427,7 +3427,7 @@ The result will be HTML-escaped:
 ```
 
 Note that **text inlining is active by default** in the body of every tag in our markup –not the tags
-themselves–, there is nothing we need to do to to enable it.
+themselves–, so there is nothing we need to do to to enable it.
 
 
 ###Inlining vs natural templates
@@ -3439,28 +3439,28 @@ this from the beginning? It's less code than all those_ `th:text` _attributes!_
 Well, be careful there, because although you might find inlining quite 
 interesting, you should always remember that inlined expressions will be 
 displayed verbatim in your HTML files when you open them statically, so you 
-probably won't be able to use them as prototypes anymore!
+probably won't be able to use them as design prototypes anymore!
 
 The difference between how a browser would statically display our fragment of
 code without using inlining...
 
-```html
+```
 Hello, Sebastian!
 ```
 
 ...and using it...
 
-```html
+```
 Hello, [[${session.user.name}]]!
 ```
 
-...is quite clear.
+...is quite clear in terms of design usefulness.
 
 
 ###Disabling inlining
 
 This mechanism can be disabled though, because there might actually be occasions in
-which we do want to output the `[[...]]` or  `[()]` sequences without its contents
+which we do want to output the `[[...]]` or  `[(...)]` sequences without its contents
 being processed as an expression. For that, we will use `th:inline="none"`:
 
 ```html
@@ -3477,22 +3477,27 @@ This will result in:
 12.2 Text inlining
 ------------------
 
-We have to note that there is a possible `text` value for `th:inline`, which not
-only enables the same *inlined expressions* as we saw before, but in fact processes tag bodies
-as if they were templates processed in the `TEXT` template mode (more about this in the
-next chapter about the *textual template modes*).
+*Text inlining* is actually very similar to the *expression inlining* capability we just
+saw, but it actually adds more power. It is enabled explicitly with `th:inline="text"`.
+
+Text inlining not only allows us to use the same *inlined expressions* we just saw, but in 
+fact processes *tag bodies* as if they were templates processed in the `TEXT` template 
+mode, which allows us to perform text-based template logic (not only output expressions).
+
+We will see more about this in the next chapter about the *textual template modes*.
 
 
 12.3 JavaScript inlining
 ------------------------
 
-JavaScript inlining allows for a better integration of Thymeleaf output expressions
-into JavaScript scripts in templates being processed in the `HTML` template mode.
+JavaScript inlining allows for a better integration of JavaScript `<script>` blocks in 
+templates being processed in the `HTML` template mode.
 
 As happens with *text inlining*, this is actually equivalent to processing the
-scripts' contents as if they were templates in the `JAVASCRIPT` template mode. Note
-however that JavaScript inlining is more *intelligent* than text inlining, and will
-perform more operations than mere text output (see below).
+scripts' contents as if they were templates in the `JAVASCRIPT` template mode, and
+therefore all the power of the *textual template modes* (see next chapter) will be at
+hand. However, in this section we will focus on how we can use it for 
+adding the output of our Thymeleaf expressions into our JavaScript blocks.
 
 This mode has to be explicitly enabled using `th:inline="javascript"`:
 
@@ -3509,7 +3514,7 @@ This will result in:
 ```html
 <script th:inline="javascript">
     ...
-    var username = 'Sebastian O\'Connor';
+    var username = "Sebastian \"Fruity\" Applejuice";
     ...
 </script>
 ```
@@ -3517,8 +3522,8 @@ This will result in:
 Two important things to note in the code above: 
 
 *First*, that JavaScript inlining will not only output the required text, but 
-also surround it with single quotes and JavaScript-escape its contents, so 
-that the expression results are output as a well-formed JavaScript literal.
+also surround it with quotes and JavaScript-escape its contents, so 
+that the expression results are output as a **well-formed JavaScript literal**.
 
 *Second, that this is happening because we are outputting the
 `${session.user.name}` expression as **escaped**, i.e. using a double-bracket
@@ -3537,14 +3542,14 @@ The result would look like:
 ```html
 <script th:inline="javascript">
     ...
-    var username = Sebastian O'Connor;
+    var username = Sebastian "Fruity" Applejuice;
     ...
 </script>
 ```
 
 ...which is malformed JavaScript code. But outputting something
 unescaped might be actually what we need if we are building parts of our
-script by means of inlined expressions, so it's good to have this tool
+script by means of appending inlined expressions, so it's good to have this tool
 at hand.
 
 
@@ -3554,13 +3559,13 @@ The mentioned *intelligence* of the JavaScript inlining mechanism goes much
 further than just applying JavaScript-specific escaping and outputting
 expression results as valid literals.
 
-For example, we can wrap our (escaped) inlined expressions in a JavaScript
-comment like:
+For example, we can wrap our (escaped) inlined expressions in JavaScript
+comments like:
 
 ```html
 <script th:inline="javascript">
     ...
-    var username = /*[[${session.user.name}]]*/ 'Gertrud Kiwifruit';
+    var username = /*[[${session.user.name}]]*/ "Gertrud Kiwifruit";
     ...
 </script>
 ```
@@ -3573,7 +3578,7 @@ wrapping comments:
 ```html
 <script th:inline="javascript">
     ...
-    var username = 'Sebastian O\'Connor';
+    var username = "Sebastian \"Fruity\" Applejuice";
     ...
 </script>
 ```
@@ -3584,7 +3589,7 @@ But have another careful look at the original template code:
 ```html
 <script th:inline="javascript">
     ...
-    var username = /*[[${session.user.name}]]*/ 'Gertrud Kiwifruit';
+    var username = /*[[${session.user.name}]]*/ "Gertrud Kiwifruit";
     ...
 </script>
 ```
@@ -3595,11 +3600,11 @@ you open your template file in a static manner (without executing it at a server
 So what we have here is a way to do **JavaScript natural templates**!
 
 
-### Advanced inlined expression evaluation
+### Advanced inlined evaluation and JavaScript serialization
 
 An important thing to note regarding JavaScript inlining is that this 
 expression evaluation is intelligent and not limited to Strings. Thymeleaf
-will correctly write in Javascript syntax the following kinds of objects:
+will correctly write in JavaScript syntax the following kinds of objects:
 
  * Strings
  * Numbers
@@ -3625,76 +3630,22 @@ Thymeleaf will correctly convert it to Javascript syntax:
 ```html
 <script th:inline="javascript">
     ...
-    var user = {'age':null,'firstName':'John','lastName':'Apricot',
-                'name':'John Apricot','nationality':'Antarctica'};
+    var user = {"age":null,"firstName":"John","lastName":"Apricot",
+                "name":"John Apricot","nationality":"Antarctica"};
     ...
 </script>
 ```
 
+The way this JavaScript serialization is done is by means of an implementation of the
+`org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer` interface,
+which can be configured at the instance of the `StandardDialect` being used
+at the template engine.
 
-### Adding code
-
-An additional feature when using JavaScript inlining is the ability to include
-code between a special comment syntax `/*[+...+]*/` so that Thymeleaf will
-automatically uncomment that code when processing the template:
-
-```javascript
-var x = 23;
-
-/*[+
-
-var msg  = 'This is a working application';
-
-+]*/
-
-var f = function() {
-    ...
-```
-
-Will be executed as:
-
-```javascript
-var x = 23;
-
-var msg  = 'This is a working application';
-
-var f = function() {
-...
-```
-
-You can include expressions inside these comments, and they will be evaluated:
-
-```javascript
-var x = 23;
-
-/*[+
-
-var msg  = 'Hello, ' + [[${session.user.name}]];
-
-+]*/
-
-var f = function() {
-...
-```
-
-
-### Removing code
-
-It is also possible to make Thymeleaf remove code between special `/*[- */` and `/* -]*/`
-comments, like this:
-
-```javascript
-var x = 23;
-
-/*[- */
-
-var msg  = 'This is a non-working template';
-
-/* -]*/
-
-var f = function() {
-...
-```
+The default implementation of this JS serialization mechanism will look for
+the [Jackson library](http://wiki.fasterxml.com/JacksonHome) in the classpath 
+and, if present, will use it. If not, it will apply a built-in serialization 
+mechanism that covers most of the needs of most scenarios and produces 
+similar results (but is less flexible).
 
 
 12.4 CSS inlining
@@ -3755,13 +3706,15 @@ as **CSS natural templates** by means of wrapping inlined expressions in comment
 </style>
 ```
 
-All other variants can also be applied: adding/removing code, etc.
-
 
 
 
 13 Textual template modes
 =========================
+
+
+13.1 Textual syntax
+-------------------
 
 Three of the Thymeleaf *template modes* are considered **textual**: `TEXT`, `JAVASCRIPT` and `CSS`.
 This differentiates them from the markup template modes: `HTML` and `XML`.
@@ -3789,11 +3742,272 @@ template that can be executed in the `TEXT` template mode. So here we are not ap
 inlining* in a markup template, but instead directly executing a template in the `TEXT` template
 mode.
 
-Note then that, when we apply `th:inline` in our `HTML` or `XML` templates, what we do is in fact
-process the bodies of the tags affected by `th:inline` as if they were templates in the template
-mode corresponding to the inlining mode we have just selected.
+But in order to include more complex logic than mere *output expressions*, we need a new non-tag-based
+syntax:
 
-### 
+```
+[# th:each="item : ${items}"]
+  - [(${item})]
+[/]
+```
+
+Which is actually the *condensed* version of the more verbose:
+
+```
+[#th:block th:each="item : ${items}"]
+  - [#th:block th:utext="${item}" /]
+[/th:block]
+```
+
+Note how this new syntax is based on elements (i.e. processable tags) that are declared as 
+`[#element ...] instead of `<element ...>`. Elements are open like `[#element ...]` and closed like
+`[/element]`, and standalone tags can be declared by minimizing the open element with a `/` in 
+a way almost equivalent to XML tags: `[#element ... /]`.
+
+The Standard Dialect only contains a processor for one of these elements: the already-known 
+`th:block`, though we could extend this in our dialects and create new elements in the usual way. 
+Also, the `th:block` element (`[#th:block ...] ... [/th:block]`) is allowed to be abbreviated as the 
+empty string (`[# ...] ... [/]`), so the above block is actually equivalent to:
+
+```
+[# th:each="item : ${items}"]
+  - [# th:utext="${item}" /]
+[/]
+```
+And given `[# th:utext="${item}" /]` is exactly equivalent to an *inlined unescaped expression*, 
+we could just use it in order to have less code. Thus we end up with the first fragment of code
+we saw above:
+
+```
+[# th:each="item : ${items}"]
+  - [(${item})]
+[/]
+```
+
+Note that the *textual syntax requires full element balance (no unclosed tags) and quoted 
+attributes*. So to say, it's more XML-style than HTML-style.
+
+Let's have a look at a more complete example of a `TEXT` template, a *plain text* email template:
+
+```
+Dear [(${customer.name})],
+
+This is the list of our products:
+
+[# th:each="prod : ${products}"]
+   - [(${prod.name})]. Price: [(${prod.price})] EUR/kg
+[/]
+
+Thanks,
+  The Thymeleaf Shop
+```
+
+After executing, the result of this could be something like:
+
+```
+Dear Mary Ann Blueberry,
+
+This is the list of our products:
+
+   - Apricots. Price: 1.12 EUR/kg
+   - Bananas. Price: 1.78 EUR/kg
+   - Apples. Price: 0.85 EUR/kg
+   - Watermelon. Price: 1.91 EUR/kg
+
+Thanks,
+  The Thymeleaf Shop
+```
+
+And another example in `JAVASCRIPT` template mode, a `greeter.js` file we process as a textual 
+template and which result we call from our HTML pages. Note this is *not* a `<script>` block
+in an HTML template, but a `.js` file being processed as a template on its own:
+
+```javascript
+var greeter = function() {
+
+    var username = [[${session.user.name}]];
+
+    [# th:each="salut : ${salutations}"]    
+      alert([[${salut}]] + " " + username);
+    [/]
+
+};
+```
+
+After executing, the result of this could be something like:
+
+```javascript
+var greeter = function() {
+
+    var username = "Bertrand \"Crunchy\" Pear";
+
+      alert("Hello" + " " + username);
+      alert("Ol\u00E1" + " " + username);
+      alert("Hola" + " " + username);
+
+};
+```
+
+
+### Escaped element attributes
+
+In order to avoid interactions with parts of the template that might be processed 
+in other modes (e.g. `text`-mode inlining inside an `HTML` template), Thymeleaf 3.0 
+allows the attributes in elements in its *textual syntax* to be escaped. So:
+
+  * Attributes in `TEXT` template mode will be *HTML-unescaped*.
+  * Attributes in `JAVASCRIPT` template mode will be *JavaScript-unescaped*.
+  * Attributes in `CSS` template mode will be *CSS-unescaped*.
+
+So this would be perfectly OK in a `TEXT`-mode template (note the `&gt;`):
+```
+  [# th:if="${120&lt;user.age}"]
+     Congratulations!
+  [/]
+```
+Of course that `&lt;` would make no sense in a *real text* template, but it is a good 
+idea if we are processing an HTML template with a `th:inline="text"` block containing 
+the code above and we want to make sure our browser doesn't take that `<user.age` for 
+the name of an open tag when statically opening the file as a prototype.
+
+
+
+13.2 Extensibility
+------------------
+
+One of the advantages of this syntax is that it is just as extensible as the 
+*markup* one. The user can still define his/her own dialects with custom elements and 
+attributes, apply a prefix to them (optionally), and then use them in textual template modes:
+```
+  [#myorg:dosomething myorg:importantattr="211"]some text[/myorg:dosomething]
+```
+
+
+
+13.3 Textual prototype-only comment blocks: adding code
+-------------------------------------------------------
+
+The `JAVASCRIPT` and `CSS` template modes (not available for `TEXT`) allow 
+including code between a special comment syntax `/*[+...+]*/` so that Thymeleaf will
+automatically uncomment such code when processing the template:
+
+```javascript
+var x = 23;
+
+/*[+
+
+var msg  = "This is a working application";
+
++]*/
+
+var f = function() {
+    ...
+```
+
+Will be executed as:
+
+```javascript
+var x = 23;
+
+var msg  = "This is a working application";
+
+var f = function() {
+...
+```
+
+You can include expressions inside these comments, and they will be evaluated:
+
+```javascript
+var x = 23;
+
+/*[+
+
+var msg  = "Hello, " + [[${session.user.name}]];
+
++]*/
+
+var f = function() {
+...
+```
+
+
+13.4 Textual parser-level comment blocks: removing code
+-------------------------------------------------------
+
+In a way similar to that of prototype-only comment blocks, all the three 
+textual template modes (`TEXT`, `JAVASCRIPT` and `CSS`) make possible to
+instruct Thymeleaf to remove code between special `/*[- */` and `/* -]*/`
+marks, like this:
+
+```javascript
+var x = 23;
+
+/*[- */
+
+var msg  = "This is shown only when executed statically!";
+
+/* -]*/
+
+var f = function() {
+...
+```
+
+Or this, in `TEXT` mode:
+
+```
+...
+/*[- Note the user is obtained from the session, which must exist -]*/
+Welcome [(${session.user.name})]!
+...
+```
+
+
+13.5 Natural JavaScript and CSS templates
+-----------------------------------------
+
+As seen in the previous chapter, JavaScript and CSS inlining offer the possibility 
+to include inlined expressions inside JavaScript/CSS comments, like:
+
+```javascript
+...
+var username = /*[[${session.user.name}]]*/ "Sebastian Lychee";
+...
+```
+...which is valid JavaScript, and once executed could look like:
+
+```html
+...
+var username = "John Apricot";
+...
+```
+
+This same *trick* of enclosing inlined expressions inside comments can in fact be
+used for the entire textual mode syntax:
+
+```
+  /*[# th:if="${user.admin}"]*/
+     alert('Welcome admin');
+  /*[/]*/
+```
+
+That alert in the code above will be shown when the template is open 
+statically --because it is 100% valid JavaScript--, and also when the template is 
+run if the user is an admin. It is completely equivalent to:
+
+```
+  [# th:if="${user.admin}"]
+     alert('Welcome admin');
+  [/]
+```
+...which is actually the code to which the initial version is converted during template parsing. 
+
+Note however that wrapping elements in comments does not clean the lines they live in (to the
+right until a `;` is found) as inlined output expressions do. That behaviour is reserved for 
+inlined output expressions only.
+
+So Thymeleaf 3.0 allows the development of **complex JavaScript scripts and CSS style sheets 
+in the form of natural templates**, valid both as a *prototype* and as a *working template*.
+
 
 
 
