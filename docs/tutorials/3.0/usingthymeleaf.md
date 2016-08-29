@@ -4017,7 +4017,7 @@ in the form of natural templates**, valid both as a *prototype* and as a *workin
 Now we know a lot about using Thymeleaf, we can add some new pages to our
 website for order management.
 
-Note that we will focus on XHTML code, but you can have a look at the bundled
+Note that we will focus on HTML code, but you can have a look at the bundled
 source code if you want to see the corresponding controllers.
 
 
@@ -4028,10 +4028,9 @@ source code if you want to see the corresponding controllers.
 Let's start by creating an order list page, `/WEB-INF/templates/order/list.html`:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
   <head>
 
@@ -4095,10 +4094,9 @@ Now for the order details page, in which we will make a heavy use of asterisk
 syntax:
 
 ```html
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
   <head>
     <title>Good Thymes Virtual Grocery</title>
