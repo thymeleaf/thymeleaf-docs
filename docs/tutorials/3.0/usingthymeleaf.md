@@ -4448,8 +4448,8 @@ the following concepts:
 
  * Input/Output is almost always the slowest part of any application. In-memory
    process is extremely quick compared to it.
- * Cloning an existing in-memory DOM-tree is always much quicker than reading a
-   template file, parsing it and creating a new DOM object tree for it.
+ * Cloning an existing in-memory event sequence is always much quicker than reading a
+   template file, parsing it and creating a new event sequence for it.
  * Web applications usually only have a few dozen templates.
  * Template files are small-to-medium size, and they are not modified while the
    application is running.
