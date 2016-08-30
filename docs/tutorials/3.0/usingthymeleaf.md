@@ -4194,7 +4194,7 @@ For our Good Thymes Virtual Grocery, we chose an `ITemplateResolver`
 implementation called `ServletContextTemplateResolver` that allowed us to obtain
 templates as resources from the Servlet Context.
 
-Besides giving you the ability to create your own template resolver by
+Besides giving us the ability to create our own template resolver by
 implementing `ITemplateResolver,` Thymeleaf includes three other implementations
 out of the box:
 
@@ -4272,6 +4272,13 @@ of configuration parameters, which include:
     ```
 
 
+
+> The Thymeleaf + Spring integration packages offer a `SpringResourceTemplateResolver`
+> implementation which uses all the Spring infrastructure for accessing and reading
+> resources in applications, and which is the recommended implementation in Spring-enabled
+> applications.
+
+
 ### Chaining Template Resolvers
 
 
@@ -4341,17 +4348,35 @@ We did not explicitly specify a Message Resolver implementation for our Grocery
 application, and as it was explained before, this meant that the implementation
 being used was an `org.thymeleaf.messageresolver.StandardMessageResolver` object.
 
-This `StandardMessageResolver,` which looks for messages files with the same
-name as the template in the way already explained, is in fact the only message
-resolver implementation offered by Thymeleaf core out of the box, although of
-course you can create your own by just implementing the `org.thymeleaf.messageresolver.IMessageResolver`
-interface.
+`StandardMessageResolver` is the standard implementation of the `IMessageResolver` 
+interface, but we could create our own if we wanted, adapted to the specific needs of
+our application.
 
-> The Thymeleaf + Spring integration packages offer an `IMessageResolver`
+> The Thymeleaf + Spring integration packages offer by default an `IMessageResolver`
 > implementation which uses the standard Spring way of retrieving externalized
-> messages, by using `MessageSource` objects.
+> messages, by using `MessageSource` beans declared at the Spring Application Context.
 
-What if you wanted to add a message resolver (or more) to the Template Engine?
+
+### Standard Message Resolver
+
+So how does `StandardMessageResolver` look for the messages requested at a specific
+template?
+
+If the template name is `home` and it is located in `/WEB-INF/templates/home.html`, and
+the requested locale is `gl_ES` then this resolver will look for messages in the following files,
+in this order:
+
+  * `/WEB-INF/templates/home_gl_ES.properties`
+  * `/WEB-INF/templates/home_gl.properties`
+  * `/WEB-INF/templates/home.properties`
+
+Refer to the JavaDoc documentation of the `StandardMessageResolver` class for more detail
+on how the complete message resolution mechanism works.
+
+
+### Configuring message resolvers
+
+What if we wanted to add a message resolver (or more) to the Template Engine?
 Easy:
 
 ```java
@@ -4362,7 +4387,7 @@ templateEngine.setMessageResolver(messageResolver);
 templateEngine.addMessageResolver(messageResolver);
 ```
 
-And why would you want to have more than one message resolver? for the same
+And why would we want to have more than one message resolver? for the same
 reason as template resolvers: message resolvers are ordered and if the first one
 cannot resolve a specific message, the second one will be asked, then the third,
 etc.
@@ -4376,11 +4401,11 @@ Thymeleaf pays quite a lot of attention to logging, and always tries to offer
 the maximum amount of useful information through its logging interface.
 
 The logging library used is `slf4j,` which in fact acts as a bridge to whichever
-logging implementation you might want to use in your application (for example, `log4j`).
+logging implementation we might want to use in our application (for example, `log4j`).
 
 Thymeleaf classes will log `TRACE`, `DEBUG` and `INFO`-level information,
-depending on the level of detail you desire, and besides general logging it will
-use three special loggers associated with the TemplateEngine class which you can
+depending on the level of detail we desire, and besides general logging it will
+use three special loggers associated with the TemplateEngine class which we can
 configure separately for different purposes:
 
  * `org.thymeleaf.TemplateEngine.CONFIG` will output detailed configuration of
@@ -4392,8 +4417,6 @@ configure separately for different purposes:
    loggers are configurable by the user and thus could change, by default they
    are:
     * `org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE`
-    * `org.thymeleaf.TemplateEngine.cache.FRAGMENT_CACHE`
-    * `org.thymeleaf.TemplateEngine.cache.MESSAGE_CACHE`
     * `org.thymeleaf.TemplateEngine.cache.EXPRESSION_CACHE`
 
 An example configuration for Thymeleaf's logging infrastructure, using `log4j`,
