@@ -4435,13 +4435,14 @@ log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=TRACE
 16 Template Cache
 =================
 
-Thymeleaf works thanks to a DOM processing engine and a series of processors
----one for each type of node that needs to apply logic--- that modify the document's
-DOM tree in order to create the results you expect by combining this tree with
-your data.
+Thymeleaf works thanks to a set of parsers --for markup and text-- that parse
+templates into sequences of events (open tag, text, close tag, comment, etc.) and 
+a series of processors --one for each type of behaviour that needs to be applied-- that 
+modify the template's parsed event sequence in order to create the results we expect 
+by combining the original template with our data.
 
 It also includes ---by default--- a cache that stores parsed templates, this is, the
-DOM trees resulting from reading and parsing template files before processing
+sequences of events resulting from reading and parsing template files before processing
 them. This is especially useful when working in a web application, and builds on
 the following concepts:
 
