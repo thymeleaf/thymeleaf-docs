@@ -4202,21 +4202,30 @@ out of the box:
    templates as classloader resources, like:
 
     ```java
-    return Thread.currentThread().getContextClassLoader().getResourceAsStream(templateName);
+    return Thread.currentThread().getContextClassLoader().getResourceAsStream(template);
     ```
 
  * `org.thymeleaf.templateresolver.FileTemplateResolver`, which resolves
    templates as files from the file system, like:
 
     ```java
-    return new FileInputStream(new File(templateName));
+    return new FileInputStream(new File(template));
     ```
 
  * `org.thymeleaf.templateresolver.UrlTemplateResolver`, which resolves
    templates as URLs (even non-local ones), like:
 
     ```java
-    return (new URL(templateName)).openStream();
+    return (new URL(template)).openStream();
+    ```
+
+ * `org.thymeleaf.templateresolver.StringTemplateResolver`, which resolves
+   templates directly as the `String` being 
+   specified as `template` (or *template name*, which in this case is obviously
+   much more than a mere name):
+
+    ```java
+    return new StringReader(templateName);
     ```
 
 All of the pre-bundled implementations of `ITemplateResolver` allow the same set
