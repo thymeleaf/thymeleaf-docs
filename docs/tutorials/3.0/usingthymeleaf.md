@@ -4300,7 +4300,8 @@ on:
 ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
 classLoaderTemplateResolver.setOrder(Integer.valueOf(1));
 
-ServletContextTemplateResolver servletContextTemplateResolver = new ServletContextTemplateResolver(servletContext);
+ServletContextTemplateResolver servletContextTemplateResolver = 
+        new ServletContextTemplateResolver(servletContext);
 servletContextTemplateResolver.setOrder(Integer.valueOf(2));
 
 templateEngine.addTemplateResolver(classLoaderTemplateResolver);
@@ -4319,7 +4320,8 @@ classLoaderTemplateResolver.setOrder(Integer.valueOf(1));
 classLoaderTemplateResolver.getResolvablePatternSpec().addPattern("/layout/*.html");
 classLoaderTemplateResolver.getResolvablePatternSpec().addPattern("/menu/*.html");
 
-ServletContextTemplateResolver servletContextTemplateResolver = new ServletContextTemplateResolver(servletContext);
+ServletContextTemplateResolver servletContextTemplateResolver = 
+        new ServletContextTemplateResolver(servletContext);
 servletContextTemplateResolver.setOrder(Integer.valueOf(2));
 ```
 
@@ -4519,7 +4521,7 @@ allowing the creation of **completely logic-less markup templates** in the `HTML
 
 The main idea is that template logic will be defined in a separate *logic file* (more exactly 
 a *logic resource*, as it doesn't need to be a *file*). By default that logic resource will 
-be an additional file living in the same place (i.e. folder) as the template file, with the 
+be an additional file living in the same place (e.g. folder) as the template file, with the 
 same name but with `.th.xml` extension:
 
 ```
@@ -4636,7 +4638,7 @@ at the original template file but leaving others for the separate decoupled logi
 using the new (in v3.0) `th:ref` attribute.
 
 
-17.3 The `th:ref` attribute
+17.3 The th:ref attribute
 ---------------------------
 
 `th:ref` is only a marker attribute. It does nothing from the processing standpoint and simply disappears 
@@ -4662,7 +4664,7 @@ bit our output.
 And in the same sense, what is the disadvantage of `th:ref`? well, obviously that we'd be adding a bit of Thymeleaf logic 
 (*"logic"*) to our templates.
 
-Note this applicability of the `th:ref` attribute does not only apply to decoupled logic template files: it works the same 
+Note this applicability of the `th:ref` attribute **does not only apply to decoupled logic template files**: it works the same 
 in other types of scenarios like e.g. in fragment expressions (`~{...}`).
 
 
@@ -4683,7 +4685,7 @@ injected attributes. So the overhead of using *decoupled templates* for cacheabl
 will be absolutely *zero*.
 
 
-17.4 Resolution of decoupled logic
+17.5 Resolution of decoupled logic
 ----------------------------------
 
 The way Thymeleaf resolves the decoupled logic resources corresponding to each template is configurable by the user. 
@@ -4697,8 +4699,6 @@ What does this standard implementation do?
     be empty and the suffix will be `.th.xml`.
   * Second, it asks the template resource to resolve a *relative resource* with the computed name by means of its 
     `ITemplateResource#relative(String relativeLocation)` method.
-
-See #419 for more info on the `ITemplateResource` interface.
 
 The specific implementation of `IDecoupledTemplateLogicResolver` to be used can be configured at the `TemplateEngine` easily:
 
