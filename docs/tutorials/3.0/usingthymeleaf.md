@@ -4851,8 +4851,6 @@ ${#servletContext.contextPath}
 19 Appendix B: Expression Utility Objects
 =========================================
 
-**TODO**: Add #execInfo and maybe some other new ones
-
 
 ### Dates
 
