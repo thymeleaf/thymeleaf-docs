@@ -4721,9 +4721,9 @@ Some objects and variable maps are always available to be invoked at variable ex
 ### Base objects
 
  * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
-   `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web). If we are
-   using the _Spring integration module_, it will be an instance of 
-   `org.thymeleaf.spring[3|4].context.SpringWebContext`.
+   `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web).
+
+    Note `#vars` and `#root` are synomyns for the same object, but using `#ctx` is recommended.
 
 ```java
 /*
@@ -4733,7 +4733,7 @@ Some objects and variable maps are always available to be invoked at variable ex
  */
 
 ${#ctx.locale}
-${#ctx.variables}
+${#ctx.variableNames}
 
 /*
  * ======================================================================
@@ -4741,14 +4741,10 @@ ${#ctx.variables}
  * ======================================================================
  */
 
-${#ctx.applicationAttributes}
-${#ctx.httpServletRequest}
-${#ctx.httpServletResponse}
-${#ctx.httpSession}
-${#ctx.requestAttributes}
-${#ctx.requestParameters}
+${#ctx.request}
+${#ctx.response}
+${#ctx.session}
 ${#ctx.servletContext}
-${#ctx.sessionAttributes}
 ```
 
  * **\#locale** : direct access to the `java.util.Locale` associated with current request.
@@ -4757,26 +4753,6 @@ ${#ctx.sessionAttributes}
 ${#locale}
 ```
 
- * **\#vars** : an instance of `org.thymeleaf.context.VariablesMap` with all the variables in the Context
-    (usually the variables contained in `#ctx.variables` plus local ones).
-
-    Unqualified expressions are evaluated against this object. In fact, `${something}` is completely equivalent
-    to (but more beautiful than) `${#vars.something}`.
-
-    `#root` is a synomyn for the same object.
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.VariablesMap
- * ======================================================================
- */
-
-${#vars.get('foo')}
-${#vars.containsKey('foo')}
-${#vars.size()}
-...
-```
 
 ### Web context namespaces for request/session attributes, etc.
 
@@ -4843,40 +4819,30 @@ ${myRequestAttribute}
 
 Inside a web environment there is also direct access to the following objects (note these are objects, not maps/namespaces):
 
- * **\#httpServletRequest** : direct access to the `javax.servlet.http.HttpServletRequest` object associated with the current request.
+ * **\#request** : direct access to the `javax.servlet.http.HttpServletRequest` object associated with the current request.
 
 ```java
-${#httpServletRequest.getAttribute('foo')}
-${#httpServletRequest.getParameter('foo')}
-${#httpServletRequest.getContextPath()}
-${#httpServletRequest.getRequestName()}
+${#request.getAttribute('foo')}
+${#request.getParameter('foo')}
+${#request.getContextPath()}
+${#request.getRequestName()}
 ...
 ```
- * **\#httpSession** : direct access to the `javax.servlet.http.HttpSession` object associated with the current request.
+ * **\#session** : direct access to the `javax.servlet.http.HttpSession` object associated with the current request.
 
 ```java
-${#httpSession.getAttribute('foo')}
-${#httpSession.id}
-${#httpSession.lastAccessedTime}
+${#session.getAttribute('foo')}
+${#session.id}
+${#session.lastAccessedTime}
 ...
 ```
-
-### Spring context objects
-
-If you are using Thymeleaf from Spring, you can also access these objects:
-
- * **\#themes** : provides the same features as the Spring `spring:theme` JSP tag.
+```
+ * **\#servletContext** : direct access to the `javax.servlet.ServletContext` object associated with the current request.
 
 ```java
-${#themes.code('foo')}
-```
-
-### Spring beans
-
-Thymeleaf also allows accessing beans registered at your Spring Application Context in the standard way defined  by Spring EL, which is using the syntax `@beanName`, for example:
-
-```html
-<div th:text="${@authService.getUserName()}">...</div>
+${#servletContext.getAttribute('foo')}
+${#servletContext.contextPath}
+...
 ```
 
 
