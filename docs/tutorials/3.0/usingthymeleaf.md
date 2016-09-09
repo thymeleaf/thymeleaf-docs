@@ -1529,6 +1529,39 @@ is both more concise and versatile from a design standpoint:
 
 
 
+4.15 Data Conversion / Formatting
+---------------------------------
+
+Thymeleaf defines a *double-brace* syntax for variable (`${...}`) and selection (`*{...}`) expressions
+that allows us to apply *data conversion* by means of a configured *conversion service*.
+
+It basically goes like this:
+
+```html
+<td th:text="${{user.lastAccessDate}}">...</td>
+```
+
+Noticed the double brace there?: `${{...}}`. That instructs Thymeleaf to pass the result of the
+`user.lastAccessDate` expression to the *conversion service* and ask it to perform a **formatting
+operation** (a conversion to `String`) before writing the result.
+
+Assuming that `user.lastAccessDate` is of type `java.util.Calendar`, if a *conversion service* 
+(implementation of `IStandardConversionService`) has been registered and contains a valid 
+conversion for `Calendar -> String`, it will be applied.
+
+Note that the default implementation of `IStandardConversionService` (the `StandardConversionService`
+class) simply executes `.toString()` on any object converted to `String`. For more information on
+how to register a custom *conversion service* implementation, have a look at the *More on
+Configuration* section in this same tutorial.
+
+> The official thymeleaf-spring3 and thymeleaf-spring4 integration packages 
+> transparently integrate this *Thymeleaf Conversion Service* mechanism with Spring's own
+> *Conversion Service* infrastructure, so that conversion services and formatters declared in
+> the Spring configuration will be made automatically available to `${{...}}` and `*{{...}}`
+> expressions.
+
+
+
 4.14 Preprocessing
 ------------------
 
@@ -4405,7 +4438,35 @@ etc.
 
 
 
-15.3 Logging
+
+15.3 Conversion Services
+------------------------
+
+The *conversion service* that enables us to perform data conversion and formatting
+operations by means of the *double-brace* syntax (`${{...}}`) is actually
+a feature of the Standard Dialect, not of the Thymeleaf Template Engine itself.
+
+As such, the way to configure it is by setting our custom implementation of
+the `IStandardConversionService` interface directly into the instance of `StandardDialect`
+that is being configured into the template engine. Like:
+
+```java
+IStandardConversionService customConversionService = ...
+
+StandardDialect dialect = new StandardDialect();
+dialect.setConversionService(customConversionService);
+
+templateEngine.setDialect(dialect);
+```
+
+> Note that the thymeleaf-spring3 and thymeleaf-spring4 packages contain the
+> `SpringStandardDialect`, and this dialect already comes pre-configured with
+> an implementation of `IStandardConversionService` that integrates Spring's
+> own *Conversion Service* infrastructure into Thymeleaf.
+
+
+
+15.4 Logging
 ------------
 
 Thymeleaf pays quite a lot of attention to logging, and always tries to offer
