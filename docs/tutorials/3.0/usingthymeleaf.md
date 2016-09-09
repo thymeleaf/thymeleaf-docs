@@ -5613,7 +5613,74 @@ ${#ids.prev('someId')}
 ```
 
 
-**Stil NEEDED: #conversions, #uris and #execInfo**
+### Conversions
+
+ * **\#conversions** : utility object that allows the execution of the *Conversion Service*
+ at any point of a template:
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.Conversions
+ * ======================================================================
+ */
+
+/*
+ * Execute the desired conversion of the 'object' value into the
+ * specified class.
+ */
+${#conversions.convert(object, 'java.util.TimeZone')}
+${#conversions.convert(object, targetClass)}
+```
+
+
+### URIs/URLs
+
+ * **\#uris** : utility object for performing URI/URL operations 
+ (esp. escaping/unescaping) inside Thymeleaf Standard Expressions.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.Uris
+ * ======================================================================
+ */
+
+/*
+ * Escape/Unescape as a URI/URL path
+ */
+${#uris.escapePath(uri)}
+${#uris.escapePath(uri, encoding)}
+${#uris.unescapePath(uri)}
+${#uris.unescapePath(uri, encoding)}
+
+/*
+ * Escape/Unescape as a URI/URL path segment (between '/' symbols)
+ */
+${#uris.escapePathSegment(uri)}
+${#uris.escapePathSegment(uri, encoding)}
+${#uris.unescapePathSegment(uri)}
+${#uris.unescapePathSegment(uri, encoding)}
+
+/*
+ * Escape/Unescape as a Fragment Identifier (#frag)
+ */
+${#uris.escapeFragmentId(uri)}
+${#uris.escapeFragmentId(uri, encoding)}
+${#uris.unescapeFragmentId(uri)}
+${#uris.unescapeFragmentId(uri, encoding)}
+
+/*
+ * Escape/Unescape as a Query Parameter (?var=value)
+ */
+${#uris.escapeQueryParam(uri)}
+${#uris.escapeQueryParam(uri, encoding)}
+${#uris.unescapeQueryParam(uri)}
+${#uris.unescapeQueryParam(uri, encoding)}
+```
+
+
+**Stil NEEDED: #execInfo**
 
 
 19 Appendix C: Markup Selector syntax
