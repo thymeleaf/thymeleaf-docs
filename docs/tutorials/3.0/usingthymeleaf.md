@@ -5733,18 +5733,24 @@ ${#ids.prev('someId')}
 
 
 
-19 Appendix C: Markup Selector syntax
+19 Appendix C: Markup Selector Syntax
 =====================================
 
-DOM Selectors borrow syntax features from XPATH, CSS and jQuery, in order to provide a powerful and easy to use way to specify template fragments.
+Thymeleaf's Markup Selectors are directly borrowed from Thymeleaf's parsing 
+library: [AttoParser](http://attoparser.org).
 
-For example, the following selector will select every `<div>` with the class `content`, in every position inside the markup:
+The syntax for this selectors has large similarities with that of selectors in XPath, CSS and 
+jQuery, which makes them easy to use for most users. You can have a look at the complete syntax
+reference at the [AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
+
+For example, the following selector will select every `<div>` with the class `content`, in 
+every position inside the markup (note this is not as concise as it could be, read on to know why):
 
 ```html
-<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+<div th:insert="mytemplate :: //div[@class='content']">...</div>
 ```
 
-The basic syntax inspired from XPath includes:
+The basic syntax includes:
 
  * `/x` means direct children of the current node with name x.
 
@@ -5760,9 +5766,9 @@ The basic syntax inspired from XPath includes:
 
 But more concise syntax can also be used:
 
- * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level).
+ * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level, a *reference* being a `th:ref` or a `th:fragment` attribute).
 
- * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value "oneclass".
+ * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value `"oneclass"`.
 
 Advanced attribute selection features:
 
@@ -5782,49 +5788,43 @@ Direct _jQuery-like_ selectors:
 
  * `#oneid` is equivalent to `[id='oneid']`.
 
- * `x%oneref` means nodes -not just elements- with name x that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation.
+ * `x%oneref` means `<x>` tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute.
 
- * `%oneref` means nodes -not just elements- with any name that match reference _oneref_ according to a specified `DOMSelector.INodeReferenceChecker` implementation. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
+ * `%oneref` means any tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
 
  * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
 
-The above DOM Selector expression:
+So the above Markup Selector expression:
 
 ```html
-<div th:include="mytemplate :: [//div[@class='content']]">...</div>
+<div th:insert="mytemplate :: //div[@class='content']">...</div>
 ```
 could be written as:
 
 ```html
-<div th:include="mytemplate :: [div.content]">...</div>
+<div th:insert="mytemplate :: div.content">...</div>
 ```
 
-###Multivalued class matching
-
-DOM Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
-
-For example, `div[class='two']` will match `<div class="one two three" />`
-
-###Optional brackets
-
-The syntax of the fragment inclusion attributes converts every fragment selection into a DOM selection, so brackets `[...]` are not needed (though allowed).
-
-So the following, with no brackets, is equivalent to the bracketed selector seen above:
-
-```html
-<div th:include="mytemplate :: div.content">...</div>
-```
-
-So, summarizing, this:
+Examining a different example, this:
 
 ```html
 <div th:replace="mytemplate :: myfrag">...</div>
 ```
 
-Will look for a `th:fragment="myfrag"` fragment signature. But would also look for tags with name `myfrag` if they existed (which they don't, in HTML). Note the difference with:
+Will look for a `th:fragment="myfrag"` fragment signature (or `th:ref` references). But 
+would also look for tags with name `myfrag` if they existed (which they don't, in HTML). 
+Note the difference with:
 
 ```html
 <div th:replace="mytemplate :: .myfrag">...</div>
 ```
 
-which will actually look for any elements with `class="myfrag"`, without caring about `th:fragment` signatures. 
+...which will actually look for any elements with `class="myfrag"`, without caring 
+about `th:fragment` signatures (or `th:ref` references). 
+
+###Multivalued class matching
+
+Markup Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
+
+For example, `div.two` will match `<div class="one two three" />`
+
