@@ -4913,6 +4913,168 @@ ${#servletContext.contextPath}
 =========================================
 
 
+### Execution Info
+
+ * **\#execInfo** : expression object providing useful information 
+ about the template being processed inside Thymeleaf Standard
+ Expressions.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.ExecutionInfo
+ * ======================================================================
+ */
+
+/*
+ * Return the name and mode of the 'leaf' template. This means the template
+ * from where the events being processed were parsed. So if this piece of
+ * code is not in the root template "A" but on a fragment being inserted
+ * into "A" from another template called "B", this will return "B" as a
+ * name, and B's mode as template mode.
+ */
+${#execInfo.templateName}
+${#execInfo.templateMode}
+
+/*
+ * Return the name and mode of the 'root' template. This means the template
+ * that the template engine was originally asked to process. So if this
+ * piece of code is not in the root template "A" but on a fragment being
+ * inserted into "A" from another template called "B", this will still 
+ * return "A" and A's template mode.
+ */
+${#execInfo.processedTemplateName}
+${#execInfo.processedTemplateMode}
+
+/*
+ * Return the stacks (actually, List<String> or List<TemplateMode>) of
+ * templates being processed. The first element will be the 
+ * 'processedTemplate' (the root one), the last one will be the 'leaf'
+ * template, and in the middle all the fragments inserted in nested
+ * manner to reach the leaf from the root will appear.
+ */
+${#execInfo.templateNames}
+${#execInfo.templateModes}
+
+/*
+ * Return the stack of templates being processed similarly (and in the
+ * same order) to 'templateNames' and 'templateModes', but returning
+ * a List<TemplateData> with the full template metadata.
+ */
+${#execInfo.templateStack}
+```
+
+
+### Messages
+
+ * **\#messages** : utility methods for obtaining externalized messages inside
+   variables expressions, in the same way as they would be obtained using `#{...}`
+   syntax.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.Messages
+ * ======================================================================
+ */
+
+/*
+ * Obtain externalized messages. Can receive a single key, a key plus arguments,
+ * or an array/list/set of keys (in which case it will return an array/list/set of 
+ * externalized messages).
+ * If a message is not found, a default message (like '??msgKey??') is returned.
+ */
+${#messages.msg('msgKey')}
+${#messages.msg('msgKey', param1)}
+${#messages.msg('msgKey', param1, param2)}
+${#messages.msg('msgKey', param1, param2, param3)}
+${#messages.msgWithParams('msgKey', new Object[] {param1, param2, param3, param4})}
+${#messages.arrayMsg(messageKeyArray)}
+${#messages.listMsg(messageKeyList)}
+${#messages.setMsg(messageKeySet)}
+
+/*
+ * Obtain externalized messages or null. Null is returned instead of a default
+ * message if a message for the specified key is not found.
+ */
+${#messages.msgOrNull('msgKey')}
+${#messages.msgOrNull('msgKey', param1)}
+${#messages.msgOrNull('msgKey', param1, param2)}
+${#messages.msgOrNull('msgKey', param1, param2, param3)}
+${#messages.msgOrNullWithParams('msgKey', new Object[] {param1, param2, param3, param4})}
+${#messages.arrayMsgOrNull(messageKeyArray)}
+${#messages.listMsgOrNull(messageKeyList)}
+${#messages.setMsgOrNull(messageKeySet)}
+```
+
+
+### URIs/URLs
+
+ * **\#uris** : utility object for performing URI/URL operations 
+ (esp. escaping/unescaping) inside Thymeleaf Standard Expressions.
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.Uris
+ * ======================================================================
+ */
+
+/*
+ * Escape/Unescape as a URI/URL path
+ */
+${#uris.escapePath(uri)}
+${#uris.escapePath(uri, encoding)}
+${#uris.unescapePath(uri)}
+${#uris.unescapePath(uri, encoding)}
+
+/*
+ * Escape/Unescape as a URI/URL path segment (between '/' symbols)
+ */
+${#uris.escapePathSegment(uri)}
+${#uris.escapePathSegment(uri, encoding)}
+${#uris.unescapePathSegment(uri)}
+${#uris.unescapePathSegment(uri, encoding)}
+
+/*
+ * Escape/Unescape as a Fragment Identifier (#frag)
+ */
+${#uris.escapeFragmentId(uri)}
+${#uris.escapeFragmentId(uri, encoding)}
+${#uris.unescapeFragmentId(uri)}
+${#uris.unescapeFragmentId(uri, encoding)}
+
+/*
+ * Escape/Unescape as a Query Parameter (?var=value)
+ */
+${#uris.escapeQueryParam(uri)}
+${#uris.escapeQueryParam(uri, encoding)}
+${#uris.unescapeQueryParam(uri)}
+${#uris.unescapeQueryParam(uri, encoding)}
+```
+
+
+### Conversions
+
+ * **\#conversions** : utility object that allows the execution of the *Conversion Service*
+ at any point of a template:
+
+```java
+/*
+ * ======================================================================
+ * See javadoc API for class org.thymeleaf.expression.Conversions
+ * ======================================================================
+ */
+
+/*
+ * Execute the desired conversion of the 'object' value into the
+ * specified class.
+ */
+${#conversions.convert(object, 'java.util.TimeZone')}
+${#conversions.convert(object, targetClass)}
+```
+
+
 ### Dates
 
  * **\#dates** : utility methods for `java.util.Date` objects:
@@ -5539,49 +5701,6 @@ ${#aggregates.avg(collection)}
 ```
 
 
-### Messages
-
- * **\#messages** : utility methods for obtaining externalized messages inside
-   variables expressions, in the same way as they would be obtained using `#{...}`
-   syntax.
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.expression.Messages
- * ======================================================================
- */
-
-/*
- * Obtain externalized messages. Can receive a single key, a key plus arguments,
- * or an array/list/set of keys (in which case it will return an array/list/set of 
- * externalized messages).
- * If a message is not found, a default message (like '??msgKey??') is returned.
- */
-${#messages.msg('msgKey')}
-${#messages.msg('msgKey', param1)}
-${#messages.msg('msgKey', param1, param2)}
-${#messages.msg('msgKey', param1, param2, param3)}
-${#messages.msgWithParams('msgKey', new Object[] {param1, param2, param3, param4})}
-${#messages.arrayMsg(messageKeyArray)}
-${#messages.listMsg(messageKeyList)}
-${#messages.setMsg(messageKeySet)}
-
-/*
- * Obtain externalized messages or null. Null is returned instead of a default
- * message if a message for the specified key is not found.
- */
-${#messages.msgOrNull('msgKey')}
-${#messages.msgOrNull('msgKey', param1)}
-${#messages.msgOrNull('msgKey', param1, param2)}
-${#messages.msgOrNull('msgKey', param1, param2, param3)}
-${#messages.msgOrNullWithParams('msgKey', new Object[] {param1, param2, param3, param4})}
-${#messages.arrayMsgOrNull(messageKeyArray)}
-${#messages.listMsgOrNull(messageKeyList)}
-${#messages.setMsgOrNull(messageKeySet)}
-```
-
-
 ### IDs
 
  * **\#ids** : utility methods for dealing with `id` attributes that might be
@@ -5612,75 +5731,6 @@ ${#ids.next('someId')}
 ${#ids.prev('someId')}
 ```
 
-
-### Conversions
-
- * **\#conversions** : utility object that allows the execution of the *Conversion Service*
- at any point of a template:
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.expression.Conversions
- * ======================================================================
- */
-
-/*
- * Execute the desired conversion of the 'object' value into the
- * specified class.
- */
-${#conversions.convert(object, 'java.util.TimeZone')}
-${#conversions.convert(object, targetClass)}
-```
-
-
-### URIs/URLs
-
- * **\#uris** : utility object for performing URI/URL operations 
- (esp. escaping/unescaping) inside Thymeleaf Standard Expressions.
-
-```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.expression.Uris
- * ======================================================================
- */
-
-/*
- * Escape/Unescape as a URI/URL path
- */
-${#uris.escapePath(uri)}
-${#uris.escapePath(uri, encoding)}
-${#uris.unescapePath(uri)}
-${#uris.unescapePath(uri, encoding)}
-
-/*
- * Escape/Unescape as a URI/URL path segment (between '/' symbols)
- */
-${#uris.escapePathSegment(uri)}
-${#uris.escapePathSegment(uri, encoding)}
-${#uris.unescapePathSegment(uri)}
-${#uris.unescapePathSegment(uri, encoding)}
-
-/*
- * Escape/Unescape as a Fragment Identifier (#frag)
- */
-${#uris.escapeFragmentId(uri)}
-${#uris.escapeFragmentId(uri, encoding)}
-${#uris.unescapeFragmentId(uri)}
-${#uris.unescapeFragmentId(uri, encoding)}
-
-/*
- * Escape/Unescape as a Query Parameter (?var=value)
- */
-${#uris.escapeQueryParam(uri)}
-${#uris.escapeQueryParam(uri, encoding)}
-${#uris.unescapeQueryParam(uri)}
-${#uris.unescapeQueryParam(uri, encoding)}
-```
-
-
-**Stil NEEDED: #execInfo**
 
 
 19 Appendix C: Markup Selector syntax
