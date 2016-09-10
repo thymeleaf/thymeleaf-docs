@@ -2520,7 +2520,7 @@ recommended since 3.0)?
   * `th:replace` actually *replaces* its host tag with the specified fragment.
 
   * `th:include` is similar to `th:insert`, but instead of inserting the fragment it only 
-  inserts the *contents*
+  inserts the *contents* of this fragment.
 
 So that an HTML fragment like this:
 
@@ -2584,7 +2584,7 @@ fragments defined with `th:fragment` can specify a set of parameters:
 </div>
 ```
 
-This requires the use of one of these two syntaxes to call the fragment from `th:include`, 
+This requires the use of one of these two syntaxes to call the fragment from `th:insert` or 
 `th:replace`:
 
 ```html
