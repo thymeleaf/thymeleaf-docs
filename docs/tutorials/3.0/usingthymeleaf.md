@@ -70,14 +70,14 @@ be parsed as markup and every tag, DOCTYPE, comment, etc. will be treated as
 mere text.
 
 The **`JAVASCRIPT`** template mode will allow the templated processing of JavaScript 
-files involved in a thymeleaf-powered application. This will allow the use of model 
+files involved in a Thymeleaf-powered application. This will allow the use of model 
 data inside those JavaScript files in the same way it can be done in HTML files, 
 but with JavaScript-specific integrations such as specialized escaping or 
 *natural scripting*. The `JAVASCRIPT` template mode is considered a *textual* mode 
 and therefore uses the same non-markup processing syntax as the `TEXT` template mode.
 
 The **`CSS`** template mode will allow the templated processing of CSS files involved 
-in a thymeleaf-powered application. Similar to the `JAVASCRIPT` mode, the `CSS` 
+in a Thymeleaf-powered application. Similar to the `JAVASCRIPT` mode, the `CSS` 
 template mode is also a *textual* mode and uses the non-markup processing syntax 
 from the `TEXT` template mode.
 
@@ -85,7 +85,7 @@ The **`RAW`** template mode will simply not process the template at all. It is m
 to be used mainly for inserting untouched resources (files, URL responses, etc.) 
 into the templates being processed. For example, using this mode external, 
 uncontrolled resources in HTML format could be included into application templates 
-safely knowing that any thymeleaf code that these resources might include will not 
+safely knowing that any Thymeleaf code that these resources might include will not 
 be executed.
 
 
@@ -116,7 +116,7 @@ if they want to define their own processing logic while taking advantage of the
 library's advanced features. A Template Engine can be configured several
 dialects at a time.
 
-> The official thymeleaf-spring3 and thymeleaf-spring4 integration packages 
+> The official Thymeleaf-spring3 and thymeleaf-spring4 integration packages 
 > both define a dialect called the "SpringStandard Dialect", mostly equivalent 
 > to the Standard Dialect but with small adaptations to make better use of some 
 > features in Spring Framework (for example, by using Spring Expression Language 
@@ -3284,7 +3284,7 @@ slightly less readable):
 11.1. Standard HTML/XML comments
 --------------------------------
 
-Standard HTML/XML comments `<!-- ... -->` can be used anywhere in thymeleaf templates. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
+Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf templates. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
 
 ```html
 <!-- User info follows -->
@@ -3297,18 +3297,18 @@ Standard HTML/XML comments `<!-- ... -->` can be used anywhere in thymeleaf temp
 11.2. Thymeleaf parser-level comment blocks
 -------------------------------------------
 
-Parser-level comment blocks are code that will be simply removed from the template when thymeleaf parses it. They look like this:
+Parser-level comment blocks are code that will be simply removed from the template when Thymeleaf parses it. They look like this:
 
 ```html
-<!--/* This code will be removed at thymeleaf parsing time! */-->
+<!--/* This code will be removed at Thymeleaf parsing time! */-->
 ``` 
 
-Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can also be used for displaying code when a template is statically open, knowing that it will be removed when thymeleaf processes it:
+Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can also be used for displaying code when a template is statically open, knowing that it will be removed when Thymeleaf processes it:
 
 ```html
 <!--/*--> 
   <div>
-     you can see me only before thymeleaf processes me!
+     you can see me only before Thymeleaf processes me!
   </div>
 <!--*/-->
 ```
