@@ -295,7 +295,7 @@ ITemplateEngine templateEngine = this.application.getTemplateEngine();
 
 Which means that the _GTVGApplication_ class is in charge of creating and
 configuring one of the most important objects in a Thymeleaf-enabled
-application: The `TemplateEngine` instance (implementation of the
+application: the `TemplateEngine` instance (implementation of the
 `ITemplateEngine` interface).
 
 Our `org.thymeleaf.TemplateEngine` object is initialized like this:
@@ -529,7 +529,7 @@ with this code above, our template would be a *valid HTML5 document*.
 
 > Both notations are completely equivalent and interchangeable, but note 
 > that for the sake of simplicity and compactness of the code samples, 
-> throughout this tutorial we will use the *namespaced notation* (`th:*`). Also,
+> throughout this tutorial we will use the *namespace notation* (`th:*`). Also,
 > the `th:*` notation is more general and allowed in every Thymeleaf template
 > mode (`XML`, `TEXT`...) whereas the `data-` notation is only
 > allowed in `HTML` mode.
@@ -662,16 +662,14 @@ requires that we use a context implementing `IWebContext`.
 WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 ```
 
-Only three of those four constructor arguments are required, because the default
+Only three out of those four constructor arguments are required, because the default
 locale for the system will be used if none is specified (although you should
 never let this happen in real applications).
 
-From the interface definition we can tell that `WebContext` will offer
-specialized methods for obtaining the request parameters and request, session
-and application attributes, which we will be able to easily integrate into
-our application's expressions. For example:
+There are some specialized expressions that we will be able to use to obtain the request parameters
+and the request, session and application attributes from the `WebContext` in our templates. For example:
 
-  * `${x}` will return a variable `x` stored into the Thymeleaf or as a *request attribute*.
+  * `${x}` will return a variable `x` stored into the Thymeleaf context or as a *request attribute*.
   * `${param.x}` will return a *request parameter* called `x` (which might be multivalued).
   * `${session.x}` will return a *session attribute* called `x`.
   * `${application.x}` will return a *servlet context attribute* called `x`.
@@ -751,7 +749,7 @@ This will output our message just like we wanted it:
 
 ### Using and displaying variables
 
-Now let's add some more contents to our home page. For example, we could want to
+Now let's add some more content to our home page. For example, we may want to
 display the date below our welcome message, like this:
 
 ```
@@ -781,7 +779,7 @@ public void process(
 }
 ```
 
-We have added a `String` today variable to our context, and now we can display
+We have added a `String` variable called `today` to our context, and now we can display
 it in our template:
 
 ```html
@@ -797,7 +795,7 @@ it in our template:
 As you can see, we are still using the `th:text` attribute for the job (and
 that's correct, because we want to replace the tag's body), but the syntax is
 a little bit different this time and instead of a `#{...}` expression value, we
-are using a `${...}` one. This is a **variable expression** value, and it contains
+are using a `${...}` one. This is a **variable expression**, and it contains
 an expression in a language called _OGNL (Object-Graph Navigation Language)_
 that will be executed on the context variables map we talked about before.
 
