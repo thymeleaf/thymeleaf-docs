@@ -3112,7 +3112,7 @@ page:
 </tr>
 ```
 
-That `prod` variable will be available only within the bonds of the `<tr>` tag.
+That `prod` variable will be available only within the bounds of the `<tr>` tag.
 Specifically:
 
  * It will be available for any other `th:*` attributes executing in that tag
