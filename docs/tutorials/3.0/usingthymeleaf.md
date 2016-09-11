@@ -1708,7 +1708,7 @@ have a look:
 <input type="submit" value="Subscribe me!" th:value="#{subscribe.submit}"/>
 ```
 
-This looks much better!. Let's try and do the same to the `action` attribute in
+This looks much better! Let's try and do the same to the `action` attribute in
 the `form` tag:
 
 ```html
@@ -2391,7 +2391,7 @@ We will often want to include in our templates fragments from other templates.
 Common uses for this are footers, headers, menus...
 
 In order to do this, Thymeleaf needs us to define the fragments available for
-inclusion, which we can do by using the `th:fragment` attribute. 
+inclusion, what we can do by using the `th:fragment` attribute. 
 
 Now let's say we want to add a standard copyright footer to all our grocery
 pages, and for that we define a `/WEB-INF/templates/footer.html` file containing
@@ -2437,7 +2437,7 @@ the code above would be equivalent to:
 
   ...
 
-  <div th:insert="footer :: copy></div>
+  <div th:insert="footer :: copy"></div>
   
 </body>
 ```
@@ -2474,7 +2474,7 @@ attribute), and they will be able to reference any context variables defined in
 this target template.
 
 > A big advantage of this approach to fragments is that you can write your
-> fragments' code in pages that are perfectly displayable by a browser, with a
+> fragments code in pages that are perfectly displayable by a browser, with a
 > complete and even *valid* markup structure, while still retaining the
 > ability to make Thymeleaf include them into other templates.
 
@@ -2520,7 +2520,7 @@ recommended since 3.0)?
   * `th:include` is similar to `th:insert`, but instead of inserting the fragment it only 
   inserts the *contents* of this fragment.
 
-So that an HTML fragment like this:
+So an HTML fragment like this:
 
 ```html
 <footer th:fragment="copy">
@@ -2619,7 +2619,7 @@ This would be, in fact, equivalent to a combination of `th:replace` and `th:with
 ```
 
 **Note** that this specification of local variables for a fragment ---no matter whether it 
-has an argument signature or not--- does not cause the context to emptied previously to its 
+has an argument signature or not--- does not cause the context to be emptied previously to its 
 execution. Fragments will still be able to access every context variable being used at the 
 calling template like they currently are. 
 
