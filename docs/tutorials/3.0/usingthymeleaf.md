@@ -26,7 +26,7 @@ are not web-based.
 The main goal of Thymeleaf is to provide an elegant and highly-maintainable
 way of creating templates. To achieve this, it builds on the concept
 of *Natural Templates* in order to inject its logic into template files
-in a way that doesn't affect the templates' capabilities to be used as
+in a way that doesn't affect the templates capabilities to be used as
 design prototypes. This improves communication of design and bridges the
 gap between design and development teams.
 
@@ -53,7 +53,7 @@ There are two *markup* template modes (`HTML` and `XML`), three *textual* templa
 modes (`TEXT`, `JAVASCRIPT` and `CSS`) and a *no-op* template mode (`RAW`).
 
 The **`HTML`** template mode will allow any kind of HTML markup input, including 
-HTML5, HTML 4 and XHTML. No markup validation of well-formedness check will be 
+HTML5, HTML 4 and XHTML. No markup validation or well-formedness check will be 
 performed, and template markup code structure will be respected to the biggest 
 possible extent in output.
 
@@ -83,7 +83,7 @@ from the `TEXT` template mode.
 
 The **`RAW`** template mode will simply not process the template at all. It is meant 
 to be used mainly for inserting untouched resources (files, URL responses, etc.) 
-into the templates being processed. For example, using this mode external, 
+into the templates being processed. For example, using this mode, external, 
 uncontrolled resources in HTML format could be included into application templates 
 safely knowing that any Thymeleaf code that these resources might include will not 
 be executed.
@@ -95,17 +95,17 @@ be executed.
 
 Thymeleaf is an extremely extensible template engine (in fact it should be
 better called a _template engine framework_) that allows you to define and
-customized the way your templates will be processed to a fine level of detail.
+customize the way your templates will be processed to a fine level of detail.
 
 An object that applies some logic to a markup artifact (a tag, a text, a comment...
-of a mere placeholder if templates are not markup) is called a _processor_, and a
+or a mere placeholder if templates are not markup) is called a _processor_, and a
 set of these processors ---plus perhaps some extra artifacts--- is what normally
-conforms a **dialect**, of which Thymeleaf's core library provides one 
-out-of-the-box called the **Standard Dialect**,
+a **dialect** is comprised of. Thymeleaf's core library provides one 
+out-of-the-box dialect called the **Standard Dialect**,
 which should be enough for the needs of a big percent of users. 
 
-*Note dialects can actually have no processors and be entirely conformed of other 
-kinds of artifacts, but processors is definitely the most usual.*
+*Note dialects can actually have no processors and be entirely comprised of other 
+kinds of artifacts, but processors are definitely the most usual.*
 
 _The Standard Dialect is the dialect this tutorial covers_. Every attribute and
 syntax feature you will learn about in the following pages is defined by this
@@ -113,8 +113,8 @@ dialect, even if that isn't explicitly mentioned.
 
 Of course, users may create their own dialects (even extending the Standard one)
 if they want to define their own processing logic while taking advantage of the
-library's advanced features. A Template Engine can be configured several
-dialects at a time.
+library's advanced features. Thymeleaf can be configured to use Several dialects
+at a time.
 
 > The official Thymeleaf-spring3 and thymeleaf-spring4 integration packages 
 > both define a dialect called the "SpringStandard Dialect", mostly equivalent 
