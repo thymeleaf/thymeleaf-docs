@@ -826,7 +826,7 @@ syntax: message and variable expressions:
 <p>Today is: <span th:text="${today}">13 february 2011</span></p>
 ```
 
-But there are more types of value we don't know yet, and more interesting detail
+But there are more types of values we don't know yet, and more interesting detail
 to know about the ones we already know. First, let's see a quick summary of the
 Standard Expression features:
 
@@ -936,7 +936,7 @@ the context.
 > but its syntax is very similar to that of OGNL (actually, exactly the same for
 > most common cases).
 
-From OGNL's syntax, we know that this:
+From OGNL's syntax, we know that the expression in:
 
 ```html
 <p>Today is: <span th:text="${today}">13 february 2011</span>.</p>
@@ -1130,7 +1130,7 @@ Of course, dollar and asterisk syntax can be mixed:
 </div>
 ```
 
-When an object selection is in place, the selected object will be also available
+When an object selection is in place, the selected object will also be available
 to dollar expressions as the `#object` expression variable:
 
 ```html
@@ -1207,7 +1207,7 @@ Some things to note here:
  * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
  * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId})}`
  * Relative URLs starting with `/` (like `/order/details`) will be automatically
-   prefixed the application context name.
+   prefixed by the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
    suffix might be added to relative URLs so that session is preserved. This is called _URL Rewriting_,
    and Thymeleaf allows you to plug in your own rewriting filters by using the `response.encodeURL(...)`
@@ -1420,8 +1420,8 @@ not be used in attribute values, and so they should be substituted by `&lt;` and
 <span th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')">
 ```
 
-Note that textual aliases exist for some of these operators: `gt` (`>`), `lt` (`<`), `ge`
-(`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
+A simpler alternative may be using textual aliases that exist for some of these operators: 
+`gt` (`>`), `lt` (`<`), `ge` (`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
