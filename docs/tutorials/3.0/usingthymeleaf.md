@@ -59,7 +59,7 @@ possible extent in output.
 
 The **`XML`** template mode will allow XML input. In this case, code is expected 
 to be well-formed from the XML standpoint: no unclosed tags, no unquoted 
-attributes, etc. and the parser will issue exceptions if well-formedness violations 
+attributes, etc. and the parser will throw exceptions if well-formedness violations 
 are found. Note however that no *validation* (DTD, XML Schema) will be performed.
 
 The **`TEXT`** template mode will allow the use of a specific non-markup syntax 
@@ -4429,7 +4429,7 @@ templateEngine.setMessageResolver(messageResolver);
 templateEngine.addMessageResolver(messageResolver);
 ```
 
-And why would we want to have more than one message resolver? for the same
+And why would we want to have more than one message resolver? For the same
 reason as template resolvers: message resolvers are ordered and if the first one
 cannot resolve a specific message, the second one will be asked, then the third,
 etc.
@@ -4508,11 +4508,11 @@ log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=TRACE
 Thymeleaf works thanks to a set of parsers --for markup and text-- that parse
 templates into sequences of events (open tag, text, close tag, comment, etc.) and 
 a series of processors --one for each type of behaviour that needs to be applied-- that 
-modify the template's parsed event sequence in order to create the results we expect 
+modify the template parsed event sequence in order to create the results we expect 
 by combining the original template with our data.
 
 It also includes ---by default--- a cache that stores parsed templates, this is, the
-sequences of events resulting from reading and parsing template files before processing
+sequence of events resulting from reading and parsing template files before processing
 them. This is especially useful when working in a web application, and builds on
 the following concepts:
 
@@ -4520,7 +4520,7 @@ the following concepts:
    process is extremely quick compared to it.
  * Cloning an existing in-memory event sequence is always much quicker than reading a
    template file, parsing it and creating a new event sequence for it.
- * Web applications usually only have a few dozen templates.
+ * Web applications usually have only a few dozen templates.
  * Template files are small-to-medium size, and they are not modified while the
    application is running.
 
@@ -4574,7 +4574,7 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 So far we have worked for our Grocery Store with templates done the *usual way*, with logic
 being inserted into our templates in the form of attributes.
 
-But Thymeleaf also allows us to completely *decouple* the template's markup from its logic, 
+But Thymeleaf also allows us to completely *decouple* the template markup from its logic, 
 allowing the creation of **completely logic-less markup templates** in the `HTML` and 
 `XML` template modes.
 
@@ -4633,7 +4633,7 @@ Here we can see a lot of `<attr>` tags inside a `thlogic` block. Those `<attr>` 
 attributes, which contain Thymeleaf *markup selectors* (actually *AttoParser markup selectors*). 
 
 Also note that `<attr>` tags can be nested so that their selectors are *appended*. That `sel="/tr[0]"` 
-above, for example, will be processed as `sel="#usersTable/tr[0]"`. And the selector for the user name's 
+above, for example, will be processed as `sel="#usersTable/tr[0]"`. And the selector for the user name 
 `<td>` will be processed as `sel="#usersTable/tr[0]//td.username"`.
 
 So once merged, both files seen above will be completely equivalent to:
@@ -4661,7 +4661,7 @@ of *decoupled templates* is that we can achieve for our templates total independ
 therefore better maintainability from the design standpoint.
 
 Of course some *contracts* between designers or developers will still be needed --like e.g. the fact that the 
-users' `<table>` will need an `id="usersTable"`--, but in many scenarios a pure-HTML template will be a much 
+users `<table>` will need an `id="usersTable"`--, but in many scenarios a pure-HTML template will be a much 
 better communication artifact between design and development teams.
 
 
@@ -4690,7 +4690,7 @@ templateResolver.setUseDecoupledLogic(true);
 
 Decoupled template logic, when enabled, is not a requirement. Its being enabled for a specific resolved template will only 
 mean that the engine will *look for* a resource containing decoupled logic, parsing and merging it with the original 
-template if it exists. No error will be issued if the decoupled logic resource does not exist.
+template if it exists. No error will be thrown if the decoupled logic resource does not exist.
 
 Also, in the same template we can mix both *coupled* and *decoupled* logic, for example by adding some Thymeleaf attributes 
 at the original template file but leaving others for the separate decoupled logic file. The most common case for this is 
@@ -4716,11 +4716,11 @@ This will match:
   * Any tags with a `th:fragment="whatever"` attribute.
   * Any tags with a `th:ref="whatever"` attribute.
 
-What is the advantage of `th:ref` against, for example, using a pure-HTML `id` attribute? merely the fact that we might not 
+What is the advantage of `th:ref` against, for example, using a pure-HTML `id` attribute? Merely the fact that we might not 
 want to add so many `id` and `class` attributes to our tags to act as *logic anchors*, which might end up *polluting* a 
 bit our output. 
 
-And in the same sense, what is the disadvantage of `th:ref`? well, obviously that we'd be adding a bit of Thymeleaf logic 
+And in the same sense, what is the disadvantage of `th:ref`? Well, obviously that we'd be adding a bit of Thymeleaf logic 
 (*"logic"*) to our templates.
 
 Note this applicability of the `th:ref` attribute **does not only apply to decoupled logic template files**: it works the same 
@@ -4739,7 +4739,7 @@ parsed these attributes will be injected *on-the-fly* by the parser itself, than
 node selection in AttoParser. So parsed nodes will come out of the parser as if they had their injected attributes 
 written in the original template file, no difference at all.
 
-The biggest advantage of this? when a template is configured to be cached, it will be cached already containing the 
+The biggest advantage of this? When a template is configured to be cached, it will be cached already containing the 
 injected attributes. So the overhead of using *decoupled templates* for cacheable templates, once they are cached, 
 will be absolutely *zero*.
 
