@@ -4895,7 +4895,6 @@ ${#session.id}
 ${#session.lastAccessedTime}
 ...
 ```
-```
  * **\#servletContext** : direct access to the `javax.servlet.ServletContext` object associated with the current request.
 
 ```java
