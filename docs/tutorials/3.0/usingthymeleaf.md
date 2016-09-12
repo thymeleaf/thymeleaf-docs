@@ -3428,7 +3428,7 @@ this:
 ```
 
 Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions** in Thymeleaf,
-and in them we can use any kind of expression that would also be valid in a
+and inside them we can use any kind of expression that would also be valid in a
 `th:text` or `th:utext` attribute.
 
 Note that, while `[[...]]` corresponds to `th:text` (i.e. result will be *HTML-escaped*), 
@@ -3508,8 +3508,8 @@ This will result in:
 12.2 Text inlining
 ------------------
 
-*Text inlining* is actually very similar to the *expression inlining* capability we just
-saw, but it actually adds more power. It is enabled explicitly with `th:inline="text"`.
+*Text inlining* is very similar to the *expression inlining* capability we have just
+seen, but it actually adds more power. It has to be enabled explicitly with `th:inline="text"`.
 
 Text inlining not only allows us to use the same *inlined expressions* we just saw, but in 
 fact processes *tag bodies* as if they were templates processed in the `TEXT` template 
@@ -3525,7 +3525,7 @@ JavaScript inlining allows for a better integration of JavaScript `<script>` blo
 templates being processed in the `HTML` template mode.
 
 As happens with *text inlining*, this is actually equivalent to processing the
-scripts' contents as if they were templates in the `JAVASCRIPT` template mode, and
+scripts contents as if they were templates in the `JAVASCRIPT` template mode, and
 therefore all the power of the *textual template modes* (see next chapter) will be at
 hand. However, in this section we will focus on how we can use it for 
 adding the output of our Thymeleaf expressions into our JavaScript blocks.
@@ -3553,10 +3553,10 @@ This will result in:
 Two important things to note in the code above: 
 
 *First*, that JavaScript inlining will not only output the required text, but 
-also surround it with quotes and JavaScript-escape its contents, so 
+also enclose it with quotes and JavaScript-escape its contents, so 
 that the expression results are output as a **well-formed JavaScript literal**.
 
-*Second, that this is happening because we are outputting the
+*Second*, that this is happening because we are outputting the
 `${session.user.name}` expression as **escaped**, i.e. using a double-bracket
 expression: `[[${session.user.name}]]`. If instead we used *unescaped* like:
 
@@ -3673,9 +3673,9 @@ which can be configured at the instance of the `StandardDialect` being used
 at the template engine.
 
 The default implementation of this JS serialization mechanism will look for
-the [Jackson library](http://wiki.fasterxml.com/JacksonHome) in the classpath 
+the [Jackson library](https://github.com/FasterXML/jackson) in the classpath 
 and, if present, will use it. If not, it will apply a built-in serialization 
-mechanism that covers most of the needs of most scenarios and produces 
+mechanism that covers the needs of most scenarios and produces 
 similar results (but is less flexible).
 
 
@@ -3791,7 +3791,7 @@ Which is actually the *condensed* version of the more verbose:
 ```
 
 Note how this new syntax is based on elements (i.e. processable tags) that are declared as 
-`[#element ...] instead of `<element ...>`. Elements are open like `[#element ...]` and closed like
+`[#element ...]` instead of `<element ...>`. Elements are open like `[#element ...]` and closed like
 `[/element]`, and standalone tags can be declared by minimizing the open element with a `/` in 
 a way almost equivalent to XML tags: `[#element ... /]`.
 
