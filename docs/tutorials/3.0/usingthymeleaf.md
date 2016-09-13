@@ -802,7 +802,7 @@ these possibilities are.
 4 Standard Expression Syntax
 ============================
 
-We will make a small break in the development of our grocery virtual store to
+We will take a small break in the development of our grocery virtual store to
 learn about one of the most important parts of the Thymeleaf Standard Dialect:
 the Thymeleaf Standard Expression syntax.
 
@@ -815,8 +815,8 @@ syntax: message and variable expressions:
 <p>Today is: <span th:text="${today}">13 february 2011</span></p>
 ```
 
-But there are more types of values we don't know yet, and more interesting detail
-to know about the ones we already know. First, let's see a quick summary of the
+But there are more types of expressions, and more interesting details to learn
+about the ones we already know. First, let's see a quick summary of the
 Standard Expression features:
 
  * Simple expressions:
@@ -875,7 +875,7 @@ home.welcome=¡Bienvenido a nuestra tienda de comestibles!
 
 But there's one aspect we still haven't thought of: what happens if the message
 text is not completely static? What if, for example, our application knew who is
-the user visiting the site at any moment and we wanted to greet him/her by name?
+the user visiting the site at any moment and we wanted to greet them by name?
 
 ```html
 <p>¡Bienvenido a nuestra tienda de comestibles, John Apricot!</p>
@@ -888,8 +888,8 @@ home.welcome=¡Bienvenido a nuestra tienda de comestibles, {0}!
 ```
 
 Parameters are specified according to the `java.text.MessageFormat` standard
-syntax, which means you could add format to numbers and dates as specified in
-the API docs for that class.
+syntax, which means you can format to numbers and dates as specified in the API
+docs for those classes.
 
 In order to specify a value for our parameter, and given an HTTP session
 attribute called `user`, we would have:
@@ -900,8 +900,8 @@ attribute called `user`, we would have:
 </p>
 ```
 
-If needed, several parameters could be specified, separated by commas. In fact,
-the message key itself could come from a variable:
+Several parameters can be specified, separated by commas. In fact, the message
+key itself could come from a variable:
 
 ```html
 <p th:utext="#{${welcomeMsgKey}(${session.user.name})}">
@@ -920,8 +920,8 @@ the context.
 
 > For detailed info about OGNL syntax and features, you should read the 
 > [OGNL Language Guide](http://commons.apache.org/ognl/)
->
-> Also note that in Spring MVC-enabled applications OGNL will be replaced with **SpringEL**,
+> 
+> In Spring MVC-enabled applications OGNL will be replaced with **SpringEL**,
 > but its syntax is very similar to that of OGNL (actually, exactly the same for
 > most common cases).
 
@@ -946,7 +946,7 @@ this:
 </p>
 ```
 
-...does in fact obtain the user name by executing:
+...obtains the user name by executing:
 
 ```java
 ((User) ctx.getVariable("session").get("user")).getName();
@@ -1007,8 +1007,7 @@ So we can do this:
 Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
 
-You can read the full reference of these objects in the
-[Appendix A](#appendix-a-expression-basic-objects).
+You can read the full reference of these objects in [Appendix A](#appendix-a-expression-basic-objects).
 
 
 ### Expression Utility Objects
@@ -1016,27 +1015,26 @@ You can read the full reference of these objects in the
 Besides these basic objects, Thymeleaf will offer us a set of utility objects
 that will help us perform common tasks in our expressions.
 
- * `#execInfo`: utility information about the template being processed.
- * `#messages`: utility methods for obtaining externalized messages inside
-   variables expressions, in the same way as they would be obtained using #{...} syntax.
- * `#uris`: utility methods for escaping parts of URLs/URIs
- * `#conversions`: utility methods for executing the configured *conversion service* (if any).
- * `#dates`: utility methods for `java.util.Date` objects: formatting, component
+ * `#execInfo`: information about the template being processed.
+ * `#messages`: methods for obtaining externalized messages inside variables
+   expressions, in the same way as they would be obtained using #{...} syntax.
+ * `#uris`: methods for escaping parts of URLs/URIs
+ * `#conversions`: methods for executing the configured *conversion service* (if any).
+ * `#dates`: methods for `java.util.Date` objects: formatting, component
    extraction, etc.
  * `#calendars`: analogous to `#dates`, but for `java.util.Calendar` objects.
- * `#numbers`: utility methods for formatting numeric objects.
- * `#strings`: utility methods for `String` objects: contains, startsWith,
-   prepending/appending, etc.
- * `#objects`: utility methods for objects in general.
- * `#bools`: utility methods for boolean evaluation.
- * `#arrays`: utility methods for arrays.
- * `#lists`: utility methods for lists.
- * `#sets`: utility methods for sets.
- * `#maps`: utility methods for maps.
- * `#aggregates`: utility methods for creating aggregates on arrays or
-   collections.
- * `#ids`: utility methods for dealing with id attributes that might be repeated
-   (for example, as a result of an iteration).
+ * `#numbers`: methods for formatting numeric objects.
+ * `#strings`: methods for `String` objects: contains, startsWith, prepending/appending,
+   etc.
+ * `#objects`: methods for objects in general.
+ * `#bools`: methods for boolean evaluation.
+ * `#arrays`: methods for arrays.
+ * `#lists`: methods for lists.
+ * `#sets`: methods for sets.
+ * `#maps`: methods for maps.
+ * `#aggregates`: methods for creating aggregates on arrays or collections.
+ * `#ids`: methods for dealing with id attributes that might be repeated (for
+   example, as a result of an iteration).
 
 You can check what functions are offered by each of these utility objects in the
 [Appendix B](#appendix-b-expression-utility-objects).
@@ -1080,16 +1078,15 @@ templateEngine.process("home", ctx, response.getWriter());
 4.3 Expressions on selections (asterisk syntax)
 -----------------------------------------------
 
-Variable expressions not only can be written in `${...}` expressions, but also
-in `*{...}` ones.
+Not only can variable expressions be written as `${...}`, but also as `*{...}`.
 
-There is an important difference, though: the asterisk syntax evaluates
-expressions on selected objects rather than on the whole context variables map.
-This is: as long as there is no selected object, the dollar and the asterisk 
-syntaxes do exactly the same.
+There is an important difference though: the asterisk syntax evaluates
+expressions on _selected objects_ rather than on the whole context.  That is, as
+long as there is no selected object, the dollar and the asterisk syntaxes do
+exactly the same.
 
-And what is that object selection thing? A `th:object` attribute. Let's use it
-in our user profile (`userprofile.html`) page:
+And what is a selected object? The result of an expression using the `th:object`
+attribute. Let's use one in our user profile (`userprofile.html`) page:
 
 ```html
   <div th:object="${session.user}">
@@ -1131,7 +1128,7 @@ to dollar expressions as the `#object` expression variable:
 ```
 
 As said, if no object selection has been performed, dollar and asterisk syntaxes
-are exactly equivalent.
+are equivalent.
 
 ```html
 <div>
@@ -1152,25 +1149,24 @@ the `@` syntax: `@{...}`
 
 There are different types of URLs:
 
- * Absolute URLs, like `http://www.thymeleaf.org`
+ * Absolute URLs: `http://www.thymeleaf.org`
  * Relative URLs, which can be:
-    * Page-relative, like `user/login.html`
-    * Context-relative, like `/itemdetails?id=3` (context name in server will be
+    * Page-relative: `user/login.html`
+    * Context-relative: `/itemdetails?id=3` (context name in server will be
       added automatically)
-    * Server-relative, like `~/billing/processInvoice` (allows calling URLs in
+    * Server-relative: `~/billing/processInvoice` (allows calling URLs in
       another context (= application) in the same server.
-    * Protocol-relative URLs, like `//code.jquery.com/jquery-2.0.3.min.js`
+    * Protocol-relative URLs: `//code.jquery.com/jquery-2.0.3.min.js`
 
-The real processing of these expressions and their conversion to the URLs that will
-be actually output will be done by implementations of the 
-`org.thymeleaf.linkbuilder.ILinkBuilder` interface that are registered into the 
-`ITemplateEngine` object being used.
+The real processing of these expressions and their conversion to the URLs that
+will be output is done by implementations of the `org.thymeleaf.linkbuilder.ILinkBuilder`
+interface that are registered into the `ITemplateEngine` object being used.
 
-By default, a single implementation of this interface is registered of class
+By default, a single implementation of this interface is registered of the class
 `org.thymeleaf.linkbuilder.StandardLinkBuilder`, which is enough for both offline
-(non-web) and also web scenarios based on the Servlet API. Other scenarios (like integration
-with non-ServletAPI web frameworks) might need specific implementations of the link
-builder interface.
+(non-web) and also web scenarios based on the Servlet API. Other scenarios (like
+integration with non-ServletAPI web frameworks) might need specific
+implementations of the link builder interface.
 
 Let's use this new syntax. Meet the `th:href` attribute:
 
@@ -1188,20 +1184,21 @@ Let's use this new syntax. Meet the `th:href` attribute:
 
 Some things to note here:
 
- * `th:href` is an attribute modifier attribute: once processed, it will compute
-   the link URL to be used and set the value of the href attribute of the `<a>` tag 
-   to this URL.
+ * `th:href` is a modifier attribute: once processed, it will compute the link
+   URL to be used and set that value to the `href` attribute of the `<a>` tag.
  * We are allowed to use expressions for URL parameters (as you can see in `orderId=${o.id}`).
-   The required URL-parameter-encoding operations will also be automatically performed.
- * If several parameters are needed, these will be separated by commas like `@{/order/process(execId=${execId},execType='FAST')}`
- * Variable templates are also allowed in URL paths, like `@{/order/{orderId}/details(orderId=${orderId})}`
- * Relative URLs starting with `/` (like `/order/details`) will be automatically
+   The required URL-parameter-encoding operations will also be automatically
+   performed.
+ * If several parameters are needed, these will be separated by commas: `@{/order/process(execId=${execId},execType='FAST')}`
+ * Variable templates are also allowed in URL paths: `@{/order/{orderId}/details(orderId=${orderId})}`
+ * Relative URLs starting with `/` (eg: `/order/details`) will be automatically
    prefixed by the application context name.
  * If cookies are not enabled or this is not yet known, a `";jsessionid=..."`
-   suffix might be added to relative URLs so that session is preserved. This is called _URL Rewriting_,
-   and Thymeleaf allows you to plug in your own rewriting filters by using the `response.encodeURL(...)`
-   mechanism from the Servlet API for every URL.
- * The `th:href` tag allowed us to (optionally) have a working static `href`
+   suffix might be added to relative URLs so that the session is preserved. This
+   is called _URL Rewriting_ and Thymeleaf allows you to plug in your own
+   rewriting filters by using the `response.encodeURL(...)` mechanism from the
+   Servlet API for every URL.
+ * The `th:href` attribute allows us to (optionally) have a working static `href`
    attribute in our template, so that our template links remained navigable by a
    browser when opened directly for prototyping purposes.
 
@@ -1216,8 +1213,8 @@ result of evaluating another expression:
 
 ### A menu for our home page
 
-Now we know how to create link URLs, what about adding a small menu in our home
-for some of the other pages in the site?
+Now that we know how to create link URLs, what about adding a small menu in our
+home page for some of the other pages in the site?
 
 ```html
 <p>Please select an option</p>
@@ -1232,20 +1229,21 @@ for some of the other pages in the site?
 
 ### Server root relative URLs
 
-An additional syntax can be used to create server-root-relative (instead of context-root-relative)
-URLs in order to link to different contexts in the same server. These URLs will be specified like
-`@{~/path/to/something}`
+An additional syntax can be used to create server-root-relative (instead of
+context-root-relative) URLs in order to link to different contexts in the same
+server. These URLs will be specified like `@{~/path/to/something}`
 
 
 
 4.5 Fragments
 -------------
 
-Fragment expressions are an easy way to represent fragments of markup and move them around templates. This
-allows us to replicate them, pass them to other templates as arguments, etc.
+Fragment expressions are an easy way to represent fragments of markup and move
+them around templates. This allows us to replicate them, pass them to other
+templates as arguments, and so on.
 
-The most common use is for fragment insertion using `th:insert` or `th:replace` (more on these in
-a later section):
+The most common use is for fragment insertion using `th:insert` or `th:replace`
+(more on these in a later section):
 
 ```html
 <div th:insert="~{commons :: main}">...</div>
@@ -1259,16 +1257,19 @@ But they can be used anywhere, just as any other variable:
 </div>
 ```
 
-Later in this tutorial there is an entire section devoted to Template Layout, including
-deeper explanation of fragment expressions.
+Later in this tutorial there is an entire section devoted to Template Layout,
+including deeper explanation of fragment expressions.
+
 
 
 4.6 Literals
 ------------
 
-###Text literals
+### Text literals
 
-Text literals are just character strings specified between single quotes. They can include any character, but you should escape any single quotes inside them as `\'`.
+Text literals are just character strings specified between single quotes. They
+can include any character, but you should escape any single quotes inside them
+using `\'`.
 
 ```html
 <p>
@@ -1276,9 +1277,9 @@ Text literals are just character strings specified between single quotes. They c
 </p>
 ```
 
-###Number literals
+### Number literals
 
-Numeric literals look exactly like what they are: numbers.
+Numeric literals are just that: numbers.
 
 ```html
 <p>The year is <span th:text="2013">1492</span>.</p>
@@ -1286,7 +1287,7 @@ Numeric literals look exactly like what they are: numbers.
 ```
 
 
-###Boolean literals
+### Boolean literals
 
 The boolean literals are `true` and `false`. For example:
 
@@ -1294,8 +1295,8 @@ The boolean literals are `true` and `false`. For example:
 <div th:if="${user.isAdmin()} == false"> ...
 ```
 
-Note that in the above example, the `== false` is written outside the braces, and thus
-it is Thymeleaf itself who takes care of it. If it were written inside the braces, it would
+In this example, the `== false` is written outside the braces, and so it is
+Thymeleaf that takes care of it. If it were written inside the braces, it would
 be the responsibility of the OGNL/SpringEL engines:
 
 ```html
@@ -1303,7 +1304,7 @@ be the responsibility of the OGNL/SpringEL engines:
 ```
 
 
-###The null literal
+### The null literal
 
 The `null` literal can be also used:
 
@@ -1312,13 +1313,14 @@ The `null` literal can be also used:
 ```
 
 
-###Literal tokens
+### Literal tokens
 
 Numeric, boolean and null literals are in fact a particular case of _literal tokens_.
 
-These tokens allow a little bit of simplification in Standard Expressions. They work exactly the same as text literals (`'...'`), but they only allow letters (`A-Z` and `a-z`),
-numbers (`0-9`), brackets (`[` and `]`), dots (`.`), hyphens (`-`) and underscores (`_`).
-So no whitespaces, no commas, etc.
+These tokens allow a little bit of simplification in Standard Expressions. They
+work exactly the same as text literals (`'...'`), but they only allow letters (`A-Z`
+and `a-z`), numbers (`0-9`), brackets (`[` and `]`), dots (`.`), hyphens (`-`)
+and underscores (`_`). So no whitespaces, no commas, etc.
 
 The nice part? Tokens don't need any quotes surrounding them. So we can do this:
 
@@ -1334,11 +1336,11 @@ instead of:
 
 
 
-
 4.7 Appending texts
 -------------------
 
-Texts, no matter whether they are literals or the result of evaluating variable or message expressions, can be easily appended using the `+` operator:
+Texts, no matter whether they are literals or the result of evaluating variable
+or message expressions, can be easily appended using the `+` operator:
 
 ```html
 <span th:text="'The name of the user is ' + ${user.name}">
@@ -1346,11 +1348,11 @@ Texts, no matter whether they are literals or the result of evaluating variable 
 
 
 
-
 4.8 Literal substitutions
 -------------------------
 
-Literal substitutions allow the easy formatting of strings containing values from variables without the need to append literals with `'...' + '...'`.
+Literal substitutions allow for an easy formatting of strings containing values
+from variables without the need to append literals with `'...' + '...'`.
 
 These substitutions must be surrounded by vertical bars (`|`), like:
 
@@ -1358,7 +1360,7 @@ These substitutions must be surrounded by vertical bars (`|`), like:
 <span th:text="|Welcome to our application, ${user.name}!|">
 ```
 
-Which is actually equivalent to:
+Which is equivalent to:
 
 ```html
 <span th:text="'Welcome to our application, ' + ${user.name} + '!'">
@@ -1370,8 +1372,9 @@ Literal substitutions can be combined with other types of expressions:
 <span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">
 ```
 
-**Note:** only variable expressions (`${...}`) are allowed inside `|...|` literal substitutions. No other literals (`'...'`), boolean/numeric tokens, conditional expressions etc. are. 
-
+> Only variable expressions (`${...}`) are allowed inside `|...|` literal
+> substitutions. No other literals (`'...'`), boolean/numeric tokens,
+> conditional expressions etc. are. 
 
 
 
@@ -1395,13 +1398,14 @@ Standard Expression engine):
 Note that textual aliases exist for some of these operators: `div` (`/`), `mod` (`%`).
 
 
+
 4.10 Comparators and Equality
 -----------------------------
 
 Values in expressions can be compared with the `>`, `<`, `>=` and `<=` symbols,
-as usual, and also the `==` and `!=` operators can be used to check equality (or
-the lack of it). Note that XML establishes that the `<` and `>` symbols should
-not be used in attribute values, and so they should be substituted by `&lt;` and
+and the `==` and `!=` operators can be used to check for equality (or the lack
+of it). Note that XML establishes that the `<` and `>` symbols should not be
+used in attribute values, and so they should be substituted by `&lt;` and
 `&gt;`.
 
 ```html
@@ -1409,20 +1413,21 @@ not be used in attribute values, and so they should be substituted by `&lt;` and
 <span th:text="'Execution mode is ' + ( (${execMode} == 'dev')? 'Development' : 'Production')">
 ```
 
-A simpler alternative may be using textual aliases that exist for some of these operators: 
-`gt` (`>`), `lt` (`<`), `ge` (`>=`), `le` (`<=`), `not` (`!`). Also `eq` (`==`), `neq`/`ne` (`!=`).
+A simpler alternative may be using textual aliases that exist for some of these
+operators: `gt` (`>`), `lt` (`<`), `ge` (`>=`), `le` (`<=`), `not` (`!`). Also
+`eq` (`==`), `neq`/`ne` (`!=`).
 
 
 
 4.11 Conditional expressions
----------------------------
+----------------------------
 
 _Conditional expressions_ are meant to evaluate only one of two expressions
 depending on the result of evaluating a condition (which is itself another
 expression).
 
 Let's have a look at an example fragment (introducing another _attribute modifier_,
-this time `th:class`):
+`th:class`):
 
 ```html
 <tr th:class="${row.even}? 'even' : 'odd'">
@@ -1458,8 +1463,8 @@ the condition is false:
 
 A _default expression_ is a special kind of conditional value without a _then_
 part. It is equivalent to the _Elvis operator_ present in some languages like
-Groovy, and allows to specify two  expressions, being the second one evaluated
-only in the case of the first one returning null.
+Groovy, lets you specify two expressions: the first one is used if it doesn't
+evaluate to null, but if it does then the second one is used.
 
 Let's see it in action in our user profile page:
 
@@ -1495,12 +1500,12 @@ parentheses:
 
 The No-Operation token is represented by an underscore symbol (`_`).
 
-The idea behind this token is to specify that the desired result for an expression is 
-to actually *do nothing*, i.e. do exactly as if the processable attribute (e.g. `th:text`) was not 
-there at all.
+The idea behind this token is to specify that the desired result for an
+expression is to *do nothing*, i.e. do exactly as if the processable attribute
+(e.g. `th:text`) was not there at all.
 
-Among other possibilities, this allows developers to use prototyping text as default values. For 
-example, instead of:
+Among other possibilities, this allows developers to use prototyping text as
+default values. For example, instead of:
 
 ```html
 <span th:text="${user.name} ?: 'no user authenticated'">...</span>
@@ -1515,12 +1520,12 @@ is both more concise and versatile from a design standpoint:
 
 
 
-
 4.15 Data Conversion / Formatting
 ---------------------------------
 
-Thymeleaf defines a *double-brace* syntax for variable (`${...}`) and selection (`*{...}`) expressions
-that allows us to apply *data conversion* by means of a configured *conversion service*.
+Thymeleaf defines a *double-brace* syntax for variable (`${...}`) and selection
+(`*{...}`) expressions that allows us to apply *data conversion* by means of a
+configured *conversion service*.
 
 It basically goes like this:
 
@@ -1528,36 +1533,36 @@ It basically goes like this:
 <td th:text="${{user.lastAccessDate}}">...</td>
 ```
 
-Noticed the double brace there?: `${{...}}`. That instructs Thymeleaf to pass the result of the
-`user.lastAccessDate` expression to the *conversion service* and ask it to perform a **formatting
-operation** (a conversion to `String`) before writing the result.
+Noticed the double brace there?: `${{...}}`. That instructs Thymeleaf to pass
+the result of the `user.lastAccessDate` expression to the *conversion service*
+and asks it to perform a **formatting operation** (a conversion to `String`)
+before writing the result.
 
 Assuming that `user.lastAccessDate` is of type `java.util.Calendar`, if a *conversion service* 
 (implementation of `IStandardConversionService`) has been registered and contains a valid 
 conversion for `Calendar -> String`, it will be applied.
 
-Note that the default implementation of `IStandardConversionService` (the `StandardConversionService`
+The default implementation of `IStandardConversionService` (the `StandardConversionService`
 class) simply executes `.toString()` on any object converted to `String`. For more information on
-how to register a custom *conversion service* implementation, have a look at the *More on
-Configuration* section in this same tutorial.
+how to register a custom *conversion service* implementation, have a look at the
+[More on Configuration](#more-on-configuration) section.
 
 > The official thymeleaf-spring3 and thymeleaf-spring4 integration packages 
-> transparently integrate this *Thymeleaf Conversion Service* mechanism with Spring's own
-> *Conversion Service* infrastructure, so that conversion services and formatters declared in
-> the Spring configuration will be made automatically available to `${{...}}` and `*{{...}}`
-> expressions.
+> transparently integrate Thymeleaf's conversion service mechanism with Spring's
+> own *Conversion Service* infrastructure, so that conversion services and
+> formatters declared in the Spring configuration will be made automatically
+> available to `${{...}}` and `*{{...}}` expressions.
 
 
 
 4.14 Preprocessing
 ------------------
 
-In addition to all these features for expression processing, Thymeleaf offers to
-us the possibility of _preprocessing_ expressions.
+In addition to all these features for expression processing, Thymeleaf has the
+feature of _preprocessing_ expressions.
 
-And what is that preprocessing thing? It is an execution of the expressions done
-before the normal one, that allows the modification of the actual expression
-that will be eventually executed.
+Preprocessing is an execution of the expressions done before the normal one that
+allows for modification of the expression that will eventually be executed.
 
 Preprocessed expressions are exactly like normal ones, but appear surrounded by
 a double underscore symbol (like `__${expression}__`).
