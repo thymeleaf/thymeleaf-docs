@@ -448,8 +448,8 @@ Thymeleaf.
 
 Our first task will be to create a home page for our grocery site.
 
-The first version we will write of this page will be extremely simple: just a
-title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
+The first version of this page will be extremely simple: just a title and a
+welcome message. This is our `/WEB-INF/templates/home.html` file:
 
 ```html
 <!DOCTYPE html>
@@ -472,13 +472,13 @@ title and a welcome message. This is our `/WEB-INF/templates/home.html` file:
 </html>
 ```
 
-The first thing you will notice here is that this file is HTML5 that can be
-correctly displayed by any browser, because it does not include any non-HTML
-tags (and browsers ignore all attributes they don't understand, like `th:text`).
+The first thing you will notice is that this file is HTML5 that can be correctly
+displayed by any browser because it does not include any non-HTML tags (browsers
+ignore all attributes they don't understand, like `th:text`).
 
-But you may also notice that this template is not really a _valid_ HTML5 document, because 
-these non-standard attributes we are using in the `th:*` form are not allowed 
-by the HTML5 specification. In fact, we are even adding an `xmlns:th` 
+But you may also notice that this template is not really a _valid_ HTML5
+document, because these non-standard attributes we are using in the `th:*` form
+are not allowed by the HTML5 specification. In fact, we are even adding an `xmlns:th` 
 attribute to our `<html>` tag, something absolutely non-HTML5-ish:
 
 ```html
@@ -486,13 +486,12 @@ attribute to our `<html>` tag, something absolutely non-HTML5-ish:
 ```
 
 ...which has no influence at all in template processing, but works as an
-*incantation* that prevents our IDE to complain about the lack of a namespace
-definition for all those `th:*` attributes.
+*incantation* that prevents our IDE from complaining about the lack of a
+namespace definition for all those `th:*` attributes.
 
-So what if we wanted to make this template **HTML5-valid**? That would be easy:
-all we would need to do is switch to Thymeleaf's fully-HTML5-valid syntax, based
-on applying the `data-` prefix to attribute names and using hyphen (`-`)
-separators instead of semi-colon (`:`):
+So what if we wanted to make this template **HTML5-valid**? Easy: switch to
+Thymeleaf's data attribute syntax, using the `data-` prefix for attribute names
+and hyphen (`-`) separators instead of semi-colons (`:`):
 
 ```html
 <!DOCTYPE html>
@@ -515,24 +514,23 @@ separators instead of semi-colon (`:`):
 </html>
 ```
 
-Custom `data-` prefixed attributes are allowed by the HTML5 specification so,
+Custom `data-` prefixed attributes are allowed by the HTML5 specification, so,
 with this code above, our template would be a *valid HTML5 document*.
 
-> Both notations are completely equivalent and interchangeable, but note 
-> that for the sake of simplicity and compactness of the code samples, 
-> throughout this tutorial we will use the *namespace notation* (`th:*`). Also,
-> the `th:*` notation is more general and allowed in every Thymeleaf template
-> mode (`XML`, `TEXT`...) whereas the `data-` notation is only
-> allowed in `HTML` mode.
+> Both notations are completely equivalent and interchangeable, but for the sake
+> of simplicity and compactness of the code samples, this tutorial will use the
+> *namespace notation* (`th:*`). Also, the `th:*` notation is more general and
+> allowed in every Thymeleaf template mode (`XML`, `TEXT`...) whereas the `data-`
+> notation is only allowed in `HTML` mode.
 
 
 ### Using th:text and externalizing text
 
 Externalizing text is extracting fragments of template code out of template
-files so that they can be kept in specific separate files (typically `.properties`
-files) and that they can be easily replaced with equivalent texts written in
-other languages (a process called internationalization or simply _i18n_).
-Externalized fragments of text are usually called *"messages"*.
+files so that they can be kept in separate files (typically `.properties` files)
+and that they can be easily replaced with equivalent texts written in other
+languages (a process called internationalization or simply _i18n_). Externalized
+fragments of text are usually called *"messages"*.
 
 Messages always have a key that identifies them, and Thymeleaf allows you to
 specify that a text should correspond to a specific message with the `#{...}`
@@ -546,8 +544,8 @@ What we can see here are in fact two different features of the Thymeleaf
 Standard Dialect:
 
  * The `th:text` attribute, which evaluates its value expression and sets the
-   result of this evaluation as the body of the host tag, effectively
-   replacing that "Welcome to our grocery store!" text we see in the code.
+   result as the body of the host tag, effectively replacing the "Welcome to our
+   grocery store!" text we see in the code.
  * The `#{home.welcome}` expression, specified in the _Standard Expression Syntax_,
    instructing that the text to be used by the `th:text` attribute should be the
    message with the `home.welcome` key corresponding to whichever locale we are
@@ -561,19 +559,19 @@ implementation being used. Normally, an implementation based on `.properties`
 files will be used, but we could create our own implementations if we wanted,
 for example, to obtain messages from a database.
 
-However, we have not specified a message resolver to our Template Engine during
+However, we have not specified a message resolver for our template engine during
 initialization, and that means that our application is using the _Standard Message Resolver_,
-implemented by class `org.thymeleaf.messageresolver.StandardMessageResolver`.
+implemented by `org.thymeleaf.messageresolver.StandardMessageResolver`.
 
-This standard message resolver expects to find messages for `/WEB-INF/templates/home.html`
-in .properties files in the same folder and with the same name as the template,
+The standard message resolver expects to find messages for `/WEB-INF/templates/home.html`
+in properties files in the same folder and with the same name as the template,
 like:
 
  * `/WEB-INF/templates/home_en.properties` for English texts.
  * `/WEB-INF/templates/home_es.properties` for Spanish language texts.
  * `/WEB-INF/templates/home_pt_BR.properties` for Portuguese (Brazil) language
    texts.
- * `/WEB-INF/templates/home.properties` for default texts (if locale is not
+ * `/WEB-INF/templates/home.properties` for default texts (if the locale is not
    matched).
 
 Let's have a look at our `home_es.properties` file:
@@ -609,10 +607,10 @@ public class HomeController implements IGTVGController {
 }
 ```
 
-The first thing we can see here is the creation of a context. A Thymeleaf
-*context* is an object implementing the `org.thymeleaf.context.IContext` interface.
-Contexts should contain all the data required for an execution of the Template
-Engine in a variables map, and also reference the Locale that must be used for
+The first thing we see is the creation of a *context*. A Thymeleaf context is an
+object implementing the `org.thymeleaf.context.IContext` interface. Contexts
+should contain all the data required for an execution of the template engine in
+a variables map, and also reference the locale that must be used for
 externalized messages.
 
 ```java
@@ -627,7 +625,7 @@ public interface IContext {
 ```
 
 There is a specialized extension of this interface, `org.thymeleaf.context.IWebContext`,
-meant to be used in ServletAPI-based web applications (like e.g. SpringMVC).
+meant to be used in ServletAPI-based web applications (like SpringMVC).
 
 ```java
 public interface IWebContext extends IContext {
@@ -645,31 +643,32 @@ The Thymeleaf core library offers an implementation of each of these interfaces:
  * `org.thymeleaf.context.Context` implements `IContext`
  * `org.thymeleaf.context.WebContext` implements `IWebContext`
 
-And as you can see in the controller code, `WebContext` is the one we will use.
-In fact we have to, because the use of a `ServletContextTemplateResolver`
-requires that we use a context implementing `IWebContext`.
+And as you can see in the controller code, `WebContext` is the one we use. In
+fact we have to, because the use of a `ServletContextTemplateResolver` requires
+that we use a context implementing `IWebContext`.
 
 ```java
 WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 ```
 
-Only three out of those four constructor arguments are required, because the default
-locale for the system will be used if none is specified (although you should
-never let this happen in real applications).
+Only three out of those four constructor arguments are required because the
+default locale for the system will be used if none is specified (although you
+should never let this happen in real applications).
 
-There are some specialized expressions that we will be able to use to obtain the request parameters
-and the request, session and application attributes from the `WebContext` in our templates. For example:
+There are some specialized expressions that we will be able to use to obtain the
+request parameters and the request, session and application attributes from the
+`WebContext` in our templates. For example:
 
-  * `${x}` will return a variable `x` stored into the Thymeleaf context or as a *request attribute*.
-  * `${param.x}` will return a *request parameter* called `x` (which might be multivalued).
-  * `${session.x}` will return a *session attribute* called `x`.
-  * `${application.x}` will return a *servlet context attribute* called `x`.
+ * `${x}` will return a variable `x` stored into the Thymeleaf context or as a *request attribute*.
+ * `${param.x}` will return a *request parameter* called `x` (which might be multivalued).
+ * `${session.x}` will return a *session attribute* called `x`.
+ * `${application.x}` will return a *servlet context attribute* called `x`.
 
 
 ### Executing the template engine
 
-With our context object ready, all we need is executing the template engine
-specifying the template name and the context, and passing on the response writer
+With our context object ready, now we can tell the template engine to process
+the template (by its name) using the context, and passing it a response writer
 so that the response can be written to it:
 
 ```java
@@ -700,7 +699,6 @@ Let's see the results of this using the Spanish locale:
 
 
 
-
 3.2 More on texts and variables
 -------------------------------
 
@@ -721,10 +719,10 @@ If we execute this template like before, we will obtain:
 ```
 
 Which is not exactly what we expected, because our `<b>` tag has been escaped
-and therefore it will be displayed at the browser.
+and therefore it will be displayed in the browser.
 
-This is the default behaviour of the th:text attribute. If we want Thymeleaf to
-respect our HTML tags and not escape them, we will have to use a different
+This is the default behaviour of the `th:text` attribute. If we want Thymeleaf
+to respect our HTML tags and not escape them, we will have to use a different
 attribute: `th:utext` (for "unescaped text"):
 
 ```html
@@ -795,8 +793,8 @@ these expressions could be more complex (like `${user.name}` for "get the
 variable called user, and call its `getName()` method").
 
 There are quite a lot of possibilities in attribute values: messages, variable
-expressions... and quite a lot more. Next chapter will show us what all these
-possibilities are.
+expressions... and quite a lot more. The next chapter will show us what all
+these possibilities are.
 
 
 
