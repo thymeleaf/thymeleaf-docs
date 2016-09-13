@@ -152,28 +152,28 @@ template file. The ability to do this is a feature called _Natural Templating_.
 2 The Good Thymes Virtual Grocery
 =================================
 
-The source code for the examples shown in this and future chapters of this guide
-can be found in the [Good Thymes Virtual Grocery GitHub repository](https://github.com/thymeleaf/thymeleafexamples-gtvg).
+The source code for the examples shown in this, and future chapters of this
+guide,  can be found in the [Good Thymes Virtual Grocery GitHub repository](https://github.com/thymeleaf/thymeleafexamples-gtvg).
+
 
 
 2.1 A website for a grocery
 ---------------------------
 
-In order to better explain the concepts involved in processing templates with
-Thymeleaf, this tutorial will use a demo application you can download from the
+To better explain the concepts involved in processing templates with Thymeleaf,
+this tutorial will use a demo application which you can download from the
 project's web site.
 
-This application represents the web site of an imaginary virtual grocery, and
-will provide us with the adequate scenarios to exemplify diverse Thymeleaf
-features.
+This application is the web site of an imaginary virtual grocery, and will
+provide us with many scenarios to showcase Thymeleaf's many features.
 
-We will need a quite simple set of model entities for our application: `Products`
+To start, we need a simple set of model entities for our application: `Products`
 which are sold to `Customers` by creating `Orders`. We will also be managing `Comments`
 about those `Products`:
 
 ![Example application model](images/usingthymeleaf/gtvg-model.png)
 
-Our small application will also have a very simple service layer, composed by `Service`
+Our application will also have a very simple service layer, composed by `Service`
 objects containing methods like:
 
 
@@ -281,16 +281,15 @@ But first let's see how that template engine is initialized.
 2.2 Creating and configuring the Template Engine
 ------------------------------------------------
 
-The _process(...)_ method in our filter contained this sentence:
+The _process(...)_ method in our filter contained this line:
 
 ```java
 ITemplateEngine templateEngine = this.application.getTemplateEngine();
 ```
 
 Which means that the _GTVGApplication_ class is in charge of creating and
-configuring one of the most important objects in a Thymeleaf-enabled
-application: the `TemplateEngine` instance (implementation of the
-`ITemplateEngine` interface).
+configuring one of the most important objects in a Thymeleaf application: the
+`TemplateEngine` instance (implementation of the `ITemplateEngine` interface).
 
 Our `org.thymeleaf.TemplateEngine` object is initialized like this:
 
@@ -332,8 +331,8 @@ public class GTVGApplication {
 }
 ```
 
-Of course there are many ways of configuring a `TemplateEngine` object, but for
-now these few lines of code will teach us enough about the steps needed.
+There are many ways of configuring a `TemplateEngine` object, but for now these
+few lines of code will teach us enough about the steps needed.
 
 
 ### The Template Resolver
@@ -367,10 +366,10 @@ public interface ITemplateResolver {
 
 These objects are in charge of determining how our templates will be accessed,
 and in this GTVG application, the `org.thymeleaf.templateresolver.ServletContextTemplateResolver`
-implementation that we are using specifies that we are going to retrieve our
-template files as resources from the _Servlet Context_: an application-wide `javax.servlet.ServletContext`
-object that exists in every Java web application, and that resolves resources
-considering the web application root as the root for resource paths.
+means that we are going to retrieve our template files as resources from the
+_Servlet Context_: an application-wide `javax.servlet.ServletContext` object
+that exists in every Java web application, and that resolves resources from the
+web application root.
 
 But that's not all we can say about the template resolver, because we can set
 some configuration parameters on it. First, the template mode:
@@ -388,9 +387,8 @@ templateResolver.setPrefix("/WEB-INF/templates/");
 templateResolver.setSuffix(".html");
 ```
 
-These _prefix_ and _suffix_ do exactly what it looks like: modify the template
-names that we will be passing to the engine for obtaining the real resource
-names to be used.
+The _prefix_ and _suffix_ modify the template names that we will be passing to
+the engine for obtaining the real resource names to be used.
 
 Using this configuration, the template name _"product/list"_ would correspond to:
 
@@ -398,23 +396,22 @@ Using this configuration, the template name _"product/list"_ would correspond to
 servletContext.getResourceAsStream("/WEB-INF/templates/product/list.html")
 ```
 
-Optionally, the amount of time that a parsed template living in cache will be
-considered valid can be configured at the Template Resolver by means of the _cacheTTLMs_
-property:
+Optionally, the amount of time that a parsed template can live in the cache is
+configured at the Template Resolver by means of the _cacheTTLMs_ property:
 
 ```java
 templateResolver.setCacheTTLMs(3600000L);
 ```
 
-Of course, a template can be expelled from cache before that TTL is reached if
-the max cache size is reached and it is the oldest entry currently cached.
+A template can still be expelled from cache before that TTL is reached if the
+max cache size is reached and it is the oldest entry currently cached.
 
 > Cache behaviour and sizes can be defined by the user by implementing the `ICacheManager`
-> interface or simply modifying the `StandardCacheManager` object set to manage
-> caches by default.
+> interface or by modifying the `StandardCacheManager` object to manage the
+> default cache.
 
-We will learn more about template resolvers later. Now let's have a look at the
-creation of our Template Engine object.
+There is much more to learn about template resolvers, but for not let's have a
+look at the creation of our Template Engine object.
 
 
 ### The Template Engine
@@ -432,8 +429,8 @@ Rather simple, isn't it? All we need is to create an instance and set the
 Template Resolver to it.
 
 A template resolver is the only *required* parameter a `TemplateEngine` needs,
-although of course there are many others that will be covered later (message
-resolvers, cache sizes, etc). For now, this is all we need.
+although there are many others that will be covered later (message resolvers,
+cache sizes, etc). For now, this is all we need.
 
 Our Template Engine is now ready and we can start creating our pages using
 Thymeleaf.
