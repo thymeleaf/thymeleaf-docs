@@ -410,7 +410,7 @@ max cache size is reached and it is the oldest entry currently cached.
 > interface or by modifying the `StandardCacheManager` object to manage the
 > default cache.
 
-There is much more to learn about template resolvers, but for not let's have a
+There is much more to learn about template resolvers, but for now let's have a
 look at the creation of our Template Engine object.
 
 
