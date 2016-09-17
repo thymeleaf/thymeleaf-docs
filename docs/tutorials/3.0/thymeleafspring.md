@@ -28,7 +28,7 @@ code samples.
 ===================================
 
 Thymeleaf offers a set of Spring integrations that allow you to use it as a
-full-featured substitute for JSP in Spring MVC applications.
+fully-featured substitute for JSP in Spring MVC applications.
 
 These integrations will allow you to:
 
@@ -58,43 +58,85 @@ This specific dialect is based on the Thymeleaf Standard Dialect and is
 implemented in a class called `org.thymeleaf.spring4.dialect.SpringStandardDialect`,
 which in fact extends from `org.thymeleaf.standard.StandardDialect`.
 
-Besides all the features already present in the Standard Dialect -- and therefore
-inherited --, the SpringStandard Dialect introduces the following specific
+Besides all the features already present in the Standard Dialect --and therefore
+inherited--, the SpringStandard Dialect introduces the following specific
 features:
 
- * Use Spring Expression Language (Spring EL) as a variable expression
+ * Use Spring Expression Language (Spring EL or SpEL) as a variable expression
    language, instead of OGNL. Consequently, all `${...}` and `*{...}`
-   expressions will be evaluated by Spring's Expression Language engine.
+   expressions will be evaluated by Spring's Expression Language engine. Note also
+   that support for the Spring EL compiler is available (Spring 4.2.4+).
  * Access any beans in your application context using SpringEL's syntax: `${@myBean.doSomething()}`
  * New attributes for form processing: `th:field`, `th:errors` and `th:errorclass`, besides a new
    implementation of `th:object` that allows it to be used for form command
    selection.
  * An expression object and method, `#themes.code(...)`, which is equivalent
    to the `spring:theme` JSP custom tag.
- * An expression object and method, `#mvc.uri(...)`, which is equivalent to the `spring:mvcUrl(...)` JSP custom function (only in Spring 4.1+). 
- * New DTDs for validation, including these new attributes, as well as new
-   corresponding DOCTYPE translation rules.
+ * An expression object and method, `#mvc.uri(...)`, which is equivalent to 
+   the `spring:mvcUrl(...)` JSP custom function (only in Spring 4.1+). 
 
-Note that _you shouldn't use this dialect directly in a normal TemplateEngine object_
-as a part of its configuration. Instead, you should instance a new template
-engine class that performs all the required configuration steps: `org.thymeleaf.spring4.SpringTemplateEngine`.
+Note that most of the times _you shouldn't be using this dialect directly in a normal 
+`TemplateEngine` object_ as a part of its configuration. Unless you have very specific
+Spring integration needs, you should instead be creating an instance of a new template
+engine class that performs all the required configuration steps automatically: 
+`org.thymeleaf.spring4.SpringTemplateEngine`.
 
-An example bean configuration:
+An example bean configuration in XML:
 
 ```xml
 <bean id="templateResolver"
-       class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+       class="org.thymeleaf.templateresolver.SpringResourceTemplateResolver">
   <property name="prefix" value="/WEB-INF/templates/" />
   <property name="suffix" value=".html" />
-  <property name="templateMode" value="HTML5" />
+  <!-- HTML is the default value, added here for the sake of clarity.   -->
+  <property name="templateMode" value="HTML" />
+  <!-- Template cache is true by default. Set to false if you want      -->
+  <!-- templates to be automatically updated when modified.             -->
+  <property name="cacheable" value="true" />
 </bean>
     
 <bean id="templateEngine"
       class="org.thymeleaf.spring4.SpringTemplateEngine">
   <property name="templateResolver" ref="templateResolver" />
+  <!-- Enabling the SpringEL compiler with Spring 4.2.4 or newer can    -->
+  <!-- speed up execution in most scenarios, but might be incompatible  -->
+  <!-- with specific cases when expressions in one template are reused  -->
+  <!-- across different data types, so this flag is "false" by default  -->
+  <!-- for safer backwards compatibility.                               -->
+  <property name="enableSpringELCompiler" value="true" />
 </bean>
 ```
 
+And using Spring's Java configuration:
+
+```java
+@Bean
+public SpringResourceTemplateResolver templateResolver(){
+    SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+    templateResolver.setApplicationContext(this.applicationContext);
+    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setSuffix(".html");
+    // HTML is the default value, added here for the sake of clarity.
+    templateResolver.setTemplateMode(TemplateMode.HTML);
+    // Template cache is true by default. Set to false if you want
+    // templates to be automatically updated when modified.
+    templateResolver.setCacheable(true);
+    return templateResolver;
+}
+
+@Bean
+public SpringTemplateEngine templateEngine(){
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver());
+    // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
+    // speed up execution in most scenarios, but might be incompatible
+    // with specific cases when expressions in one template are reused
+    // across different data types, so this flag is "false" by default
+    // for safer backwards compatibility.
+    templateEngine.setEnableSpringELCompiler(true);
+    return templateEngine;
+}
+```
 
 
 
@@ -114,8 +156,7 @@ system:
 
 Views model pages in our applications and allow us to modify and predefine their
 behaviour by defining them as beans. Views are in charge of rendering the actual
-HTML interface, usually by the execution of some template engine like JSP (or
-Thymeleaf).
+HTML interface, usually by the execution of some template engine like Thymeleaf.
 
 ViewResolvers are the objects in charge of obtaining View objects for a specific
 operation and locale. Typically, controllers ask ViewResolvers to forward to a
@@ -126,9 +167,9 @@ control is passed to it for the renderization of HTML.
 
 > Note that not all pages in our applications have to be defined as Views, but
 > only those which behaviour we wish to be non-standard or configured in a
-> specific way (for example, by wiring some special beans to it. If a
-> ViewResolver is asked a view that has no corresponding bean ---which is the
-> common case---, a new View object is created ad hoc and returned.
+> specific way (for example, by wiring some special beans to it). If a
+> ViewResolver is asked a view that has no corresponding bean --which is the
+> common case--, a new View object is created ad hoc and returned.
 
 A typical configuration for a JSP+JSTL ViewResolver in a Spring MVC application
 looks like this:
