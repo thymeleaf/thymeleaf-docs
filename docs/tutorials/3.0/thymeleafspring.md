@@ -40,6 +40,7 @@ These integrations will allow you to:
    form-backing beans and result bindings, including the use of property editors, conversion services and validation error handling.
  * Display internationalization messages from messages files managed by Spring
    (through the usual `MessageSource` objects).
+ * Resolve your templates using Spring's own resource resolution mechanisms.
 
 Note that in order to fully understand this tutorial, you should have first gone
 through the _"Using Thymeleaf"_ tutorial, which explains the Standard Dialect in depth.
@@ -81,37 +82,13 @@ Spring integration needs, you should instead be creating an instance of a new te
 engine class that performs all the required configuration steps automatically: 
 `org.thymeleaf.spring4.SpringTemplateEngine`.
 
-An example bean configuration in XML:
-
-```xml
-<bean id="templateResolver"
-       class="org.thymeleaf.templateresolver.SpringResourceTemplateResolver">
-  <property name="prefix" value="/WEB-INF/templates/" />
-  <property name="suffix" value=".html" />
-  <!-- HTML is the default value, added here for the sake of clarity.   -->
-  <property name="templateMode" value="HTML" />
-  <!-- Template cache is true by default. Set to false if you want      -->
-  <!-- templates to be automatically updated when modified.             -->
-  <property name="cacheable" value="true" />
-</bean>
-    
-<bean id="templateEngine"
-      class="org.thymeleaf.spring4.SpringTemplateEngine">
-  <property name="templateResolver" ref="templateResolver" />
-  <!-- Enabling the SpringEL compiler with Spring 4.2.4 or newer can    -->
-  <!-- speed up execution in most scenarios, but might be incompatible  -->
-  <!-- with specific cases when expressions in one template are reused  -->
-  <!-- across different data types, so this flag is "false" by default  -->
-  <!-- for safer backwards compatibility.                               -->
-  <property name="enableSpringELCompiler" value="true" />
-</bean>
-```
-
-And using Spring's Java configuration:
+An example bean configuration:
 
 ```java
 @Bean
 public SpringResourceTemplateResolver templateResolver(){
+    // SpringResourceTemplateResolver automatically integrates with Spring's own
+    // resource resolution infrastructure, which is highly recommended.
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
     templateResolver.setApplicationContext(this.applicationContext);
     templateResolver.setPrefix("/WEB-INF/templates/");
@@ -126,6 +103,8 @@ public SpringResourceTemplateResolver templateResolver(){
 
 @Bean
 public SpringTemplateEngine templateEngine(){
+    // SpringTemplateEngine automatically applies SpringStandardDialect and
+    // enables Spring's own MessageSource message resolution mechanisms.
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.setTemplateResolver(templateResolver());
     // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
@@ -136,6 +115,36 @@ public SpringTemplateEngine templateEngine(){
     templateEngine.setEnableSpringELCompiler(true);
     return templateEngine;
 }
+```
+
+Or, using Spring's XML-based configuration:
+
+```xml
+<!-- SpringResourceTemplateResolver automatically integrates with Spring's own -->
+<!-- resource resolution infrastructure, which is highly recommended.          -->
+<bean id="templateResolver"
+       class="org.thymeleaf.templateresolver.SpringResourceTemplateResolver">
+  <property name="prefix" value="/WEB-INF/templates/" />
+  <property name="suffix" value=".html" />
+  <!-- HTML is the default value, added here for the sake of clarity.          -->
+  <property name="templateMode" value="HTML" />
+  <!-- Template cache is true by default. Set to false if you want             -->
+  <!-- templates to be automatically updated when modified.                    -->
+  <property name="cacheable" value="true" />
+</bean>
+    
+<!-- SpringTemplateEngine automatically applies SpringStandardDialect and      -->
+<!-- enables Spring's own MessageSource message resolution mechanisms.         -->
+<bean id="templateEngine"
+      class="org.thymeleaf.spring4.SpringTemplateEngine">
+  <property name="templateResolver" ref="templateResolver" />
+  <!-- Enabling the SpringEL compiler with Spring 4.2.4 or newer can speed up  -->
+  <!-- execution in most scenarios, but might be incompatible with specific    -->
+  <!-- cases when expressions in one template are reused across different data -->
+  <!-- ypes, so this flag is "false" by default for safer backwards            -->
+  <!-- compatibility.                                                          -->
+  <property name="enableSpringELCompiler" value="true" />
+</bean>
 ```
 
 
@@ -172,7 +181,7 @@ control is passed to it for the renderization of HTML.
 > common case--, a new View object is created ad hoc and returned.
 
 A typical configuration for a JSP+JSTL ViewResolver in a Spring MVC application
-looks like this:
+from the past looked like this:
 
 ```xml
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -184,7 +193,7 @@ looks like this:
 </bean>
 ```
 
-A quick look at its properties is enough to know about how it's configured:
+A quick look at its properties is enough to know about how it was configured:
 
  * `viewClass` establishes the class of the View instances. This is needed for a
    JSP resolver, but it will not be needed at all when we're working with Thymeleaf.
@@ -210,9 +219,24 @@ result of the execution of controllers.
 
 Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
 
+```java
+@Bean
+public ThymeleafViewResolver viewResolver(){
+    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+    viewResolver.setTemplateEngine(templateEngine());
+    // NOTE 'order' and 'viewNames' are optional
+    viewResolver.setOrder(1);
+    viewResolver.setViewNames(new String[] {".html", ".xhtml"});
+    return viewResolver;
+}
+```
+
+...or in XML:
+
 ```xml
 <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
   <property name="templateEngine" ref="templateEngine" />
+  <!-- NOTE 'order' and 'viewNames' are optional -->
   <property name="order" value="1" />
   <property name="viewNames" value="*.html,*.xhtml" />
 </bean>
@@ -230,64 +254,27 @@ Template Engine).
 And what if we wanted to define a `View` bean and add some static variables to
 it? Easy:
 
-```xml
-<bean name="main" class="org.thymeleaf.spring4.view.ThymeleafView">
-  <property name="staticVariables">
-    <map>
-      <entry key="footer" value="Some company: &lt;b&gt;ACME&lt;/b&gt;" />
-    </map>
-  </property>
-</bean>
-```
-
-
-
-
-4 Template Resolution
-=====================
-
-
-
-4.1 Spring-based Template Resolution
-------------------------------------
-
-When used with Spring, Thymeleaf provides additional implementations of `ITemplateResolver` and an associated `IResourceResolver`, fully integrated with Spring's resource resolution mechanism. These are:
-
-  * `org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver` for resolving templates.
-  * `org.thymeleaf.spring4.resourceresolver.SpringResourceResourceResolver`, mostly for internal use.
-
-This template resolver will allow applications to resolve templates using the standard Spring resource resolution syntax. It can be configured like:
-
-```xml
-<bean id="templateResolver"
-      class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
-  <property name="suffix" value=".html" />
-  <property name="templateMode" value="HTML5" />
-</bean>
-```
-
-And this will allow you to use view names like:
-
 ```java
-@RequestMapping("/doit")
-public String doIt() {
-    ...
-    return "classpath:resources/templates/doit";
+@Bean
+public ThymeleafView mainView() {
+    ThymeleafView view = new ThymeleafView("main");
+    view.setStaticVariables(
+        Collections.singletonMap("footer", "The ACME Fruit Company"));
+    return view;
 }
 ```
 
-Note that this Spring-based resource resolver will never be used by default. It will just be an option available for applications to configure in addition to the other template resolver implementations offered by the Thymeleaf core.
 
 
 
-5 Spring Thyme Seed Starter Manager
+4 Spring Thyme Seed Starter Manager
 ===================================
 
 The source code for the examples shown in this and future chapters of this guide
 can be found in the [Spring Thyme Seed Starter Manager GitHub repository](https://github.com/thymeleaf/thymeleafexamples-stsm).
 
 
-5.1 The Concept
+4.1 The Concept
 ---------------
 
 At Thymeleaf we're huge fans of thyme, and every spring we prepare our seed
@@ -308,7 +295,7 @@ Spring MVC.
 
 
 
-5.2 Business Layer
+4.2 Business Layer
 ------------------
 
 We will need a very simple business layer for our application. First of all,
@@ -359,7 +346,7 @@ public class VarietyService {
 
 
 
-5.3 Spring MVC configuration
+4.3 Spring MVC configuration
 ----------------------------
 
 Next we need to set up the Spring MVC configuration for the application, which
@@ -367,89 +354,116 @@ will include not only the standard Spring MVC artifacts like resource handling
 or annotation scanning, but also the creation of the Template Engine and View
 Resolver instances.
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/mvc
-                           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-                           http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-    
-    
-  <!-- **************************************************************** -->
-  <!--  RESOURCE FOLDERS CONFIGURATION                                  -->
-  <!--  Dispatcher configuration for serving static resources           -->
-  <!-- **************************************************************** -->
-  <mvc:resources location="/images/" mapping="/images/**" />
-  <mvc:resources location="/css/" mapping="/css/**" />
-    
+```java
+@Configuration
+@EnableWebMvc
+@ComponentScan("thymeleafexamples.stsm")
+public class SpringWebConfig
+        extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
-  <!-- **************************************************************** -->
-  <!--  SPRING ANNOTATION PROCESSING                                    -->
-  <!-- **************************************************************** -->
-  <mvc:annotation-driven conversion-service="conversionService" />
-  <context:component-scan base-package="thymeleafexamples.stsm" />
+    private ApplicationContext applicationContext;
 
 
-  <!-- **************************************************************** -->
-  <!--  MESSAGE EXTERNALIZATION/INTERNATIONALIZATION                    -->
-  <!--  Standard Spring MessageSource implementation                    -->
-  <!-- **************************************************************** -->
-  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="Messages" />
-  </bean>
+    public SpringWebConfig() {
+        super();
+    }
 
 
-  <!-- **************************************************************** -->
-  <!--  CONVERSION SERVICE                                              -->
-  <!--  Standard Spring formatting-enabled implementation               -->
-  <!-- **************************************************************** -->
-  <bean id="conversionService" 
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-    <property name="formatters">
-      <set>
-        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
-        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
-      </set>
-    </property>
-  </bean>
+    public void setApplicationContext(final ApplicationContext applicationContext)
+            throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
 
-  <!-- **************************************************************** -->
-  <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
-  <!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
-  <!-- **************************************************************** -->
 
-  <bean id="templateResolver"
-        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-    <property name="prefix" value="/WEB-INF/templates/" />
-    <property name="suffix" value=".html" />
-    <property name="templateMode" value="HTML5" />
-  </bean>
-    
-  <bean id="templateEngine"
-        class="org.thymeleaf.spring4.SpringTemplateEngine">
-    <property name="templateResolver" ref="templateResolver" />
-  </bean>
-   
-  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-    <property name="templateEngine" ref="templateEngine" />
-  </bean>    
+    /* ******************************************************************* */
+    /*  GENERAL CONFIGURATION ARTIFACTS                                    */
+    /*  Static Resources, i18n Messages, Formatters (Conversion Service)   */
+    /* ******************************************************************* */
 
-    
-</beans>
+    @Override
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+    }
+
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("Messages");
+        return messageSource;
+    }
+
+    @Override
+    public void addFormatters(final FormatterRegistry registry) {
+        super.addFormatters(registry);
+        registry.addFormatter(varietyFormatter());
+        registry.addFormatter(dateFormatter());
+    }
+
+    @Bean
+    public VarietyFormatter varietyFormatter() {
+        return new VarietyFormatter();
+    }
+
+    @Bean
+    public DateFormatter dateFormatter() {
+        return new DateFormatter();
+    }
+
+
+
+    /* **************************************************************** */
+    /*  THYMELEAF-SPECIFIC ARTIFACTS                                    */
+    /*  TemplateResolver <- TemplateEngine <- ViewResolver              */
+    /* **************************************************************** */
+
+    @Bean
+    public SpringResourceTemplateResolver templateResolver(){
+        // SpringResourceTemplateResolver automatically integrates with Spring's own
+        // resource resolution infrastructure, which is highly recommended.
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setApplicationContext(this.applicationContext);
+        templateResolver.setPrefix("/WEB-INF/templates/");
+        templateResolver.setSuffix(".html");
+        // HTML is the default value, added here for the sake of clarity.
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        // Template cache is true by default. Set to false if you want
+        // templates to be automatically updated when modified.
+        templateResolver.setCacheable(true);
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine(){
+        // SpringTemplateEngine automatically applies SpringStandardDialect and
+        // enables Spring's own MessageSource message resolution mechanisms.
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
+        // speed up execution in most scenarios, but might be incompatible
+        // with specific cases when expressions in one template are reused
+        // across different data types, so this flag is "false" by default
+        // for safer backwards compatibility.
+        templateEngine.setEnableSpringELCompiler(true);
+        return templateEngine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver viewResolver(){
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        return viewResolver;
+    }
+
+}
 ```
 
-Important: Note that we have selected HTML5 as a template mode.
 
 
-
-5.4 The Controller
+4.4 The Controller
 ------------------
 
 Of course, we will also need a controller for our application. As the STSM will
@@ -504,7 +518,7 @@ public List<SeedStarter> populateSeedStarters() {
 ### Mapped methods
 
 And now the most important part of a controller, the mapped methods: one for
-showing the form page, and other for processing the addition of new Seed Starter
+showing the form page, and another one for processing the addition of new `SeedStarter`
 objects.
 
 ```java
@@ -528,42 +542,39 @@ public String saveSeedstarter(
 
 
 
-5.5 Configuring a Conversion Service
+4.5 Configuring a Conversion Service
 ------------------------------------
 
-In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we registered a Spring `ConversionService` implementation at the application context. See it again:
+In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we 
+configured our application so that a Spring `ConversionService` object was created and
+initialized (by the `WebMvcConfigurerAdapter` we extend) with a couple of *formatter*
+objects we will need. See it again:
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans ...>
+```java
+@Override
+public void addFormatters(final FormatterRegistry registry) {
+    super.addFormatters(registry);
+    registry.addFormatter(varietyFormatter());
+    registry.addFormatter(dateFormatter());
+}
 
-  ...    
-  <mvc:annotation-driven conversion-service="conversionService" />
-  ...
+@Bean
+public VarietyFormatter varietyFormatter() {
+    return new VarietyFormatter();
+}
 
-  <!-- **************************************************************** -->
-  <!--  CONVERSION SERVICE                                              -->
-  <!--  Standard Spring formatting-enabled implementation               -->
-  <!-- **************************************************************** -->
-  <bean id="conversionService"
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-    <property name="formatters">
-      <set>
-        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
-        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
-      </set>
-    </property>
-  </bean>
-
-  ...
-    
-</beans>
+@Bean
+public DateFormatter dateFormatter() {
+    return new DateFormatter();
+}
 ```
 
-That conversion service allowed us to register two Spring *formatters*, 
-implementations of the `org.springframework.format.Formatter` interface. For more information on how the Spring conversion infrastructure works, see the docs at [spring.io](http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/validation.html#core-convert).
+Spring *formatters* are implementations of the `org.springframework.format.Formatter` 
+interface. For more information on how the Spring conversion infrastructure works, 
+see the docs at [spring.io](http://docs.spring.io/spring/docs/4.3.x/spring-framework-reference/html/validation.html#core-convert).
 
-Let's have a look at the `DateFormatter`, which formats dates according to a format string present at the `date.format` message key of our `Messages.properties`:
+Let's have a look at the `DateFormatter`, which formats dates according to a format 
+string present at the `date.format` message key of our `Messages.properties`:
 
 ```java
 public class DateFormatter implements Formatter<Date> {
@@ -627,7 +638,7 @@ We will learn more on how these formatters affect the way our data is displayed 
 
 
 
-6 Listing Seed Starter Data
+5 Listing Seed Starter Data
 ===========================
 
 The first thing that our `/WEB-INF/templates/seedstartermng.html` page will show
@@ -806,12 +817,12 @@ nested table for showing the contents of each row in the container:
 
 
 
-7 Creating a Form
+6 Creating a Form
 =================
 
 
 
-7.1 Handling the command object
+6.1 Handling the command object
 -------------------------------
 
 _Command object_ is the name Spring MVC gives to form-backing beans, this is, to
@@ -841,7 +852,7 @@ Spring MVC's infrastructure:
 
 
 
-7.2 Inputs
+6.2 Inputs
 ----------
 
 Let's see now how to add an input to our form:
@@ -881,7 +892,7 @@ etc., effectively adding complete HTML5 support to Spring MVC.
 
 
 
-7.3 Checkbox fields
+6.3 Checkbox fields
 -------------------
 
 `th:field` also allows us to define checkbox inputs. Let's see an example from
@@ -956,7 +967,7 @@ a `checked="checked"` attribute to the corresponding input tags.
 
 
 
-7.4 Radio Button fields
+6.4 Radio Button fields
 -----------------------
 
 Radio button fields are specified in a similar way to non-boolean (multi-valued)
@@ -973,7 +984,7 @@ checkboxes ---except that they are not multivalued, of course:
 
 
 
-7.5 Dropdown/List selectors
+6.5 Dropdown/List selectors
 ---------------------------
 
 Select fields have two parts: the `<select>` tag and its nested `<option>` tags.
@@ -999,7 +1010,7 @@ tag itself.
 
 
 
-7.6 Dynamic fields
+6.6 Dynamic fields
 ------------------
 
 Thanks to the advanced form-field binding capabilities in Spring MVC, we can use
@@ -1141,7 +1152,7 @@ a couple of times:
 
 
 
-8 Validation and Error Messages
+7 Validation and Error Messages
 ===============================
 
 Most of our forms will need to show validation messages in order to inform the
@@ -1151,7 +1162,7 @@ Thymeleaf offers some tools for this: a couple of functions in the `#fields`
 object, the `th:errors` and the `th:errorclass` attributes.
 
 
-8.1 Field errors
+7.1 Field errors
 ----------------
 
 Let's see how we could set a specific CSS class to a field if it has an error:
@@ -1199,7 +1210,7 @@ If `datePlanted` has errors, this will render as:
 ```
 
 
-8.2 All errors
+7.2 All errors
 --------------
 
 And what if we want to show all the errors in the form? We just need to query the `#fields.hasErrors(...)` and `#fields.errors(...)` methods with the `'*'` or `'all'` constants (which are equivalent):
@@ -1232,7 +1243,7 @@ Finally. Note `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyErrors()`
 ```
 
 
-8.3 Global errors
+7.3 Global errors
 -----------------
 
 There is a third type of error in a Spring form: *global* errors. These are errors that are not associated with any specific fields in the form, but still exist.
@@ -1258,7 +1269,7 @@ Thymeleaf offers the `global` constant for accessing these errors:
 ```
 
 
-8.4 Displaying errors outside forms
+7.4 Displaying errors outside forms
 -----------------------------------
 
 Form validation errors can also be displayed outside forms by using variable (`${...}`) instead of selection (`*{...}`) expressions and prefixing the name of the form-backing bean: 
@@ -1278,7 +1289,7 @@ Form validation errors can also be displayed outside forms by using variable (`$
 ```
 
 
-8.5 Rich error objects
+7.5 Rich error objects
 ----------------------
 
 Thymeleaf offers the possibility to obtain form error information in the form of beans (instead of mere *strings*), with the `fieldName` (String), `message` (String) and `global` (boolean) attributes.
@@ -1295,7 +1306,7 @@ These errors can be obtained by means of the `#fields.detailedErrors()` utility 
 ```
 
 
-9 It's still a Prototype!
+8 It's still a Prototype!
 =========================
 
 Our application is ready now. But let's have a second look at the `.html` page
@@ -1313,11 +1324,11 @@ that with JSP!
 
 
 
-10 The Conversion Service
-=========================
+9 The Conversion Service
+========================
 
-10.1 Configuration
-------------------
+9.1 Configuration
+-----------------
 
 As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Let's see again what it looks like:
 
@@ -1348,8 +1359,8 @@ As explained before, Thymeleaf can make use of a Conversion Service registered a
 </beans>
 ```
 
-10.1 Double-bracket syntax
---------------------------
+9.1 Double-bracket syntax
+-------------------------
 
 The Conversion Service can be easily applied in order to convert/format any object into String. This is done by means of the double-bracket syntax:
 
@@ -1372,8 +1383,8 @@ So, for example, given an Integer-to-String converter that adds commas as a thou
 
 
 
-10.2 Use in forms
------------------
+9.2 Use in forms
+----------------
 
 
 We saw before that every `th:field` attribute will always apply the conversion service, so this:
@@ -1392,8 +1403,8 @@ Note that this is the only scenario in which the Conversion Service is applied i
 
 
 
-10.3 `#conversions` utility object
------------------------------------ 
+9.3 `#conversions` utility object
+--------------------------------- 
 
 The `#conversions` expression utility object allows the manual execution of the Conversion Service wherever needed:
 
@@ -1409,7 +1420,7 @@ Syntax for this utility object:
 
 
 
-11 Rendering Template Fragments
+10 Rendering Template Fragments
 ===============================
 
 Thymeleaf offers the possibility to render only part of a template as the result of its execution: a *fragment*. 
@@ -1421,7 +1432,7 @@ Fragmentary rendering can be achieved by using Thymeleaf's *fragment specs*: obj
 The most common of these implementations is `org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec`, which allows specifying a fragment using a DOM Selector exactly like the ones used at `th:include` or `th:replace`.
 
 
-11.1 Specifying fragments in view beans
+10.1 Specifying fragments in view beans
 ----------------------------------------
 
 *View beans* are beans of the `org.thymeleaf.spring4.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
@@ -1493,7 +1504,7 @@ Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select 
 
 
 
-11.2 Specifying fragments in controller return values
+10.2 Specifying fragments in controller return values
 ---------------------------------------------------
 
 Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the same syntax as in `th:include` or `th:replace` attributes:
@@ -1528,11 +1539,11 @@ public String showContentPart() {
 
 
 
-12 Advanced Integration Features
+11 Advanced Integration Features
 ================================
 
 
-12.1 Integration with `RequestDataValueProcessor`
+11.1 Integration with `RequestDataValueProcessor`
 -------------------------------------------------
 
 Thymeleaf now seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
@@ -1567,7 +1578,7 @@ An implementation of `RequestDataValueProcessor` can be easily configured at the
 Note this feature will only be available for Spring versions 3.1 and newer.
 
 
-12.1 Building URIs to controllers
+11.1 Building URIs to controllers
 ---------------------------------
 
 Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the need to know the URIs these controllers are mapped to.
@@ -1595,11 +1606,11 @@ The following code will create a link to it:
 You can read more about this mechanism at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
 
 
-13 Spring WebFlow integration
+12 Spring WebFlow integration
 ============================
 
 
-13.1 Basic configuration
+12.1 Basic configuration
 -----------------------
 
 The `thymeleaf-spring4` integration package includes integration with Spring
@@ -1640,7 +1651,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-13.2 Ajax fragments
+12.2 Ajax fragments
 ------------------
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
