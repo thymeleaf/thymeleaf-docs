@@ -664,8 +664,8 @@ Like this:
     <tbody>
       <tr th:each="sb : ${allSeedStarters}">
         <td th:text="${{sb.datePlanted}}">13/01/2011</td>
-        <td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
-        <td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
+        <td th:text="#{|bool.${sb.covered}|}">yes</td>
+        <td th:text="#{|seedstarter.type.${sb.type}|}">Wireframe</td>
         <td th:text="${#strings.arrayJoin(
                            #messages.arrayMsg(
                                #strings.arrayPrepend(sb.features,'seedstarter.feature.')),
@@ -716,16 +716,19 @@ The next thing to see is a lot of internationalized (externalized) texts, like:
 ```
 
 This being a Spring MVC application, we already defined a `MessageSource` bean
-in our spring XML configuration (`MessageSource` objects are the standard way of
+in our Spring configuration (`MessageSource` objects are the standard way of
 managing externalized texts in Spring MVC):
 
-```xml
-<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-  <property name="basename" value="Messages" />
-</bean>
+```java
+@Bean
+public ResourceBundleMessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("Messages");
+    return messageSource;
+}
 ```
 
-...and that basename property indicates that we will have files like `Messages_es.properties`
+...and that `basename` property indicates that we will have files like `Messages_es.properties`
 or `Messages_en.properties` in our classpath. Let's have a look at the Spanish
 version:
 
@@ -751,7 +754,10 @@ seedstarter.feature.PH_CORRECTOR=Corrector de PH
 ```
 
 In the first column of the table listing we will show the date when the seed
-starter was prepared. But **we will show it formatted** in the way we defined in our `DateFormatter`. In order to do that we will use the double-bracket syntax, which will automatically apply the Spring Conversion Service.
+starter was prepared. But **we will show it formatted** in the way we defined 
+in our `DateFormatter`. In order to do that we will use the double-brace 
+syntax (`${{...}}`), which will automatically apply the Spring Conversion Service,
+including the `DateFormatter` we registered at configuration.
 
 ```html
 <td th:text="${{sb.datePlanted}}">13/01/2011</td>
@@ -759,10 +765,10 @@ starter was prepared. But **we will show it formatted** in the way we defined in
 
 Next is showing whether the seed starter container is covered or not, by
 transforming the value of the boolean covered bean property into an
-internationalized _"yes"_ or _"no"_ with a conditional expression:
+internationalized _"yes"_ or _"no"_ with a literal substitution expression:
 
 ```html
-<td th:text="${sb.covered}? #{bool.true} : #{bool.false}">yes</td>
+<td th:text="#{|bool.${sb.covered}|}">yes</td>
 ```
 
 Now we have to show the type of seed starter container. Type is a java enum with
@@ -774,7 +780,7 @@ add the `seedstarter.type.` prefix to the enum value by means of an expression,
 which result we will then use as the message key:
 
 ```html
-<td th:text="#{${'seedstarter.type.' + sb.type}}">Wireframe</td>
+<td th:text="#{|seedstarter.type.${sb.type}|">Wireframe</td>
 ```
 
 The most difficult part of this listing is the _features_ column. In it we want
