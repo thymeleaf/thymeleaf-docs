@@ -1324,8 +1324,7 @@ functionality we have added to our HTML, we can still use it as a prototype (we 
 ![STSM natural templating](images/thymeleafspring/stsm-natural-templating.png)
 
 There it is! It's not a working application, it's not real data... but it is a
-perfectly valid prototype made up of perfectly displayable HTML code. Try to do
-that with JSP!
+perfectly valid prototype made up of perfectly displayable HTML code.
 
 
 
@@ -1336,39 +1335,35 @@ that with JSP!
 9.1 Configuration
 -----------------
 
-As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Let's see again what it looks like:
+As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Our
+application configuration class, by extending Spring's own `WebMvcConfigurerAdapter` helper, will automatically
+register such conversion service, which we can configure by adding the *formatters* that we need. Let's see 
+again what it looks like:
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans ...>
+```java
+@Override
+public void addFormatters(final FormatterRegistry registry) {
+    super.addFormatters(registry);
+    registry.addFormatter(varietyFormatter());
+    registry.addFormatter(dateFormatter());
+}
 
-  ...    
-  <mvc:annotation-driven conversion-service="conversionService" />
-  ...
+@Bean
+public VarietyFormatter varietyFormatter() {
+    return new VarietyFormatter();
+}
 
-  <!-- **************************************************************** -->
-  <!--  CONVERSION SERVICE                                              -->
-  <!--  Standard Spring formatting-enabled implementation               -->
-  <!-- **************************************************************** -->
-  <bean id="conversionService"
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-    <property name="formatters">
-      <set>
-        <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
-        <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
-      </set>
-    </property>
-  </bean>
-
-  ...
-    
-</beans>
+@Bean
+public DateFormatter dateFormatter() {
+    return new DateFormatter();
+}
 ```
 
-9.1 Double-bracket syntax
--------------------------
+9.1 Double-brace syntax
+-----------------------
 
-The Conversion Service can be easily applied in order to convert/format any object into String. This is done by means of the double-bracket syntax:
+The Conversion Service can be easily applied in order to convert/format any object into String. This 
+is done by means of the double-brace expression syntax:
 
   * For variable expressions: `${{...}}`
   * For selection expressions: `*{{...}}`
@@ -1405,7 +1400,8 @@ We saw before that every `th:field` attribute will always apply the conversion s
 <input type="text" th:field="*{{datePlanted}}" />
 ```
 
-Note that this is the only scenario in which the Conversion Service is applied in expressions using single-bracket syntax.
+Note that, per requirement of Spring, this is the only scenario in which the Conversion Service 
+is applied in expressions using single-brace syntax.
 
 
 
