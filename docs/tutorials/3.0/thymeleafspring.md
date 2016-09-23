@@ -252,18 +252,21 @@ already specified at the Template Resolver (which in turn is passed to the
 Template Engine).
 
 And what if we wanted to define a `View` bean and add some static variables to
-it? Easy:
+it? Easy, just define a *prototype* bean for it:
 
 ```java
 @Bean
+@Scope("prototype")
 public ThymeleafView mainView() {
-    ThymeleafView view = new ThymeleafView("main");
+    ThymeleafView view = new ThymeleafView("main"); // templateName = 'main'
     view.setStaticVariables(
         Collections.singletonMap("footer", "The ACME Fruit Company"));
     return view;
 }
 ```
 
+By doing this, you will be able to execute specifically this view bean
+selecting it by bean name (`mainView`, in this case).
 
 
 
