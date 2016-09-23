@@ -1440,16 +1440,17 @@ The most common of these implementations is `org.thymeleaf.standard.fragment.Sta
 10.1 Specifying fragments in view beans
 ----------------------------------------
 
-*View beans* are beans of the `org.thymeleaf.spring4.view.ThymeleafView` class declared at the application context. They allow the specification of fragments like this:
+*View beans* are beans of the `org.thymeleaf.spring4.view.ThymeleafView` class declared at the application 
+context (`@Bean` declarations if you are using Java configuration). They allow the specification of fragments like this:
 
-```xml
-<bean name="content-part" class="org.thymeleaf.spring4.view.ThymeleafView">
-  <property name="templateName" value="index" />
-  <property name="fragmentSpec">
-    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
-          c:selectorExpression="content" />
-  </property>
-</bean>
+```java
+@Bean(name="content-part")
+@Scope("prototype")
+public ThymeleafView someViewBean() {
+    ThymeleafView view = new ThymeleafView("index"); // templateName = 'index'
+    view.setMarkupSelector("content");
+    return view;
+}
 ``` 
 
 Given the above bean definition, if our controller returns `content-part` (the name of the above bean)...
@@ -1462,7 +1463,9 @@ public String showContentPart() {
 }
 ```
 
-...thymeleaf will return only the `content` fragment of the `index` template -- which location will probably be something like `/WEB-INF/templates/index.html`, once prefix and suffix are applied:
+...thymeleaf will return only the `content` fragment of the `index` template -- which location will 
+probably be something like `/WEB-INF/templates/index.html`, once prefix and suffix are applied. So 
+the result will be completely equivalent to specifying `index :: content`:
 
 ```html
 <!DOCTYPE html>
@@ -1471,23 +1474,24 @@ public String showContentPart() {
   <body>
     ...
     <div th:fragment="content">
-      Only this will be rendered!!
+      Only this div will be rendered!
     </div>
     ...
   </body>
 </html>
 ```
 
-Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select a fragment in a template without needing any `th:fragment` attributes at all. Let's use the `id` attribute, for example:
+Note also that, thanks to the power of Thymeleaf Markup Selectors, we could select a fragment in a 
+template without needing any `th:fragment` attributes at all. Let's use the `id` attribute, for example:
 
 ```xml
-<bean name="content-part" class="org.thymeleaf.spring4.view.ThymeleafView">
-  <property name="fragmentSpec">
-    <bean class="org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec"
-          c:selectorExpression="#content" />
-  </property>
-  <property name="templateName" value="index" />
-</bean>
+@Bean(name="content-part")
+@Scope("prototype")
+public ThymeleafView someViewBean() {
+    ThymeleafView view = new ThymeleafView("index"); // templateName = 'index'
+    view.setMarkupSelector("#content");
+    return view;
+}
 ``` 
 
 ...which will perfectly select:
@@ -1499,7 +1503,7 @@ Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select 
   <body>
     ...
     <div id="content">
-      Only this will be rendered!!
+      Only this div will be rendered!
     </div>
     ...
   </body>
@@ -1512,7 +1516,8 @@ Note also that, thanks to the power of Thymeleaf DOM Selectors, we could select 
 10.2 Specifying fragments in controller return values
 ---------------------------------------------------
 
-Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the same syntax as in `th:include` or `th:replace` attributes:
+Instead of declaring *view beans*, fragments can be specified from the controllers themselves by using the 
+syntax of *fragment expressions*. Just like in `th:insert` or `th:replace` attributes:
 
 ```java    
 @RequestMapping("/showContentPart")
@@ -1522,7 +1527,8 @@ public String showContentPart() {
 }
 ```
 
-Of course, again the full power of DOM Selectors is available, so we could select our fragment based on standard HTML attributes, like `id="content"`:
+Of course, again the full power of DOM Selectors is available, so we could select our fragment based on 
+standard HTML attributes, like `id="content"`:
 
 ```java    
 @RequestMapping("/showContentPart")
@@ -1551,26 +1557,20 @@ public String showContentPart() {
 11.1 Integration with `RequestDataValueProcessor`
 -------------------------------------------------
 
-Thymeleaf now seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
+Thymeleaf seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
 
-An implementation of `RequestDataValueProcessor` can be easily configured at the Application Context:
+An implementation of `RequestDataValueProcessor` can be easily configured at the Application Context. It needs to implement
+the `org.springframework.web.servlet.support.RequestDataValueProcessor` interface and have 
+`requestDataValueProcessor` as a bean name:
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
- 
-    ...
- 
-    <bean name="requestDataValueProcessor"
-          class="net.example.requestdata.processor.MyRequestDataValueProcessor" />
- 
-</beans>
+```java
+@Bean
+public RequestDataValueProcessor requestDataValueProcessor() {
+  return new MyRequestDataValueProcessor();
+}
 ```
 
-...and Thymeleaf uses it this way:
+...and Thymeleaf will use it this way:
 
   * `th:href` and `th:src` call `RequestDataValueProcessor.processUrl(...)` before rendering the URL.
 
@@ -1580,15 +1580,22 @@ An implementation of `RequestDataValueProcessor` can be easily configured at the
 
   * `th:field` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value of the field it applies to (or the tag body if it is a `<textarea>`).
 
-Note this feature will only be available for Spring versions 3.1 and newer.
+
+> Note there are very few scenarios in which you would need to explicitly implement `RequestDataValueProcessor`
+> in your application. In most cases, this will be used automatically by security libraries you transparently use, 
+> like e.g. Spring Security's CSRF support.
+
 
 
 11.1 Building URIs to controllers
 ---------------------------------
 
-Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the need to know the URIs these controllers are mapped to.
+Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the 
+need to know the URIs these controllers are mapped to.
 
-In Thymeleaf, this can be achieved by means of the `#mvc.url(...)` expression method, which allows the specification of controller methods by the capital letters of the controller class they are in, followed by the name of the method itself. This is equivalent to JSP's `spring:mvcUrl(...)` custom function. 
+In Thymeleaf, this can be achieved by means of the `#mvc.url(...)` expression object method, which allows the 
+specification of controller methods by the capital letters of the controller class they are in, followed by 
+the name of the method itself. This is equivalent to JSP's `spring:mvcUrl(...)` custom function. 
 
 For example, for:
 ```java
@@ -1608,7 +1615,8 @@ The following code will create a link to it:
 <a th:href="${(#mvc.url('EC#getDataParam').arg(0,'internal')).build()}">Get Data Param</a>
 ``` 
 
-You can read more about this mechanism at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
+You can read more about this mechanism 
+at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
 
 
 12 Spring WebFlow integration
