@@ -40,12 +40,12 @@ apply plugin: 'jetty'
 project.webAppDirName = "${buildDir}/jetty"
 
 // These two variables should be updated when creating a new version of the docs
-project.version = '3.0.1.RELEASE'
+project.version = '3.0.2.RELEASE'
 def documentDate = new Date().clearTime()
 documentDate.set(
 	year: 2016,
 	month: Calendar.SEPTEMBER,
-	date: 11)
+	date: 28)
 
 def conversions = [
 	articles: ['html'],
