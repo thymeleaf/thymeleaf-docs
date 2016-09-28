@@ -2439,21 +2439,21 @@ the code above would be equivalent to:
 
 ### Fragment specification syntax
 
-The syntax of fragment expressions is quite straightforward. There are three different formats:
+The syntax of *fragment expressions* is quite straightforward. There are three different formats:
 
- * `"templatename::selector"` Includes the fragment resulting from applying the specified Markup Selector on the template named `templatename`.
-    * Note that `selector` can be a mere fragment name, so you could specify something as simple as `templatename::fragmentname` like in the `footer :: copy` above. More on the syntax of markup selectors below.
+ * `"~{templatename::selector}"` Includes the fragment resulting from applying the specified Markup Selector on the template named `templatename`.
+    * Note that `selector` can be a mere fragment name, so you could specify something as simple as `~{templatename::fragmentname}` like in the `~{footer :: copy}` above. More on the syntax of markup selectors below.
 
    > Markup Selector syntax is defined by the underlying AttoParser parsing library, and is similar to 
    > XPath expressions or CSS selectors, see the [Appendix C](#appendix-c-markup-selector-syntax) for more info.
 
- * `"templatename"` Includes the complete template named `templatename`.
+ * `"~{templatename}"` Includes the complete template named `templatename`.
 
    > Note that the template name you use in `th:insert`/`th:replace` tags
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
- * `::selector"` or `"this::selector"` Includes a fragment from the same template.
+ * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same template.
 
 Both `templatename` and `selector` in the above examples
 can be fully-featured expressions (even conditionals!) like:
@@ -2461,6 +2461,8 @@ can be fully-featured expressions (even conditionals!) like:
 ```html
 <div th:insert="footer :: (${user.isAdmin}? #{footer.admin} : #{footer.normaluser})"></div>
 ```
+
+Note again how the surrounding `~{...}` envelope is optional in `th:insert`/`th:replace`.
 
 Fragments can include any `th:*` attributes. These attributes will be evaluated
 once the fragment is included into the target template (the one with the `th:insert`/`th:replace`
