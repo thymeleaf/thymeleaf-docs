@@ -1626,8 +1626,8 @@ at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-re
 12.1 Basic configuration
 -----------------------
 
-The `thymeleaf-spring4` integration package includes integration with Spring
-WebFlow 2.3.x.
+The Thymeleaf + Spring integration packages include integration with Spring
+WebFlow (2.3+).
 
 WebFlow includes some AJAX capabilities for rendering fragments of the displayed
 page when specific events (_transitions_) are triggered, and in order to enable
@@ -1664,8 +1664,14 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 
 
 
-12.2 Ajax fragments
-------------------
+12.2 AJAX fragments in Spring WebFlow
+-------------------------------------
+
+> Note that what is explained here is just the way to crete AJAX fragments to be used
+> with Spring WebFlow. If you are not using WebFlow, creating a Spring MVC controller that
+> responds to an AJAX request and returns a chunk of HTML is as straightforward as creating
+> any other template-returning controller, with the only exception that you would probably
+> be returning a fragment like `"main :: admin"` from your controller method.
 
 WebFlow allows the specification of fragments to be rendered via AJAX with `<render>`
 tags, like this:
