@@ -192,11 +192,11 @@ What happened was that one specific browser simply denied implementing
 support for the `application/xhtml+xml` content type. Guess which one.
 Yeah, exactly, that one. Internet Explorer.
 
-IE6, IE7 and IE8 show a download dialog when you try to access a
-document served with XHTML's own content type, and that of course means
-that you cannot use that content type if you want to be able to display
-your web site to IE users. IE9 seems to be on the way to correct that,
-but it is simply too late by now.
+Versions of IE older than 11 showed a download dialog when you tried to access a
+document served with XHTML's own content type, and that of course meant
+that you could not use that content type if you wanted to be able to display
+your web site to IE users. By the time this was corrected,
+it was simply too late.
 
 Fortunately -- or maybe unfortunately -- The XHTML 1.0 specification
 included an appendix that stated that XHTML 1.0 content could also be
@@ -354,23 +354,16 @@ that is exactly all we need. It just acts as a switch.
 Can I use HTML5 already?
 ------------------------
 
-Yes and no. You can use some of the HTML5 features that have already
-been implemented into some browsers, but (as of 2011) there still is no
-browser that fully implements all of the HTML5 features. And even if
-there was, that could change because the specification itself is still
-work in progress.
+Mostly yes. While (as of 2016) there is no browser that fully
+implements the whole HTML5 feature set, most of the common ones do
+implement a large part of it. So as long as your users are not stuck
+with very old versions of (now-defunct) Internet Explorer, you should
+be fine in most scenarios.
 
-Using HTML5 in full will in fact take some time, to be honest. Think
-that not only you will have to wait for some browser to implement all of
-HTML5, but that in fact you will have to wait for *most* browsers to do
-it, and then wait for your potential users to upgrade their browsers to
-these versions. Now think that a noticeable percent of big companies
-still use Internet Explorer 6 (published in 2001) as their standard
-browser and... well... cry.
+Also, note that browser support actually evolves with time not only
+because of the quick pace at which browsers release new versions, but
+also because the specification itself is still work in progress.
 
-But anyway, one thing is for sure: you can switch your DOCTYPE to
-HTML5's and you will be doing HTML5. And that is something you can do
-today if you feel the need to.
 
 
 And what about XHTML5? Does that exist?
@@ -382,12 +375,12 @@ In theory, yes. XHTML5 is just HTML5 served with:
     Content-Type: application/xhtml+xml
 ```
 
-But again, this content type is not currently supported by IE. So in
-practice, no, it doesn't exist.
+But note that IE didn't support this until version 11 (Microsoft
+Edge does support it). So again, think about your users' browser capabilities
 
-Be careful though: the difference between HTML5 and XHTML5 is the
-content type and *only* the content type, because an XML-formed HTML5
-document is in fact a perfectly valid HTML5 document. This is quite
+Also, note that the difference between HTML5 and XHTML5 is the
+content type and *only* the content type, because an XML-well-formed 
+HTML5 document is in fact a perfectly valid HTML5 document. This is quite
 different to the relation between HTML4 and XHTML 1.0/1.1, which were
 incompatible languages.
 
