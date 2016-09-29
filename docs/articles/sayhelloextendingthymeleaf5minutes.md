@@ -16,28 +16,24 @@ Dialects
 Thymeleaf Dialects are sets of features you can use in your templates.
 These features include:
 
--   **Processing logic** specified via *processors* that apply on
-    specific DOM nodes.
--   **DOCTYPE translations** which allow the automatic conversion of the
-    template's DOCTYPE declaration into a target one, thus allowing
-    validation both before processing --against a DTD including the
-    dialect's tags and attributes-- and after processing --against a DTD
-    not including these, like e.g. a standard XHTML DTD.
--   **DOCTYPE resolution entries** which are fed into Thymeleaf's
-    template parsers and allow the resolution of DTD files for the
-    validation of templates (if required) in an offline manner, this is,
-    without the need to perform remote HTTP connections and/or download
-    anything.
+-   **Processing logic** specified via *processors* that apply to
+    attributes in your tags (or tags themselves).
+-   **Preprocessing and Postprocessing logic** specified via *pre-processors*
+    and *post-processors* that apply to your template before (pre) or
+    after (post) processing actually takes place.
+-   **Expression objects** which can be used in Thymeleaf Standard
+    Expressions (like `#arrays`, `#dates`, etc.) in order to perform
+    the specialized operations you might need.
 
 All of these features are optional, and a dialect can specify only some
-of them. For example, your dialect might not need to specify any DOCTYPE
-translations because you do not plan to allow the ability to validate
-templates against a DTD including your dialect's features.
+of them. For example, your dialect might not need to specify any processors,
+but declare a couple of *expression objects*.
 
 If you've seen fragments of code written in the *Standard Dialects*, you
 should have noticed that the processable attributes start with `th:`.
 That "`th`" is called the **dialect prefix**, and it means that all tags
-and attributes processed by that dialect will start with such prefix.
+and attributes processed by that dialect will start with such prefix. Each
+dialect can specify its own prefix.
 
 It is important also to note that **a Template Engine can be set several
 dialects at a time**, thus allowing the processing of templates
