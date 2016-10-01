@@ -12,7 +12,7 @@ which you can view or download from [its GitHub repo](https://github.com/thymele
 Some improvements for our 'hello' dialect
 -----------------------------------------
 
-To the moment, our `HelloDialect` allowed us to turn this:
+So far our `HelloDialect` allowed us to turn this:
 
 ```html
 <p hello:sayto="World">Hi ya!</p>
@@ -78,19 +78,23 @@ The first thing we want to do is add a new *processor* to our existing
 method in order to include our new `SayToPlanetAttrProcessor` class:
 
 ```java
-public class HelloDialect extends AbstractDialect {
+public class HelloDialect extends AbstractProcessorDialect {
 
-...
+  ...
 
-  //
-  // The processors.
-  //
-  @Override
-  public Set<IProcessor> getProcessors() {
-    final Set<IProcessor> processors = new HashSet<IProcessor>();
-    processors.add(new SayToAttrProcessor());
-    processors.add(new SayToPlanetAttrProcessor());
-    return processors;
+  /*
+   * Initialize the dialect's processors.
+   *
+   * Note the dialect prefix is passed here because, although we set
+   * "hello" to be the dialect's prefix at the constructor, that only
+   * works as a default, and at engine configuration time the user
+   * might have chosen a different prefix to be used.
+   */
+  public Set<IProcessor> getProcessors(final String dialectPrefix) {
+      final Set<IProcessor> processors = new HashSet<IProcessor>();
+      processors.add(new SayToAttributeTagProcessor(dialectPrefix));
+      processors.add(new SayToPlanetAttributeTagProcessor(dialectPrefix));
+      return processors;
   }
 
   ...
@@ -117,123 +121,102 @@ Parser*, which will parse the attribute value into an executable
 *expression* object:
 
 ```java
-public class SayToPlanetAttrProcessor
-extends AbstractTextChildModifierAttrProcessor {
+public class SayToPlanetAttributeTagProcessor extends AbstractAttributeTagProcessor {
 
-  private static final String SAYTO_PLANET_MESSAGE = "msg.helloplanet";
+    private static final String ATTR_NAME = "saytoplanet";
+    private static final int PRECEDENCE = 10000;
 
-  public SayToPlanetAttrProcessor() {
-    // Only execute this processor for 'saytoplanet' attributes.
-    super("saytoplanet");
-  }
+    private static final String SAYTO_PLANET_MESSAGE = "msg.helloplanet";
 
-  public int getPrecedence() {
-    // Higher (less-precedent) than any attribute in the
-    // SpringStandard dialect and also than 'sayto'.
-    return 11000;
-  }
+    
+    public SayToPlanetAttributeTagProcessor(final String dialectPrefix) {
+        super(
+            TemplateMode.HTML, // This processor will apply only to HTML mode
+            dialectPrefix,     // Prefix to be applied to name for matching
+            null,              // No tag name: match any tag name
+            false,             // No prefix to be applied to tag name
+            ATTR_NAME,         // Name of the attribute that will be matched
+            true,              // Apply dialect prefix to attribute name
+            PRECEDENCE,        // Precedence (inside dialect's precedence)
+            true);             // Remove the matched attribute afterwards
+    }
 
-  @Override
-  protected String getText(final Arguments arguments, final Element element,
-    final String attributeName) {
 
-    final Configuration configuration = arguments.getConfiguration();
+    protected void doProcess(
+            final ITemplateContext context, final IProcessableElementTag tag,
+            final AttributeName attributeName, final String attributeValue,
+            final IElementTagStructureHandler structureHandler) {
 
-    final IStandardExpressionParser parser =
-        StandardExpressions.getExpressionParser(configuration);
+        /*
+         * In order to evaluate the attribute value as a Thymeleaf Standard Expression,
+         * we first obtain the parser, then use it for parsing the attribute value into
+         * an expression object, and finally execute this expression object.
+         */
+        final IEngineConfiguration configuration = context.getConfiguration();
 
-    final String attributeValue = element.getAttributeValue(attributeName);
+        final IStandardExpressionParser parser =
+                StandardExpressions.getExpressionParser(configuration);
 
-    final IStandardExpression expression =
-        parser.parseExpression(configuration, arguments, attributeValue);
+        final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 
-    final String planet = (String) expression.execute(configuration, arguments);
+        final String planet = (String) expression.execute(context);
 
-    return "Hello, planet " + planet;
-
-  }
+        /*
+         * Set the salutation as the body of the tag, HTML-escaped and
+         * non-processable (hence the 'false' argument)
+         */
+        structureHandler.setBody("Hello, planet " + planet, false);
+        
+    }
 
 }
 ```
 
-Note that, as we did in the previous article, we used the
-`AbstractTextChildModifierAttrProcessor` convenience abstract class in
-order to simplify the development of our processor, simply computing the
-text that will be inserted as body of the processed tag.
+Note that, as we did in the previous article, we are extending the
+`AbstractAttributeTagProcessor` convenience abstract class.
 
 
 Adding internationalization
 ---------------------------
 
 Now we want to internationalize the message returned by our attribute
-processor. This means substituting this English-only message building
+processor. This means replacing this English-only message building
 code:
 
 ```java
-return "Hello, planet " + planet;
+"Hello, planet " + planet;
 ```
 
-...by a message built from an externalized String that we must somehow
-obtain from our code. The abstract parent class `AbstractProcessor`
-offers three methods we can use for this:
+...with a message built from an externalized String that we must somehow
+obtain from our code. The context object (`ITemplateContext`) offers
+what we need:
 
 ```java
-protected String getMessage(
-  final Arguments arguments, final String messageKey, final Object[] messageParameters);
-
-protected String getMessageForTemplate(
-  final Arguments arguments, final String messageKey, final Object[] messageParameters);
-
-protected String getMessageForProcessor(
-  final Arguments arguments, final String messageKey, final Object[] messageParameters);
+    public String getMessage(
+            final Class<?> origin, 
+            final String key, 
+            final Object[] messageParameters, 
+            final boolean useAbsentMessageRepresentation);
 ```
 
-Each of them has a different meaning, let's start by the last two:
+Its arguments have the following meaning:
 
--   `getMessageForTemplate(...)` uses the Template Engine's currently
-    registered internationalization mechanisms to look for the desired
-    message. For example:
-    -   In a Spring application, we will probably be using specific
-        *Message Resolvers* that query the Spring `MessageSource`
-        objects registered for the application.
-    -   When not in a Spring application, we will probably be using
-        Thymeleaf's *Standard Message Resolver* that looks for
-        `.properties` files with the same name as the template being
-        processed.
+  - `originp  the *origin* class to be used for message resolution. When 
+    calling from a processor, this is normally the processor class itself. 
+  - `key` the key of the message to be retrieved.
+  - `messageParameters` the parameters to be applied to the requested message.
+  - `useAbsentMessageRepresentation` whether an *absent message representation* 
+    should be returned in the case that the message does not exist or not
 
--   `getMessageForProcessor(...)` uses a message resolution mechanism
-    created for allowing the *componentization* ---or, if you prefer,
-    *encapsulation*--- of dialects. This mechanism consists in allowing
-    *tag* and *attribute processors* to specify their own messages,
-    whichever the application their dialects are used on. These are read
-    from `.properties` files with the same name and living in the same
-    package as the processor class (or any of its superclasses). For
-    example, the `thymeleafexamples.sayhello.dialect` package in our
-    example could contain:
-    -   `SayToPlanetAttrProcessor.java`: the *attribute processor*.
-    -   `SayToPlanetAttrProcessor_en_GB.properties`: externalized
-        messages for English (UK) language.
-    -   `SayToPlanetAttrProcessor_en.properties`: externalized messages
-        for English (rest of countries) language.
-    -   `SayToPlanetAttrProcessor.properties`: default externalized
-        messages.
-
-Finally, the first method of the three, `getMessage(...)` acts as a
-combination of the other two: first it tries to resolve the required
-message as a *template message* (defined in the application messages
-files) and if it doesn't exist tries to resolve it as a *processor
-message*. This way, applications can override if needed any messages
-established by its dialects.
-
-Enough about theory, let's put all this into practice. First we will
+So let's use this to achieve some internationalization. First we will
 need some `.properties` files, like
-`SayToPlanetAttrProcessor_es.properties` for Spanish:
+`SayToPlanetAttributeTagProcessor_es.properties` for Spanish:
 
 ```html
     msg.helloplanet=&iexcl;Hola, planeta {0}!
 ```    
 
-`SayToPlanetAttrProcessor_pt.properties` for Portuguese:
+`SayToPlanetAttributeTagProcessor_pt.properties` for Portuguese:
 
 ```html
 msg.helloplanet=Ol&aacute;, planeta {0}!
@@ -241,44 +224,53 @@ msg.helloplanet=Ol&aacute;, planeta {0}!
 
 ...etc.
 
-And now we will have to modify the `getText()` method in our
-`SayToPlanetAttrProcessor` class to make use of these messages:
+And now we will have to modify the `SayToPlanetAttributeTagProcessor` processor
+class to make use of these messages:
 
 ```java
-@Override
-protected String getText(final Arguments arguments, final Element element,
-  final String attributeName) {
+protected void doProcess(
+        final ITemplateContext context, final IProcessableElementTag tag,
+        final AttributeName attributeName, final String attributeValue,
+        final IElementTagStructureHandler structureHandler) {
 
+    /*
+     * In order to evaluate the attribute value as a Thymeleaf Standard Expression,
+     * we first obtain the parser, then use it for parsing the attribute value into
+     * an expression object, and finally execute this expression object.
+     */
+    final IEngineConfiguration configuration = context.getConfiguration();
 
-  final Configuration configuration = arguments.getConfiguration();
+    final IStandardExpressionParser parser =
+            StandardExpressions.getExpressionParser(configuration);
 
-  final IStandardExpressionParser parser =
-      StandardExpressions.getExpressionParser(configuration);
+    final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 
-  final String attributeValue = element.getAttributeValue(attributeName);
+    final String planet = (String) expression.execute(context);
 
-  final IStandardExpression expression =
-      parser.parseExpression(configuration, arguments, attributeValue);
+    /*
+     * This 'getMessage(...)' method will first try to resolve the message
+     * from the configured Spring Message Sources (because this is a Spring
+     * -enabled application).
+     * 
+     * If not found, it will try to resolve it from a classpath-bound
+     * .properties with the same name as the specified 'origin', which
+     * in this case is this processor's class itself. This allows resources
+     * to be packaged if needed in the same .jar files as the processors
+     * they are used in.
+     */
+    final String i18nMessage =
+            context.getMessage(
+                    SayToPlanetAttributeTagProcessor.class,
+                    SAYTO_PLANET_MESSAGE,
+                    new Object[] {planet},
+                    true);
 
-  final String planet = (String) expression.execute(configuration, arguments);
-
-  //
-  // This 'getMessage(...)' method will first try to resolve the
-  // message as a 'template message' (one that is defined for a specific
-  // template or templates, and that would be resolved, in a Spring MVC app,
-  // by Spring's MessageSource objects).
-  //
-  // If not found, it will try to resolve it as a 'processor message', a type
-  // of messages meant to appear in .properties files by the side of the
-  // attribute processor itself (or any of its superclasses) and, if needed,
-  // be packaged along with it in a .jar file for better encapsulation of UI
-  // components.
-  //
-  final String message =
-      getMessage(arguments, SAYTO_PLANET_MESSAGE, new Object[] {planet});
-
-  return message;
-
+    /*
+     * Set the computed message as the body of the tag, HTML-escaped and
+     * non-processable (hence the 'false' argument)
+     */
+    structureHandler.setBody(HtmlEscape.escapeHtml5(i18nMessage), false);
+    
 }
 ```
 
@@ -310,5 +302,3 @@ started with the Standard Dialect in 5
 minutes"*](standarddialect5minutes.html) and the
 [tutorials](/documentation.html) quite similar to this scenario.
 
-Once you're done (or if you get stuck), you can share your results at
-our [user forums](http://forum.thymeleaf.org).
