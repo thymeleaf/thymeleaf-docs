@@ -1604,8 +1604,7 @@ The preprocessing String `__` can be escaped in attributes using `\_\_`.
 ==========================
 
 This chapter will explain the way in which we can set (or modify) values of
-attributes in our markup tags, possibly the next most basic feature we will need
-after setting the tag body content.
+attributes in our markup.
 
 
 
@@ -1620,13 +1619,13 @@ with a form:
 <form action="subscribe.html">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" />
+    <input type="submit" value="Subscribe!" />
   </fieldset>
 </form>
 ```
 
-It looks quite OK, but the fact is that this file looks more like a static HTML
-page than a template for a web application. First, the `action` attribute in our
+As with Thymeleaf, this template starts off more like a static prototype than it
+does a template for a web application.  First, the `action` attribute in our
 form statically links to the template file itself, so that there is no place
 for useful URL rewriting. Second, the `value` attribute in the submit button makes
 it display a text in English, but we'd like it to be internationalized.
@@ -1638,20 +1637,20 @@ attributes of the tags it is set in:
 <form action="subscribe.html" th:attr="action=@{/subscribe}">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
+    <input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>
   </fieldset>
 </form>
 ```
 
 The concept is quite straightforward: `th:attr` simply takes an expression that
 assigns a value to an attribute. Having created the corresponding controller and
-messages files, the result of processing this file will be as expected:
+messages files, the result of processing this file will be:
 
 ```html
 <form action="/gtvg/subscribe">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="¡Suscríbeme!"/>
+    <input type="submit" value="¡Suscríbe!"/>
   </fieldset>
 </form>
 ```
@@ -1683,23 +1682,21 @@ Given the required messages files, this will output:
 By now, you might be thinking that something like:
 
 ```html
-<input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
+<input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>
 ```
 
 ...is quite an ugly piece of markup. Specifying an assignment inside an
 attribute's value can be very practical, but it is not the most elegant way of
 creating templates if you have to do it all the time.
 
-Thymeleaf agrees with you. And that's why in fact `th:attr` is scarcely used in
+Thymeleaf agrees with you, and that's why `th:attr` is scarcely used in
 templates. Normally, you will be using other `th:*` attributes whose task is
 setting specific tag attributes (and not just any attribute like `th:attr`).
 
-And which attribute does the Standard Dialect offer us for setting the `value`
-attribute of our button? Well, in a rather obvious manner, it's `th:value`. Let's
-have a look:
+For example, to set the `value` attribute, use `th:value`:
 
 ```html
-<input type="submit" value="Subscribe me!" th:value="#{subscribe.submit}"/>
+<input type="submit" value="Subscribe!" th:value="#{subscribe.submit}"/>
 ```
 
 This looks much better! Let's try and do the same to the `action` attribute in
@@ -1808,7 +1805,7 @@ For our GTVG home page, this will allow us to substitute this:
      th:src="@{/images/gtvglogo.png}" th:title="#{logo}" th:alt="#{logo}" />
 ```
 
-...by this:
+...with this:
 
 ```html
 <img src="../../images/gtvglogo.png" 
@@ -1820,14 +1817,13 @@ For our GTVG home page, this will allow us to substitute this:
 5.4 Appending and prepending
 ----------------------------
 
-Working in an equivalent way to `th:attr`, Thymeleaf offers the `th:attrappend`
-and `th:attrprepend` attributes, which append (suffix) or prepend (prefix) the
-result of their evaluation to the existing attribute values.
+Thymeleaf also offers the `th:attrappend` and `th:attrprepend` attributes, which
+append (suffix) or prepend (prefix) the result of their evaluation to the
+existing attribute values.
 
 For example, you might want to store the name of a CSS class to be added (not
 set, just added) to one of your buttons in a context variable, because the
-specific CSS class to be used would depend on something that the user did before.
-Easy:
+specific CSS class to be used would depend on something that the user did before:
 
 ```html
 <input type="button" value="Do it!" class="btn" th:attrappend="class=${' ' + cssStyle}" />
@@ -1840,9 +1836,10 @@ you will get:
 <input type="button" value="Do it!" class="btn warning" />
 ```
 
-There are also two specific _appending attributes_ in the Standard Dialect: the `th:classappend`
-and `th:styleappend` attributes, which are used for adding a CSS class or a fragment of _style_ to an element without
-overwriting the existing ones:
+There are also two specific _appending attributes_ in the Standard Dialect: the
+`th:classappend` and `th:styleappend` attributes, which are used for adding a
+CSS class or a fragment of _style_ to an element without overwriting the
+existing ones:
 
 ```html
 <tr th:each="prod : ${prods}" class="row" th:classappend="${prodStat.odd}? 'odd'">
@@ -1856,19 +1853,16 @@ we will talk about it later.)
 5.5 Fixed-value boolean attributes
 ----------------------------------
 
-Some XHTML/HTML5 attributes are special in that, either they are present in
-their elements with a specific and fixed value, or they are not present at all.
+HTML has the concept of _boolean attributes_, attributes that have no value and
+the prescence of one means that value is "true".  In XHTML, these attributes
+take just 1 value, which is itself.
 
 For example, `checked`:
 
 ```html
-<input type="checkbox" name="option1" checked="checked" />
-<input type="checkbox" name="option2" />
+<input type="checkbox" name="option2" checked /> <!-- HTML -->
+<input type="checkbox" name="option1" checked="checked" /> <!-- XHTML -->
 ```
-
-No other value than `"checked"` is allowed according to the XHTML standards for
-the `checked` attribute (HTML5 rules are a little more relaxed on that). And the
-same happens with `disabled`, `multiple`, `readonly` and `selected`.
 
 The Standard Dialect includes attributes that allow you to set these attributes
 by evaluating a condition, so that if evaluated to true, the attribute will be
@@ -1898,10 +1892,9 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 5.6 Setting the value of any attribute (default attribute processor)
 --------------------------------------------------------------------
 
-Besides everything we have just seen about ways of setting attribute with specific
-processors such as `th:value`, `th:disabled` etc. Thymeleaf offers a *default
-attribute processor* that allows us to set the value of *any* attribute even
-if no specific `th:*` processor has been defined for it at the Standard Dialect.
+Thymeleaf offers a *default attribute processor* that allows us to set the value
+of *any* attribute, even if no specific `th:*` processor has been defined for it
+at the Standard Dialect.
 
 So something like:
 
@@ -1920,7 +1913,8 @@ Will result in:
 5.7 Support for HTML5-friendly attribute and element names
 ----------------------------------------------------------
 
-It is also possible to use a completely different syntax to apply processors to your templates, more HTML5-friendly.
+It is also possible to use a completely different syntax to apply processors to
+your templates in a more HTML5-friendly manner.
 
 ```html	
 <table>
@@ -1931,11 +1925,19 @@ It is also possible to use a completely different syntax to apply processors to 
 </table>
 ```
 
-The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically available to all your dialects (not only the Standard ones).
+The `data-{prefix}-{name}` syntax is the standard way to write custom attributes
+in HTML5, without requiring developers to use any namespaced names like `th:*`.
+Thymeleaf makes this syntax automatically available to all your dialects (not
+only the Standard ones).
 
-There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the _W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_). This can be used, for example, for the `th:block` element (or also `th-block`), which will be explained in a later section. 
+There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows
+the _W3C Custom Elements specification_ (a part of the larger _W3C Web
+Components spec_). This can be used, for example, for the `th:block` element (or
+also `th-block`), which will be explained in a later section. 
 
-**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it. There is no intention at all to deprecate the namespaced syntax in the future. 
+**Important:** this syntax is an addition to the namespaced `th:*` one, it does
+not replace it. There is no intention at all to deprecate the namespaced syntax
+in the future. 
 
 
 
