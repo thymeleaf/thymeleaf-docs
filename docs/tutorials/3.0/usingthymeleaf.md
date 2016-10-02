@@ -2386,15 +2386,14 @@ The default option is specified as `th:case="*"`:
 
 ### Defining and referencing fragments
 
-We will often want to include in our templates fragments from other templates.
-Common uses for this are footers, headers, menus...
+In our templates, we will often want to include parts from other templates,
+parts like footers, headers, menus...
 
-In order to do this, Thymeleaf needs us to define the fragments available for
-inclusion, what we can do by using the `th:fragment` attribute. 
+In order to do this, Thymeleaf needs us to define these parts, "fragments", for
+inclusion, which can be done using the `th:fragment` attribute. 
 
-Now let's say we want to add a standard copyright footer to all our grocery
-pages, and for that we define a `/WEB-INF/templates/footer.html` file containing
-this code:
+Say we want to add a standard copyright footer to all our grocery pages, so we
+create a `/WEB-INF/templates/footer.html` file containing this code:
 
 ```html
 <!DOCTYPE html>
@@ -2426,10 +2425,10 @@ our home page using one of the `th:insert` or `th:replace` attributes (and also
 </body>
 ```
 
-Note that `th:insert` expects a *fragment expression* (`~{...}`), or more specifically
-*an expression that results in a fragment*. But in the former case (a non-complex
-*fragment expression*) like the code above, the (`~{`,`}`) enclosing is completely optional, so 
-the code above would be equivalent to:
+Note that `th:insert` expects a *fragment expression* (`~{...}`), which is *an
+expression that results in a fragment*. In the above example though, which is a
+non-complex *fragment expression*, the (`~{`,`}`) enclosing is completely
+optional, so the code above would be equivalent to:
 
 ```html
 <body>
@@ -2444,13 +2443,18 @@ the code above would be equivalent to:
 
 ### Fragment specification syntax
 
-The syntax of *fragment expressions* is quite straightforward. There are three different formats:
+The syntax of *fragment expressions* is quite straightforward. There are three
+different formats:
 
- * `"~{templatename::selector}"` Includes the fragment resulting from applying the specified Markup Selector on the template named `templatename`.
-    * Note that `selector` can be a mere fragment name, so you could specify something as simple as `~{templatename::fragmentname}` like in the `~{footer :: copy}` above. More on the syntax of markup selectors below.
+ * `"~{templatename::selector}"` Includes the fragment resulting from applying
+   the specified Markup Selector on the template named `templatename`.  Note
+   that `selector` can be a mere fragment name, so you could specify something
+   as simple as `~{templatename::fragmentname}` like in the `~{footer :: copy}`
+   above.
 
-   > Markup Selector syntax is defined by the underlying AttoParser parsing library, and is similar to 
-   > XPath expressions or CSS selectors, see the [Appendix C](#appendix-c-markup-selector-syntax) for more info.
+   > Markup Selector syntax is defined by the underlying AttoParser parsing
+   > library, and is similar to XPath expressions or CSS selectors. See
+   > [Appendix C](#appendix-c-markup-selector-syntax) for more info.
 
  * `"~{templatename}"` Includes the complete template named `templatename`.
 
@@ -2458,10 +2462,11 @@ The syntax of *fragment expressions* is quite straightforward. There are three d
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
- * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same template.
+ * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same
+   template.
 
-Both `templatename` and `selector` in the above examples
-can be fully-featured expressions (even conditionals!) like:
+Both `templatename` and `selector` in the above examples can be fully-featured
+expressions (even conditionals!) like:
 
 ```html
 <div th:insert="footer :: (${user.isAdmin}? #{footer.admin} : #{footer.normaluser})"></div>
@@ -2475,9 +2480,9 @@ attribute), and they will be able to reference any context variables defined in
 this target template.
 
 > A big advantage of this approach to fragments is that you can write your
-> fragments code in pages that are perfectly displayable by a browser, with a
-> complete and even *valid* markup structure, while still retaining the
-> ability to make Thymeleaf include them into other templates.
+> fragments in pages that are perfectly displayable by a browser, with a
+> complete and even *valid* markup structure, while still retaining the ability
+> to make Thymeleaf include them into other templates.
 
 
 ### Referencing fragments without `th:fragment`
@@ -2510,16 +2515,16 @@ We can use the fragment above simply referencing it by its `id` attribute, in a 
 
 ### Difference between `th:insert` and `th:replace` (and `th:include`)
 
-And what is the difference between `th:insert`, `th:replace` and `th:include` (not
-recommended since 3.0)? 
+And what is the difference between `th:insert` and `th:replace` (and `th:include`,
+not recommended since 3.0)?
 
-  * `th:insert` is the simplest: it will simply insert the specified fragment as the body
-  of its host tag.
+ * `th:insert` is the simplest: it will simply insert the specified fragment as the body
+   of its host tag.
 
-  * `th:replace` actually *replaces* its host tag with the specified fragment.
+ * `th:replace` actually *replaces* its host tag with the specified fragment.
 
-  * `th:include` is similar to `th:insert`, but instead of inserting the fragment it only 
-  inserts the *contents* of this fragment.
+ * `th:include` is similar to `th:insert`, but instead of inserting the fragment
+   it only inserts the *contents* of this fragment.
 
 So an HTML fragment like this:
 
@@ -2574,7 +2579,7 @@ So an HTML fragment like this:
 8.2 Parameterizable fragment signatures
 ---------------------------------------
 
-In order to create a more _function-like_ mechanism for the use of template fragments,
+In order to create a more _function-like_ mechanism for template fragments,
 fragments defined with `th:fragment` can specify a set of parameters:
 	
 ```html
@@ -2583,8 +2588,8 @@ fragments defined with `th:fragment` can specify a set of parameters:
 </div>
 ```
 
-This requires the use of one of these two syntaxes to call the fragment from `th:insert` or 
-`th:replace`:
+This requires the use of one of these two syntaxes to call the fragment from
+`th:insert` or `th:replace`:
 
 ```html
 <div th:replace="::frag (${value1},${value2})">...</div>
@@ -2597,9 +2602,10 @@ Note that order is not important in the last option:
 <div th:replace="::frag (twovar=${value2},onevar=${value1})">...</div>
 ```
 
-###Fragment local variables without fragment arguments
 
-Even if fragments are defined without arguments, like this:
+### Fragment local variables without fragment arguments
+
+Even if fragments are defined without arguments like this:
 
 ```html	
 <div th:fragment="frag">
@@ -2613,22 +2619,23 @@ We could use the second syntax specified above to call them (and only the second
 <div th:replace="::frag (onevar=${value1},twovar=${value2})">
 ```
 
-This would be, in fact, equivalent to a combination of `th:replace` and `th:with`:
+This would be equivalent to a combination of `th:replace` and `th:with`:
 
 ```html	
 <div th:replace="::frag" th:with="onevar=${value1},twovar=${value2}">
 ```
 
-**Note** that this specification of local variables for a fragment ---no matter whether it 
-has an argument signature or not--- does not cause the context to be emptied previously to its 
-execution. Fragments will still be able to access every context variable being used at the 
-calling template like they currently are. 
+**Note** that this specification of local variables for a fragment -- no matter
+whether it has an argument signature or not -- does not cause the context to be
+emptied prior to its execution. Fragments will still be able to access every
+context variable being used at the calling template like they currently are. 
 
 
-###th:assert for in-template assertions
+### th:assert for in-template assertions
 
-The `th:assert` attribute can specify a comma-separated list of expressions which should be
-evaluated and produce true for every evaluation, raising an exception if not.
+The `th:assert` attribute can specify a comma-separated list of expressions
+which should be evaluated and produce true for every evaluation, raising an
+exception if not.
 
 ```html
 <div th:assert="${onevar},(${twovar} != 43)">...</div>
@@ -2645,11 +2652,12 @@ This comes in handy for validating parameters at a fragment signature:
 8.3 Flexible layouts: beyond mere fragment insertion
 ----------------------------------------------------
 
-Thanks to *fragment expressions*, we can specify parameters for fragments that are not texts,
-numbers, bean objects... but instead fragments of markup.
+Thanks to *fragment expressions*, we can specify parameters for fragments that
+are not texts, numbers, bean objects... but instead fragments of markup.
 
-This allows us to create our fragments in a way such that they can be *enriched* wich markup
-coming from the calling templates, resulting in a very flexible **template layout mechanism**. 
+This allows us to create our fragments in a way such that they can be *enriched*
+with markup coming from the calling templates, resulting in a very flexible
+**template layout mechanism**.
 
 Note the use of the `title` and `links` variables in the fragment below:
 
@@ -2684,9 +2692,9 @@ We can now call this fragment like:
 ...
 ```
 
-...and the result will use the actual `<title>` and `<link>` tags from our calling
-template as the values of the `title` and `links` variables, resulting in
-our fragment being customized during insertion:
+...and the result will use the actual `<title>` and `<link>` tags from our
+calling template as the values of the `title` and `links` variables, resulting
+in our fragment being customized during insertion:
 
 ```html
 ...
@@ -2743,8 +2751,9 @@ block:
 
 ### Using the no-operation token
 
-The no-op can be also used as a parameter to a fragment, if we just want to let our fragment use 
-its current markup as a default value. Again, using the `common_header` example:
+The no-op can be also used as a parameter to a fragment if we just want to let
+our fragment use  its current markup as a default value. Again, using the
+`common_header` example:
 
 ```html
 ...
@@ -2759,8 +2768,9 @@ its current markup as a default value. Again, using the `common_header` example:
 ...
 ```
 
-See how the `title` argument (first argument of the `common_header` fragment) is set to *no-op* (`_`),
-which results in this part of the fragment not being executed at all (`title` = *no-operation*):
+See how the `title` argument (first argument of the `common_header` fragment) is
+set to *no-op* (`_`), which results in this part of the fragment not being
+executed at all (`title` = *no-operation*):
 
 ```html
   <title th:replace="${title}">The awesome application</title>
@@ -2789,11 +2799,12 @@ So the result is:
 
 ### Advanced conditional insertion of fragments
 
-The availability of both the *emtpy fragment* and *no-operation token* allows us to perform
-conditional insertion of fragments in a very easy and elegant way.
+The availability of both the *emtpy fragment* and *no-operation token* allows us
+to perform conditional insertion of fragments in a very easy and elegant way.
 
-For example, we could do this in order to insert our `common :: adminhead` fragment *only* if the
-user is an administrator, and insert nothing (emtpy fragment) if not:
+For example, we could do this in order to insert our `common :: adminhead`
+fragment *only* if the user is an administrator, and insert nothing (emtpy
+fragment) if not:
 
 ```html
 ...
@@ -2801,8 +2812,9 @@ user is an administrator, and insert nothing (emtpy fragment) if not:
 ...
 ```
 
-Also, we can use the *no-operation token* in order to insert a fragment only if the specified
-condition is met, but leave the markup without modifications if the condition is not met:
+Also, we can use the *no-operation token* in order to insert a fragment only if
+the specified condition is met, but leave the markup without modifications if
+the condition is not met:
 
 ```html
 ...
@@ -2812,9 +2824,10 @@ condition is met, but leave the markup without modifications if the condition is
 ...
 ```
 
-Additionally, if we have configured our template resolvers to *check for existence* of
-the template resources –by means of their `checkExistence` flag–, we can use the existence
-of the fragment itself as the condition in a *default* operation:
+Additionally, if we have configured our template resolvers to *check for
+existence* of the template resources –- by means of their `checkExistence` flag
+-– we can use the existence of the fragment itself as the condition in a *default*
+operation:
 
 ```html
 ...
@@ -2858,7 +2871,7 @@ Back to the example application, let's revisit the last version of our product l
 This code is just fine as a template, but as a static page (when directly open
 by a browser without Thymeleaf processing it) it would not make a nice prototype. 
 
-Why? Because although perfectly displayable by browsers, that table only has a
+Why? Because, although perfectly displayable by browsers, that table only has a
 row, and this row has mock data. As a prototype, it simply wouldn't look
 realistic enough... we should have more than one product, _we need more rows_.
 
@@ -3061,8 +3074,8 @@ Once processed, everything will look again as it should:
 </table>
 ```
 
-And what about that `all` value in the attribute, what does it mean? Well, in fact
-`th:remove` can behave in five different ways, depending on its value:
+And what does that `all` value in the attribute, mean? `th:remove` can behave in
+five different ways, depending on its value:
 
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
@@ -3116,8 +3129,9 @@ when prototyping:
 </table>
 ```
 
-The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long as it returns one 
-of the allowed String values (`all`, `tag`, `body`, `all-but-first` or `none`).
+The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long
+as it returns one of the allowed String values (`all`, `tag`, `body`, `all-but-first`
+or `none`).
 
 This means removals could be conditional, like:
 
@@ -3125,14 +3139,15 @@ This means removals could be conditional, like:
 <a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
 ```
 
-Also note that `th:remove` considers `null` a synonym to `none`, so that the following works
-exactly as the example above:
+Also note that `th:remove` considers `null` a synonym to `none`, so the
+following works the same as the example above:
 
 ```html
 <a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
 ```
 
-In this case, if `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
+In this case, if `${condition}` is false, `null` will be returned, and thus no
+removal will be performed. 
 
 
 
