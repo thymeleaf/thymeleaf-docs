@@ -38,7 +38,7 @@ These integrations will allow you to:
    templates.
  * Create forms in your templates that are completely integrated with your
    form-backing beans and result bindings, including the use of property editors, conversion services and validation error handling.
- * Display internationalization messages from messages files managed by Spring
+ * Display internationalization messages from message files managed by Spring
    (through the usual `MessageSource` objects).
  * Resolve your templates using Spring's own resource resolution mechanisms.
 
@@ -217,7 +217,7 @@ Thymeleaf offers implementations for the two interfaces mentioned above:
 These two classes will be in charge of processing Thymeleaf templates as a
 result of the execution of controllers.
 
-Configuration of the Thymeleaf View Resolver is very similar to that of JSP's:
+Configuration of the Thymeleaf View Resolver is very similar to that of JSP:
 
 ```java
 @Bean
@@ -1243,7 +1243,7 @@ As in the examples above, we could obtain all the errors and iterate them...
 <p th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</p>
 ```
 
-Finally. Note `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyErrors()` and `#fields.errors('*')` is equivalent to `#fields.allErrors()`. Use whichever syntax you prefer:
+Finally note that `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyErrors()` and `#fields.errors('*')` is equivalent to `#fields.allErrors()`. Use whichever syntax you prefer:
 
 ```html
 <div th:if="${#fields.hasAnyErrors()}">
@@ -1667,7 +1667,7 @@ usual way, understandable by any of the _Template Resolvers_ configured at the `
 12.2 AJAX fragments in Spring WebFlow
 -------------------------------------
 
-> Note that what is explained here is just the way to crete AJAX fragments to be used
+> Note that what is explained here is just the way to create AJAX fragments to be used
 > with Spring WebFlow. If you are not using WebFlow, creating a Spring MVC controller that
 > responds to an AJAX request and returns a chunk of HTML is as straightforward as creating
 > any other template-returning controller, with the only exception that you would probably
