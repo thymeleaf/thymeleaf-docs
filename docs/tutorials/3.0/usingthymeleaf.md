@@ -3155,9 +3155,9 @@ removal will be performed.
 9 Local Variables
 =================
 
-Thymeleaf calls _local variables_ those variables that are defined for a
-specific fragment of a template, and are only available for evaluation inside
-that fragment.
+Thymeleaf calls _local variables_ the variables that are defined for a specific
+fragment of a template, and are only available for evaluation inside that
+fragment.
 
 An example we have already seen is the `prod` iter variable in our product list
 page:
@@ -3176,7 +3176,7 @@ Specifically:
  * It will be available for any child element of the `<tr>` tag, such as any `<td>`
    elements.
 
-Thymeleaf offers you a way to declare local variables without iteration. It is
+Thymeleaf offers you a way to declare local variables without iteration, using
 the `th:with` attribute, and its syntax is like that of attribute value
 assignments:
 
@@ -3190,8 +3190,8 @@ assignments:
 
 When `th:with` is processed, that `firstPer` variable is created as a local
 variable and added to the variables map coming from the context, so that it is
-as available for evaluation as any other variables declared in the context from
-the beginning, but only within the bounds of the containing `<div>` tag.
+available for evaluation along with any other variables declared in the context,
+but only within the bounds of the containing `<div>` tag.
 
 You can define several variables at the same time using the usual multiple
 assignment syntax:
@@ -3232,7 +3232,6 @@ date.format=MMMM dd'','' yyyy
 ```
 
 ...and an equivalent one to our `home_es.properties`:
-
 
 ```
 date.format=dd ''de'' MMMM'','' yyyy
@@ -3276,11 +3275,11 @@ example:
 </ul>
 ```
 
-Of course, we would expect that `th:each` attribute to execute before the `th:text`
-so that we get the results we want, but given the fact that the HTML or XML standards 
-do not give any kind of meaning to the order in which the attributes in a tag are 
-written, a _precedence_ mechanism has to be established in the attributes themselves 
-in order to be sure that this will work as expected.
+We would expect that `th:each` attribute to execute before the `th:text` so that
+we get the results we want, but given the fact that the HTML/XML standards do
+not give any kind of meaning to the order in which the attributes in a tag are 
+written, a _precedence_ mechanism had to be established in the attributes
+themselves in order to be sure that this will work as expected.
 
 So, all Thymeleaf attributes define a numeric precedence, which establishes the
 order in which they are executed in the tag. This order is:
@@ -3321,14 +3320,15 @@ Order   Feature                            Attributes
 </div>
 
 This precedence mechanism means that the above iteration fragment will give
-exactly the same results if the attribute position is inverted (although it would be
-slightly less readable):
+exactly the same results if the attribute position is inverted (although it
+would be slightly less readable):
 
 ```html
 <ul>
   <li th:text="${item.description}" th:each="item : ${items}">Item description here...</li>
 </ul>
 ```
+
 
 
 
