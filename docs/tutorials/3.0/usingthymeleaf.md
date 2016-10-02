@@ -3489,10 +3489,9 @@ statically in browsers as prototypes!
 12.1 Expression inlining
 ------------------------
 
-Although the Standard Dialect allows us to do almost everything we might need by
-using tag attributes, there are situations in which we could prefer writing
-expressions directly into our HTML texts. For example, we could prefer writing
-this:
+Although the Standard Dialect allows us to do almost everything using tag
+attributes, there are situations in which we could prefer writing expressions
+directly into our HTML texts. For example, we could prefer writing this:
 
 ```html
 <p>Hello, [[${session.user.name}]]!</p>
@@ -3504,12 +3503,12 @@ this:
 <p>Hello, <span th:text="${session.user.name}">Sebastian</span>!</p>
 ```
 
-Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions** in Thymeleaf,
-and inside them we can use any kind of expression that would also be valid in a
-`th:text` or `th:utext` attribute.
+Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions**
+in Thymeleaf, and inside them we can use any kind of expression that would also
+be valid in a `th:text` or `th:utext` attribute.
 
 Note that, while `[[...]]` corresponds to `th:text` (i.e. result will be *HTML-escaped*), 
-`[(...)]` corresponds to `th:utext` and will not perform any HTML-escaping at all. So
+`[(...)]` corresponds to `th:utext` and will not perform any HTML-escaping. So
 with a variable such as `msg = 'This is <b>great!</b>'`, given this fragment:
 
 ```html
@@ -3534,15 +3533,16 @@ The result will be HTML-escaped:
 <p>The message is "This is &lt;b&gt;great!&lt;/b&gt;"</p>
 ```
 
-Note that **text inlining is active by default** in the body of every tag in our markup –not the tags
-themselves–, so there is nothing we need to do to to enable it.
+Note that **text inlining is active by default** in the body of every tag in our
+markup –- not the tags themselves -–, so there is nothing we need to do to to
+enable it.
 
 
-###Inlining vs natural templates
+### Inlining vs natural templates
 
-So now, especially if you come from other template engines in which this way of
-outputting text is the usual thing, you might be asking: _Why aren't we doing 
-this from the beginning? It's less code than all those_ `th:text` _attributes!_ 
+If you come from other template engines in which this way of outputting text is
+the norm, you might be asking: _Why aren't we doing this from the beginning?
+It's less code than all those_ `th:text` _attributes!_ 
 
 Well, be careful there, because although you might find inlining quite 
 interesting, you should always remember that inlined expressions will be 
@@ -3565,11 +3565,11 @@ Hello, [[${session.user.name}]]!
 ...is quite clear in terms of design usefulness.
 
 
-###Disabling inlining
+### Disabling inlining
 
-This mechanism can be disabled though, because there might actually be occasions in
-which we do want to output the `[[...]]` or  `[(...)]` sequences without its contents
-being processed as an expression. For that, we will use `th:inline="none"`:
+This mechanism can be disabled though, because there might actually be occasions
+in which we do want to output the `[[...]]` or  `[(...)]` sequences without its
+contents being processed as an expression. For that, we will use `th:inline="none"`:
 
 ```html
 <p th:inline="none">A double array looks like this: [[1, 2, 3], [4, 5]]!</p>
@@ -3582,29 +3582,33 @@ This will result in:
 ```
 
 
+
 12.2 Text inlining
 ------------------
 
-*Text inlining* is very similar to the *expression inlining* capability we have just
-seen, but it actually adds more power. It has to be enabled explicitly with `th:inline="text"`.
+*Text inlining* is very similar to the *expression inlining* capability we have
+just seen, but it actually adds more power. It has to be enabled explicitly with
+`th:inline="text"`.
 
-Text inlining not only allows us to use the same *inlined expressions* we just saw, but in 
-fact processes *tag bodies* as if they were templates processed in the `TEXT` template 
-mode, which allows us to perform text-based template logic (not only output expressions).
+Text inlining not only allows us to use the same *inlined expressions* we just
+saw, but in fact processes *tag bodies* as if they were templates processed in
+the `TEXT` template mode, which allows us to perform text-based template logic
+(not only output expressions).
 
 We will see more about this in the next chapter about the *textual template modes*.
+
 
 
 12.3 JavaScript inlining
 ------------------------
 
-JavaScript inlining allows for a better integration of JavaScript `<script>` blocks in 
-templates being processed in the `HTML` template mode.
+JavaScript inlining allows for a better integration of JavaScript `<script>`
+blocks in templates being processed in the `HTML` template mode.
 
-As happens with *text inlining*, this is actually equivalent to processing the
-scripts contents as if they were templates in the `JAVASCRIPT` template mode, and
-therefore all the power of the *textual template modes* (see next chapter) will be at
-hand. However, in this section we will focus on how we can use it for 
+As with *text inlining*, this is actually equivalent to processing the scripts
+contents as if they were templates in the `JAVASCRIPT` template mode, and
+therefore all the power of the *textual template modes* (see next chapter) will
+be at hand. However, in this section we will focus on how we can use it for 
 adding the output of our Thymeleaf expressions into our JavaScript blocks.
 
 This mode has to be explicitly enabled using `th:inline="javascript"`:
@@ -3630,12 +3634,12 @@ This will result in:
 Two important things to note in the code above: 
 
 *First*, that JavaScript inlining will not only output the required text, but 
-also enclose it with quotes and JavaScript-escape its contents, so 
-that the expression results are output as a **well-formed JavaScript literal**.
+also enclose it with quotes and JavaScript-escape its contents, so that the
+expression results are output as a **well-formed JavaScript literal**.
 
-*Second*, that this is happening because we are outputting the
-`${session.user.name}` expression as **escaped**, i.e. using a double-bracket
-expression: `[[${session.user.name}]]`. If instead we used *unescaped* like:
+*Second*, that this is happening because we are outputting the `${session.user.name}`
+expression as **escaped**, i.e. using a double-bracket expression: `[[${session.user.name}]]`.
+If instead we used *unescaped* like:
 
 ```html
 <script th:inline="javascript">
@@ -3655,13 +3659,12 @@ The result would look like:
 </script>
 ```
 
-...which is malformed JavaScript code. But outputting something
-unescaped might be actually what we need if we are building parts of our
-script by means of appending inlined expressions, so it's good to have this tool
-at hand.
+...which is malformed JavaScript code. But outputting something unescaped might
+be what we need if we are building parts of our script by means of appending
+inlined expressions, so it's good to have this tool at hand.
 
 
-###JavaScript natural templates
+### JavaScript natural templates
 
 The mentioned *intelligence* of the JavaScript inlining mechanism goes much
 further than just applying JavaScript-specific escaping and outputting
@@ -3679,9 +3682,9 @@ comments like:
 ```
 
 And Thymeleaf will ignore everything we have written *after the comment and
-before the semicolon* (in this case ` 'Gertrud Kiwifruit'`), so the result 
-of executing this will look exactly like when we were not using the 
-wrapping comments:
+before the semicolon* (in this case ` 'Gertrud Kiwifruit'`), so the result of
+executing this will look exactly like when we were not using the wrapping
+comments:
 
 ```html
 <script th:inline="javascript">
@@ -3703,16 +3706,17 @@ But have another careful look at the original template code:
 ```
 
 Note how this is **valid JavaScript** code. And it will perfectly execute when
-you open your template file in a static manner (without executing it at a server).
+you open your template file in a static manner (without executing it at a
+server).
 
 So what we have here is a way to do **JavaScript natural templates**!
 
 
 ### Advanced inlined evaluation and JavaScript serialization
 
-An important thing to note regarding JavaScript inlining is that this 
-expression evaluation is intelligent and not limited to Strings. Thymeleaf
-will correctly write in JavaScript syntax the following kinds of objects:
+An important thing to note regarding JavaScript inlining is that this
+expression evaluation is intelligent and not limited to Strings. Thymeleaf will
+correctly write in JavaScript syntax the following kinds of objects:
 
  * Strings
  * Numbers
@@ -3744,16 +3748,17 @@ Thymeleaf will correctly convert it to Javascript syntax:
 </script>
 ```
 
-The way this JavaScript serialization is done is by means of an implementation of the
-`org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer` interface,
-which can be configured at the instance of the `StandardDialect` being used
-at the template engine.
+The way this JavaScript serialization is done is by means of an implementation
+of the `org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer`
+interface, which can be configured at the instance of the `StandardDialect`
+being used at the template engine.
 
-The default implementation of this JS serialization mechanism will look for
-the [Jackson library](https://github.com/FasterXML/jackson) in the classpath 
-and, if present, will use it. If not, it will apply a built-in serialization 
-mechanism that covers the needs of most scenarios and produces 
-similar results (but is less flexible).
+The default implementation of this JS serialization mechanism will look for the
+[Jackson library](https://github.com/FasterXML/jackson) in the classpath and, if
+present, will use it. If not, it will apply a built-in serialization mechanism
+that covers the needs of most scenarios and produces similar results (but is
+less flexible).
+
 
 
 12.4 CSS inlining
@@ -3794,17 +3799,18 @@ And the result would be:
 </style>
 ```
 
-Note how CSS inlining also bears some *intelligence*, just like JavaScript's. Specifically,
-expressions output via *escaped* expressions like `[[${classname}]]` will be escaped as
-**CSS identifiers**. That is why our `classname = 'main elems'` has turned into `main\ elems`
-in the fragment of code above.
+Note how CSS inlining also bears some *intelligence*, just like JavaScript's.
+Specifically, expressions output via *escaped* expressions like `[[${classname}]]`
+will be escaped as **CSS identifiers**. That is why our `classname = 'main elems'`
+has turned into `main\ elems` in the fragment of code above.
 
 
 ### Advanced features: CSS natural templates, etc.
 
-In an equivalent way to what was explained before for JavaScript, CSS inlining also 
-allows for our `<style>` tags to work both statically and dynamically, i.e. to work
-as **CSS natural templates** by means of wrapping inlined expressions in comments. See:
+In an equivalent way to what was explained before for JavaScript, CSS inlining
+also allows for our `<style>` tags to work both statically and dynamically, i.e.
+ as **CSS natural templates** by means of wrapping inlined expressions in
+ comments. See:
 
 ```html
 <style th:inline="css">
@@ -3819,6 +3825,7 @@ as **CSS natural templates** by means of wrapping inlined expressions in comment
 
 13 Textual template modes
 =========================
+
 
 
 13.1 Textual syntax
