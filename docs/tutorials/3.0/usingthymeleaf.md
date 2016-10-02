@@ -4302,7 +4302,7 @@ Not much really new here, except for this nested object selection:
 </body>
 ```
 
-...which makes that `*{name}` in fact equivalent to:
+...which makes that `*{name}` equivalent to:
 
 
 ```html
