@@ -3335,10 +3335,14 @@ would be slightly less readable):
 11. Comments and Blocks
 =======================
 
+
+
 11.1. Standard HTML/XML comments
 --------------------------------
 
-Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf templates. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
+Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf
+templates. Anything inside these comments won't be processed by Thymeleaf, and
+will be copied verbatim to the result:
 
 ```html
 <!-- User info follows -->
@@ -3348,16 +3352,20 @@ Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf temp
 ```
 
 
+
 11.2. Thymeleaf parser-level comment blocks
 -------------------------------------------
 
-Parser-level comment blocks are code that will be simply removed from the template when Thymeleaf parses it. They look like this:
+Parser-level comment blocks are code that will be simply removed from the
+template when Thymeleaf parses it. They look like this:
 
 ```html
 <!--/* This code will be removed at Thymeleaf parsing time! */-->
 ``` 
 
-Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can also be used for displaying code when a template is statically open, knowing that it will be removed when Thymeleaf processes it:
+Thymeleaf will remove everything between `<!--/*` and `*/-->`, so these comment
+blocks can also be used for displaying code when a template is statically open,
+knowing that it will be removed when Thymeleaf processes it:
 
 ```html
 <!--/*--> 
@@ -3367,7 +3375,8 @@ Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so the
 <!--*/-->
 ```
 
-This might come very handy for prototyping tables with a lot of `<tr>`'s, for example:
+This might come very handy for prototyping tables with a lot of `<tr>`'s, for
+example:
 
 ```html
 <table>
@@ -3386,10 +3395,13 @@ This might come very handy for prototyping tables with a lot of `<tr>`'s, for ex
 ```
 
 
+
 11.3. Thymeleaf prototype-only comment blocks
 ---------------------------------------------
 
-Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
+Thymeleaf allows the definition of special comment blocks marked to be comments
+when the template is open statically (i.e. as a prototype), but considered
+normal markup by Thymeleaf when executing the template.
 
 ```html
 <span>hello!</span>
@@ -3401,7 +3413,9 @@ Thymeleaf allows the definition of special comment blocks marked to be comments 
 <span>goodbye!</span>
 ```
 
-Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers, but not its contents, which will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
+Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers,
+but not its contents, which will be left therefore uncommented. So when
+executing the template, Thymeleaf will actually see this:
 
 ```html
 <span>hello!</span>
@@ -3413,17 +3427,22 @@ Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers
 <span>goodbye!</span>
 ```
 
-As happens with parser-level comment blocks, note that this feature is dialect-independent.
+As with parser-level comment blocks, this feature is dialect-independent.
+
 
 
 11.4. Synthetic `th:block` tag
 ------------------------------
 
-Thymeleaf's only element processor (not an attribute) included in the Standard Dialects is `th:block`.
+Thymeleaf's only element processor (not an attribute) included in the Standard
+Dialects is `th:block`.
 
-`th:block` is a mere attribute container that allows template developers to specify whichever attributes they want. Thymeleaf will execute these attributes and then simply make the block dissapear without a trace.
+`th:block` is a mere attribute container that allows template developers to
+specify whichever attributes they want. Thymeleaf will execute these attributes
+and then simply make the block, but not its contents, disappear.
 
-So it could be useful, for example, when creating iterated tables that require more than one `<tr>` for each element:
+So it could be useful, for example, when creating iterated tables that require
+more than one `<tr>` for each element:
 
 ```html
 <table>
@@ -3455,7 +3474,9 @@ And especially useful when used in combination with prototype-only comment block
 </table>
 ```
 
-Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks inside `<table>`), and still works OK when open statically in browsers as prototypes! 
+Note how this solution allows templates to be valid HTML (no need to add
+forbidden `<div>` blocks inside `<table>`), and still works OK when open
+statically in browsers as prototypes! 
 
 
 
