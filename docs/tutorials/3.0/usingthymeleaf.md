@@ -2271,9 +2271,9 @@ Quite a lot of things to see here, so let's focus on the important line:
    th:if="${not #lists.isEmpty(prod.comments)}">view</a>
 ```
 
-There is little to explain from this code, in fact: We will be creating a link
-to the comments page (with URL `/product/comments`) with a `prodId` parameter
-set to the `id` of the product, but only if the product has any comments.
+This will create a link to the comments page (with URL `/product/comments`) with
+a `prodId` parameter set to the `id` of the product, but only if the product has
+any comments.
 
 Let's have a look at the resulting markup:
 
@@ -2336,8 +2336,8 @@ expression as `true` following these rules:
     * If value is not a boolean, a number, a character or a String.
  * (If value is null, th:if will evaluate to false).
 
-Also, `th:if` has an inverse counterpart, `th:unless`, which we could have used
-in the previous example instead of using a `not` inside the OGNL expression:
+Also, `th:if` has an inverse attribute, `th:unless`, which we could have used in
+the previous example instead of using a `not` inside the OGNL expression:
 
 ```html
 <a href="comments.html"
@@ -2352,8 +2352,6 @@ in the previous example instead of using a `not` inside the OGNL expression:
 
 There is also a way to display content conditionally using the equivalent of a
 _switch_ structure in Java: the `th:switch` / `th:case` attribute set.
-
-They work exactly as you would expect:
 
 ```html
 <div th:switch="${user.role}">
