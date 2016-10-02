@@ -1604,8 +1604,7 @@ The preprocessing String `__` can be escaped in attributes using `\_\_`.
 ==========================
 
 This chapter will explain the way in which we can set (or modify) values of
-attributes in our markup tags, possibly the next most basic feature we will need
-after setting the tag body content.
+attributes in our markup.
 
 
 
@@ -1620,13 +1619,13 @@ with a form:
 <form action="subscribe.html">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" />
+    <input type="submit" value="Subscribe!" />
   </fieldset>
 </form>
 ```
 
-It looks quite OK, but the fact is that this file looks more like a static HTML
-page than a template for a web application. First, the `action` attribute in our
+As with Thymeleaf, this template starts off more like a static prototype than it
+does a template for a web application.  First, the `action` attribute in our
 form statically links to the template file itself, so that there is no place
 for useful URL rewriting. Second, the `value` attribute in the submit button makes
 it display a text in English, but we'd like it to be internationalized.
@@ -1638,20 +1637,20 @@ attributes of the tags it is set in:
 <form action="subscribe.html" th:attr="action=@{/subscribe}">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
+    <input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>
   </fieldset>
 </form>
 ```
 
 The concept is quite straightforward: `th:attr` simply takes an expression that
 assigns a value to an attribute. Having created the corresponding controller and
-messages files, the result of processing this file will be as expected:
+messages files, the result of processing this file will be:
 
 ```html
 <form action="/gtvg/subscribe">
   <fieldset>
     <input type="text" name="email" />
-    <input type="submit" value="¡Suscríbeme!"/>
+    <input type="submit" value="¡Suscríbe!"/>
   </fieldset>
 </form>
 ```
@@ -1683,23 +1682,21 @@ Given the required messages files, this will output:
 By now, you might be thinking that something like:
 
 ```html
-<input type="submit" value="Subscribe me!" th:attr="value=#{subscribe.submit}"/>
+<input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>
 ```
 
 ...is quite an ugly piece of markup. Specifying an assignment inside an
 attribute's value can be very practical, but it is not the most elegant way of
 creating templates if you have to do it all the time.
 
-Thymeleaf agrees with you. And that's why in fact `th:attr` is scarcely used in
+Thymeleaf agrees with you, and that's why `th:attr` is scarcely used in
 templates. Normally, you will be using other `th:*` attributes whose task is
 setting specific tag attributes (and not just any attribute like `th:attr`).
 
-And which attribute does the Standard Dialect offer us for setting the `value`
-attribute of our button? Well, in a rather obvious manner, it's `th:value`. Let's
-have a look:
+For example, to set the `value` attribute, use `th:value`:
 
 ```html
-<input type="submit" value="Subscribe me!" th:value="#{subscribe.submit}"/>
+<input type="submit" value="Subscribe!" th:value="#{subscribe.submit}"/>
 ```
 
 This looks much better! Let's try and do the same to the `action` attribute in
@@ -1808,7 +1805,7 @@ For our GTVG home page, this will allow us to substitute this:
      th:src="@{/images/gtvglogo.png}" th:title="#{logo}" th:alt="#{logo}" />
 ```
 
-...by this:
+...with this:
 
 ```html
 <img src="../../images/gtvglogo.png" 
@@ -1820,14 +1817,13 @@ For our GTVG home page, this will allow us to substitute this:
 5.4 Appending and prepending
 ----------------------------
 
-Working in an equivalent way to `th:attr`, Thymeleaf offers the `th:attrappend`
-and `th:attrprepend` attributes, which append (suffix) or prepend (prefix) the
-result of their evaluation to the existing attribute values.
+Thymeleaf also offers the `th:attrappend` and `th:attrprepend` attributes, which
+append (suffix) or prepend (prefix) the result of their evaluation to the
+existing attribute values.
 
 For example, you might want to store the name of a CSS class to be added (not
 set, just added) to one of your buttons in a context variable, because the
-specific CSS class to be used would depend on something that the user did before.
-Easy:
+specific CSS class to be used would depend on something that the user did before:
 
 ```html
 <input type="button" value="Do it!" class="btn" th:attrappend="class=${' ' + cssStyle}" />
@@ -1840,9 +1836,10 @@ you will get:
 <input type="button" value="Do it!" class="btn warning" />
 ```
 
-There are also two specific _appending attributes_ in the Standard Dialect: the `th:classappend`
-and `th:styleappend` attributes, which are used for adding a CSS class or a fragment of _style_ to an element without
-overwriting the existing ones:
+There are also two specific _appending attributes_ in the Standard Dialect: the
+`th:classappend` and `th:styleappend` attributes, which are used for adding a
+CSS class or a fragment of _style_ to an element without overwriting the
+existing ones:
 
 ```html
 <tr th:each="prod : ${prods}" class="row" th:classappend="${prodStat.odd}? 'odd'">
@@ -1856,19 +1853,16 @@ we will talk about it later.)
 5.5 Fixed-value boolean attributes
 ----------------------------------
 
-Some XHTML/HTML5 attributes are special in that, either they are present in
-their elements with a specific and fixed value, or they are not present at all.
+HTML has the concept of _boolean attributes_, attributes that have no value and
+the prescence of one means that value is "true".  In XHTML, these attributes
+take just 1 value, which is itself.
 
 For example, `checked`:
 
 ```html
-<input type="checkbox" name="option1" checked="checked" />
-<input type="checkbox" name="option2" />
+<input type="checkbox" name="option2" checked /> <!-- HTML -->
+<input type="checkbox" name="option1" checked="checked" /> <!-- XHTML -->
 ```
-
-No other value than `"checked"` is allowed according to the XHTML standards for
-the `checked` attribute (HTML5 rules are a little more relaxed on that). And the
-same happens with `disabled`, `multiple`, `readonly` and `selected`.
 
 The Standard Dialect includes attributes that allow you to set these attributes
 by evaluating a condition, so that if evaluated to true, the attribute will be
@@ -1898,10 +1892,9 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 5.6 Setting the value of any attribute (default attribute processor)
 --------------------------------------------------------------------
 
-Besides everything we have just seen about ways of setting attribute with specific
-processors such as `th:value`, `th:disabled` etc. Thymeleaf offers a *default
-attribute processor* that allows us to set the value of *any* attribute even
-if no specific `th:*` processor has been defined for it at the Standard Dialect.
+Thymeleaf offers a *default attribute processor* that allows us to set the value
+of *any* attribute, even if no specific `th:*` processor has been defined for it
+at the Standard Dialect.
 
 So something like:
 
@@ -1920,7 +1913,8 @@ Will result in:
 5.7 Support for HTML5-friendly attribute and element names
 ----------------------------------------------------------
 
-It is also possible to use a completely different syntax to apply processors to your templates, more HTML5-friendly.
+It is also possible to use a completely different syntax to apply processors to
+your templates in a more HTML5-friendly manner.
 
 ```html	
 <table>
@@ -1931,11 +1925,19 @@ It is also possible to use a completely different syntax to apply processors to 
 </table>
 ```
 
-The `data-{prefix}-{name}` syntax is the standard way to write custom attributes in HTML5, without requiring developers to use any namespaced names like `th:*`. Thymeleaf makes this syntax automatically available to all your dialects (not only the Standard ones).
+The `data-{prefix}-{name}` syntax is the standard way to write custom attributes
+in HTML5, without requiring developers to use any namespaced names like `th:*`.
+Thymeleaf makes this syntax automatically available to all your dialects (not
+only the Standard ones).
 
-There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows the _W3C Custom Elements specification_ (a part of the larger _W3C Web Components spec_). This can be used, for example, for the `th:block` element (or also `th-block`), which will be explained in a later section. 
+There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows
+the _W3C Custom Elements specification_ (a part of the larger _W3C Web
+Components spec_). This can be used, for example, for the `th:block` element (or
+also `th-block`), which will be explained in a later section. 
 
-**Important:** this syntax is an addition to the namespaced `th:*` one, it does not replace it. There is no intention at all to deprecate the namespaced syntax in the future. 
+**Important:** this syntax is an addition to the namespaced `th:*` one, it does
+not replace it. There is no intention at all to deprecate the namespaced syntax
+in the future. 
 
 
 
@@ -1944,28 +1946,28 @@ There is also a syntax to specify custom tags: `{prefix}-{name}`, which follows 
 ===========
 
 So far we have created a home page, a user profile page and also a page for
-letting users subscribe to our newsletter... but what about our products?
-Shouldn't we build a product list to let visitors know what we sell? Well,
-obviously yes. And there we go now.
+letting users subscribe to our newsletter... but what about our products?  For
+that, we will need a way to iterate over items in a collection to build out our
+product page.
 
 
 
 6.1 Iteration basics
 --------------------
 
-For listing our products in our `/WEB-INF/templates/product/list.html` page we
-will need a table. Each of our products will be displayed in a row (a `<tr>`
-element), and so for our template we will need to create a _template row_ ---one
-that will exemplify how we want each product to be displayed--- and then instruct
-Thymeleaf to _iterate it_ once for each product.
+To display products in our `/WEB-INF/templates/product/list.html` page we will
+use a table. Each of our products will be displayed in a row (a `<tr>` element),
+and so for our template we will need to create a _template row_ -- one
+that will exemplify how we want each product to be displayed -- and then instruct
+Thymeleaf to repeat it, once for each product.
 
 The Standard Dialect offers us an attribute for exactly that: `th:each`.
 
 
 ### Using th:each
 
-For our product list page, we will need a controller that retrieves the list of
-products from the service layer and adds it to the template context:
+For our product list page, we will need a controller method that retrieves the
+list of products from the service layer and adds it to the template context:
 
 ```java
 public void process(
@@ -1984,7 +1986,8 @@ public void process(
 }
 ```
 
-And then we will use `th:each` in our template to iterate the list of products:
+And then we will use `th:each` in our template to iterate over the list of
+products:
 
 ```html
 <!DOCTYPE html>
@@ -2025,26 +2028,26 @@ And then we will use `th:each` in our template to iterate the list of products:
 ```
 
 That `prod : ${prods}` attribute value you see above means "for each element in
-the result of evaluating `${prods}`, repeat this fragment of template setting
-that element into a variable called prod". Let's give a name each of the things
+the result of evaluating `${prods}`, repeat this fragment of template, using the
+current element in a variable called prod". Let's give a name each of the things
 we see:
 
  * We will call `${prods}` the _iterated expression_ or _iterated variable_.
  * We will call `prod` the _iteration variable_ or simply _iter variable_.
 
-Note that the `prod` iter variable will only be available inside the `<tr>`
-element (including inner tags like `<td>`).
+Note that the `prod` iter variable is scoped to the `<tr>` element, which means
+it is available to inner tags like `<td>`.
 
 
 ### Iterable values
 
-Not only `java.util.List` objects can be used for iteration in Thymeleaf. In
-fact, there is a quite complete set of objects that are considered _iterable_
+The `java.util.List` class isn't the onlyvalue that can be used for iteration in
+Thymeleaf. There is a quite complete set of objects that are considered _iterable_
 by a `th:each` attribute:
 
  * Any object implementing `java.util.Iterable`
  * Any object implementing `java.util.Enumeration`.
- * Any object implementing `java.util.Iterator`, which values will be used as
+ * Any object implementing `java.util.Iterator`, whose values will be used as
    they are returned by the iterator, without the need to cache all values in memory.
  * Any object implementing `java.util.Map`. When iterating maps, iter variables
    will be of class `java.util.Map.Entry`.
@@ -2075,7 +2078,7 @@ following data:
  * Whether the current iteration is the last one. This is the `last` boolean
    property.
 
-Let's see how we could use it within the previous example:
+Let's see how we could use it with the previous example:
 
 ```html
 <table>
@@ -2092,11 +2095,10 @@ Let's see how we could use it within the previous example:
 </table>
 ```
 
-As you can see, the status variable (`iterStat` in this example) is defined in
-the `th:each` attribute by writing its name after the iter variable itself,
-separated by a comma. As happens to the iter variable, the status variable will
-only be available inside the fragment of code defined by the tag holding the `th:each`
-attribute.
+The status variable (`iterStat` in this example) is defined in the `th:each`
+attribute by writing its name after the iter variable itself, separated by a
+comma. Just like the iter variable, the status variable is also scoped to the
+fragment of code defined by the tag holding the `th:each` attribute.
 
 Let's have a look at the result of processing our template:
 
@@ -2178,17 +2180,18 @@ for you by suffixing `Stat` to the name of the iteration variable:
 6.3 Optimizing through lazy retrieval of data
 ---------------------------------------------
 
-Sometimes we might want to optimize the retrieval of collections of data (e.g. from a database)
-so that these collections are only retrieved if they are really going to be used. 
+Sometimes we might want to optimize the retrieval of collections of data (e.g.
+from a database) so that these collections are only retrieved if they are really
+going to be used. 
 
 > Actually, this is something that can be applied to *any* piece of data, but given the size
 > that in-memory collections might have, retrieving collections that are meant to be iterated
 > is the most common case for this scenario.
 
-In order to support this, Thymeleaf offers a mechanism to *lazily load context variables*.
-Context variables that implement the `ILazyContextVariable` interface --most probably by
-extending its `LazyContextVariable` default implementation-- will be resolved in 
-the moment of being executed. For example:
+In order to support this, Thymeleaf offers a mechanism to *lazily load context
+variables*. Context variables that implement the `ILazyContextVariable`
+interface -- most probably by extending its `LazyContextVariable` default
+implementation -- will be resolved in the moment of being executed. For example:
 
 ```java
 context.setVariable(
@@ -2200,20 +2203,24 @@ context.setVariable(
          }
      });
 ```
-This variable can be used without noticing its *lazyness*, in code such as:
+
+This variable can be used without knowledge of its *lazyness*, in code such as:
+
 ```html
 <ul>
   <li th:each="u : ${users}" th:text="${u.name}">user name</li>
 </ul>
 ```
-But at the same time, will never be initialized (its `loadValue()` method will never be called) 
-if `condition` evaluates to `false` in code such as:
+
+But at the same time, will never be initialized (its `loadValue()` method will
+never be called) if `condition` evaluates to `false` in code such as:
 
 ```html
 <ul th:if="${condition}">
   <li th:each="u : ${users}" th:text="${u.name}">user name</li>
 </ul>
 ```
+
 
 
 
@@ -2264,9 +2271,9 @@ Quite a lot of things to see here, so let's focus on the important line:
    th:if="${not #lists.isEmpty(prod.comments)}">view</a>
 ```
 
-There is little to explain from this code, in fact: We will be creating a link
-to the comments page (with URL `/product/comments`) with a `prodId` parameter
-set to the `id` of the product, but only if the product has any comments.
+This will create a link to the comments page (with URL `/product/comments`) with
+a `prodId` parameter set to the `id` of the product, but only if the product has
+any comments.
 
 Let's have a look at the resulting markup:
 
@@ -2329,8 +2336,8 @@ expression as `true` following these rules:
     * If value is not a boolean, a number, a character or a String.
  * (If value is null, th:if will evaluate to false).
 
-Also, `th:if` has an inverse counterpart, `th:unless`, which we could have used
-in the previous example instead of using a `not` inside the OGNL expression:
+Also, `th:if` has an inverse attribute, `th:unless`, which we could have used in
+the previous example instead of using a `not` inside the OGNL expression:
 
 ```html
 <a href="comments.html"
@@ -2345,8 +2352,6 @@ in the previous example instead of using a `not` inside the OGNL expression:
 
 There is also a way to display content conditionally using the equivalent of a
 _switch_ structure in Java: the `th:switch` / `th:case` attribute set.
-
-They work exactly as you would expect:
 
 ```html
 <div th:switch="${user.role}">
@@ -2381,15 +2386,14 @@ The default option is specified as `th:case="*"`:
 
 ### Defining and referencing fragments
 
-We will often want to include in our templates fragments from other templates.
-Common uses for this are footers, headers, menus...
+In our templates, we will often want to include parts from other templates,
+parts like footers, headers, menus...
 
-In order to do this, Thymeleaf needs us to define the fragments available for
-inclusion, what we can do by using the `th:fragment` attribute. 
+In order to do this, Thymeleaf needs us to define these parts, "fragments", for
+inclusion, which can be done using the `th:fragment` attribute. 
 
-Now let's say we want to add a standard copyright footer to all our grocery
-pages, and for that we define a `/WEB-INF/templates/footer.html` file containing
-this code:
+Say we want to add a standard copyright footer to all our grocery pages, so we
+create a `/WEB-INF/templates/footer.html` file containing this code:
 
 ```html
 <!DOCTYPE html>
@@ -2421,10 +2425,10 @@ our home page using one of the `th:insert` or `th:replace` attributes (and also
 </body>
 ```
 
-Note that `th:insert` expects a *fragment expression* (`~{...}`), or more specifically
-*an expression that results in a fragment*. But in the former case (a non-complex
-*fragment expression*) like the code above, the (`~{`,`}`) enclosing is completely optional, so 
-the code above would be equivalent to:
+Note that `th:insert` expects a *fragment expression* (`~{...}`), which is *an
+expression that results in a fragment*. In the above example though, which is a
+non-complex *fragment expression*, the (`~{`,`}`) enclosing is completely
+optional, so the code above would be equivalent to:
 
 ```html
 <body>
@@ -2439,13 +2443,18 @@ the code above would be equivalent to:
 
 ### Fragment specification syntax
 
-The syntax of *fragment expressions* is quite straightforward. There are three different formats:
+The syntax of *fragment expressions* is quite straightforward. There are three
+different formats:
 
- * `"~{templatename::selector}"` Includes the fragment resulting from applying the specified Markup Selector on the template named `templatename`.
-    * Note that `selector` can be a mere fragment name, so you could specify something as simple as `~{templatename::fragmentname}` like in the `~{footer :: copy}` above. More on the syntax of markup selectors below.
+ * `"~{templatename::selector}"` Includes the fragment resulting from applying
+   the specified Markup Selector on the template named `templatename`.  Note
+   that `selector` can be a mere fragment name, so you could specify something
+   as simple as `~{templatename::fragmentname}` like in the `~{footer :: copy}`
+   above.
 
-   > Markup Selector syntax is defined by the underlying AttoParser parsing library, and is similar to 
-   > XPath expressions or CSS selectors, see the [Appendix C](#appendix-c-markup-selector-syntax) for more info.
+   > Markup Selector syntax is defined by the underlying AttoParser parsing
+   > library, and is similar to XPath expressions or CSS selectors. See
+   > [Appendix C](#appendix-c-markup-selector-syntax) for more info.
 
  * `"~{templatename}"` Includes the complete template named `templatename`.
 
@@ -2453,10 +2462,11 @@ The syntax of *fragment expressions* is quite straightforward. There are three d
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
- * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same template.
+ * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same
+   template.
 
-Both `templatename` and `selector` in the above examples
-can be fully-featured expressions (even conditionals!) like:
+Both `templatename` and `selector` in the above examples can be fully-featured
+expressions (even conditionals!) like:
 
 ```html
 <div th:insert="footer :: (${user.isAdmin}? #{footer.admin} : #{footer.normaluser})"></div>
@@ -2470,9 +2480,9 @@ attribute), and they will be able to reference any context variables defined in
 this target template.
 
 > A big advantage of this approach to fragments is that you can write your
-> fragments code in pages that are perfectly displayable by a browser, with a
-> complete and even *valid* markup structure, while still retaining the
-> ability to make Thymeleaf include them into other templates.
+> fragments in pages that are perfectly displayable by a browser, with a
+> complete and even *valid* markup structure, while still retaining the ability
+> to make Thymeleaf include them into other templates.
 
 
 ### Referencing fragments without `th:fragment`
@@ -2505,16 +2515,16 @@ We can use the fragment above simply referencing it by its `id` attribute, in a 
 
 ### Difference between `th:insert` and `th:replace` (and `th:include`)
 
-And what is the difference between `th:insert`, `th:replace` and `th:include` (not
-recommended since 3.0)? 
+And what is the difference between `th:insert` and `th:replace` (and `th:include`,
+not recommended since 3.0)?
 
-  * `th:insert` is the simplest: it will simply insert the specified fragment as the body
-  of its host tag.
+ * `th:insert` is the simplest: it will simply insert the specified fragment as the body
+   of its host tag.
 
-  * `th:replace` actually *replaces* its host tag with the specified fragment.
+ * `th:replace` actually *replaces* its host tag with the specified fragment.
 
-  * `th:include` is similar to `th:insert`, but instead of inserting the fragment it only 
-  inserts the *contents* of this fragment.
+ * `th:include` is similar to `th:insert`, but instead of inserting the fragment
+   it only inserts the *contents* of this fragment.
 
 So an HTML fragment like this:
 
@@ -2569,7 +2579,7 @@ So an HTML fragment like this:
 8.2 Parameterizable fragment signatures
 ---------------------------------------
 
-In order to create a more _function-like_ mechanism for the use of template fragments,
+In order to create a more _function-like_ mechanism for template fragments,
 fragments defined with `th:fragment` can specify a set of parameters:
 	
 ```html
@@ -2578,8 +2588,8 @@ fragments defined with `th:fragment` can specify a set of parameters:
 </div>
 ```
 
-This requires the use of one of these two syntaxes to call the fragment from `th:insert` or 
-`th:replace`:
+This requires the use of one of these two syntaxes to call the fragment from
+`th:insert` or `th:replace`:
 
 ```html
 <div th:replace="::frag (${value1},${value2})">...</div>
@@ -2592,9 +2602,10 @@ Note that order is not important in the last option:
 <div th:replace="::frag (twovar=${value2},onevar=${value1})">...</div>
 ```
 
-###Fragment local variables without fragment arguments
 
-Even if fragments are defined without arguments, like this:
+### Fragment local variables without fragment arguments
+
+Even if fragments are defined without arguments like this:
 
 ```html	
 <div th:fragment="frag">
@@ -2608,22 +2619,23 @@ We could use the second syntax specified above to call them (and only the second
 <div th:replace="::frag (onevar=${value1},twovar=${value2})">
 ```
 
-This would be, in fact, equivalent to a combination of `th:replace` and `th:with`:
+This would be equivalent to a combination of `th:replace` and `th:with`:
 
 ```html	
 <div th:replace="::frag" th:with="onevar=${value1},twovar=${value2}">
 ```
 
-**Note** that this specification of local variables for a fragment ---no matter whether it 
-has an argument signature or not--- does not cause the context to be emptied previously to its 
-execution. Fragments will still be able to access every context variable being used at the 
-calling template like they currently are. 
+**Note** that this specification of local variables for a fragment -- no matter
+whether it has an argument signature or not -- does not cause the context to be
+emptied prior to its execution. Fragments will still be able to access every
+context variable being used at the calling template like they currently are. 
 
 
-###th:assert for in-template assertions
+### th:assert for in-template assertions
 
-The `th:assert` attribute can specify a comma-separated list of expressions which should be
-evaluated and produce true for every evaluation, raising an exception if not.
+The `th:assert` attribute can specify a comma-separated list of expressions
+which should be evaluated and produce true for every evaluation, raising an
+exception if not.
 
 ```html
 <div th:assert="${onevar},(${twovar} != 43)">...</div>
@@ -2640,11 +2652,12 @@ This comes in handy for validating parameters at a fragment signature:
 8.3 Flexible layouts: beyond mere fragment insertion
 ----------------------------------------------------
 
-Thanks to *fragment expressions*, we can specify parameters for fragments that are not texts,
-numbers, bean objects... but instead fragments of markup.
+Thanks to *fragment expressions*, we can specify parameters for fragments that
+are not texts, numbers, bean objects... but instead fragments of markup.
 
-This allows us to create our fragments in a way such that they can be *enriched* wich markup
-coming from the calling templates, resulting in a very flexible **template layout mechanism**. 
+This allows us to create our fragments in a way such that they can be *enriched*
+with markup coming from the calling templates, resulting in a very flexible
+**template layout mechanism**.
 
 Note the use of the `title` and `links` variables in the fragment below:
 
@@ -2679,9 +2692,9 @@ We can now call this fragment like:
 ...
 ```
 
-...and the result will use the actual `<title>` and `<link>` tags from our calling
-template as the values of the `title` and `links` variables, resulting in
-our fragment being customized during insertion:
+...and the result will use the actual `<title>` and `<link>` tags from our
+calling template as the values of the `title` and `links` variables, resulting
+in our fragment being customized during insertion:
 
 ```html
 ...
@@ -2738,8 +2751,9 @@ block:
 
 ### Using the no-operation token
 
-The no-op can be also used as a parameter to a fragment, if we just want to let our fragment use 
-its current markup as a default value. Again, using the `common_header` example:
+The no-op can be also used as a parameter to a fragment if we just want to let
+our fragment use  its current markup as a default value. Again, using the
+`common_header` example:
 
 ```html
 ...
@@ -2754,8 +2768,9 @@ its current markup as a default value. Again, using the `common_header` example:
 ...
 ```
 
-See how the `title` argument (first argument of the `common_header` fragment) is set to *no-op* (`_`),
-which results in this part of the fragment not being executed at all (`title` = *no-operation*):
+See how the `title` argument (first argument of the `common_header` fragment) is
+set to *no-op* (`_`), which results in this part of the fragment not being
+executed at all (`title` = *no-operation*):
 
 ```html
   <title th:replace="${title}">The awesome application</title>
@@ -2784,11 +2799,12 @@ So the result is:
 
 ### Advanced conditional insertion of fragments
 
-The availability of both the *emtpy fragment* and *no-operation token* allows us to perform
-conditional insertion of fragments in a very easy and elegant way.
+The availability of both the *emtpy fragment* and *no-operation token* allows us
+to perform conditional insertion of fragments in a very easy and elegant way.
 
-For example, we could do this in order to insert our `common :: adminhead` fragment *only* if the
-user is an administrator, and insert nothing (emtpy fragment) if not:
+For example, we could do this in order to insert our `common :: adminhead`
+fragment *only* if the user is an administrator, and insert nothing (emtpy
+fragment) if not:
 
 ```html
 ...
@@ -2796,8 +2812,9 @@ user is an administrator, and insert nothing (emtpy fragment) if not:
 ...
 ```
 
-Also, we can use the *no-operation token* in order to insert a fragment only if the specified
-condition is met, but leave the markup without modifications if the condition is not met:
+Also, we can use the *no-operation token* in order to insert a fragment only if
+the specified condition is met, but leave the markup without modifications if
+the condition is not met:
 
 ```html
 ...
@@ -2807,9 +2824,10 @@ condition is met, but leave the markup without modifications if the condition is
 ...
 ```
 
-Additionally, if we have configured our template resolvers to *check for existence* of
-the template resources –by means of their `checkExistence` flag–, we can use the existence
-of the fragment itself as the condition in a *default* operation:
+Additionally, if we have configured our template resolvers to *check for
+existence* of the template resources –- by means of their `checkExistence` flag
+-– we can use the existence of the fragment itself as the condition in a *default*
+operation:
 
 ```html
 ...
@@ -2853,7 +2871,7 @@ Back to the example application, let's revisit the last version of our product l
 This code is just fine as a template, but as a static page (when directly open
 by a browser without Thymeleaf processing it) it would not make a nice prototype. 
 
-Why? Because although perfectly displayable by browsers, that table only has a
+Why? Because, although perfectly displayable by browsers, that table only has a
 row, and this row has mock data. As a prototype, it simply wouldn't look
 realistic enough... we should have more than one product, _we need more rows_.
 
@@ -3056,8 +3074,8 @@ Once processed, everything will look again as it should:
 </table>
 ```
 
-And what about that `all` value in the attribute, what does it mean? Well, in fact
-`th:remove` can behave in five different ways, depending on its value:
+And what does that `all` value in the attribute, mean? `th:remove` can behave in
+five different ways, depending on its value:
 
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
@@ -3111,8 +3129,9 @@ when prototyping:
 </table>
 ```
 
-The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long as it returns one 
-of the allowed String values (`all`, `tag`, `body`, `all-but-first` or `none`).
+The `th:remove` attribute can take any _Thymeleaf Standard Expression_, as long
+as it returns one of the allowed String values (`all`, `tag`, `body`, `all-but-first`
+or `none`).
 
 This means removals could be conditional, like:
 
@@ -3120,14 +3139,15 @@ This means removals could be conditional, like:
 <a href="/something" th:remove="${condition}? tag : none">Link text not to be removed</a>
 ```
 
-Also note that `th:remove` considers `null` a synonym to `none`, so that the following works
-exactly as the example above:
+Also note that `th:remove` considers `null` a synonym to `none`, so the
+following works the same as the example above:
 
 ```html
 <a href="/something" th:remove="${condition}? tag">Link text not to be removed</a>
 ```
 
-In this case, if `${condition}` is false, `null` will be returned, and thus no removal will be performed. 
+In this case, if `${condition}` is false, `null` will be returned, and thus no
+removal will be performed. 
 
 
 
@@ -3135,9 +3155,9 @@ In this case, if `${condition}` is false, `null` will be returned, and thus no r
 9 Local Variables
 =================
 
-Thymeleaf calls _local variables_ those variables that are defined for a
-specific fragment of a template, and are only available for evaluation inside
-that fragment.
+Thymeleaf calls _local variables_ the variables that are defined for a specific
+fragment of a template, and are only available for evaluation inside that
+fragment.
 
 An example we have already seen is the `prod` iter variable in our product list
 page:
@@ -3156,7 +3176,7 @@ Specifically:
  * It will be available for any child element of the `<tr>` tag, such as any `<td>`
    elements.
 
-Thymeleaf offers you a way to declare local variables without iteration. It is
+Thymeleaf offers you a way to declare local variables without iteration, using
 the `th:with` attribute, and its syntax is like that of attribute value
 assignments:
 
@@ -3170,8 +3190,8 @@ assignments:
 
 When `th:with` is processed, that `firstPer` variable is created as a local
 variable and added to the variables map coming from the context, so that it is
-as available for evaluation as any other variables declared in the context from
-the beginning, but only within the bounds of the containing `<div>` tag.
+available for evaluation along with any other variables declared in the context,
+but only within the bounds of the containing `<div>` tag.
 
 You can define several variables at the same time using the usual multiple
 assignment syntax:
@@ -3212,7 +3232,6 @@ date.format=MMMM dd'','' yyyy
 ```
 
 ...and an equivalent one to our `home_es.properties`:
-
 
 ```
 date.format=dd ''de'' MMMM'','' yyyy
@@ -3256,11 +3275,11 @@ example:
 </ul>
 ```
 
-Of course, we would expect that `th:each` attribute to execute before the `th:text`
-so that we get the results we want, but given the fact that the HTML or XML standards 
-do not give any kind of meaning to the order in which the attributes in a tag are 
-written, a _precedence_ mechanism has to be established in the attributes themselves 
-in order to be sure that this will work as expected.
+We would expect that `th:each` attribute to execute before the `th:text` so that
+we get the results we want, but given the fact that the HTML/XML standards do
+not give any kind of meaning to the order in which the attributes in a tag are 
+written, a _precedence_ mechanism had to be established in the attributes
+themselves in order to be sure that this will work as expected.
 
 So, all Thymeleaf attributes define a numeric precedence, which establishes the
 order in which they are executed in the tag. This order is:
@@ -3301,8 +3320,8 @@ Order   Feature                            Attributes
 </div>
 
 This precedence mechanism means that the above iteration fragment will give
-exactly the same results if the attribute position is inverted (although it would be
-slightly less readable):
+exactly the same results if the attribute position is inverted (although it
+would be slightly less readable):
 
 ```html
 <ul>
@@ -3312,13 +3331,18 @@ slightly less readable):
 
 
 
+
 11. Comments and Blocks
 =======================
+
+
 
 11.1. Standard HTML/XML comments
 --------------------------------
 
-Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf templates. Anything inside these comments won't be processed by neither Thymeleaf nor the browser, and will be just copied verbatim to the result:
+Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf
+templates. Anything inside these comments won't be processed by Thymeleaf, and
+will be copied verbatim to the result:
 
 ```html
 <!-- User info follows -->
@@ -3328,16 +3352,20 @@ Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf temp
 ```
 
 
+
 11.2. Thymeleaf parser-level comment blocks
 -------------------------------------------
 
-Parser-level comment blocks are code that will be simply removed from the template when Thymeleaf parses it. They look like this:
+Parser-level comment blocks are code that will be simply removed from the
+template when Thymeleaf parses it. They look like this:
 
 ```html
 <!--/* This code will be removed at Thymeleaf parsing time! */-->
 ``` 
 
-Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so these comment blocks can also be used for displaying code when a template is statically open, knowing that it will be removed when Thymeleaf processes it:
+Thymeleaf will remove everything between `<!--/*` and `*/-->`, so these comment
+blocks can also be used for displaying code when a template is statically open,
+knowing that it will be removed when Thymeleaf processes it:
 
 ```html
 <!--/*--> 
@@ -3347,7 +3375,8 @@ Thymeleaf will remove absolutely everything between `<!--/*` and `*/-->`, so the
 <!--*/-->
 ```
 
-This might come very handy for prototyping tables with a lot of `<tr>`'s, for example:
+This might come very handy for prototyping tables with a lot of `<tr>`'s, for
+example:
 
 ```html
 <table>
@@ -3366,10 +3395,13 @@ This might come very handy for prototyping tables with a lot of `<tr>`'s, for ex
 ```
 
 
+
 11.3. Thymeleaf prototype-only comment blocks
 ---------------------------------------------
 
-Thymeleaf allows the definition of special comment blocks marked to be comments when the template is open statically (i.e. as a prototype), but considered normal markup by Thymeleaf when executing the template.
+Thymeleaf allows the definition of special comment blocks marked to be comments
+when the template is open statically (i.e. as a prototype), but considered
+normal markup by Thymeleaf when executing the template.
 
 ```html
 <span>hello!</span>
@@ -3381,7 +3413,9 @@ Thymeleaf allows the definition of special comment blocks marked to be comments 
 <span>goodbye!</span>
 ```
 
-Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers, but not its contents, which will be left therefore uncommented. So when executing the template, Thymeleaf will actually see this:
+Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers,
+but not its contents, which will be left therefore uncommented. So when
+executing the template, Thymeleaf will actually see this:
 
 ```html
 <span>hello!</span>
@@ -3393,17 +3427,22 @@ Thymeleaf's parsing system will simply remove the `<!--/*/` and `/*/-->` markers
 <span>goodbye!</span>
 ```
 
-As happens with parser-level comment blocks, note that this feature is dialect-independent.
+As with parser-level comment blocks, this feature is dialect-independent.
+
 
 
 11.4. Synthetic `th:block` tag
 ------------------------------
 
-Thymeleaf's only element processor (not an attribute) included in the Standard Dialects is `th:block`.
+Thymeleaf's only element processor (not an attribute) included in the Standard
+Dialects is `th:block`.
 
-`th:block` is a mere attribute container that allows template developers to specify whichever attributes they want. Thymeleaf will execute these attributes and then simply make the block dissapear without a trace.
+`th:block` is a mere attribute container that allows template developers to
+specify whichever attributes they want. Thymeleaf will execute these attributes
+and then simply make the block, but not its contents, disappear.
 
-So it could be useful, for example, when creating iterated tables that require more than one `<tr>` for each element:
+So it could be useful, for example, when creating iterated tables that require
+more than one `<tr>` for each element:
 
 ```html
 <table>
@@ -3435,7 +3474,9 @@ And especially useful when used in combination with prototype-only comment block
 </table>
 ```
 
-Note how this solution allows templates to be valid HTML (no need to add forbidden `<div>` blocks inside `<table>`), and still works OK when open statically in browsers as prototypes! 
+Note how this solution allows templates to be valid HTML (no need to add
+forbidden `<div>` blocks inside `<table>`), and still works OK when open
+statically in browsers as prototypes! 
 
 
 
@@ -3448,10 +3489,9 @@ Note how this solution allows templates to be valid HTML (no need to add forbidd
 12.1 Expression inlining
 ------------------------
 
-Although the Standard Dialect allows us to do almost everything we might need by
-using tag attributes, there are situations in which we could prefer writing
-expressions directly into our HTML texts. For example, we could prefer writing
-this:
+Although the Standard Dialect allows us to do almost everything using tag
+attributes, there are situations in which we could prefer writing expressions
+directly into our HTML texts. For example, we could prefer writing this:
 
 ```html
 <p>Hello, [[${session.user.name}]]!</p>
@@ -3463,12 +3503,12 @@ this:
 <p>Hello, <span th:text="${session.user.name}">Sebastian</span>!</p>
 ```
 
-Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions** in Thymeleaf,
-and inside them we can use any kind of expression that would also be valid in a
-`th:text` or `th:utext` attribute.
+Expressions between `[[...]]` or `[(...)]` are considered **inlined expressions**
+in Thymeleaf, and inside them we can use any kind of expression that would also
+be valid in a `th:text` or `th:utext` attribute.
 
 Note that, while `[[...]]` corresponds to `th:text` (i.e. result will be *HTML-escaped*), 
-`[(...)]` corresponds to `th:utext` and will not perform any HTML-escaping at all. So
+`[(...)]` corresponds to `th:utext` and will not perform any HTML-escaping. So
 with a variable such as `msg = 'This is <b>great!</b>'`, given this fragment:
 
 ```html
@@ -3493,15 +3533,16 @@ The result will be HTML-escaped:
 <p>The message is "This is &lt;b&gt;great!&lt;/b&gt;"</p>
 ```
 
-Note that **text inlining is active by default** in the body of every tag in our markup –not the tags
-themselves–, so there is nothing we need to do to to enable it.
+Note that **text inlining is active by default** in the body of every tag in our
+markup –- not the tags themselves -–, so there is nothing we need to do to to
+enable it.
 
 
-###Inlining vs natural templates
+### Inlining vs natural templates
 
-So now, especially if you come from other template engines in which this way of
-outputting text is the usual thing, you might be asking: _Why aren't we doing 
-this from the beginning? It's less code than all those_ `th:text` _attributes!_ 
+If you come from other template engines in which this way of outputting text is
+the norm, you might be asking: _Why aren't we doing this from the beginning?
+It's less code than all those_ `th:text` _attributes!_ 
 
 Well, be careful there, because although you might find inlining quite 
 interesting, you should always remember that inlined expressions will be 
@@ -3524,11 +3565,11 @@ Hello, [[${session.user.name}]]!
 ...is quite clear in terms of design usefulness.
 
 
-###Disabling inlining
+### Disabling inlining
 
-This mechanism can be disabled though, because there might actually be occasions in
-which we do want to output the `[[...]]` or  `[(...)]` sequences without its contents
-being processed as an expression. For that, we will use `th:inline="none"`:
+This mechanism can be disabled though, because there might actually be occasions
+in which we do want to output the `[[...]]` or  `[(...)]` sequences without its
+contents being processed as an expression. For that, we will use `th:inline="none"`:
 
 ```html
 <p th:inline="none">A double array looks like this: [[1, 2, 3], [4, 5]]!</p>
@@ -3541,29 +3582,33 @@ This will result in:
 ```
 
 
+
 12.2 Text inlining
 ------------------
 
-*Text inlining* is very similar to the *expression inlining* capability we have just
-seen, but it actually adds more power. It has to be enabled explicitly with `th:inline="text"`.
+*Text inlining* is very similar to the *expression inlining* capability we have
+just seen, but it actually adds more power. It has to be enabled explicitly with
+`th:inline="text"`.
 
-Text inlining not only allows us to use the same *inlined expressions* we just saw, but in 
-fact processes *tag bodies* as if they were templates processed in the `TEXT` template 
-mode, which allows us to perform text-based template logic (not only output expressions).
+Text inlining not only allows us to use the same *inlined expressions* we just
+saw, but in fact processes *tag bodies* as if they were templates processed in
+the `TEXT` template mode, which allows us to perform text-based template logic
+(not only output expressions).
 
 We will see more about this in the next chapter about the *textual template modes*.
+
 
 
 12.3 JavaScript inlining
 ------------------------
 
-JavaScript inlining allows for a better integration of JavaScript `<script>` blocks in 
-templates being processed in the `HTML` template mode.
+JavaScript inlining allows for a better integration of JavaScript `<script>`
+blocks in templates being processed in the `HTML` template mode.
 
-As happens with *text inlining*, this is actually equivalent to processing the
-scripts contents as if they were templates in the `JAVASCRIPT` template mode, and
-therefore all the power of the *textual template modes* (see next chapter) will be at
-hand. However, in this section we will focus on how we can use it for 
+As with *text inlining*, this is actually equivalent to processing the scripts
+contents as if they were templates in the `JAVASCRIPT` template mode, and
+therefore all the power of the *textual template modes* (see next chapter) will
+be at hand. However, in this section we will focus on how we can use it for 
 adding the output of our Thymeleaf expressions into our JavaScript blocks.
 
 This mode has to be explicitly enabled using `th:inline="javascript"`:
@@ -3589,12 +3634,12 @@ This will result in:
 Two important things to note in the code above: 
 
 *First*, that JavaScript inlining will not only output the required text, but 
-also enclose it with quotes and JavaScript-escape its contents, so 
-that the expression results are output as a **well-formed JavaScript literal**.
+also enclose it with quotes and JavaScript-escape its contents, so that the
+expression results are output as a **well-formed JavaScript literal**.
 
-*Second*, that this is happening because we are outputting the
-`${session.user.name}` expression as **escaped**, i.e. using a double-bracket
-expression: `[[${session.user.name}]]`. If instead we used *unescaped* like:
+*Second*, that this is happening because we are outputting the `${session.user.name}`
+expression as **escaped**, i.e. using a double-bracket expression: `[[${session.user.name}]]`.
+If instead we used *unescaped* like:
 
 ```html
 <script th:inline="javascript">
@@ -3614,13 +3659,12 @@ The result would look like:
 </script>
 ```
 
-...which is malformed JavaScript code. But outputting something
-unescaped might be actually what we need if we are building parts of our
-script by means of appending inlined expressions, so it's good to have this tool
-at hand.
+...which is malformed JavaScript code. But outputting something unescaped might
+be what we need if we are building parts of our script by means of appending
+inlined expressions, so it's good to have this tool at hand.
 
 
-###JavaScript natural templates
+### JavaScript natural templates
 
 The mentioned *intelligence* of the JavaScript inlining mechanism goes much
 further than just applying JavaScript-specific escaping and outputting
@@ -3638,9 +3682,9 @@ comments like:
 ```
 
 And Thymeleaf will ignore everything we have written *after the comment and
-before the semicolon* (in this case ` 'Gertrud Kiwifruit'`), so the result 
-of executing this will look exactly like when we were not using the 
-wrapping comments:
+before the semicolon* (in this case ` 'Gertrud Kiwifruit'`), so the result of
+executing this will look exactly like when we were not using the wrapping
+comments:
 
 ```html
 <script th:inline="javascript">
@@ -3662,16 +3706,17 @@ But have another careful look at the original template code:
 ```
 
 Note how this is **valid JavaScript** code. And it will perfectly execute when
-you open your template file in a static manner (without executing it at a server).
+you open your template file in a static manner (without executing it at a
+server).
 
 So what we have here is a way to do **JavaScript natural templates**!
 
 
 ### Advanced inlined evaluation and JavaScript serialization
 
-An important thing to note regarding JavaScript inlining is that this 
-expression evaluation is intelligent and not limited to Strings. Thymeleaf
-will correctly write in JavaScript syntax the following kinds of objects:
+An important thing to note regarding JavaScript inlining is that this
+expression evaluation is intelligent and not limited to Strings. Thymeleaf will
+correctly write in JavaScript syntax the following kinds of objects:
 
  * Strings
  * Numbers
@@ -3703,16 +3748,17 @@ Thymeleaf will correctly convert it to Javascript syntax:
 </script>
 ```
 
-The way this JavaScript serialization is done is by means of an implementation of the
-`org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer` interface,
-which can be configured at the instance of the `StandardDialect` being used
-at the template engine.
+The way this JavaScript serialization is done is by means of an implementation
+of the `org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer`
+interface, which can be configured at the instance of the `StandardDialect`
+being used at the template engine.
 
-The default implementation of this JS serialization mechanism will look for
-the [Jackson library](https://github.com/FasterXML/jackson) in the classpath 
-and, if present, will use it. If not, it will apply a built-in serialization 
-mechanism that covers the needs of most scenarios and produces 
-similar results (but is less flexible).
+The default implementation of this JS serialization mechanism will look for the
+[Jackson library](https://github.com/FasterXML/jackson) in the classpath and, if
+present, will use it. If not, it will apply a built-in serialization mechanism
+that covers the needs of most scenarios and produces similar results (but is
+less flexible).
+
 
 
 12.4 CSS inlining
@@ -3753,17 +3799,18 @@ And the result would be:
 </style>
 ```
 
-Note how CSS inlining also bears some *intelligence*, just like JavaScript's. Specifically,
-expressions output via *escaped* expressions like `[[${classname}]]` will be escaped as
-**CSS identifiers**. That is why our `classname = 'main elems'` has turned into `main\ elems`
-in the fragment of code above.
+Note how CSS inlining also bears some *intelligence*, just like JavaScript's.
+Specifically, expressions output via *escaped* expressions like `[[${classname}]]`
+will be escaped as **CSS identifiers**. That is why our `classname = 'main elems'`
+has turned into `main\ elems` in the fragment of code above.
 
 
 ### Advanced features: CSS natural templates, etc.
 
-In an equivalent way to what was explained before for JavaScript, CSS inlining also 
-allows for our `<style>` tags to work both statically and dynamically, i.e. to work
-as **CSS natural templates** by means of wrapping inlined expressions in comments. See:
+In an equivalent way to what was explained before for JavaScript, CSS inlining
+also allows for our `<style>` tags to work both statically and dynamically, i.e.
+ as **CSS natural templates** by means of wrapping inlined expressions in
+ comments. See:
 
 ```html
 <style th:inline="css">
@@ -3780,19 +3827,21 @@ as **CSS natural templates** by means of wrapping inlined expressions in comment
 =========================
 
 
+
 13.1 Textual syntax
 -------------------
 
-Three of the Thymeleaf *template modes* are considered **textual**: `TEXT`, `JAVASCRIPT` and `CSS`.
-This differentiates them from the markup template modes: `HTML` and `XML`.
+Three of the Thymeleaf *template modes* are considered **textual**: `TEXT`, `JAVASCRIPT`
+and `CSS`. This differentiates them from the markup template modes: `HTML` and `XML`.
 
-The key difference between *textual* template modes and the markup ones is that in a textual
-template there are no tags into which to insert logic in the form of attributes, so we have to
-rely on other mechanisms for inserting logic.
+The key difference between *textual* template modes and the markup ones is that
+in a textual template there are no tags into which to insert logic in the form
+of attributes, so we have to rely on other mechanisms.
 
-The first and most basic of these mechanisms is **inlining**, which we have already detailed in
-the previous chapter. Inlining syntax is the most simple way to output results of expressions
-in textual template mode, so this is a perfectly valid template for a text email.
+The first and most basic of these mechanisms is **inlining**, which we have
+already detailed in the previous chapter. Inlining syntax is the most simple way
+to output results of expressions in textual template mode, so this is a
+perfectly valid template for a text email.
 
 ```
   Dear [(${name})],
@@ -3804,13 +3853,11 @@ in textual template mode, so this is a perfectly valid template for a text email
     The Reporter.
 ```
 
-Note there are no tags at all in the code above, even if it is a complete and valid Thymeleaf
-template that can be executed in the `TEXT` template mode. So here we are not applying *text
-inlining* in a markup template, but instead directly executing a template in the `TEXT` template
-mode.
+Even without tags, the example above is a complete and valid Thymeleaf template
+that can be executed in the `TEXT` template mode.
 
-But in order to include more complex logic than mere *output expressions*, we need a new non-tag-based
-syntax:
+But in order to include more complex logic than mere *output expressions*, we
+need a new non-tag-based syntax:
 
 ```
 [# th:each="item : ${items}"]
@@ -3826,24 +3873,27 @@ Which is actually the *condensed* version of the more verbose:
 [/th:block]
 ```
 
-Note how this new syntax is based on elements (i.e. processable tags) that are declared as 
-`[#element ...]` instead of `<element ...>`. Elements are open like `[#element ...]` and closed like
-`[/element]`, and standalone tags can be declared by minimizing the open element with a `/` in 
-a way almost equivalent to XML tags: `[#element ... /]`.
+Note how this new syntax is based on elements (i.e. processable tags) that are
+declared as `[#element ...]` instead of `<element ...>`. Elements are open like
+`[#element ...]` and closed like `[/element]`, and standalone tags can be
+declared by minimizing the open element with a `/` in a way almost equivalent to
+XML tags: `[#element ... /]`.
 
-The Standard Dialect only contains a processor for one of these elements: the already-known 
-`th:block`, though we could extend this in our dialects and create new elements in the usual way. 
-Also, the `th:block` element (`[#th:block ...] ... [/th:block]`) is allowed to be abbreviated as the 
-empty string (`[# ...] ... [/]`), so the above block is actually equivalent to:
+The Standard Dialect only contains a processor for one of these elements: the
+already-known `th:block`, though we could extend this in our dialects and create
+new elements in the usual way. Also, the `th:block` element (`[#th:block ...] ... [/th:block]`)
+is allowed to be abbreviated as the empty string (`[# ...] ... [/]`), so the
+above block is actually equivalent to:
 
 ```
 [# th:each="item : ${items}"]
   - [# th:utext="${item}" /]
 [/]
 ```
-And given `[# th:utext="${item}" /]` is exactly equivalent to an *inlined unescaped expression*, 
-we could just use it in order to have less code. Thus we end up with the first fragment of code
-we saw above:
+
+And given `[# th:utext="${item}" /]` is equivalent to an *inlined unescaped
+expression*, we could just use it in order to have less code. Thus we end up
+with the first fragment of code we saw above:
 
 ```
 [# th:each="item : ${items}"]
@@ -3851,10 +3901,11 @@ we saw above:
 [/]
 ```
 
-Note that the *textual syntax requires full element balance (no unclosed tags) and quoted 
-attributes*. So to say, it's more XML-style than HTML-style.
+Note that the *textual syntax requires full element balance (no unclosed tags)
+and quoted attributes* -- it's more XML-style than HTML-style.
 
-Let's have a look at a more complete example of a `TEXT` template, a *plain text* email template:
+Let's have a look at a more complete example of a `TEXT` template, a *plain text*
+email template:
 
 ```
 Dear [(${customer.name})],
@@ -3885,9 +3936,10 @@ Thanks,
   The Thymeleaf Shop
 ```
 
-And another example in `JAVASCRIPT` template mode, a `greeter.js` file we process as a textual 
-template and which result we call from our HTML pages. Note this is *not* a `<script>` block
-in an HTML template, but a `.js` file being processed as a template on its own:
+And another example in `JAVASCRIPT` template mode, a `greeter.js` file, we
+process as a textual template and which result we call from our HTML pages. Note
+this is *not* a `<script>` block in an HTML template, but a `.js` file being
+processed as a template on its own:
 
 ```javascript
 var greeter = function() {
@@ -3918,13 +3970,14 @@ var greeter = function() {
 
 ### Escaped element attributes
 
-In order to avoid interactions with parts of the template that might be processed 
-in other modes (e.g. `text`-mode inlining inside an `HTML` template), Thymeleaf 3.0 
-allows the attributes in elements in its *textual syntax* to be escaped. So:
+In order to avoid interactions with parts of the template that might be
+processed in other modes (e.g. `text`-mode inlining inside an `HTML` template),
+Thymeleaf 3.0 allows the attributes in elements in its *textual syntax* to be
+escaped. So:
 
-  * Attributes in `TEXT` template mode will be *HTML-unescaped*.
-  * Attributes in `JAVASCRIPT` template mode will be *JavaScript-unescaped*.
-  * Attributes in `CSS` template mode will be *CSS-unescaped*.
+ * Attributes in `TEXT` template mode will be *HTML-unescaped*.
+ * Attributes in `JAVASCRIPT` template mode will be *JavaScript-unescaped*.
+ * Attributes in `CSS` template mode will be *CSS-unescaped*.
 
 So this would be perfectly OK in a `TEXT`-mode template (note the `&gt;`):
 ```
@@ -3932,10 +3985,12 @@ So this would be perfectly OK in a `TEXT`-mode template (note the `&gt;`):
      Congratulations!
   [/]
 ```
-Of course that `&lt;` would make no sense in a *real text* template, but it is a good 
-idea if we are processing an HTML template with a `th:inline="text"` block containing 
-the code above and we want to make sure our browser doesn't take that `<user.age` for 
-the name of an open tag when statically opening the file as a prototype.
+
+Of course that `&lt;` would make no sense in a *real text* template, but it is a
+good idea if we are processing an HTML template with a `th:inline="text"` block
+containing the code above and we want to make sure our browser doesn't take that
+`<user.age` for the name of an open tag when statically opening the file as a
+prototype.
 
 
 
@@ -3943,8 +3998,10 @@ the name of an open tag when statically opening the file as a prototype.
 ------------------
 
 One of the advantages of this syntax is that it is just as extensible as the 
-*markup* one. The user can still define his/her own dialects with custom elements and 
-attributes, apply a prefix to them (optionally), and then use them in textual template modes:
+*markup* one. Developers can still define their own dialects with custom
+elements and attributes, apply a prefix to them (optionally), and then use them
+in textual template modes:
+
 ```
   [#myorg:dosomething myorg:importantattr="211"]some text[/myorg:dosomething]
 ```
@@ -3955,8 +4012,8 @@ attributes, apply a prefix to them (optionally), and then use them in textual te
 -------------------------------------------------------
 
 The `JAVASCRIPT` and `CSS` template modes (not available for `TEXT`) allow 
-including code between a special comment syntax `/*[+...+]*/` so that Thymeleaf will
-automatically uncomment such code when processing the template:
+including code between a special comment syntax `/*[+...+]*/` so that Thymeleaf
+will automatically uncomment such code when processing the template:
 
 ```javascript
 var x = 23;
@@ -3998,13 +4055,14 @@ var f = function() {
 ```
 
 
+
 13.4 Textual parser-level comment blocks: removing code
 -------------------------------------------------------
 
-In a way similar to that of prototype-only comment blocks, all the three 
-textual template modes (`TEXT`, `JAVASCRIPT` and `CSS`) make possible to
-instruct Thymeleaf to remove code between special `/*[- */` and `/* -]*/`
-marks, like this:
+In a way similar to that of prototype-only comment blocks, all the three textual
+template modes (`TEXT`, `JAVASCRIPT` and `CSS`) make it possible to instruct
+Thymeleaf to remove code between special `/*[- */` and `/* -]*/` marks, like
+this:
 
 ```javascript
 var x = 23;
@@ -4029,17 +4087,19 @@ Welcome [(${session.user.name})]!
 ```
 
 
+
 13.5 Natural JavaScript and CSS templates
 -----------------------------------------
 
-As seen in the previous chapter, JavaScript and CSS inlining offer the possibility 
-to include inlined expressions inside JavaScript/CSS comments, like:
+As seen in the previous chapter, JavaScript and CSS inlining offer the
+possibility to include inlined expressions inside JavaScript/CSS comments, like:
 
 ```javascript
 ...
 var username = /*[[${session.user.name}]]*/ "Sebastian Lychee";
 ...
 ```
+
 ...which is valid JavaScript, and once executed could look like:
 
 ```html
@@ -4057,28 +4117,31 @@ used for the entire textual mode syntax:
   /*[/]*/
 ```
 
-That alert in the code above will be shown when the template is open 
-statically --because it is 100% valid JavaScript--, and also when the template is 
-run if the user is an admin. It is completely equivalent to:
+That alert in the code above will be shown when the template is open statically
+-- because it is 100% valid JavaScript --, and also when the template is run if
+the user is an admin. It is equivalent to:
 
 ```
   [# th:if="${user.admin}"]
      alert('Welcome admin');
   [/]
 ```
-...which is actually the code to which the initial version is converted during template parsing. 
 
-Note however that wrapping elements in comments does not clean the lines they live in (to the
-right until a `;` is found) as inlined output expressions do. That behaviour is reserved for 
-inlined output expressions only.
+...which is actually the code to which the initial version is converted during
+template parsing. 
 
-So Thymeleaf 3.0 allows the development of **complex JavaScript scripts and CSS style sheets 
-in the form of natural templates**, valid both as a *prototype* and as a *working template*.
+Note however that wrapping elements in comments does not clean the lines they
+live in (to the right until a `;` is found) as inlined output expressions do.
+That behaviour is reserved for inlined output expressions only.
+
+So Thymeleaf 3.0 allows the development of **complex JavaScript scripts and CSS
+style sheets in the form of natural templates**, valid both as a *prototype* and
+as a *working template*.
 
 
 
 
-14 Some more Pages for our Grocery
+14 Some more pages for our grocery
 ==================================
 
 Now we know a lot about using Thymeleaf, we can add some new pages to our
@@ -4239,7 +4302,7 @@ Not much really new here, except for this nested object selection:
 </body>
 ```
 
-...which makes that `*{name}` in fact equivalent to:
+...which makes that `*{name}` equivalent to:
 
 
 ```html
@@ -4287,9 +4350,8 @@ out of the box:
     ```
 
  * `org.thymeleaf.templateresolver.StringTemplateResolver`, which resolves
-   templates directly as the `String` being 
-   specified as `template` (or *template name*, which in this case is obviously
-   much more than a mere name):
+   templates directly as the `String` being specified as `template` (or
+   *template name*, which in this case is obviously much more than a mere name):
 
     ```java
     return new StringReader(templateName);
@@ -4347,18 +4409,16 @@ of configuration parameters, which include:
     templateResolver.setCacheTTLMs(60000L);
     ```
 
-
-
 > The Thymeleaf + Spring integration packages offer a `SpringResourceTemplateResolver`
-> implementation which uses all the Spring infrastructure for accessing and reading
-> resources in applications, and which is the recommended implementation in Spring-enabled
-> applications.
+> implementation which uses all the Spring infrastructure for accessing and
+> reading resources in applications, and which is the recommended implementation
+> in Spring-enabled applications.
 
 
 ### Chaining Template Resolvers
 
 
-Also, a Template Engine can be specified several template resolvers, in which case an
+Also, a Template Engine can specify several template resolvers, in which case an
 order can be established between them for template resolution so that, if the
 first one is not able to resolve the template, the second one is asked, and so
 on:
@@ -4392,15 +4452,18 @@ ServletContextTemplateResolver servletContextTemplateResolver =
 servletContextTemplateResolver.setOrder(Integer.valueOf(2));
 ```
 
-If these *resolvable patterns* are not specified, we will be relying on the specific capabilities
-of each of the `ITemplateResolver` implementations we are using. Note that not all implementations
-might be able to determine the real existence of a template before resolving, and thus could
-always consider a template as *resolvable* and break the resolution chain (not allowing other resolvers
-to check for the same template), but then be unable to read the real resource.
+If these *resolvable patterns* are not specified, we will be relying on the
+specific capabilities of each of the `ITemplateResolver` implementations we are
+using. Note that not all implementations might be able to determine the
+existence of a template before resolving, and thus could always consider a
+template as *resolvable* and break the resolution chain (not allowing other
+resolvers to check for the same template), but then be unable to read the real
+resource.
 
-Also, all the `ITemplateResolver` implementations that are distributed out-of-the-box,
-include a mechanism that will allow us to make the resolvers *really check* if a
-resource exists before considering it *resolvable*. It is the `checkExistence` flag, which works like:
+All the `ITemplateResolver` implementations that are included with core
+Thymeleaf include a mechanism that will allow us to make the resolvers *really
+check* if a resource exists before considering it *resolvable*. It is the
+`checkExistence` flag, which works like:
 
 ```java
 ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
@@ -4408,14 +4471,15 @@ classLoaderTemplateResolver.setOrder(Integer.valueOf(1));
 classLoaderTempalteResolver.setCheckExistence(true);
 ```
 
-This `checkExistence` flag forces the resolver perform a *real check* for resource existence during
-the resolution phase (and let the following resolver in the chain be called if existence check returns
-false). While this might sound as a good thing in every case, note that in most cases this will
-mean a double access to the resource itself (once for checking existence, another time for reading it),
-and this could be a performance issue in some scenarios like e.g. remote URL-based template resources
--- a potential performance issue that might anyway get largely mitigated by the use of a template cache
-(in which case templates will only be *resolved* the first time they are accessed).
-
+This `checkExistence` flag forces the resolver perform a *real check* for
+resource existence during the resolution phase (and let the following resolver
+in the chain be called if existence check returns false). While this might sound
+good in every case, in most cases this will mean a double access to the resource
+itself (once for checking existence, another time for reading it), and could be
+a performance issue in some scenarios, e.g. remote URL-based template resources
+-- a potential performance issue that might anyway get largely mitigated by the
+use of the template cache (in which case templates will only be *resolved* the
+first time they are accessed).
 
 
 
@@ -4427,29 +4491,30 @@ application, and as it was explained before, this meant that the implementation
 being used was an `org.thymeleaf.messageresolver.StandardMessageResolver` object.
 
 `StandardMessageResolver` is the standard implementation of the `IMessageResolver` 
-interface, but we could create our own if we wanted, adapted to the specific needs of
-our application.
+interface, but we could create our own if we wanted, adapted to the specific
+needs of our application.
 
 > The Thymeleaf + Spring integration packages offer by default an `IMessageResolver`
 > implementation which uses the standard Spring way of retrieving externalized
-> messages, by using `MessageSource` beans declared at the Spring Application Context.
+> messages, by using `MessageSource` beans declared at the Spring Application
+> Context.
 
 
 ### Standard Message Resolver
 
-So how does `StandardMessageResolver` look for the messages requested at a specific
-template?
+So how does `StandardMessageResolver` look for the messages requested at a
+specific template?
 
-If the template name is `home` and it is located in `/WEB-INF/templates/home.html`, and
-the requested locale is `gl_ES` then this resolver will look for messages in the following files,
-in this order:
+If the template name is `home` and it is located in `/WEB-INF/templates/home.html`,
+and the requested locale is `gl_ES` then this resolver will look for messages in
+the following files, in this order:
 
-  * `/WEB-INF/templates/home_gl_ES.properties`
-  * `/WEB-INF/templates/home_gl.properties`
-  * `/WEB-INF/templates/home.properties`
+ * `/WEB-INF/templates/home_gl_ES.properties`
+ * `/WEB-INF/templates/home_gl.properties`
+ * `/WEB-INF/templates/home.properties`
 
-Refer to the JavaDoc documentation of the `StandardMessageResolver` class for more detail
-on how the complete message resolution mechanism works.
+Refer to the JavaDoc documentation of the `StandardMessageResolver` class for
+more detail on how the complete message resolution mechanism works.
 
 
 ### Configuring message resolvers
@@ -4476,12 +4541,13 @@ etc.
 15.3 Conversion Services
 ------------------------
 
-The *conversion service* that enables us to perform data conversion and formatting
-operations by means of the *double-brace* syntax (`${{...}}`) is actually
-a feature of the Standard Dialect, not of the Thymeleaf Template Engine itself.
+The *conversion service* that enables us to perform data conversion and
+formatting operations by means of the *double-brace* syntax (`${{...}}`) is
+actually a feature of the Standard Dialect, not of the Thymeleaf Template Engine
+itself.
 
-As such, the way to configure it is by setting our custom implementation of
-the `IStandardConversionService` interface directly into the instance of `StandardDialect`
+As such, the way to configure it is by setting our custom implementation of the
+`IStandardConversionService` interface directly into the instance of `StandardDialect`
 that is being configured into the template engine. Like:
 
 ```java
@@ -4494,9 +4560,9 @@ templateEngine.setDialect(dialect);
 ```
 
 > Note that the thymeleaf-spring3 and thymeleaf-spring4 packages contain the
-> `SpringStandardDialect`, and this dialect already comes pre-configured with
-> an implementation of `IStandardConversionService` that integrates Spring's
-> own *Conversion Service* infrastructure into Thymeleaf.
+> `SpringStandardDialect`, and this dialect already comes pre-configured with an
+> implementation of `IStandardConversionService` that integrates Spring's own
+> *Conversion Service* infrastructure into Thymeleaf.
 
 
 
@@ -4541,28 +4607,28 @@ log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=TRACE
 16 Template Cache
 =================
 
-Thymeleaf works thanks to a set of parsers --for markup and text-- that parse
-templates into sequences of events (open tag, text, close tag, comment, etc.) and 
-a series of processors --one for each type of behaviour that needs to be applied-- that 
-modify the template parsed event sequence in order to create the results we expect 
-by combining the original template with our data.
+Thymeleaf works thanks to a set of parsers -- for markup and text -- that parse
+templates into sequences of events (open tag, text, close tag, comment, etc.)
+and a series of processors -- one for each type of behaviour that needs to be
+applied -- that modify the template parsed event sequence in order to create the
+results we expect by combining the original template with our data.
 
-It also includes ---by default--- a cache that stores parsed templates, this is, the
-sequence of events resulting from reading and parsing template files before processing
-them. This is especially useful when working in a web application, and builds on
-the following concepts:
+It also includes -- by default -- a cache that stores parsed templates; the
+sequence of events resulting from reading and parsing template files before
+processing them. This is especially useful when working in a web application,
+and builds on the following concepts:
 
  * Input/Output is almost always the slowest part of any application. In-memory
-   process is extremely quick compared to it.
- * Cloning an existing in-memory event sequence is always much quicker than reading a
-   template file, parsing it and creating a new event sequence for it.
+   processing is extremely quick by comparison.
+ * Cloning an existing in-memory event sequence is always much quicker than
+   reading a template file, parsing it and creating a new event sequence for it.
  * Web applications usually have only a few dozen templates.
  * Template files are small-to-medium size, and they are not modified while the
    application is running.
 
 This all leads to the idea that caching the most used templates in a web
-application is feasible without wasting big amounts of memory, and also that it
-will save a lot of time that would be spent on input/output operations on a
+application is feasible without wasting large amounts of memory, and also that
+it will save a lot of time that would be spent on input/output operations on a
 small set of files that, in fact, never change.
 
 And how can we take control of this cache? First, we've learned before that we
@@ -4601,23 +4667,25 @@ templateEngine.clearTemplateCacheFor("/users/userList");
 ```
 
 
+
+
 17 Decoupled Template Logic
 ===========================
 
 17.1 Decoupled logic: The concept
 ---------------------------------
 
-So far we have worked for our Grocery Store with templates done the *usual way*, with logic
-being inserted into our templates in the form of attributes.
+So far we have worked for our Grocery Store with templates done the *usual way*,
+with logic being inserted into our templates in the form of attributes.
 
-But Thymeleaf also allows us to completely *decouple* the template markup from its logic, 
-allowing the creation of **completely logic-less markup templates** in the `HTML` and 
-`XML` template modes.
+But Thymeleaf also allows us to completely *decouple* the template markup from
+its logic, allowing the creation of **completely logic-less markup templates**
+in the `HTML` and `XML` template modes.
 
-The main idea is that template logic will be defined in a separate *logic file* (more exactly 
-a *logic resource*, as it doesn't need to be a *file*). By default that logic resource will 
-be an additional file living in the same place (e.g. folder) as the template file, with the 
-same name but with `.th.xml` extension:
+The main idea is that template logic will be defined in a separate *logic file*
+(more exactly a *logic resource*, as it doesn't need to be a *file*). By default,
+that logic resource will  be an additional file living in the same place (e.g.
+folder) as the template file, with the same name but with `.th.xml` extension:
 
 ```
 /templates
@@ -4625,7 +4693,7 @@ same name but with `.th.xml` extension:
 +->/home.th.xml
 ```
 
-Such `home.html` file can be completely logic-less. It might look like this:
+So the `home.html` file can be completely logic-less. It might look like this:
 
 ```html
 <!DOCTYPE html>
@@ -4645,11 +4713,12 @@ Such `home.html` file can be completely logic-less. It might look like this:
 </html>
 ```
 
-Absolutely no Thymeleaf code there. This is a template file that a designer with no Thymeleaf or 
-templating knowledge could have created, edited and/or understood. Or a fragment of HTML provided 
-by some external system with no Thymeleaf hooks at all.
+Absolutely no Thymeleaf code there. This is a template file that a designer with
+no Thymeleaf or templating knowledge could have created, edited and/or
+understood. Or a fragment of HTML provided by some external system with no
+Thymeleaf hooks at all.
 
-Let's now turn that `home.html` template into a perfectly working Thymeleaf template by creating 
+Let's now turn that `home.html` template into a Thymeleaf template by creating 
 our additional `home.th.xml` file like this:
 
 ```xml
@@ -4664,15 +4733,16 @@ our additional `home.th.xml` file like this:
 </thlogic>
 ```
 
-Here we can see a lot of `<attr>` tags inside a `thlogic` block. Those `<attr>` tags perform 
-*attribute injection* on nodes of the original template selected by means of their `sel` 
-attributes, which contain Thymeleaf *markup selectors* (actually *AttoParser markup selectors*). 
+Here we can see a lot of `<attr>` tags inside a `thlogic` block. Those `<attr>`
+tags perform *attribute injection* on nodes of the original template selected by
+means of their `sel` attributes, which contain Thymeleaf *markup selectors*
+(actually *AttoParser markup selectors*). 
 
-Also note that `<attr>` tags can be nested so that their selectors are *appended*. That `sel="/tr[0]"` 
-above, for example, will be processed as `sel="#usersTable/tr[0]"`. And the selector for the user name 
-`<td>` will be processed as `sel="#usersTable/tr[0]//td.username"`.
+Also note that `<attr>` tags can be nested so that their selectors are *appended*.
+That `sel="/tr[0]"` above, for example, will be processed as `sel="#usersTable/tr[0]"`.
+And the selector for the user name `<td>` will be processed as `sel="#usersTable/tr[0]//td.username"`.
 
-So once merged, both files seen above will be completely equivalent to:
+So once merged, both files seen above will be the same as:
 
 ```html
 <!DOCTYPE html>
@@ -4692,27 +4762,32 @@ So once merged, both files seen above will be completely equivalent to:
 </html>
 ```
 
-This looks more familiar, and is indeed less *verbose* than creating two separate files. But the advantage 
-of *decoupled templates* is that we can achieve for our templates total independence from Thymeleaf, and 
-therefore better maintainability from the design standpoint.
+This looks more familiar, and is indeed less *verbose* than creating two
+separate files. But the advantage of *decoupled templates* is that we can
+give for our templates total independence from Thymeleaf, and therefore better
+maintainability from the design standpoint.
 
-Of course some *contracts* between designers or developers will still be needed --like e.g. the fact that the 
-users `<table>` will need an `id="usersTable"`--, but in many scenarios a pure-HTML template will be a much 
-better communication artifact between design and development teams.
+Of course some *contracts* between designers or developers will still be needed
+-- e.g. the fact that the users `<table>` will need an `id="usersTable"` --, but
+in many scenarios a pure-HTML template will be a much better communication
+artifact between design and development teams.
+
 
 
 17.2 Configuring decoupled templates
 ------------------------------------
 
-**Enabling decoupled templates**
+### Enabling decoupled templates
 
-Decoupled logic will not be expected for every template by default. Instead, the configured template resolvers 
-(implementations of `ITemplateResolver`) will need to specifically mark the templates they resolve as *using 
-decoupled logic*.
+Decoupled logic will not be expected for every template by default. Instead, the
+configured template resolvers (implementations of `ITemplateResolver`) will need
+to specifically mark the templates they resolve as *using decoupled logic*.
 
-Except for `StringTemplateResolver` (which does not allow decoupled logic), all other out-of-the-box implementations 
-of `ITemplateResolver` will provide a flag called `useDecoupledLogic` that will mark all templates resolved by that 
-resolver as potentially having all or part of its logic living in a separate resource:
+Except for `StringTemplateResolver` (which does not allow decoupled logic), all
+other out-of-the-box implementations of `ITemplateResolver` will provide a flag
+called `useDecoupledLogic` that will mark all templates resolved by that
+resolver as potentially having all or part of its logic living in a separate
+resource:
 
 ```java
 final ServletContextTemplateResolver templateResolver = 
@@ -4722,23 +4797,28 @@ templateResolver.setUseDecoupledLogic(true);
 ```
 
 
-**Mixing coupled and decoupled logic**
+### Mixing coupled and decoupled logic
 
-Decoupled template logic, when enabled, is not a requirement. Its being enabled for a specific resolved template will only 
-mean that the engine will *look for* a resource containing decoupled logic, parsing and merging it with the original 
-template if it exists. No error will be thrown if the decoupled logic resource does not exist.
+Decoupled template logic, when enabled, is not a requirement. When enabled, it
+means that the engine will *look for* a resource containing decoupled logic,
+parsing and merging it with the original template if it exists. No error will be
+thrown if the decoupled logic resource does not exist.
 
-Also, in the same template we can mix both *coupled* and *decoupled* logic, for example by adding some Thymeleaf attributes 
-at the original template file but leaving others for the separate decoupled logic file. The most common case for this is 
-using the new (in v3.0) `th:ref` attribute.
+Also, in the same template we can mix both *coupled* and *decoupled* logic, for
+example by adding some Thymeleaf attributes at the original template file but
+leaving others for the separate decoupled logic file. The most common case for
+this is using the new (in v3.0) `th:ref` attribute.
+
 
 
 17.3 The th:ref attribute
 ---------------------------
 
-`th:ref` is only a marker attribute. It does nothing from the processing standpoint and simply disappears 
-when the template is processed, but its usefulness lies in the fact that it acts as a *markup reference*, i.e. it 
-can be resolved by name from a *markup selector* just like a *tag name* or a *fragment* (`th:fragment`).
+`th:ref` is only a marker attribute. It does nothing from the processing
+standpoint and simply disappears when the template is processed, but its
+usefulness lies in the fact that it acts as a *markup reference*, i.e. it can be
+resolved by name from a *markup selector* just like a *tag name* or a *fragment*
+(`th:fragment`).
 
 So if we have a selector like:
 
@@ -4748,54 +4828,65 @@ So if we have a selector like:
 
 This will match:
 
-  * Any `<whatever>` tags.
-  * Any tags with a `th:fragment="whatever"` attribute.
-  * Any tags with a `th:ref="whatever"` attribute.
+ * Any `<whatever>` tags.
+ * Any tags with a `th:fragment="whatever"` attribute.
+ * Any tags with a `th:ref="whatever"` attribute.
 
-What is the advantage of `th:ref` against, for example, using a pure-HTML `id` attribute? Merely the fact that we might not 
-want to add so many `id` and `class` attributes to our tags to act as *logic anchors*, which might end up *polluting* a 
-bit our output. 
+What is the advantage of `th:ref` against, for example, using a pure-HTML `id`
+attribute? Merely the fact that we might not want to add so many `id` and `class`
+attributes to our tags to act as *logic anchors*, which might end up *polluting*
+our output. 
 
-And in the same sense, what is the disadvantage of `th:ref`? Well, obviously that we'd be adding a bit of Thymeleaf logic 
-(*"logic"*) to our templates.
+And in the same sense, what is the disadvantage of `th:ref`? Well, obviously
+that we'd be adding a bit of Thymeleaf logic (*"logic"*) to our templates.
 
-Note this applicability of the `th:ref` attribute **does not only apply to decoupled logic template files**: it works the same 
-in other types of scenarios like e.g. in fragment expressions (`~{...}`).
+Note this applicability of the `th:ref` attribute **does not only apply to
+decoupled logic template files**: it works the same in other types of scenarios,
+like in fragment expressions (`~{...}`).
+
 
 
 17.4 Performance impact of decoupled templates
 ----------------------------------------------
 
-Extremely small. When a resolved template is marked to use decoupled logic and it is not cached, the template logic resource 
-will be resolved first, parsed and processed into a secuence of instructions in-memory: basically a list of attributes to
-be injected to each markup selector.
+The impact is extremely small. When a resolved template is marked to use
+decoupled logic and it is not cached, the template logic resource will be
+resolved first, parsed and processed into a secuence of instructions in-memory:
+basically a list of attributes to be injected to each markup selector.
 
-But this is the only *additional step* required because, after this, the real template will be parsed, and while it is 
-parsed these attributes will be injected *on-the-fly* by the parser itself, thanks to the advanced capabilities for 
-node selection in AttoParser. So parsed nodes will come out of the parser as if they had their injected attributes 
-written in the original template file, no difference at all.
+But this is the only *additional step* required because, after this, the real
+template will be parsed, and while it is parsed these attributes will be
+injected *on-the-fly* by the parser itself, thanks to the advanced capabilities
+for node selection in AttoParser. So parsed nodes will come out of the parser as
+if they had their injected attributes written in the original template file.
 
-The biggest advantage of this? When a template is configured to be cached, it will be cached already containing the 
-injected attributes. So the overhead of using *decoupled templates* for cacheable templates, once they are cached, 
+The biggest advantage of this? When a template is configured to be cached, it
+will be cached already containing the injected attributes. So the overhead of
+using *decoupled templates* for cacheable templates, once they are cached, 
 will be absolutely *zero*.
+
 
 
 17.5 Resolution of decoupled logic
 ----------------------------------
 
-The way Thymeleaf resolves the decoupled logic resources corresponding to each template is configurable by the user. 
-It is determined by an extension point, the `org.thymeleaf.templateparser.markup.decoupled.IDecoupledTemplateLogicResolver`, 
+The way Thymeleaf resolves the decoupled logic resources corresponding to each
+template is configurable by the user. It is determined by an extension point,
+the `org.thymeleaf.templateparser.markup.decoupled.IDecoupledTemplateLogicResolver`, 
 for which a *default implementation* is provided: `StandardDecoupledTemplateLogicResolver`.
 
 What does this standard implementation do?
 
-  * First, it applies a `prefix` and a `suffix` to the *base name* of the template resource (obtained by means of its 
-    `ITemplateResource#getBaseName()` method). Both prefix and suffix can be configured and, by default, the prefix will 
-    be empty and the suffix will be `.th.xml`.
-  * Second, it asks the template resource to resolve a *relative resource* with the computed name by means of its 
-    `ITemplateResource#relative(String relativeLocation)` method.
+ * First, it applies a `prefix` and a `suffix` to the *base name* of the
+   template resource (obtained by means of its `ITemplateResource#getBaseName()`
+   method). Both prefix and suffix can be configured and, by default, the prefix
+   will be empty and the suffix will be `.th.xml`.
+ * Second, it asks the template resource to resolve a *relative resource* with
+   the computed name by means of its `ITemplateResource#relative(String relativeLocation)`
+   method.
 
-The specific implementation of `IDecoupledTemplateLogicResolver` to be used can be configured at the `TemplateEngine` easily:
+The specific implementation of `IDecoupledTemplateLogicResolver` to be used can
+be configured at the `TemplateEngine` easily:
 
 ```java
 final StandardDecoupledTemplateLogicResolver decoupledresolver = 
@@ -4811,14 +4902,18 @@ templateEngine.setDecoupledTemplateLogicResolver(decoupledResolver);
 18 Appendix A: Expression Basic Objects
 =======================================
 
-Some objects and variable maps are always available to be invoked at variable expressions (executed by OGNL or SpringEL). Let's see them:
+Some objects and variable maps are always available to be invoked. Let's see
+them:
+
 
 ### Base objects
 
- * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
-   `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web).
+ * **\#ctx** : the context object. An implementation of `org.thymeleaf.context.IContext` 
+   or `org.thymeleaf.context.IWebContext` depending on our environment
+   (standalone or web).
 
-    Note `#vars` and `#root` are synomyns for the same object, but using `#ctx` is recommended.
+   Note `#vars` and `#root` are synomyns for the same object, but using `#ctx`
+   is recommended.
 
 ```java
 /*
@@ -4842,7 +4937,8 @@ ${#ctx.session}
 ${#ctx.servletContext}
 ```
 
- * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+ * **\#locale** : direct access to the `java.util.Locale` associated with
+   current request.
 
 ```java
 ${#locale}
@@ -4851,12 +4947,15 @@ ${#locale}
 
 ### Web context namespaces for request/session attributes, etc.
 
-When using Thymeleaf in a web environment, we can use a series of shortcuts for accessing request parameters, session attributes and application attributes:
+When using Thymeleaf in a web environment, we can use a series of shortcuts for
+accessing request parameters, session attributes and application attributes:
 
-   > Note these are not *context objects*, but maps added to the context as variables, so we access them without `#`. In some way, therefore, they act as *namespaces*.
+> Note these are not *context objects*, but maps added to the context as
+> variables, so we access them without `#`. In some way, they act as *namespaces*.
 
- * **param** : for retrieving request parameters. `${param.foo}` is a
-   `String[]` with the values of the `foo` request parameter, so `${param.foo[0]}` will normally be used for getting the first value.
+ * **param** : for retrieving request parameters. `${param.foo}` is a `String[]`
+   with the values of the `foo` request parameter, so `${param.foo[0]}` will
+   normally be used for getting the first value.
 
 ```java
 /*
@@ -4904,17 +5003,22 @@ ${application.containsKey('foo')}
 ...
 ```
 
-Note there is **no need to specify a namespace for accessing request attributes** (as opposed to *request parameters*) because all request attributes are automatically added to the context as variables in the context root:
+Note there is **no need to specify a namespace for accessing request attributes**
+(as opposed to *request parameters*) because all request attributes are
+automatically added to the context as variables in the context root:
 
 ```java
 ${myRequestAttribute}
 ```
 
+
 ### Web context objects
 
-Inside a web environment there is also direct access to the following objects (note these are objects, not maps/namespaces):
+Inside a web environment there is also direct access to the following objects
+(note these are objects, not maps/namespaces):
 
- * **\#request** : direct access to the `javax.servlet.http.HttpServletRequest` object associated with the current request.
+ * **\#request** : direct access to the `javax.servlet.http.HttpServletRequest`
+   object associated with the current request.
 
 ```java
 ${#request.getAttribute('foo')}
@@ -4923,7 +5027,9 @@ ${#request.getContextPath()}
 ${#request.getRequestName()}
 ...
 ```
- * **\#session** : direct access to the `javax.servlet.http.HttpSession` object associated with the current request.
+
+ * **\#session** : direct access to the `javax.servlet.http.HttpSession` object
+   associated with the current request.
 
 ```java
 ${#session.getAttribute('foo')}
@@ -4931,7 +5037,9 @@ ${#session.id}
 ${#session.lastAccessedTime}
 ...
 ```
- * **\#servletContext** : direct access to the `javax.servlet.ServletContext` object associated with the current request.
+
+ * **\#servletContext** : direct access to the `javax.servlet.ServletContext`
+   object associated with the current request.
 
 ```java
 ${#servletContext.getAttribute('foo')}
@@ -4948,9 +5056,8 @@ ${#servletContext.contextPath}
 
 ### Execution Info
 
- * **\#execInfo** : expression object providing useful information 
- about the template being processed inside Thymeleaf Standard
- Expressions.
+ * **\#execInfo** : expression object providing useful information about the
+   template being processed inside Thymeleaf Standard Expressions.
 
 ```java
 /*
@@ -5043,8 +5150,8 @@ ${#messages.setMsgOrNull(messageKeySet)}
 
 ### URIs/URLs
 
- * **\#uris** : utility object for performing URI/URL operations 
- (esp. escaping/unescaping) inside Thymeleaf Standard Expressions.
+ * **\#uris** : utility object for performing URI/URL operations (esp.
+   escaping/unescaping) inside Thymeleaf Standard Expressions.
 
 ```java
 /*
@@ -5089,8 +5196,8 @@ ${#uris.unescapeQueryParam(uri, encoding)}
 
 ### Conversions
 
- * **\#conversions** : utility object that allows the execution of the *Conversion Service*
- at any point of a template:
+ * **\#conversions** : utility object that allows the execution of the
+   *Conversion Service* at any point of a template:
 
 ```java
 /*
@@ -5766,18 +5873,21 @@ ${#ids.prev('someId')}
 
 
 
+
 19 Appendix C: Markup Selector Syntax
 =====================================
 
 Thymeleaf's Markup Selectors are directly borrowed from Thymeleaf's parsing 
 library: [AttoParser](http://attoparser.org).
 
-The syntax for this selectors has large similarities with that of selectors in XPath, CSS and 
-jQuery, which makes them easy to use for most users. You can have a look at the complete syntax
-reference at the [AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
+The syntax for this selectors has large similarities with that of selectors in
+XPath, CSS and jQuery, which makes them easy to use for most users. You can have
+a look at the complete syntax reference at the
+[AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
 
-For example, the following selector will select every `<div>` with the class `content`, in 
-every position inside the markup (note this is not as concise as it could be, read on to know why):
+For example, the following selector will select every `<div>` with the class `content`,
+in every position inside the markup (note this is not as concise as it could be,
+read on to know why):
 
 ```html
 <div th:insert="mytemplate :: //div[@class='content']">...</div>
@@ -5789,27 +5899,40 @@ The basic syntax includes:
 
  * `//x` means children of the current node with name x, at any depth.
 
- * `x[@z="v"]` means elements with name x and an attribute called z with value "v".
+ * `x[@z="v"]` means elements with name x and an attribute called z with value
+   "v".
 
- * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and z2 with values "v1" and "v2", respectively.
+ * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and
+   z2 with values "v1" and "v2", respectively.
 
  * `x[i]` means element with name x positioned in number i among its siblings.
 
- * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its siblings that also match this condition.
+ * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and
+   positioned in number i among its siblings that also match this condition.
 
 But more concise syntax can also be used:
 
- * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level, a *reference* being a `th:ref` or a `th:fragment` attribute).
+ * `x` is exactly equivalent to `//x` (search an element with name or reference
+   `x` at any depth level, a *reference* being a `th:ref` or a `th:fragment` attribute).
 
- * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value `"oneclass"`.
+ * Selectors are also allowed without element name/reference, as long as they
+   include a specification of arguments. So `[@class='oneclass']` is a valid
+   selector that looks for any elements (tags) with a class attribute with value
+   `"oneclass"`.
 
 Advanced attribute selection features:
 
- * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']` means elements with name `x` and a value for attribute `class` that starts with `section`.
+ * Besides `=` (equal), other comparison operators are also valid: `!=` (not
+   equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']`
+   means elements with name `x` and a value for attribute `class` that starts
+   with `section`.
 
- * Attributes can be specified both starting with `@` (XPath-style) and without (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
+ * Attributes can be specified both starting with `@` (XPath-style) and without
+   (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
  
- * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
+ * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and
+   also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']`
+   is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
 
 Direct _jQuery-like_ selectors:
 
@@ -5821,9 +5944,12 @@ Direct _jQuery-like_ selectors:
 
  * `#oneid` is equivalent to `[id='oneid']`.
 
- * `x%oneref` means `<x>` tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute.
+ * `x%oneref` means `<x>` tags that have a `th:ref="oneref"` or `th:fragment="oneref"`
+   attribute.
 
- * `%oneref` means any tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
+ * `%oneref` means any tags that have a `th:ref="oneref"` or `th:fragment="oneref"`
+   attribute. Note this is actually equivalent to simply `oneref` because
+   references can be used instead of element names.
 
  * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
 
@@ -5832,7 +5958,8 @@ So the above Markup Selector expression:
 ```html
 <div th:insert="mytemplate :: //div[@class='content']">...</div>
 ```
-could be written as:
+
+Could be written as:
 
 ```html
 <div th:insert="mytemplate :: div.content">...</div>
@@ -5844,20 +5971,22 @@ Examining a different example, this:
 <div th:replace="mytemplate :: myfrag">...</div>
 ```
 
-Will look for a `th:fragment="myfrag"` fragment signature (or `th:ref` references). But 
-would also look for tags with name `myfrag` if they existed (which they don't, in HTML). 
-Note the difference with:
+Will look for a `th:fragment="myfrag"` fragment signature (or `th:ref`
+references). But would also look for tags with name `myfrag` if they existed
+(which they don't, in HTML). Note the difference with:
 
 ```html
 <div th:replace="mytemplate :: .myfrag">...</div>
 ```
 
-...which will actually look for any elements with `class="myfrag"`, without caring 
-about `th:fragment` signatures (or `th:ref` references). 
+...which will actually look for any elements with `class="myfrag"`, without
+caring about `th:fragment` signatures (or `th:ref` references). 
 
-###Multivalued class matching
 
-Markup Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
+### Multivalued class matching
+
+Markup Selectors understand the class attribute to be **multivalued**, and
+therefore allow the application of selectors on this attribute even if the
+element has several class values.
 
 For example, `div.two` will match `<div class="one two three" />`
-
