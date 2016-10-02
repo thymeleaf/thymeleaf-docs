@@ -4350,9 +4350,8 @@ out of the box:
     ```
 
  * `org.thymeleaf.templateresolver.StringTemplateResolver`, which resolves
-   templates directly as the `String` being 
-   specified as `template` (or *template name*, which in this case is obviously
-   much more than a mere name):
+   templates directly as the `String` being specified as `template` (or
+   *template name*, which in this case is obviously much more than a mere name):
 
     ```java
     return new StringReader(templateName);
@@ -4410,18 +4409,16 @@ of configuration parameters, which include:
     templateResolver.setCacheTTLMs(60000L);
     ```
 
-
-
 > The Thymeleaf + Spring integration packages offer a `SpringResourceTemplateResolver`
-> implementation which uses all the Spring infrastructure for accessing and reading
-> resources in applications, and which is the recommended implementation in Spring-enabled
-> applications.
+> implementation which uses all the Spring infrastructure for accessing and
+> reading resources in applications, and which is the recommended implementation
+> in Spring-enabled applications.
 
 
 ### Chaining Template Resolvers
 
 
-Also, a Template Engine can be specified several template resolvers, in which case an
+Also, a Template Engine can specify several template resolvers, in which case an
 order can be established between them for template resolution so that, if the
 first one is not able to resolve the template, the second one is asked, and so
 on:
@@ -4455,15 +4452,18 @@ ServletContextTemplateResolver servletContextTemplateResolver =
 servletContextTemplateResolver.setOrder(Integer.valueOf(2));
 ```
 
-If these *resolvable patterns* are not specified, we will be relying on the specific capabilities
-of each of the `ITemplateResolver` implementations we are using. Note that not all implementations
-might be able to determine the real existence of a template before resolving, and thus could
-always consider a template as *resolvable* and break the resolution chain (not allowing other resolvers
-to check for the same template), but then be unable to read the real resource.
+If these *resolvable patterns* are not specified, we will be relying on the
+specific capabilities of each of the `ITemplateResolver` implementations we are
+using. Note that not all implementations might be able to determine the
+existence of a template before resolving, and thus could always consider a
+template as *resolvable* and break the resolution chain (not allowing other
+resolvers to check for the same template), but then be unable to read the real
+resource.
 
-Also, all the `ITemplateResolver` implementations that are distributed out-of-the-box,
-include a mechanism that will allow us to make the resolvers *really check* if a
-resource exists before considering it *resolvable*. It is the `checkExistence` flag, which works like:
+All the `ITemplateResolver` implementations that are included with core
+Thymeleaf include a mechanism that will allow us to make the resolvers *really
+check* if a resource exists before considering it *resolvable*. It is the
+`checkExistence` flag, which works like:
 
 ```java
 ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
@@ -4471,14 +4471,15 @@ classLoaderTemplateResolver.setOrder(Integer.valueOf(1));
 classLoaderTempalteResolver.setCheckExistence(true);
 ```
 
-This `checkExistence` flag forces the resolver perform a *real check* for resource existence during
-the resolution phase (and let the following resolver in the chain be called if existence check returns
-false). While this might sound as a good thing in every case, note that in most cases this will
-mean a double access to the resource itself (once for checking existence, another time for reading it),
-and this could be a performance issue in some scenarios like e.g. remote URL-based template resources
--- a potential performance issue that might anyway get largely mitigated by the use of a template cache
-(in which case templates will only be *resolved* the first time they are accessed).
-
+This `checkExistence` flag forces the resolver perform a *real check* for
+resource existence during the resolution phase (and let the following resolver
+in the chain be called if existence check returns false). While this might sound
+good in every case, in most cases this will mean a double access to the resource
+itself (once for checking existence, another time for reading it), and could be
+a performance issue in some scenarios, e.g. remote URL-based template resources
+-- a potential performance issue that might anyway get largely mitigated by the
+use of the template cache (in which case templates will only be *resolved* the
+first time they are accessed).
 
 
 
@@ -4490,29 +4491,30 @@ application, and as it was explained before, this meant that the implementation
 being used was an `org.thymeleaf.messageresolver.StandardMessageResolver` object.
 
 `StandardMessageResolver` is the standard implementation of the `IMessageResolver` 
-interface, but we could create our own if we wanted, adapted to the specific needs of
-our application.
+interface, but we could create our own if we wanted, adapted to the specific
+needs of our application.
 
 > The Thymeleaf + Spring integration packages offer by default an `IMessageResolver`
 > implementation which uses the standard Spring way of retrieving externalized
-> messages, by using `MessageSource` beans declared at the Spring Application Context.
+> messages, by using `MessageSource` beans declared at the Spring Application
+> Context.
 
 
 ### Standard Message Resolver
 
-So how does `StandardMessageResolver` look for the messages requested at a specific
-template?
+So how does `StandardMessageResolver` look for the messages requested at a
+specific template?
 
-If the template name is `home` and it is located in `/WEB-INF/templates/home.html`, and
-the requested locale is `gl_ES` then this resolver will look for messages in the following files,
-in this order:
+If the template name is `home` and it is located in `/WEB-INF/templates/home.html`,
+and the requested locale is `gl_ES` then this resolver will look for messages in
+the following files, in this order:
 
-  * `/WEB-INF/templates/home_gl_ES.properties`
-  * `/WEB-INF/templates/home_gl.properties`
-  * `/WEB-INF/templates/home.properties`
+ * `/WEB-INF/templates/home_gl_ES.properties`
+ * `/WEB-INF/templates/home_gl.properties`
+ * `/WEB-INF/templates/home.properties`
 
-Refer to the JavaDoc documentation of the `StandardMessageResolver` class for more detail
-on how the complete message resolution mechanism works.
+Refer to the JavaDoc documentation of the `StandardMessageResolver` class for
+more detail on how the complete message resolution mechanism works.
 
 
 ### Configuring message resolvers
@@ -4539,12 +4541,13 @@ etc.
 15.3 Conversion Services
 ------------------------
 
-The *conversion service* that enables us to perform data conversion and formatting
-operations by means of the *double-brace* syntax (`${{...}}`) is actually
-a feature of the Standard Dialect, not of the Thymeleaf Template Engine itself.
+The *conversion service* that enables us to perform data conversion and
+formatting operations by means of the *double-brace* syntax (`${{...}}`) is
+actually a feature of the Standard Dialect, not of the Thymeleaf Template Engine
+itself.
 
-As such, the way to configure it is by setting our custom implementation of
-the `IStandardConversionService` interface directly into the instance of `StandardDialect`
+As such, the way to configure it is by setting our custom implementation of the
+`IStandardConversionService` interface directly into the instance of `StandardDialect`
 that is being configured into the template engine. Like:
 
 ```java
@@ -4557,9 +4560,9 @@ templateEngine.setDialect(dialect);
 ```
 
 > Note that the thymeleaf-spring3 and thymeleaf-spring4 packages contain the
-> `SpringStandardDialect`, and this dialect already comes pre-configured with
-> an implementation of `IStandardConversionService` that integrates Spring's
-> own *Conversion Service* infrastructure into Thymeleaf.
+> `SpringStandardDialect`, and this dialect already comes pre-configured with an
+> implementation of `IStandardConversionService` that integrates Spring's own
+> *Conversion Service* infrastructure into Thymeleaf.
 
 
 
