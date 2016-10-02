@@ -4902,14 +4902,18 @@ templateEngine.setDecoupledTemplateLogicResolver(decoupledResolver);
 18 Appendix A: Expression Basic Objects
 =======================================
 
-Some objects and variable maps are always available to be invoked at variable expressions (executed by OGNL or SpringEL). Let's see them:
+Some objects and variable maps are always available to be invoked. Let's see
+them:
+
 
 ### Base objects
 
- * **\#ctx** : the context object. It will be an implementation of `org.thymeleaf.context.IContext`, 
-   `org.thymeleaf.context.IWebContext` depending on our environment (standalone or web).
+ * **\#ctx** : the context object. An implementation of `org.thymeleaf.context.IContext` 
+   or `org.thymeleaf.context.IWebContext` depending on our environment
+   (standalone or web).
 
-    Note `#vars` and `#root` are synomyns for the same object, but using `#ctx` is recommended.
+   Note `#vars` and `#root` are synomyns for the same object, but using `#ctx`
+   is recommended.
 
 ```java
 /*
@@ -4933,7 +4937,8 @@ ${#ctx.session}
 ${#ctx.servletContext}
 ```
 
- * **\#locale** : direct access to the `java.util.Locale` associated with current request.
+ * **\#locale** : direct access to the `java.util.Locale` associated with
+   current request.
 
 ```java
 ${#locale}
@@ -4942,12 +4947,15 @@ ${#locale}
 
 ### Web context namespaces for request/session attributes, etc.
 
-When using Thymeleaf in a web environment, we can use a series of shortcuts for accessing request parameters, session attributes and application attributes:
+When using Thymeleaf in a web environment, we can use a series of shortcuts for
+accessing request parameters, session attributes and application attributes:
 
-   > Note these are not *context objects*, but maps added to the context as variables, so we access them without `#`. In some way, therefore, they act as *namespaces*.
+> Note these are not *context objects*, but maps added to the context as
+> variables, so we access them without `#`. In some way, they act as *namespaces*.
 
- * **param** : for retrieving request parameters. `${param.foo}` is a
-   `String[]` with the values of the `foo` request parameter, so `${param.foo[0]}` will normally be used for getting the first value.
+ * **param** : for retrieving request parameters. `${param.foo}` is a `String[]`
+   with the values of the `foo` request parameter, so `${param.foo[0]}` will
+   normally be used for getting the first value.
 
 ```java
 /*
@@ -4995,17 +5003,22 @@ ${application.containsKey('foo')}
 ...
 ```
 
-Note there is **no need to specify a namespace for accessing request attributes** (as opposed to *request parameters*) because all request attributes are automatically added to the context as variables in the context root:
+Note there is **no need to specify a namespace for accessing request attributes**
+(as opposed to *request parameters*) because all request attributes are
+automatically added to the context as variables in the context root:
 
 ```java
 ${myRequestAttribute}
 ```
 
+
 ### Web context objects
 
-Inside a web environment there is also direct access to the following objects (note these are objects, not maps/namespaces):
+Inside a web environment there is also direct access to the following objects
+(note these are objects, not maps/namespaces):
 
- * **\#request** : direct access to the `javax.servlet.http.HttpServletRequest` object associated with the current request.
+ * **\#request** : direct access to the `javax.servlet.http.HttpServletRequest`
+   object associated with the current request.
 
 ```java
 ${#request.getAttribute('foo')}
@@ -5014,7 +5027,9 @@ ${#request.getContextPath()}
 ${#request.getRequestName()}
 ...
 ```
- * **\#session** : direct access to the `javax.servlet.http.HttpSession` object associated with the current request.
+
+ * **\#session** : direct access to the `javax.servlet.http.HttpSession` object
+   associated with the current request.
 
 ```java
 ${#session.getAttribute('foo')}
@@ -5022,7 +5037,9 @@ ${#session.id}
 ${#session.lastAccessedTime}
 ...
 ```
- * **\#servletContext** : direct access to the `javax.servlet.ServletContext` object associated with the current request.
+
+ * **\#servletContext** : direct access to the `javax.servlet.ServletContext`
+   object associated with the current request.
 
 ```java
 ${#servletContext.getAttribute('foo')}
@@ -5039,9 +5056,8 @@ ${#servletContext.contextPath}
 
 ### Execution Info
 
- * **\#execInfo** : expression object providing useful information 
- about the template being processed inside Thymeleaf Standard
- Expressions.
+ * **\#execInfo** : expression object providing useful information about the
+   template being processed inside Thymeleaf Standard Expressions.
 
 ```java
 /*
@@ -5134,8 +5150,8 @@ ${#messages.setMsgOrNull(messageKeySet)}
 
 ### URIs/URLs
 
- * **\#uris** : utility object for performing URI/URL operations 
- (esp. escaping/unescaping) inside Thymeleaf Standard Expressions.
+ * **\#uris** : utility object for performing URI/URL operations (esp.
+   escaping/unescaping) inside Thymeleaf Standard Expressions.
 
 ```java
 /*
@@ -5180,8 +5196,8 @@ ${#uris.unescapeQueryParam(uri, encoding)}
 
 ### Conversions
 
- * **\#conversions** : utility object that allows the execution of the *Conversion Service*
- at any point of a template:
+ * **\#conversions** : utility object that allows the execution of the
+   *Conversion Service* at any point of a template:
 
 ```java
 /*
@@ -5857,18 +5873,21 @@ ${#ids.prev('someId')}
 
 
 
+
 19 Appendix C: Markup Selector Syntax
 =====================================
 
 Thymeleaf's Markup Selectors are directly borrowed from Thymeleaf's parsing 
 library: [AttoParser](http://attoparser.org).
 
-The syntax for this selectors has large similarities with that of selectors in XPath, CSS and 
-jQuery, which makes them easy to use for most users. You can have a look at the complete syntax
-reference at the [AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
+The syntax for this selectors has large similarities with that of selectors in
+XPath, CSS and jQuery, which makes them easy to use for most users. You can have
+a look at the complete syntax reference at the
+[AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
 
-For example, the following selector will select every `<div>` with the class `content`, in 
-every position inside the markup (note this is not as concise as it could be, read on to know why):
+For example, the following selector will select every `<div>` with the class `content`,
+in every position inside the markup (note this is not as concise as it could be,
+read on to know why):
 
 ```html
 <div th:insert="mytemplate :: //div[@class='content']">...</div>
@@ -5880,27 +5899,40 @@ The basic syntax includes:
 
  * `//x` means children of the current node with name x, at any depth.
 
- * `x[@z="v"]` means elements with name x and an attribute called z with value "v".
+ * `x[@z="v"]` means elements with name x and an attribute called z with value
+   "v".
 
- * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and z2 with values "v1" and "v2", respectively.
+ * `x[@z1="v1" and @z2="v2"]` means elements with name x and attributes z1 and
+   z2 with values "v1" and "v2", respectively.
 
  * `x[i]` means element with name x positioned in number i among its siblings.
 
- * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and positioned in number i among its siblings that also match this condition.
+ * `x[@z="v"][i]` means elements with name x, attribute z with value "v" and
+   positioned in number i among its siblings that also match this condition.
 
 But more concise syntax can also be used:
 
- * `x` is exactly equivalent to `//x` (search an element with name or reference `x` at any depth level, a *reference* being a `th:ref` or a `th:fragment` attribute).
+ * `x` is exactly equivalent to `//x` (search an element with name or reference
+   `x` at any depth level, a *reference* being a `th:ref` or a `th:fragment` attribute).
 
- * Selectors are also allowed without element name/reference, as long as they include a specification of arguments. So `[@class='oneclass']` is a valid selector that looks for any elements (tags) with a class attribute with value `"oneclass"`.
+ * Selectors are also allowed without element name/reference, as long as they
+   include a specification of arguments. So `[@class='oneclass']` is a valid
+   selector that looks for any elements (tags) with a class attribute with value
+   `"oneclass"`.
 
 Advanced attribute selection features:
 
- * Besides `=` (equal), other comparison operators are also valid: `!=` (not equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']` means elements with name `x` and a value for attribute `class` that starts with `section`.
+ * Besides `=` (equal), other comparison operators are also valid: `!=` (not
+   equal), `^=` (starts with) and `$=` (ends with). For example: `x[@class^='section']`
+   means elements with name `x` and a value for attribute `class` that starts
+   with `section`.
 
- * Attributes can be specified both starting with `@` (XPath-style) and without (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
+ * Attributes can be specified both starting with `@` (XPath-style) and without
+   (jQuery-style). So `x[z='v']` is equivalent to `x[@z='v']`.
  
- * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']` is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
+ * Multiple-attribute modifiers can be joined both with `and` (XPath-style) and
+   also by chaining multiple modifiers (jQuery-style). So `x[@z1='v1' and @z2='v2']`
+   is actually equivalent to `x[@z1='v1'][@z2='v2']` (and also to `x[z1='v1'][z2='v2']`).
 
 Direct _jQuery-like_ selectors:
 
@@ -5912,9 +5944,12 @@ Direct _jQuery-like_ selectors:
 
  * `#oneid` is equivalent to `[id='oneid']`.
 
- * `x%oneref` means `<x>` tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute.
+ * `x%oneref` means `<x>` tags that have a `th:ref="oneref"` or `th:fragment="oneref"`
+   attribute.
 
- * `%oneref` means any tags that have a `th:ref="oneref"` or `th:fragment="oneref"` attribute. Note this is actually equivalent to simply `oneref` because references can be used instead of element names.
+ * `%oneref` means any tags that have a `th:ref="oneref"` or `th:fragment="oneref"`
+   attribute. Note this is actually equivalent to simply `oneref` because
+   references can be used instead of element names.
 
  * Direct selectors and attribute selectors can be mixed: `a.external[@href^='https']`.
 
@@ -5923,7 +5958,8 @@ So the above Markup Selector expression:
 ```html
 <div th:insert="mytemplate :: //div[@class='content']">...</div>
 ```
-could be written as:
+
+Could be written as:
 
 ```html
 <div th:insert="mytemplate :: div.content">...</div>
@@ -5935,20 +5971,22 @@ Examining a different example, this:
 <div th:replace="mytemplate :: myfrag">...</div>
 ```
 
-Will look for a `th:fragment="myfrag"` fragment signature (or `th:ref` references). But 
-would also look for tags with name `myfrag` if they existed (which they don't, in HTML). 
-Note the difference with:
+Will look for a `th:fragment="myfrag"` fragment signature (or `th:ref`
+references). But would also look for tags with name `myfrag` if they existed
+(which they don't, in HTML). Note the difference with:
 
 ```html
 <div th:replace="mytemplate :: .myfrag">...</div>
 ```
 
-...which will actually look for any elements with `class="myfrag"`, without caring 
-about `th:fragment` signatures (or `th:ref` references). 
+...which will actually look for any elements with `class="myfrag"`, without
+caring about `th:fragment` signatures (or `th:ref` references). 
 
-###Multivalued class matching
 
-Markup Selectors understand the class attribute to be **multivalued**, and therefore allow the application of selectors on this attribute even if the element has several class values.
+### Multivalued class matching
+
+Markup Selectors understand the class attribute to be **multivalued**, and
+therefore allow the application of selectors on this attribute even if the
+element has several class values.
 
 For example, `div.two` will match `<div class="one two three" />`
-
