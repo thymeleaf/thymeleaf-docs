@@ -40,17 +40,18 @@ Standard Expression syntax
 
 Most Thymeleaf attributes allow their values to be set as or containing
 *expressions*, which we will call *Standard Expressions* because of the
-dialects they are used in. These can be of four types:
+dialects they are used in. These can be of five types:
 
--   Variable expressions
--   Selection or *asterisk* expressions
--   Text externalization or *internationalization* expressions
--   URL expressions
+  - `${...}` : Variable expressions.
+  - `*{...}` : Selection expressions.
+  - `#{...}` : Message (i18n) expressions.
+  - `@{...}` : Link (URL) expressions.
+  - `~{...}` : Fragment expressions.
 
 ### Variable expressions
 
-Variable expressions are OGNL expressions ---or Spring EL if you're using
-*SpringStandard*--- executed on the map of context variables ---also called
+Variable expressions are OGNL expressions --or Spring EL if you're integrating
+Thymeleaf with Spring-- executed on the *context variables* --- also called
 *model attributes* in Spring jargon. They look like this:
 
 ```html
@@ -64,11 +65,23 @@ depending on the attribute:
 <span th:text="${book.author.name}">
 ```
 
+The expression above is equivalent (both in OGNL and SpringEL) to:
+```java
+((Book)context.getVariable("book")).getAuthor().getName()
+```
+
+But we can find variable expressions in scenarios which not only involve
+*output*, but more complex processing like *conditionals*, *iteration*...
+
 ```html
 <li th:each="book : ${books}">
 ```
 
-### Selection (asterisk) expressions
+Here `${books}` selects the variable called `books` from the context, and
+evaluates it as an *iterable* to be used at a `th:each` loop.
+
+
+### Selection expressions
 
 Selection expressions are just like variable expressions, except they
 will be executed on a previously selected object instead of the whole
@@ -88,12 +101,26 @@ The object they act on is specified by a `th:object` attribute:
 </div>
 ```
 
-### Text externalization expressions
+So that would be equivalent to:
+```java
+{
+  // th:object="${book}"
+  final Book selection = (Book) context.getVariable("book");
+  // th:text="*{title}"
+  output(selection.getTitle());
+}
+```
 
-Text externalization (often called *internationalization*) allows us to
+### Message (i18n) expressions
+
+Message expressions (often called *text externalization*, 
+*internationalization* or *i18n*) allows us to
 retrieve locale-specific messages from external sources (`.properties`
 files), referencing them by a key and (optionally) applying a set of
 parameters.
+
+In Spring applications, this will automatically integrate with Spring's
+`MessageSource` mechanism.
 
 ```html
     #{main.title}
@@ -114,43 +141,114 @@ You can find them in templates like:
 </table>
 ```
 
-### URL expressions
-
-URL expressions are meant to add useful context and session info to the
-URLs, a process usually called *URL rewriting*.
+Note you can use *variable expressions* inside *message expressions* if you
+want the message key to be determined by the value of a context variable,
+or you want to specify variables as parameters:
 
 ```html
-    @{/order/list}
+#{${config.adminWelcomeKey}(${session.user.name})}
 ```
+
+### Link (URL) expressions
+
+Link expressions are meant to build URLs and add useful context and session info to
+them (a process usually called *URL rewriting*).
+
+So for a web application deployed at the `/myapp` context of your web server, an
+expression such as: 
+
+```html
+<a th:href="@{/order/list}">...</a>
+```
+
+Could be converted into something like this:
+
+```html
+<a href="/myapp/order/list">...</a>
+```
+
+Or even this, if we need to keep sessions and cookies are not enabled (or the server doesn't
+know yet):
+
+```html
+<a href="/myapp/order/list;jsessionid=23fa31abd41ea093">...</a>
+```
+
 
 URLs can also take parameters:
 
 ```html
-    @{/order/details(id=${orderId})}
+<a th:href="@{/order/details(id=${orderId},type=${orderType})}">...</a>
 ```
 
-And be relative (in which case no application context will be added to
-the URL):
+Resulting in something like this:
 
 ```html
-    @{../documents/report}
+<!-- Note ampersands (&) should be HTML-escaped in tag attributes... -->
+<a href="/myapp/order/details?id=23&amp;type=online">...</a>
 ```
 
-Let's see these expressions in context:
+
+Link expressions can be relative, in which case no application 
+context will be prefixed to the URL:
 
 ```html
-<form th:action="@{/createOrder}">
+<a th:href="@{../documents/report}">...</a>
 ```
+
+Also server-relative (again, no application context to be prefixed):
 
 ```html
-<a href="main.html" th:href="@{/main}">
+<a th:href="@{~/contents/main}">...</a>
 ```
 
-From this last example, see how Thymleaf allows us to set an `href`
-value for static prototyping, letting our templates link to each other
-nicely when directly open in a browser, and at the same time with
-`th:href` we can specify the URL that will be set as `href` when
-Thymeleaf really executes the template.
+And protocol-relative (just like absolute URLs, but browser will
+use the same HTTP or HTTPS protocol used in the page being displayed):
+
+```html
+<a th:href="@{//static.mycompany.com/res/initial}">...</a>
+```
+
+And of course, Link expressions can be absolute:
+
+```html
+<a th:href="@{http://www.mycompany.com/main}">...</a>
+```
+
+But wait, in an absolute (or protocol-relative) URL... what value does
+the Thymeleaf Link Expression add? easy: the possibility of URL-rewriting
+defined by *response filters*: In a Servlet-based web application, for every URL being output 
+(context-relative, relative, absolute...) Thymeleaf will always call the 
+`HttpServletResponse.encodeUrl(...)` mechanism before displaying the URL. Which
+means that a filter can perform customized URL-rewriting for the application by
+means of wrapping the `HttpServletResponse` object (a commonly used mechanism).
+
+
+### Fragment expressions
+
+Fragment expressions are an easy way to represent fragments of markup and move
+them around templates. Thanks to these expressions, fragments can be replicated,
+passed to other templates are arguments, and so on.
+
+The most common use is for fragment insertion using `th:insert` or `th:replace`:
+
+```html
+<div th:insert="~{commons :: main}">...</div>
+```
+
+But they can be used anywhere, just as any other variable:
+
+```html
+<div th:with="frag=~{footer :: #main/text()}">
+  <p th:insert="${frag}">
+</div>
+```
+
+Fragment expressions can have arguments:
+
+
+
+
 
 ### Literals and operations
 
