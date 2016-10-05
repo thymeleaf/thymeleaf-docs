@@ -1501,6 +1501,8 @@ public class ScoreDialect extends AbstractProcessorDialect {
         processors.add(new RemarkForPositionAttributeTagProcessor(dialectPrefix));
         processors.add(new HeadlinesElementTagProcessor(dialectPrefix));
         processors.add(new MatchDayTodayModelProcessor(dialectPrefix));
+        // This will remove the xmlns:score attributes we might add for IDE validation
+        processors.add(new StandardXmlNsTagProcessor(TemplateMode.HTML, dialectPrefix));
         return processors;
     }
 
