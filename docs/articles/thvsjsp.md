@@ -149,7 +149,7 @@ And this is our Thymeleaf code:
             <li th:each="type : ${allTypes}">
               <input type="radio" th:field="*{subscriptionType}" th:value="${type}" />
               <label th:for="${#ids.prev('subscriptionType')}"
-                th:text="#{'subscriptionType.'+${type}}">First type</label>
+                th:text="#{|subscriptionType.${type}|}">First type</label>
             </li>
             <li th:remove="all"><input type="radio" /> <label>Second Type</label></li>
           </ul>
