@@ -55,7 +55,7 @@ Thymeleaf with Spring-- executed on the *context variables* --- also called
 *model attributes* in Spring jargon. They look like this:
 
 ```html
-    ${session.user.name}
+${session.user.name}
 ```
 
 And you will find them as attribute values or as a part of them,
@@ -88,7 +88,7 @@ will be executed on a previously selected object instead of the whole
 context variables map. They look like this:
 
 ```html
-    *{customer.name}
+*{customer.name}
 ```
 
 The object they act on is specified by a `th:object` attribute:
@@ -123,11 +123,11 @@ In Spring applications, this will automatically integrate with Spring's
 `MessageSource` mechanism.
 
 ```html
-    #{main.title}
+#{main.title}
 ```
 
 ```html
-    #{message.entrycreated(${entryId})}
+#{message.entrycreated(${entryId})}
 ```
 
 You can find them in templates like:
@@ -289,7 +289,7 @@ One last thing to know about expressions is there is something called
 this:
 
 ```html
-    #{selection.__${sel.code}__}
+#{selection.__${sel.code}__}
 ```
 
 What we are seeing there is a variable expression (`${sel.code}`) that

@@ -201,7 +201,7 @@ what we need:
 
 Its arguments have the following meaning:
 
-  - `originp  the *origin* class to be used for message resolution. When 
+  - `origin`  the *origin* class to be used for message resolution. When 
     calling from a processor, this is normally the processor class itself. 
   - `key` the key of the message to be retrieved.
   - `messageParameters` the parameters to be applied to the requested message.
