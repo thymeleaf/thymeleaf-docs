@@ -3,10 +3,11 @@ title: Standard URL Syntax
 ---
 
 
-The Thymeleaf standard dialects ---called *Standard* and *SpringStandard*---
+The Thymeleaf standard dialects --called *Standard* and *SpringStandard*--
 offer a way to easily create URLs in your web applications so that they
 include any required *URL preparation* artifacts. This is done by means
-of the so-called *"at" syntax* of the *standard expressions*: `@{...}`
+of the so-called *link expressions*, a type of *Thymeleaf
+Standard Epression*: `@{...}`
 
 
 Absolute URLs
@@ -20,7 +21,8 @@ specifying a protocol name (`http://` or `https://`)
 ```
 
 They are not modified at all (unless you have an _URL Rewriting_ filter
-configured at your server):
+configured at your server and performing modifications at the
+`HttpServletResponse.encodeUrl(...)` method):
 
 ```html
 <a href="http://www.thymeleaf/documentation.html">
@@ -83,7 +85,7 @@ scripts, etc.:
 <script th:src="@{//scriptserver.example.net/myscript.js}">...</script>
 ```
 
-...which will render unmodified, as:
+...which will render unmodified (except for *URL rewriting*), like:
 
 ```html
 <script src="//scriptserver.example.net/myscript.js">...</script>
@@ -115,7 +117,8 @@ You can add several parameters, separating them with commas:
 Which would output as:
 
 ```html
-<a href="/order/details?id=3&action=show_all">
+<!-- Note ampersands (&) should be HTML-escaped in tag attributes... -->
+<a href="/order/details?id=3&amp;action=show_all">
 ```
 
 You can also include parameters in the form of _path variables_ similarly
@@ -156,7 +159,7 @@ URL rewriting
 Thymeleaf allows you to configure _URL rewriting filters_ in your application,
 and it does so by calling the `response.encodeURL(...)` method in the
 `javax.servlet.http.HttpServletResponse` class of the Servlet API for every
-URL generated from a thymeleaf template.
+URL generated from a Thymeleaf template.
 
 This is the standard way of supporting URL rewriting operations in Java web
 applications, and allows URLs to:
