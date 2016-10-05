@@ -3,6 +3,7 @@ title: Thymeleaf Page Layouts
 author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
 ---
 
+**Note**: this article refers to an older version of Thymeleaf (Thymeleaf 2.1).
 
 Introduction
 ------------

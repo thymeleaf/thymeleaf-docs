@@ -3,11 +3,7 @@ title: Bringing Thymeleaf and Natural Templates to the Spring PetClinic
 author: 'Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>'
 ---
 
-
-**Note**: The Spring PetClinic application received a major update from
-SpringSource in March 2013, and the *thymeleafexamples-petclinic*
-application has been updated consequently, along with this article.
-
+**Note**: this article refers to an older version of Thymeleaf (Thymeleaf 2.1).
 
 The Spring PetClinic application
 --------------------------------
