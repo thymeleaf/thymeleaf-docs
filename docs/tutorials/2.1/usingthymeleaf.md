@@ -4095,10 +4095,14 @@ ${#dates.create(year,month,day,hour,minute,second,millisecond)}
  */
 ${#dates.createNow()}
 
+${#dates.createNowForTimeZone()}
+
 /*
  * Create a date (java.util.Date) object for the current date (time set to 00:00)
  */
 ${#dates.createToday()}
+
+${#dates.createTodayForTimeZone()}
 ```
 
 
@@ -4165,15 +4169,24 @@ ${#calendars.create(year,month,day,hour,minute)}
 ${#calendars.create(year,month,day,hour,minute,second)}
 ${#calendars.create(year,month,day,hour,minute,second,millisecond)}
 
+${#calendars.createForTimeZone(year,month,day,timeZone)}
+${#calendars.createForTimeZone(year,month,day,hour,minute,timeZone)}
+${#calendars.createForTimeZone(year,month,day,hour,minute,second,timeZone)}
+${#calendars.createForTimeZone(year,month,day,hour,minute,second,millisecond,timeZone)}
+
 /*
  * Create a calendar (java.util.Calendar) object for the current date and time
  */
 ${#calendars.createNow()}
 
+${#calendars.createNowForTimeZone()}
+
 /*
  * Create a calendar (java.util.Calendar) object for the current date (time set to 00:00)
  */
 ${#calendars.createToday()}
+
+${#calendars.createTodayForTimeZone()}
 ```
 
 
