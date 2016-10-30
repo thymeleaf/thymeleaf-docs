@@ -76,7 +76,7 @@ Let's assume we have a `@Controller` that sends a redirect with a request parame
     public class SomeController {
         @RequestMapping("/")
         public String redirect() {
-            return "redirect:/query?q=Thymeleaf Is Great!";
+            return "redirect:/query?q=Thymeleaf+Is+Great!";
         }
     }
 ```
