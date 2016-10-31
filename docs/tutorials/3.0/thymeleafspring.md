@@ -360,7 +360,6 @@ Resolver instances.
 ```java
 @Configuration
 @EnableWebMvc
-@ComponentScan("thymeleafexamples.stsm")
 public class SpringWebConfig
         extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
