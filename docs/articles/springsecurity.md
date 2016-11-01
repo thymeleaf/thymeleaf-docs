@@ -25,17 +25,20 @@ Documentation](http://static.springsource.org/spring-security/site/reference.htm
 Login pages
 -----------
 
-With Spring security you could specify any URL to act as a login page,
-so we simply set URLs for login page and login error page as
-**\<form-login\>** element attributes into the Spring-Security
-configuration file (usually **applicationContext-security.xml**):
+With Spring Security you could specify any URL to act as a login page,
+just like:
 
-```html
-<http auto-config="true">
-  <form-login login-page="/login.html" authentication-failure-url="/login-error.html" />
-  <logout />
-  ...
-</http>
+```java
+@Override
+protected void configure(final HttpSecurity http) throws Exception {
+    http
+        .formLogin()
+        .loginPage("/login.html")
+        .failureUrl("/login-error.html")
+      .and()
+        .logout()
+        .logoutSuccessUrl("/index.html");
+}
 ```
 
 Now we have to match these pages inside a Spring Controller:
@@ -69,18 +72,18 @@ Our **login.html** template is as follows:
 
 ```html
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Login page</title>
   </head>
   <body>
     <h1>Login page</h1>
-    <p th:if="${loginError}">Wrong user or password</p>
-    <form th:action="@{/j_spring_security_check}" method="post">
-      <label for="j_username">Username</label>:
-      <input type="text" id="j_username" name="j_username" /> <br />
-      <label for="j_password">Password</label>:
-      <input type="password" id="j_password" name="j_password" /> <br />
+    <p th:if="${loginError}" class="error">Wrong user or password</p>
+    <form th:action="@{/login.html}" method="post">
+      <label for="username">Username</label>:
+      <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+      <label for="password">Password</label>:
+      <input type="password" id="password" name="password" /> <br />
       <input type="submit" value="Log in" />
     </form>
   </body>
@@ -91,81 +94,70 @@ Our **login.html** template is as follows:
 Error page
 ----------
 
-We also can configure a Thymeleaf error page. In this case Spring
+We can also configure a Thymeleaf error page. In this case Spring
 Security is not involved at all, we should simply modify our **web.xml**
 adding error **\<error-page\>** elements like:
 
-```xml
-...
-<error-page>
-  <exception-type>java.lang.Throwable</exception-type>
-  <location>/error.html</location>
-</error-page>
-<error-page>
-  <error-code>500</error-code>
-  <location>/error.html</location>
-</error-page>
-...
-```
-
-Then, we have to map the **/error.html** in our Spring Controller:
 
 ```java
-@Controller
-public class HomeController {
+@ControllerAdvice
+public class ErrorController {
 
-  ...
+    private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
-  // Error page
-  @RequestMapping("/error.html")
-  public String error(HttpServletRequest request, Model model) {
-    model.addAttribute("errorCode", request.getAttribute("javax.servlet.error.status_code"));
-    Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
-    String errorMessage = null;
-    if (throwable != null) {
-      errorMessage = throwable.getMessage();
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String exception(final Throwable throwable, final Model model) {
+        logger.error("Exception during execution of SpringSecurity application", throwable);
+        String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
+        model.addAttribute("errorMessage", errorMessage);
+        return "error";
     }
-    model.addAttribute("errorMessage", errorMessage);
-    return "error.html";
-  }
 
 }
 ```
-
-Note that we store error code and error message into the model to show
-some information in the error page.
 
 The **error.html** template could be like:
 
 ```html
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>Error page</title>
-  </head>
-  <body>
-    <h1 th:text="${errorCode}">500</h1>
-    <p th:text="${errorMessage}">java.lang.NullPointerException</p>
-  </body>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Error page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
+    </head>
+    <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
+        <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
+        <a href="index.html" th:href="@{/index.html}">Back to Home Page</a>
+    </body>
 </html>
 ```
 
+Note how we are using Spring's `HttpStatus` enum in order to obtain detailed information about the
+response status that has been set (which in this case will always be `500`, but this allows us
+to use this `error.html` in other error reporting scenarios).
 
-Spring security dialect
+
+Spring Security Dialect
 -----------------------
 
 The [Spring Security 3 integration
 module](https://github.com/thymeleaf/thymeleaf-extras-springsecurity3)
 is a Thymeleaf dialect equivalent to [Spring security
-taglib](http://static.springsource.org/spring-security/site/docs/3.1.x/reference/taglibs.html).
+taglib](http://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/taglibs.html).
 
 We use this dialect in the example in order to print the logged user
 credentials and to show different content to different roles.
 
-The attribute **sec:authorize** renders its content when the attribute
+The **sec:authorize** attribute renders its content when the attribute
 expression is evaluated to **true**:
 
 ```html
+<div sec:authorize="isAuthenticated()">
+  This content is only shown to authenticated users.
+</div>
 <div sec:authorize="hasRole('ROLE_ADMIN')">
   This content is only shown to administrators.
 </div>
@@ -174,7 +166,7 @@ expression is evaluated to **true**:
 </div>
 ```
 
-The attribute **sec:authentication** is used to print logged user name
+The **sec:authentication** attribute is used to print logged user name
 and roles:
 
 ```html

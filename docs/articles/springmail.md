@@ -1,5 +1,5 @@
 ---
-title: Rich HTML email in Spring with Thymeleaf
+title: Sending email in Spring with Thymeleaf
 author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
 ---
 
@@ -10,7 +10,7 @@ composing email messages of several kinds, and we will integrate this
 with Spring's email utilities in order to configure a simple but
 powerful email system.
 
-Note that, although this article ---and the corresponding example app---
+Note that, although this article --and the corresponding example app--
 uses the Spring Framework, Thymeleaf can also be used for processing
 email templates in an application without Spring.
 
@@ -21,7 +21,7 @@ Prerequisites
 This article assumes you are familiar with both Thymeleaf and Spring 4.
 We will not dive into Spring Mail details, for further information
 please take a look at the [Email chapter at the Spring
-Documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mail).
+Documentation](http://docs.spring.io/spring/docs/4.3.x/spring-framework-reference/html/mail.html).
 
 
 Example application
@@ -31,7 +31,8 @@ All the code in this article comes from a working example application.  You can
 view or download the source from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-springmail).
 Downloading this application, executing it and exploring its source code is
 highly recommended *(note that you will have to configure your SMTP user name
-and password at `configuration.properties`)*.
+and password (and your SMTP server if you are not using GMail) at 
+`src/main/resources/configuration.properties`)*.
 
 
 Sending email with Spring
