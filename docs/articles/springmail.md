@@ -3,8 +3,6 @@ title: Sending email in Spring with Thymeleaf
 author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
 ---
 
-**Note**: this article refers to an older version of Thymeleaf (Thymeleaf 2.1).
-
 In this article we will show how to use Thymeleaf templates for
 composing email messages of several kinds, and we will integrate this
 with Spring's email utilities in order to configure a simple but

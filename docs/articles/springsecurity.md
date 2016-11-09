@@ -3,8 +3,6 @@ title: Thymeleaf + Spring Security integration basics
 author: 'Jos&eacute; Miguel Samper \<jmiguelsamper AT users.sourceforge.net\>'
 ---
 
-**Note**: this article refers to an older version of Thymeleaf (Thymeleaf 2.1).
-
 Have you switched to Thymeleaf but your login and error pages are still
 using JSP?  In this article we will see how to configure your Spring application
 to use Thymeleaf for login and error pages.
