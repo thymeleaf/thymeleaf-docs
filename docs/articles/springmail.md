@@ -203,7 +203,7 @@ public class SpringMailConfig implements ApplicationContextAware, EnvironmentAwa
 ```
 
 Note that we have configured three *template resolvers* for our email-specific engine:
-one for the TEXT templaets, another one for HTML templates, and a third one
+one for the TEXT templates, another one for HTML templates, and a third one
 for editable HTML templates, which we will give the user the opportunity to modify
 and will reach the template engine as a mere `String` once modified.
 
@@ -270,7 +270,7 @@ sending emails with an inlined image, and it looks like:
       You can find <b>your inlined image</b> just below this text.
     </p>
     <p>
-      <img src="sample.png" th:src="'cid:' + ${imageResourceName}" />
+      <img src="sample.png" th:src="|cid:${imageResourceName}|" />
     </p>
     <p>
       Regards, <br />
@@ -296,6 +296,30 @@ Let's remark some points:
     `cid:image.jpg` matching the attached image filename.
 
 
+### Text (non-HTML) email
+
+And what about text email? Well, we have already configured a template resolver for textual
+email templates, so all we would have to do is create template using Thymeleaf's
+textual syntax, just like:
+
+```
+[[ #{greeting(${name})} ]]
+
+[# th:if="${name.length() gt 10}"]Wow! You've got a long name (more than 10 chars)![/]
+
+You have been successfully subscribed to the Fake newsletter on [[ ${#dates.format(subscriptionDate)} ]].
+
+Your hobbies are:
+[# th:each="hobby : ${hobbies}"]
+ - [[ ${hobby} ]]
+[/]
+
+Regards,
+    The Thymeleaf Team
+```
+
+
+
 Putting it all together
 -----------------------
 
@@ -310,31 +334,31 @@ public void sendMailWithInline(
   final byte[] imageBytes, final String imageContentType, final Locale locale)
   throws MessagingException {
 
-  // Prepare the evaluation context
-  final Context ctx = new Context(locale);
-  ctx.setVariable("name", recipientName);
-  ctx.setVariable("subscriptionDate", new Date());
-  ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
-  ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
+    // Prepare the evaluation context
+    final Context ctx = new Context(locale);
+    ctx.setVariable("name", recipientName);
+    ctx.setVariable("subscriptionDate", new Date());
+    ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+    ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
 
-  // Prepare message using a Spring helper
-  final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-  final MimeMessageHelper message =
-      new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-  message.setSubject("Example HTML email with inline image");
-  message.setFrom("thymeleaf@example.com");
-  message.setTo(recipientEmail);
+    // Prepare message using a Spring helper
+    final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+    final MimeMessageHelper message =
+        new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
+    message.setSubject("Example HTML email with inline image");
+    message.setFrom("thymeleaf@example.com");
+    message.setTo(recipientEmail);
 
-  // Create the HTML body using Thymeleaf
-  final String htmlContent = this.templateEngine.process("email-inlineimage.html", ctx);
-  message.setText(htmlContent, true); // true = isHtml
+    // Create the HTML body using Thymeleaf
+    final String htmlContent = this.templateEngine.process("email-inlineimage.html", ctx);
+    message.setText(htmlContent, true); // true = isHtml
 
-  // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
-  final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-  message.addInline(imageResourceName, imageSource, imageContentType);
+    // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
+    final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
+    message.addInline(imageResourceName, imageSource, imageContentType);
 
-  // Send mail
-  this.mailSender.send(mimeMessage);
+    // Send mail
+    this.mailSender.send(mimeMessage);
 
 }
 ```
@@ -364,10 +388,10 @@ public String sendMailWithInline(
   final Locale locale)
   throws MessagingException, IOException {
 
-  this.emailService.sendMailWithInline(
-      recipientName, recipientEmail, image.getName(),
-      image.getBytes(), image.getContentType(), locale);
-  return "redirect:sent.html";
+    this.emailService.sendMailWithInline(
+        recipientName, recipientEmail, image.getName(),
+        image.getBytes(), image.getContentType(), locale);
+    return "redirect:sent.html";
 
 }
 ```
@@ -379,8 +403,8 @@ model the uploaded file and pass its contents on to the service.
 More examples
 -------------
 
-For the sake of brevity, we have only detailed one of the four types of
-email we want our application to send. However, you can see the source
+For the sake of brevity, we have only detailed one of the five types of
+email our application is able to send. However, you can see the source
 code required for creating all four types of emails at the `springmail`
 example application you can download from the [documentation
 page](/documentation.html).
