@@ -10,7 +10,9 @@ powerful email system.
 
 Note that, although this article --and the corresponding example app--
 uses the Spring Framework, Thymeleaf can also be used for processing
-email templates in an application without Spring.
+email templates in an application without Spring. Also note that the
+example application is a web application, but there is no need for an
+app to be web-enabled in order to send email with Thymeleaf.
 
 
 Prerequisites
@@ -41,34 +43,45 @@ configuration, as in the following code (your specific configuration
 needs might differ):
 
 ```java
-@Bean
-public JavaMailSender mailSender() throws IOException {
-    Properties properties = configProperties();
-    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    mailSender.setHost(properties.getProperty("mail.server.host"));
-    mailSender.setPort(Integer.parseInt(properties.getProperty("mail.server.port")));
-    mailSender.setProtocol(properties.getProperty("mail.server.protocol"));
-    mailSender.setUsername(properties.getProperty("mail.server.username"));
-    mailSender.setPassword(properties.getProperty("mail.server.password"));
-    mailSender.setJavaMailProperties(javaMailProperties());
-    return mailSender;
-}
+@Configuration
+@PropertySource("classpath:mail/emailconfig.properties")
+public class SpringMailConfig implements ApplicationContextAware, EnvironmentAware {
 
-private Properties configProperties() throws IOException {
-    Properties properties = new Properties();
-    properties.load(new ClassPathResource("configuration.properties").getInputStream());
-    return properties;
-}
+    private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
 
-private Properties javaMailProperties() throws IOException {
-    Properties properties = new Properties();
-    properties.load(new ClassPathResource("javamail.properties").getInputStream());
-    return properties;
+    private ApplicationContext applicationContext;
+    private Environment environment;
+
+    ...
+
+    @Bean
+    public JavaMailSender mailSender() throws IOException {
+
+        final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+        // Basic mail sender configuration, based on emailconfig.properties
+        mailSender.setHost(this.environment.getProperty(HOST));
+        mailSender.setPort(Integer.parseInt(this.environment.getProperty(PORT)));
+        mailSender.setProtocol(this.environment.getProperty(PROTOCOL));
+        mailSender.setUsername(this.environment.getProperty(USERNAME));
+        mailSender.setPassword(this.environment.getProperty(PASSWORD));
+
+        // JavaMail-specific mail sender configuration, based on javamail.properties
+        final Properties javaMailProperties = new Properties();
+        javaMailProperties.load(this.applicationContext.getResource(JAVA_MAIL_FILE).getInputStream());
+        mailSender.setJavaMailProperties(javaMailProperties);
+
+        return mailSender;
+
+    }
+
+    ...
+
 }
 ```
 
 Note that the previous code is getting the configuration from the properties
-files `configuration.properties` and `javamail.properties` on your classpath.
+files `mail/emailconfig.properties` and `mail/javamail.properties` on your classpath.
 
 Spring provides a class called `MimeMessageHelper` to ease the creation
 of email messages. Let's see how to use it together with our
@@ -76,7 +89,7 @@ of email messages. Let's see how to use it together with our
 
 ```java
 final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
 message.setFrom("sender@example.com");
 message.setTo("recipient@example.com");
 message.setSubject("This is the message subject");
@@ -85,8 +98,8 @@ this.mailSender.send(mimeMessage);
 ```
 
 
-Thymeleaf HTML email templates
-------------------------------
+Thymeleaf email templates
+-------------------------
 
 Using Thymeleaf for processing our email templates would allow us to use
 some interesting features:
@@ -101,8 +114,8 @@ some interesting features:
     prototypes, written by UI designers.
 -   etc...
 
-Also, given the fact that Thymeleaf has no dependencies on the servlet
-API, there would be **no need at all to create or send this HTML email
+Also, given the fact that Thymeleaf has no required dependencies on the servlet
+API, there would be **no need at all to create or send email
 from a web application**. The techniques explained here could be used
 with little or no change in a standalone application with no web UI.
 
@@ -110,70 +123,99 @@ with little or no change in a standalone application with no web UI.
 
 Our example application will be sending four types of emails:
 
-1.  Simple HTML (with internationalized greeting).
-2.  HTML text with an attachment.
-3.  HTML text with an inline image.
-4.  HTML text edited by the user.
+1.  Text (non-HTML) email.
+2.  Simple HTML (with internationalized greeting).
+3.  HTML text with an attachment.
+4.  HTML text with an inline image.
+5.  HTML text edited by the user.
 
 ### Spring configuration
 
-In order to process our templates, we will need to configure our
-`TemplateEngine` in our Spring configuration:
+In order to process our templates, we will configure a `TemplateEngine` especially
+configured for email processing, in our Spring Email configuration:
 
 ```java
-/**
- * THYMELEAF: View Resolver - implementation of Spring's ViewResolver interface.
- */
-@Bean
-public ViewResolver viewResolver() {
-    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-    viewResolver.setTemplateEngine(templateEngine());
-    return viewResolver;
-}
+@Configuration
+@PropertySource("classpath:mail/emailconfig.properties")
+public class SpringMailConfig implements ApplicationContextAware, EnvironmentAware {
 
-/**
- * THYMELEAF: Template Engine (Spring4-specific version).
- */
-@Bean
-public SpringTemplateEngine templateEngine() {
-    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-    templateEngine.addTemplateResolver(emailTemplateResolver());
-    templateEngine.addTemplateResolver(webTemplateResolver());
-    return templateEngine;
-}
+    ...
 
-/**
- * THYMELEAF: Template Resolver for email templates.
- */
-private TemplateResolver emailTemplateResolver() {
-    TemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-    templateResolver.setPrefix("/mail/");
-    templateResolver.setTemplateMode("HTML5");
-    templateResolver.setOrder(1);
-    return templateResolver;
-}
+    @Bean
+    public ResourceBundleMessageSource emailMessageSource() {
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("mail/MailMessages");
+        return messageSource;
+    }
 
-/**
- * THYMELEAF: Template Resolver for webapp pages.
- */
-private TemplateResolver webTemplateResolver() {
-    TemplateResolver templateResolver = new ServletContextTemplateResolver();
-    templateResolver.setPrefix("/WEB-INF/templates/");
-    templateResolver.setTemplateMode("HTML5");
-    templateResolver.setOrder(2);
-    return templateResolver;
+    ...
+
+    @Bean
+    public TemplateEngine emailTemplateEngine() {
+        final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        // Resolver for TEXT emails
+        templateEngine.addTemplateResolver(textTemplateResolver());
+        // Resolver for HTML emails (except the editable one)
+        templateEngine.addTemplateResolver(htmlTemplateResolver());
+        // Resolver for HTML editable emails (which will be treated as a String)
+        templateEngine.addTemplateResolver(stringTemplateResolver());
+        // Message source, internationalization specific to emails
+        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+        return templateEngine;
+    }
+
+    private ITemplateResolver textTemplateResolver() {
+        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setOrder(Integer.valueOf(1));
+        templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
+        templateResolver.setPrefix("/mail/");
+        templateResolver.setSuffix(".txt");
+        templateResolver.setTemplateMode(TemplateMode.TEXT);
+        templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
+
+    private ITemplateResolver htmlTemplateResolver() {
+        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setOrder(Integer.valueOf(2));
+        templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+        templateResolver.setPrefix("/mail/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
+
+    private ITemplateResolver stringTemplateResolver() {
+        final StringTemplateResolver templateResolver = new StringTemplateResolver();
+        templateResolver.setOrder(Integer.valueOf(3));
+        // No resolvable pattern, will simply process as a String template everything not previously matched
+        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
+
+    ...
+
 }
 ```
 
-Note that we have configured two *template resolvers* for our engine:
-one for the email templates ---which come from our resources directory and
-therefore are loaded by a `ClassLoaderTemplateResolver`--- and another one
-for the web templates that support the example application itself ---which
-loads its templates from the *servlet context*, as most Spring web
-applications do.
+Note that we have configured three *template resolvers* for our email-specific engine:
+one for the TEXT templaets, another one for HTML templates, and a third one
+for editable HTML templates, which we will give the user the opportunity to modify
+and will reach the template engine as a mere `String` once modified.
 
-Of course, if we were creating a non-web application, we would not need
-either the `webTemplateResolver` or the `viewResolver` beans at all.
+All three template resolvers are ordered so that they execute in sequence, trying to match
+their *resolvable patterns* against the name of the template and only 
+resolving the specified template if its name matches.
+
+Also note how this `TemplateEngine` is specific to email processing, and completely
+separate to the one used for the web interface. This `TemplateEngine` for the web 
+interface, which will be integrated with Spring MVC by means of a `ThymeleafViewResolver`
+is in fact defined in a different `@Configuration` file extending `WebMvcConfigurerAdapter`
+(and which we will not show here in order to focus on email processing).
 
 ### Executing the Template Engine
 
@@ -194,7 +236,7 @@ ctx.setVariable("subscriptionDate", new Date());
 ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
 ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
 
-final String htmlContent = this.templateEngine.process("email-inlineimage.html", ctx);
+final String htmlContent = this.templateEngine.process("html/email-inlineimage.html", ctx);
 ```
 
 Our `email-inlineimage.html` is the template file we will use for
