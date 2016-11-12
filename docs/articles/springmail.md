@@ -121,7 +121,7 @@ with little or no change in a standalone application with no web UI.
 
 ### Our goals
 
-Our example application will be sending four types of emails:
+Our example application will be sending five types of emails:
 
 1.  Text (non-HTML) email.
 2.  Simple HTML (with internationalized greeting).
@@ -405,6 +405,6 @@ More examples
 
 For the sake of brevity, we have only detailed one of the five types of
 email our application is able to send. However, you can see the source
-code required for creating all four types of emails at the `springmail`
+code required for creating all five types of emails at the `springmail`
 example application you can download from the [documentation
 page](/documentation.html).
