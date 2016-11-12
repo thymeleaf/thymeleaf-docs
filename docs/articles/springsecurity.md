@@ -92,9 +92,10 @@ Our **login.html** template is as follows:
 Error page
 ----------
 
-We can also configure a Thymeleaf error page. In this case Spring
-Security is not involved at all, we should simply modify our **web.xml**
-adding error **\<error-page\>** elements like:
+We can also configure an error page based on Thymeleaf . In this case Spring
+Security is not involved at all, we should simply add an
+[ExceptionHandler](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc)
+to our Spring configuration like:
 
 
 ```java
