@@ -426,7 +426,7 @@ thoroughly.
 ### Thymol
 
 When a Thymeleaf template is used as a static prototype, we cannot see
-the fragments we are including using the `th:include/th:replace` host
+the fragments we are including using the `th:insert/th:replace` host
 tags. We can only see the fragments aside, opening their own template
 documents.
 
@@ -435,7 +435,7 @@ pages while prototyping. This can be done using
 [Thymol](http://www.thymeleaf.org/ecosystem.html#thymol), an unofficial
 JavaScript library that is an implementation of Thymeleaf's standard
 fragment inclusion functionality, providing static support for some
-Thymeleaf attributes like `th:include` or `th:replace`, conditional
+Thymeleaf attributes like `th:insert` or `th:replace`, conditional
 display with `th:if`/`th:unless`, etc.
 
 As Thymol's author states: *Thymol was created in order to provide a
@@ -444,8 +444,7 @@ capabilities by offering support for Thymeleaf attributes through a
 statically accessible javascript library*
 
 Thymol documentation and examples can be found on the official project
-site here: [Thymol at
-SourceForge.net](http://sourceforge.net/u/jjbenson/wiki/thymol/).
+site here: [Thymol](http://www.thymoljs.org/).
 
 Thymeleaf Layout Dialect
 ------------------------
@@ -467,7 +466,7 @@ To get started with Layout Dialect we need to include it into the
 <dependency>
   <groupId>nz.net.ultraq.thymeleaf</groupId>
   <artifactId>thymeleaf-layout-dialect</artifactId>
-  <version>1.2.1</version>
+  <version>2.0.5</version>
 </dependency>
 ```
 
@@ -495,7 +494,7 @@ The layout file is defined in `/WEB-INF/views/task/layout.html`:
 <html>
   <head>
     <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
-    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Task List</title>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Task List</title>
     ...
   </head>
   <body>
@@ -539,7 +538,7 @@ The content page looks as follows (`WEB-INF/views/task/list.html`):
 
 ```xml
 <!DOCTYPE html>
-<html layout:decorator="task/layout">
+<html layout:decorate="~{task/layout}">
   <head>
     <title>Task List</title>
     ...
@@ -578,9 +577,10 @@ And in the browser it looks like this:
 ![Layout page](images/layouts/layoutlayoutdialectlist.png)
 
 Content of this `task/list` view will be decorated by the elements of
-`task/layout` view. Please note `layout:decorator="task/layout"`
+`task/layout` view. Please note `layout:decorate="~{task/layout}"`
 attribute in `<html>` element. This attribute signals to the Layout
-Dialect which layout should be used to decorate given view.
+Dialect which layout should be used to decorate given view. 
+And please note it is using Thymeleaf Fragment Expression syntax.
 
 And what about *Natural Templates* using the Layout Dialect? Again,
 possible! You simply need to
@@ -603,15 +603,12 @@ This is an example of a reusable alert fragment using `layout:fragment`
 <!DOCTYPE html>
 <html>
   <body>
-    <th:block layout:fragment="alert">
-      <div class="alert alert-dismissable" th:classappend="'alert-' + ${type}">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <h4 th:text="${header}">Alert header</h4>
-        <!--/* 'layout:fragment' attribute defines a replaceable content section */-->
-        <th:block layout:fragment="alert-content">
-          <p>Default alert content</p>
-        </th:block>
-      </div>
+    <th:block layout:fragment="alert-content">
+        <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula...</p>
+        <p>
+            <button type="button" class="btn btn-danger">Take this action</button>
+            <button type="button" class="btn btn-default">Or do this</button>
+        </p>
     </th:block>
   </body>
 </html>
@@ -621,27 +618,27 @@ The calling of the above fragment may look as follows
 (`task/list.html`):
 
 ```xml
-<div layout:include="task/alert :: alert" th:with="type='info', header='Info'" th:remove="tag">
-  <!--/* Implements alert content fragment with simple content */-->
-  <th:block layout:fragment="alert-content">
-    <p><em>This is a simple list of tasks!</em></p>
-  </th:block>
-</div>
+    <div layout:insert="~{task/alert :: alert}" th:with="type='info', header='Info'" th:remove="tag">
+        <!--/* Implements alert content fragment with simple content */-->
+        <th:block layout:fragment="alert-content">
+            <p><em>This is a simple list of tasks!</em></p>
+        </th:block>
+    </div>
 ```
 
 Or:
 
 ```xml
-<div layout:include="task/alert :: alert" th:with="type='danger', header='Oh snap!'" th:remove="tag">
-  <!--/* Implements alert content fragment with full-blown HTML content */-->
-  <th:block layout:fragment="alert-content">
-    <p>Some text</p>
-    <p>
-      <button type="button" class="btn btn-danger">Take this action</button>
-      <button type="button" class="btn btn-default">Or do this</button>
-    </p>
-  </th:block>
-</div>
+    <div layout:insert="~{task/alert :: alert}" th:with="type='danger', header='Oh snap! You got an error!'" th:remove="tag">
+        <!--/* Implements alert content fragment with full-blown HTML content */-->
+        <th:block layout:fragment="alert-content">
+           <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula...</p>
+            <p>
+                <button type="button" class="btn btn-danger">Take this action</button>
+                <button type="button" class="btn btn-default">Or do this</button>
+            </p>
+        </th:block>
+    </div>
 ```
 
 In this case, the entire `alert-content` of `task/alert`
@@ -652,7 +649,9 @@ HTML above.
 
 Please check out the Layout Dialect documentation that describes this
 topic very thoroughly. You will definitively find some more advanced
-examples than in this article. You can find the documentation here:
+examples than in this article. 
+
+You can find the documentation here:
 [Layout Dialect](https://github.com/ultraq/thymeleaf-layout-dialect).
 
 
