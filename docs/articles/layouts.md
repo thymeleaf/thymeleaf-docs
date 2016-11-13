@@ -23,7 +23,7 @@ this can be done using **Thymeleaf Standard Layout System**:
 
 ```xml
 <body>
-    <div th:include="footer :: copy">...</div>
+    <div th:insert="footer :: copy">...</div>
 </body>
 ```
 
@@ -39,8 +39,8 @@ In hierarchical style, the templates are usually created with a
 parent-child relation, from the more general part (layout) to the most
 specific ones (subviews; e.g. page content). Each component of the
 template may be included dynamically based on the inclusion and
-substitution of template fragments. In Thymeleaf this can be done using:
-**Thymeleaf Layout Dialect** and **Thymeleaf Tiles Integration**.
+substitution of template fragments. In Thymeleaf this can be done using
+**Thymeleaf Layout Dialect**.
 
 The main advantages of this solution are the reuse of atomic portions of
 the view and modular design, whereas the main disadvantage is that much
@@ -61,15 +61,12 @@ Thymeleaf Standard Layout System
 --------------------------------
 
 Thymeleaf Standard Layout System offers page fragment inclusion that is
-similar to *JSP includes*, with some important improvements over them:
+similar to *JSP includes*, with some important improvements over them.
 
-### Basic inclusion with `th:include` and `th:replace`
+### Basic inclusion with `th:insert` and `th:replace`
 
-Thymeleaf can include parts of other pages as fragments (whereas JSP
-only includes complete pages) using `th:include` (will include the
-contents of the fragment into its host tag) or `th:replace` (will
-actually substitute the host tag by the fragment's). This allows the
-grouping of fragments into one or several pages. Look at the example.
+Thymeleaf can include parts of other pages as fragments (whereas JSP only includes complete pages) using `th:insert` (it will simply insert the specified fragment as the body of its host tag) or `th:replace` (will actually substitute the host tag by the fragment's). This allows the grouping of fragments into one or several pages. Look at the example.
+
 The `home/homeNotSignedIn.html` template is rendered when the anonymous
 user enters the home page of our application.
 
@@ -77,10 +74,10 @@ Class `thymeleafexamples.layouts.home.HomeController`
 
 ```java
 @Controller
-public class HomeController {
+class HomeController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Principal principal) {
+    String index(Principal principal) {
         return principal != null ? "home/homeSignedIn" : "home/homeNotSignedIn";
     }
 
@@ -127,7 +124,7 @@ Template `home/homeNotSignedIn.html`
           <a href="/signup" th:href="@{/signup}" class="btn btn-large btn-success">Sign up</a>
         </p>
       </div>
-      <div th:replace="fragments/footer :: footer">&copy; 2013 The Static Templates</div>
+      <div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
     </div>
     ...
   </body>
@@ -154,7 +151,7 @@ that we are referencing. This can be a file (like in this example) or it
 can reference to the same file either by using the `this` keyword (e.g.
 `this :: header`) or without any keyword (e.g. `:: header`). The
 expression after double colon is a fragment selector (either fragment
-name or *DOM selector*). As you can also see, the header fragment
+name or *Markup Selector*). As you can also see, the header fragment
 contains a markup that is used for static prototyping only.
 
 Header and footer are defined in the following files:
@@ -213,7 +210,7 @@ And template `fragments/footer.html`
   </head>
   <body>
     <div th:fragment="footer">
-      &copy; 2013 Footer
+      &copy; 2016 Footer
     </div>
   </body>
 </html>
@@ -226,39 +223,38 @@ file, as it was mentioned earlier.
 What is important here, is that all the templates can still be natural
 templates and can be viewed in a browser without a running server.
 
-### Including with DOM Selectors
+### Including with Markup Selectors
 
 In Thymeleaf, fragments don't need to be explicitly specified using
 `th:fragment` at the page they are extracted from. Thymeleaf can select
 an arbitrary section of a page as a fragment (even a page living on an
-external server) by means of its DOM Selector syntax, similar to XPath
+external server) by means of its Markup Selector syntax, similar to XPath
 expressions and CSS selectors.
 
 ```xml
-<div th:include="http://www.thymeleaf.org :: p.notice" >...</div>
+<p th:insert="http://www.thymeleaf.org :: section.description" >...</p>
 ```
 
-The above code will include a paragraph with `class="notice"` from
+The above code will include a `section` with `class="description"` from
 `thymeleaf.org`. In order to make it happen, the template engine must be
 configured with `UrlTemplateResolver`:
 
 ```java
 @Bean
 public SpringTemplateEngine templateEngine() {
-    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-    templateEngine.addTemplateResolver(templateResolver());
-    templateEngine.addTemplateResolver(urlTemplateResolver());
-    templateEngine.addDialect(new SpringSecurityDialect());
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();    
+    templateEngine.addTemplateResolver(new UrlTemplateResolver());
+    ...
     return templateEngine;
 }
 ```
 
-For the DOM Selector syntax reference checkout this section in Thymeleaf
-documentation: [DOM Selector syntax](http://www.thymeleaf.org/doc/html/Using-Thymeleaf.html#appendix-c-dom-selector-syntax).
+For the Markup Selector syntax reference checkout this section in Thymeleaf
+documentation: [Markup Selector syntax](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax).
 
 ### Using expressions
 
-In `templatename :: domselector`, both `templatename` and `domselector`
+In `templatename :: selector`, both `templatename` and `selector`
 can be fully-featured expressions. In the below example we want to
 include different fragments depending on a condition. If the
 authenticated user is an Admin, we will show a different footer than for
@@ -266,7 +262,7 @@ a regular user:
 
 ```xml
 <div th:replace="fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'">
-  &copy; 2013 The Static Templates
+  &copy; 2016 The Static Templates
 </div>
 ```
 
@@ -282,13 +278,29 @@ footers defined:
   <body>
     <!-- /*  Multiple fragments may be defined in one file */-->
     <div th:fragment="footer">
-      &copy; 2013 Footer
+      &copy; 2016 Footer
     </div>
     <div th:fragment="footer-admin">
-      &copy; 2013 Admin Footer
+      &copy; 2016 Admin Footer
     </div>
   </body>
 </html>
+```
+
+### Fragment Expressions
+
+Thymeleaf 3.0 introduced a new type of expression as a part of the general Thymeleaf Standard Expression system: **Fragment Expressions**: 
+
+```xml
+    <div th:insert="~{fragments/footer :: footer}">...</div>
+```
+
+The idea of this syntax is to be able to use resolved fragments as any other kind of objects in the template execution context for later use:
+
+```xml
+<div th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/footer :: footer-admin} : ~{fragments/footer :: footer-admin}">
+  &copy; 2016 The Static Templates
+</div>
 ```
 
 ### Parameterized inclusion
@@ -296,7 +308,7 @@ footers defined:
 Fragments can specify arguments, just like methods. Whenever they are
 explicitly specified with a `th:fragment` attribute, they can provide an
 argument signature that can then be filled in with arguments from the
-calling `th:include` or `th:replace` attributes.
+calling `th:insert` or `th:replace` attributes.
 
 Examples talk best. We can use parameterized inclusion in many contexts
 but one real life context is displaying messages on different pages of
@@ -332,8 +344,8 @@ reusable and parameterized fragment. This can be done as follows:
     ...
   </head>
   <body>
-    <div th:fragment="alert (type, message)"
-         class="alert alert-dismissable" th:classappend="'alert-' + ${type}">
+    <div class="alert alert-dismissable" 
+         th:fragment="alert (type, message)" th:classappend="'alert-' + ${type}">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <span th:text="${message}">Test</span>
     </div>
@@ -406,15 +418,10 @@ the content will be loaded via AJAX call (see
 ### References
 
 Please check Thymeleaf documentation that describes this topic very
-thoroughly. You can find it here: [Template
-Layout](http://www.thymeleaf.org/doc/html/Using-Thymeleaf.html#template-layout).
+thoroughly.
 
-Natural templating is greatly explained in [Bringing Thymeleaf and
-Natural Templates to the Spring
-PetClinic](petclinic.html) article in
-`And what about the Natural Templates thing?` chapter. The example can
-be found on
-[GitHub](https://github.com/thymeleaf/thymeleafexamples-petclinic/blob/thymeleafexamples-petclinic-20131104/src/main/webapp/WEB-INF/thymeleaf/owners/ownersList.html).
+* [Template Layout](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#template-layout).
+* [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragment-specification-syntax)
 
 ### Thymol
 
@@ -605,51 +612,6 @@ The layout file reads as follows:
       <!-- from "fragments/header.html" at runtime.                                     -->
       <!-- ============================================================================ -->
       <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">Static header</a>
-          </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <!--/* Tiles attribute will be put here at runtime */-->
-      <div tiles:replace="content">
-        <!-- ============================================================================ -->
-        <!-- This content is only used for static prototyping purposes (natural templates)-->
-        <!-- and is therefore entirely optional, as this markup fragment will be included -->
-        <!-- from "fragments/header.html" at runtime.                                     -->
-        <!-- ============================================================================ -->
-        <h1>Static content for prototyping purposes only</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
-          Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
-          Phasellus et placerat elit.
-        </p>
-      </div>
-      <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
-    </div>
-  </body>
-</html>
-```
-
-We can see several things in the above example. Firstly, the layout is a
-natural template and it is a valid UI design prototype (in this example
-the layout is very simple):
-
-![Layout page](images/layouts/layouttiles.png)
-
-Secondly, we can mix standard layout (`th:include/th:replace`) with
-Tiles dialect. Thirdly, Thymeleaf has ability to include a template
-fragment instead of the whole template.
-
 
 Thymeleaf Layout Dialect
 ------------------------
@@ -927,50 +889,14 @@ What will happen?
 The project can be found on
 [GitHub](https://github.com/kolorobot/thymeleaf-custom-layout).
 
-
-Future Plans
-------------
-
-And finally, what's the future of Thymeleaf layouts? There are some
-really interesting things planned:
-
-### Fragment-as-a-parameter inclusion
-
-Current Thymeleaf fragments allow passing arguments, but these arguments
-are normally just small pieces of text. It is not really comfortable to
-pass a complete HTML, as it is possible with hierarchical layout systems
-(including the Layout Dialect).
-
-In the future, it will be possible to select and pass entire subtrees of
-markup as arguments. See [this
-ticket](https://github.com/thymeleaf/thymeleaf/issues/180) for more
-details.
-
-### Decoupled templates
-
-In order to make the communication between UI designers and developers
-easier, Thymeleaf will offer the possibility to separate HTML markup and
-Thymeleaf processors into separate files as an option. See [this
-ticket](https://github.com/thymeleaf/thymeleaf/issues/47) for more
-details.
-
-### Tiles 3 support
-
-The Apache Tiles integration module currently only supports Tiles 2
-integration. Tiles 3, although seems to be very alike Tiles 2, has a
-different architecture and therefore a separate module will be created
-in the future.
-
-
 Summary
 -------
 
 In this article, we described many ways of achieving the same:
 **layouts**. You can build layouts using Thymeleaf Standard Layout
-System that is based on include-style approach. You can use Apache Tiles
-with Tiles Dialect, if you are either migrating from Tiles or if Tiles
-is your choice. You also have powerful Layout Dialect, that uses
+System that is based on include-style approach. You also have powerful Layout Dialect, that uses
 decorator pattern for working with layout files. Finally, you can easily
-create your own solution. Hopefully, this article gives you some more
-insights on the topic and you will find your preferred approach
+create your own solution. 
+
+Hopefully, this article gives you some more insights on the topic and you will find your preferred approach 
 depending on your needs.
