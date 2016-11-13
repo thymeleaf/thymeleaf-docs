@@ -583,7 +583,7 @@ attribute in `<html>` element. This attribute signals to the Layout
 Dialect which layout should be used to decorate given view.
 
 And what about *Natural Templates* using the Layout Dialect? Again,
-possible! In just the same way as with Tiles Dialect, you simply need to
+possible! You simply need to
 add some prototyping-only markup around the fragments being included in
 your templates and that's it!
 
