@@ -76,7 +76,7 @@ Class `thymeleafexamples.layouts.home.HomeController`
 @Controller
 class HomeController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     String index(Principal principal) {
         return principal != null ? "home/homeSignedIn" : "home/homeNotSignedIn";
     }
@@ -308,8 +308,8 @@ our application after successful form submission. Let's look at the
 signup process in the application:
 
 ```java
-@RequestMapping(value = "signup", method = RequestMethod.POST)
-public String signup(@Valid @ModelAttribute SignupForm signupForm,
+@PostMapping("signup")
+String signup(@Valid @ModelAttribute SignupForm signupForm,
         Errors errors, RedirectAttributes ra) {
     
     if (errors.hasErrors()) {
@@ -375,6 +375,40 @@ The idea of this syntax is to be able to use resolved fragments as any other kin
 <div th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/footer :: footer-admin} : ~{fragments/footer :: footer-admin}">
   &copy; 2016 The Static Templates
 </div>
+```
+
+Fragment expression allows creating fragments in a way such that they can be enriched with markup coming from the calling templates, resulting in a layout mechanism that is far more flexible than `th:insert` and `th:replace`only.
+
+#### Creating a layout - a container for reusable fragments
+
+The `layout.html` file defines all the fragments that will be used by calling templates:
+
+```xml
+
+```
+
+#### Composing a page from fragments
+
+Having the layout elements of pages defined it is time to include them in some of the pages:
+
+```xml
+
+```
+
+#### Empty fragments
+
+What if we have no additional links or scripts to be passed to the included fragment from a calling template?
+
+```xml
+
+```
+
+#### Including fragments with its current value
+
+No-operation token.
+
+```xml
+
 ```
 
 ### Fragment inclusion from Spring `@Controller`
