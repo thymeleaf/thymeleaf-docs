@@ -5451,11 +5451,42 @@ ${#numbers.listFormatDecimal(numList,3,'POINT',2,'COMMA')}
 ${#numbers.setFormatDecimal(numSet,3,'POINT',2,'COMMA')}
 
 
+/* 
+ * =====================
+ * Formatting currencies
+ * =====================
+ */
+
+${#numbers.formatCurrency(num)}
+${#numbers.arrayFormatCurrency(numArray)}
+${#numbers.listFormatCurrency(numList)}
+${#numbers.setFormatCurrency(numSet)}
+
+
+/* 
+ * ======================
+ * Formatting percentages
+ * ======================
+ */
+
+${#numbers.formatPercent(num)}
+${#numbers.arrayFormatPercent(numArray)}
+${#numbers.listFormatPercent(numList)}
+${#numbers.setFormatPercent(numSet)}
+
+/* 
+ * Set minimum integer digits and (exact) decimal digits.
+ */
+${#numbers.formatPercent(num, 3, 2)}
+${#numbers.arrayFormatPercent(numArray, 3, 2)}
+${#numbers.listFormatPercent(numList, 3, 2)}
+${#numbers.setFormatPercent(numSet, 3, 2)}
+
 
 /*
- * ==========================
+ * ===============
  * Utility methods
- * ==========================
+ * ===============
  */
 
 /*
