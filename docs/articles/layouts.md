@@ -177,16 +177,24 @@ Template `fragments/header.html`
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#" th:href="@{/}">Home</a></li>
-            <li><a href="#" th:href="@{/message}">Messages</a></li>
-            <li><a href="#" th:href="@{/task}">Tasks</a></li>
+            <li th:classappend="${module == 'home' ? 'active' : ''}">
+              <a href="#" th:href="@{/}">Home</a>
+            </li>
+            <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+              <a href="#" th:href="@{/task}">Tasks</a>
+            </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li th:if="${#authorization.expression('!isAuthenticated()')}">
-              <a href="/signin" th:href="@{/signin}">Sign in</a>
+              <a href="/signin" th:href="@{/signin}">
+                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+              </a>
             </li>
             <li th:if="${#authorization.expression('isAuthenticated()')}">
-              <a href="/logout" th:href="@{/logout}">Logout</a>
+              <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+              </a>
+             <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
             </li>
           </ul>
         </div>
@@ -229,15 +237,16 @@ In Thymeleaf, fragments don't need to be explicitly specified using
 `th:fragment` at the page they are extracted from. Thymeleaf can select
 an arbitrary section of a page as a fragment (even a page living on an
 external server) by means of its Markup Selector syntax, similar to XPath
-expressions and CSS selectors.
+expressions, CSS or jQuery selectors.
 
 ```xml
 <p th:insert="http://www.thymeleaf.org :: section.description" >...</p>
 ```
 
 The above code will include a `section` with `class="description"` from
-`thymeleaf.org`. In order to make it happen, the template engine must be
-configured with `UrlTemplateResolver`:
+`thymeleaf.org`. 
+
+In order to make it happen, the template engine must be configured with `UrlTemplateResolver`:
 
 ```java
 @Bean
@@ -266,8 +275,7 @@ a regular user:
 </div>
 ```
 
-`fragments/footer.html` has slightly changed, as we need to have two
-footers defined:
+`fragments/footer.html` has slightly changed, as we need to have two footers defined:
 
 ```xml
 <!DOCTYPE html>
@@ -285,22 +293,6 @@ footers defined:
     </div>
   </body>
 </html>
-```
-
-### Fragment Expressions
-
-Thymeleaf 3.0 introduced a new type of expression as a part of the general Thymeleaf Standard Expression system: **Fragment Expressions**: 
-
-```xml
-    <div th:insert="~{fragments/footer :: footer}">...</div>
-```
-
-The idea of this syntax is to be able to use resolved fragments as any other kind of objects in the template execution context for later use:
-
-```xml
-<div th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/footer :: footer-admin} : ~{fragments/footer :: footer-admin}">
-  &copy; 2016 The Static Templates
-</div>
 ```
 
 ### Parameterized inclusion
@@ -344,8 +336,7 @@ reusable and parameterized fragment. This can be done as follows:
     ...
   </head>
   <body>
-    <div class="alert alert-dismissable" 
-         th:fragment="alert (type, message)" th:classappend="'alert-' + ${type}">
+    <div class="alert alert-dismissable" th:fragment="alert (type, message)" th:assert="${!#strings.isEmpty(type) && !#strings.isEmpty(message)}" th:classappend="'alert-' + ${type}">      
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <span th:text="${message}">Test</span>
     </div>
@@ -355,9 +346,8 @@ reusable and parameterized fragment. This can be done as follows:
 
 The above `alert` fragment takes two arguments: `type` and `message`.
 The `type` is the message type used for styling a message whereas the
-`message` is a text that will be shown to the user. If we wanted, we
-could have even ensured that arguments existed or met certain conditions
-using a `th:assert` attribute.
+`message` is a text that will be shown to the user. We
+ensure that arguments exist and are not empty by using a `th:assert` attribute.
 
 In order to include `alert` in any template we may write the following
 code (please note, that the value of a variable can be an expression):
@@ -369,7 +359,23 @@ code (please note, that the value of a variable can be an expression):
 Parameterized fragments let developers create functional-like fragments
 that are easier to reuse. Read more about parameterized fragments in the
 Thymeleaf documentation: [Parameterizable fragment
-signatures](http://www.thymeleaf.org/doc/html/Using-Thymeleaf.html#parameterizable-fragment-signatures).
+signatures](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#parameterizable-fragment-signatures).
+
+### Fragment Expressions
+
+Thymeleaf 3.0 introduced a new type of expression as a part of the general Thymeleaf Standard Expression system: **Fragment Expressions**: 
+
+```xml
+    <div th:insert="~{fragments/footer :: footer}">...</div>
+```
+
+The idea of this syntax is to be able to use resolved fragments as any other kind of objects in the template execution context for later use:
+
+```xml
+<div th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/footer :: footer-admin} : ~{fragments/footer :: footer-admin}">
+  &copy; 2016 The Static Templates
+</div>
+```
 
 ### Fragment inclusion from Spring `@Controller`
 
