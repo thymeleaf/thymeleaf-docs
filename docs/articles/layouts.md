@@ -411,6 +411,8 @@ No-operation token.
 
 ```
 
+Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. See more: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+
 ### Fragment inclusion from Spring `@Controller`
 
 Fragments can be directly specified from a Spring MVC controller, i.e.
