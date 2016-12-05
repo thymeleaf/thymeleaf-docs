@@ -379,39 +379,79 @@ The idea of this syntax is to be able to use resolved fragments as any other kin
 
 Fragment expression allows creating fragments in a way such that they can be enriched with markup coming from the calling templates, resulting in a layout mechanism that is far more flexible than `th:insert` and `th:replace`only.
 
-#### Creating a layout - a container for reusable fragments
+#### Flexible Layout Example
 
-The `layout.html` file defines all the fragments that will be used by calling templates:
-
-```xml
-
-```
-
-#### Composing a page from fragments
-
-Having the layout elements of pages defined it is time to include them in some of the pages:
+The `task/layout.html` file defines all the fragments that will be used by calling templates. The below `header` fragment takes `breadcrumb` parameter that will replace `ol` markup with its resolved value:
 
 ```xml
-
+<!--/* Header fragment */-->
+<div th:fragment="header(breadcrumb)">
+    <ol class="breadcrumb container" th:replace="${breadcrumb}">
+        <li><a href="#">Home</a></li>
+    </ol>
+</div>
 ```
-
-#### Empty fragments
-
-What if we have no additional links or scripts to be passed to the included fragment from a calling template?
+In the calling template (`task/task-list.html`) we will use a *Markup Selector* syntax to pass the element matching `.breadcrumb` selector:
 
 ```xml
-
+<!--/* The markup with breadcrumb class will be passed to the header fragment */-->
+<header th:insert="task/layout :: header(~{ :: .breadcrumb})">
+    <ol class="breadcrumb container">
+        <li><a href="#">Home</a></li>
+        <li><a href="#" th:href="@{/task}">Tasks</a></li>
+    </ol>
+</header>
 ```
 
-#### Including fragments with its current value
-
-No-operation token.
+As a result, the following HTML will be generated for the `task/taks-list` view:
 
 ```xml
-
+<header>
+    <ol class="breadcrumb container">
+        <li><a href="#">Home</a></li>
+        <li><a href="[...]">Tasks</a></li>
+    </ol>
+</header>
 ```
 
-Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. See more: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+Similarily, we can use the same fragment with different breadcrumb in another view  (`task/task.html`):
+
+```xml
+<header th:insert="task/layout :: header(~{ :: .breadcrumb})">
+    <ol class="breadcrumb container">
+        <li><a href="#">Home</a></li>
+        <li><a href="#" th:href="@{/task}">Tasks</a></li>
+        <li th:text="${'Task ' + task.id}">Task</li>
+    </ol>
+</header>
+```
+
+If there is nothing to be passed to the fragment, we can use a special empty fragment expression - `~{}`. It will pass an empty value that will be ignored in the `header` fragment:
+
+```xml
+<header th:insert="task/layout :: header(~{})">
+    
+</header>
+```
+
+One another feature of the new fragment expression is so called *no-operation* token that allows the default markup of the fragment to be used in case this is needed:
+
+```xml
+<header th:insert="task/layout :: header(_)">
+    
+</header>
+```
+As a result, we will get:
+
+```xml
+<header>
+    <ol class="breadcrumb container">
+        <li><a href="#">Home</a></li>
+    </ol>
+</header>
+```
+
+Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. Read more about this topic in the Thymeleaf documentation: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
 ### Fragment inclusion from Spring `@Controller`
 
@@ -464,6 +504,7 @@ thoroughly.
 
 * [Template Layout](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#template-layout).
 * [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragment-specification-syntax)
+* [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
 ### Thymol
 
