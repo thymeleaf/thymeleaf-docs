@@ -783,7 +783,7 @@ add the `seedstarter.type.` prefix to the enum value by means of an expression,
 which result we will then use as the message key:
 
 ```html
-<td th:text="#{|seedstarter.type.${sb.type}|">Wireframe</td>
+<td th:text="#{|seedstarter.type.${sb.type}|}">Wireframe</td>
 ```
 
 The most difficult part of this listing is the _features_ column. In it we want
