@@ -4325,8 +4325,8 @@ implementation called `ServletContextTemplateResolver` that allowed us to obtain
 templates as resources from the Servlet Context.
 
 Besides giving us the ability to create our own template resolver by
-implementing `ITemplateResolver,` Thymeleaf includes three other implementations
-out of the box:
+implementing `ITemplateResolver,` Thymeleaf includes four implementations out of
+the box:
 
  * `org.thymeleaf.templateresolver.ClassLoaderTemplateResolver`, which resolves
    templates as classloader resources, like:
@@ -4382,13 +4382,11 @@ of configuration parameters, which include:
     templateResolver.setEncoding("UTF-8");
     ```
 
- * Default template mode, and patterns for defining other modes for specific
-   templates:
+ * Template mode to be used:
 
     ```java
-    // Default is TemplateMode.XHTML
-    templateResolver.setTemplateMode("HTML5");
-    templateResolver.getXhtmlTemplateModePatternSpec().addPattern("*.xhtml");
+    // Default is HTML
+    templateResolver.setTemplateMode("XML");
     ```
 
  * Default mode for template cache, and patterns for defining whether specific
