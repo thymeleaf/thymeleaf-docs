@@ -364,6 +364,10 @@ Also, note that browser support actually evolves with time not only
 because of the quick pace at which browsers release new versions, but
 also because the specification itself is still work in progress.
 
+For a list of HTML5 features and the corresponding browser support, check the
+[Can I use...](http://caniuse.com/) website.  Notably, the HTML5 category list
+for all of the features: [http://caniuse.com/#cats=HTML5](http://caniuse.com/#cats=HTML5)
+
 
 
 And what about XHTML5? Does that exist?
