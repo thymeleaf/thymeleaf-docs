@@ -3332,8 +3332,8 @@ would be slightly less readable):
 
 
 
-11. Comments and Blocks
-=======================
+11 Comments and Blocks
+======================
 
 
 
@@ -5916,7 +5916,7 @@ ${#ids.prev('someId')}
 
 
 
-19 Appendix C: Markup Selector Syntax
+20 Appendix C: Markup Selector Syntax
 =====================================
 
 Thymeleaf's Markup Selectors are directly borrowed from Thymeleaf's parsing 
