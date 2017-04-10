@@ -23,9 +23,6 @@
 (function() {
 	'use strict';
 
-	var $ = DumbQuerySelector.$;
-	var $$ = DumbQuerySelector.$$;
-
 	// Languages used for syntax highlighting
 	var languages = ['html', 'java', 'javascript', 'xml', 'css', 'text'];
 
