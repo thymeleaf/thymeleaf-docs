@@ -1372,9 +1372,9 @@ Literal substitutions can be combined with other types of expressions:
 <span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">
 ```
 
-> Only variable expressions (`${...}`) are allowed inside `|...|` literal
-> substitutions. No other literals (`'...'`), boolean/numeric tokens,
-> conditional expressions etc. are. 
+> Only variable/message expressions (`${...}`, `*{...}`, `#{...}`) are allowed 
+> inside `|...|` literal substitutions. No other literals (`'...'`), 
+> boolean/numeric tokens, conditional expressions etc. are. 
 
 
 
