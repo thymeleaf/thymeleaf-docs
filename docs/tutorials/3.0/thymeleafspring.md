@@ -123,7 +123,7 @@ Or, using Spring's XML-based configuration:
 <!-- SpringResourceTemplateResolver automatically integrates with Spring's own -->
 <!-- resource resolution infrastructure, which is highly recommended.          -->
 <bean id="templateResolver"
-       class="org.thymeleaf.templateresolver.SpringResourceTemplateResolver">
+       class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
   <property name="prefix" value="/WEB-INF/templates/" />
   <property name="suffix" value=".html" />
   <!-- HTML is the default value, added here for the sake of clarity.          -->
