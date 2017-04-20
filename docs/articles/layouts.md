@@ -240,7 +240,7 @@ external server) by means of its Markup Selector syntax, similar to XPath
 expressions, CSS or jQuery selectors.
 
 ```xml
-<p th:insert="http://www.thymeleaf.org :: section.description" >...</p>
+<div th:insert="http://www.thymeleaf.org :: section.description" >...</div>
 ```
 
 The above code will include a `section` with `class="description"` from
@@ -336,7 +336,7 @@ reusable and parameterized fragment. This can be done as follows:
     ...
   </head>
   <body>
-    <div class="alert alert-dismissable" th:fragment="alert (type, message)" th:assert="${!#strings.isEmpty(type) && !#strings.isEmpty(message)}" th:classappend="'alert-' + ${type}">      
+    <div class="alert alert-dismissable" th:fragment="alert (type, message)" th:assert="${!#strings.isEmpty(type) and !#strings.isEmpty(message)}" th:classappend="'alert-' + ${type}">      
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <span th:text="${message}">Test</span>
     </div>
@@ -407,10 +407,12 @@ As a result, the following HTML will be generated for the `task/taks-list` view:
 
 ```xml
 <header>
-    <ol class="breadcrumb container">
-        <li><a href="#">Home</a></li>
-        <li><a href="[...]">Tasks</a></li>
-    </ol>
+    <div>
+        <ol class="breadcrumb container">
+            <li><a href="#">Home</a></li>
+            <li><a href="[...]">Tasks</a></li>
+        </ol>
+    </div>
 </header>
 ```
 
