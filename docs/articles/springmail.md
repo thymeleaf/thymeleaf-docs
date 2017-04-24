@@ -303,15 +303,15 @@ email templates, so all we would have to do is create template using Thymeleaf's
 textual syntax, just like:
 
 ```
-[[ #{greeting(${name})} ]]
+[( #{greeting(${name})} )]
 
 [# th:if="${name.length() gt 10}"]Wow! You've got a long name (more than 10 chars)![/]
 
-You have been successfully subscribed to the Fake newsletter on [[ ${#dates.format(subscriptionDate)} ]].
+You have been successfully subscribed to the Fake newsletter on [( ${#dates.format(subscriptionDate)} )].
 
 Your hobbies are:
 [# th:each="hobby : ${hobbies}"]
- - [[ ${hobby} ]]
+ - [( ${hobby} )]
 [/]
 
 Regards,

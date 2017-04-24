@@ -44,8 +44,8 @@ project.version = '3.0.5.RELEASE'
 def documentDate = new Date().clearTime()
 documentDate.set(
 	year: 2017,
-	month: Calendar.MARCH,
-	date: 29)
+	month: Calendar.APRIL,
+	date: 18)
 
 def conversions = [
 	articles: ['html'],
