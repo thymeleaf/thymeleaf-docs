@@ -298,7 +298,7 @@ public class GTVGApplication {
   
     
     ...
-    private static TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
     ...
     
     
