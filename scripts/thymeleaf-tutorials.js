@@ -23,9 +23,6 @@
 (function() {
 	'use strict';
 
-	var $ = DumbQuerySelector.$;
-	var $$ = DumbQuerySelector.$$;
-
 	// Add class names to the various table-of-contents levels so they're easier to style
 	$$('#toc > ul').forEach(function(el) {
 		el.classList.add('level1');
