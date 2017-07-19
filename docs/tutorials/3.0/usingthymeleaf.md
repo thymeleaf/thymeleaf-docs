@@ -5925,7 +5925,7 @@ library: [AttoParser](http://attoparser.org).
 The syntax for this selectors has large similarities with that of selectors in
 XPath, CSS and jQuery, which makes them easy to use for most users. You can have
 a look at the complete syntax reference at the
-[AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.0.RELEASE/org/attoparser/select/package-summary.html).
+[AttoParser documentation](http://www.attoparser.org/apidocs/attoparser/2.0.4.RELEASE/org/attoparser/select/package-summary.html).
 
 For example, the following selector will select every `<div>` with the class `content`,
 in every position inside the markup (note this is not as concise as it could be,
