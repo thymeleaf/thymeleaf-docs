@@ -2462,8 +2462,11 @@ different formats:
    > will have to be resolvable by the Template Resolver currently being used by
    > the Template Engine.
 
- * `~{::selector}"` or `"~{this::selector}"` Includes a fragment from the same
-   template.
+ * `~{::selector}"` or `"~{this::selector}"` Inserts a fragment from the same
+   template, matching `selector`. If not found on the template where the expression
+   appears, the stack of template calls (insertions) is traversed towards the
+   originally processed template (the *root*), until `selector` matches at 
+   some level.
 
 Both `templatename` and `selector` in the above examples can be fully-featured
 expressions (even conditionals!) like:
