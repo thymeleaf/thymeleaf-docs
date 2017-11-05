@@ -4647,7 +4647,7 @@ object, which could be an instance of the default `StandardCacheManager`
 implementation:
 
 ```java
-// Default is 50
+// Default is 200
 StandardCacheManager cacheManager = new StandardCacheManager();
 cacheManager.setTemplateCacheMaxSize(100);
 ...
