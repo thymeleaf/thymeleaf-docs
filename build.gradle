@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import nz.net.ultraq.lesscss.LessCSSCompiler
-
 import org.apache.tools.ant.filters.*
 import org.gradle.api.plugins.jetty.internal.Monitor
 
@@ -62,15 +60,6 @@ def outputDir    = file("${buildDir}/site")
 def docNames = [] as Set
 def docTypes = [:]
 
-
-buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
-	}
-}
 
 /**
  * Copy all docs and resources to the source dir, from where they will be fed to
@@ -123,19 +112,9 @@ task copyResources << {
 		from imagesDir
 		into "${srcDir.path}/images"
 	}
-
-	// Copy over stylesheets, compiling LessCSS files into CSS
 	copy {
-		from(stylesDir) {
-			exclude '**/*.less'
-		}
+		from stylesDir
 		into "${srcDir.path}/styles"
-	}
-
-	LessCSSCompiler compiler = new LessCSSCompiler()
-	fileTree(stylesDir) { include '**/*.less' }.each { lessFile ->
-		def lessFileBase = lessFile.name - '.less'
-		compiler.compile(lessFile, file("${srcDir.path}/styles/${lessFileBase}.css"))
 	}
 
 	// Generate output directory structure

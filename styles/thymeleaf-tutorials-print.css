@@ -59,10 +59,8 @@ blockquote {
 /* Content */
 /* -------------------------------------------------------------------------- */
 
-#content {
-	.level1 {
-		page-break-before: always;
-	}
+#content .level1 {
+	page-break-before: always;
 }
 
 /**

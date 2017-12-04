@@ -32,11 +32,11 @@
 
 h2 {
 	counter-reset: subheading;
+}
 
-	&::before {
-		counter-increment: heading;
-		content: counter(heading) ". ";
-	}
+h2::before {
+	counter-increment: heading;
+	content: counter(heading) ". ";
 }
 
 h3::before {
