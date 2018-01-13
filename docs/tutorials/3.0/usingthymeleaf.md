@@ -3537,7 +3537,7 @@ The result will be HTML-escaped:
 ```
 
 Note that **text inlining is active by default** in the body of every tag in our
-markup –- not the tags themselves -–, so there is nothing we need to do to to
+markup –- not the tags themselves -–, so there is nothing we need to do to
 enable it.
 
 
