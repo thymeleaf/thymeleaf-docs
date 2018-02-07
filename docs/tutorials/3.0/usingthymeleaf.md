@@ -3153,6 +3153,57 @@ In this case, if `${condition}` is false, `null` will be returned, and thus no
 removal will be performed. 
 
 
+8.5 Layout Inheritance
+----------------------
+
+To be able to have a single file as layout, fragments can be used. An example 
+of a simple layout having `title` and `content` using `th:fragment` and 
+`th:replace`:
+
+```html
+<!DOCTYPE html>
+<html th:fragment="layout (title, content)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:replace="${title}">Layout Title</title>
+</head>
+<body>
+    <h1>Layout H1</h1>
+    <div th:replace="${content}">
+        <p>Layout content</p>
+    </div>
+    <footer>
+        Layout footer
+    </footer>
+</body>
+</html>
+```
+
+This example declares a fragment called **layout** having _title_ and _content_ as
+parameters. Both will be replaced on page inheriting it by provided fragment 
+expressions in the example below.
+
+```html
+<!DOCTYPE html>
+<html th:replace="~{layoutFile :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Page Title</title>
+</head>
+<body>
+<section>
+    <p>Page content</p>
+    <div>Included on page</div>
+</section>
+</body>
+</html>
+```
+
+In this file, the `html` tag will be replaced by _layout_, but in the layout 
+`title` and `content` will have been replaced by `title` and `section` blocks
+respectively.
+
+If desired, the layout can be composed by several fragments as _header_ 
+and _footer_.
+
 
 
 9 Local Variables
