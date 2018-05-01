@@ -958,8 +958,9 @@ public class ClassForPositionAttributeTagProcessor extends AbstractAttributeTagP
          * Set the new value into the 'class' attribute (maybe appending to an existing value)
          */
         if (newValue != null) {
-            if (attributeValue != null) {
-                structureHandler.setAttribute("class", attributeValue + " " + newValue);
+            String currentClass = tag.getAttribute("class").getValue();
+            if (currentClass != null) {
+                structureHandler.setAttribute("class", currentClass + " " + newValue);
             } else {
                 structureHandler.setAttribute("class", newValue);
             }
@@ -999,8 +1000,9 @@ host tag (remember the `tag` object is immutable):
 
 ```java
 if (newValue != null) {
-    if (attributeValue != null) {
-        structureHandler.setAttribute("class", attributeValue + " " + newValue);
+    String currentClass = tag.getAttribute("class").getValue();
+    if (currentClass != null) {
+        structureHandler.setAttribute("class", currentClass + " " + newValue);
     } else {
         structureHandler.setAttribute("class", newValue);
     }
