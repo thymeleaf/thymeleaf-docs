@@ -1520,7 +1520,7 @@ is both more concise and versatile from a design standpoint:
 
 
 
-4.15 Data Conversion / Formatting
+4.14 Data Conversion / Formatting
 ---------------------------------
 
 Thymeleaf defines a *double-brace* syntax for variable (`${...}`) and selection
@@ -1555,7 +1555,7 @@ how to register a custom *conversion service* implementation, have a look at the
 
 
 
-4.14 Preprocessing
+4.15 Preprocessing
 ------------------
 
 In addition to all these features for expression processing, Thymeleaf has the
