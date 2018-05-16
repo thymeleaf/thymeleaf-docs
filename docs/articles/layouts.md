@@ -238,7 +238,7 @@ external server) by means of its Markup Selector syntax, similar to XPath
 expressions, CSS or jQuery selectors.
 
 ```xml
-<div th:insert="http://www.thymeleaf.org :: section.description" >...</div>
+<div th:insert="https://www.thymeleaf.org :: section.description" >...</div>
 ```
 
 The above code will include a `section` with `class="description"` from
