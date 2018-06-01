@@ -6,8 +6,8 @@ Thymeleaf documentation in Markdown format, which is then converted to HTML, EPU
 and PDF (using [wkhtmltopdf](http://wkhtmltopdf.org/))
 formats using the supplied Gradle build script.
 
-The flavour of Markdown used is pandoc's Markdown. It's specifics and extensions can be
-examined here: http://johnmacfarlane.net/pandoc/demo/example9/pandocs-markdown.html
+The flavour of Markdown used is pandoc's Markdown. Its specifics and extensions can be
+examined here: https://pandoc.org/MANUAL.html#pandocs-markdown
 
 
 Types of documents managed
