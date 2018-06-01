@@ -145,7 +145,6 @@ task generateDocsHTML(
 				"--toc-depth=4",
 				"--section-divs",
 				"--no-highlight",
-				"--smart",
 				"--output=" + outputFile,
 				"${srcDir.path}/${docName}.md"
 			])
@@ -187,7 +186,6 @@ task generateDocsEbook(
 				"--toc",
 				"--toc-depth=4",
 				"--section-divs",
-				"--smart",
 				"--output=" + epubOutputFile,
 				inputFile
 			], file(inputFile.parent))  // We need to set the working dir in order for pandoc to find images
