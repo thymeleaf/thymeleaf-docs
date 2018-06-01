@@ -869,7 +869,7 @@ As we already know, `#{...}` message expressions allow us to link this:
 
 ...to this:
 
-```html
+```
 home.welcome=¡Bienvenido a nuestra tienda de comestibles!
 ```
 
@@ -883,7 +883,7 @@ the user visiting the site at any moment and we wanted to greet them by name?
 
 This means we would need to add a parameter to our message. Just like this:
 
-```html
+```
 home.welcome=¡Bienvenido a nuestra tienda de comestibles, {0}!
 ```
 
