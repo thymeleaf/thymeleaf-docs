@@ -887,12 +887,13 @@ This means we would need to add a parameter to our message. Just like this:
 home.welcome=¡Bienvenido a nuestra tienda de comestibles, {0}!
 ```
 
-Parameters are specified according to the `java.text.MessageFormat` standard
-syntax, which means you can format to numbers and dates as specified in the API
-docs for those classes.
+Parameters are specified according to the
+[`java.text.MessageFormat`](https://docs.oracle.com/javase/10/docs/api/java/text/MessageFormat.html)
+standard syntax, which means you can format to numbers and dates as specified
+in the API docs for classes in the `java.text.*` package.
 
 In order to specify a value for our parameter, and given an HTTP session
-attribute called `user`, we would have:
+attribute called `user`, we could have:
 
 ```html
 <p th:utext="#{home.welcome(${session.user.name})}">
@@ -900,8 +901,9 @@ attribute called `user`, we would have:
 </p>
 ```
 
-Several parameters can be specified, separated by commas. In fact, the message
-key itself could come from a variable:
+Several parameters can be specified, separated by commas.
+
+The message key itself can come from a variable:
 
 ```html
 <p th:utext="#{${welcomeMsgKey}(${session.user.name})}">
