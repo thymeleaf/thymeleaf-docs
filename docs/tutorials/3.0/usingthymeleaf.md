@@ -901,6 +901,9 @@ attribute called `user`, we could have:
 </p>
 ```
 
+> Note that the use of `th:utext` here means that the formatted message will
+> not be escaped. This example assumes that `user.name` is already escaped.
+
 Several parameters can be specified, separated by commas.
 
 The message key itself can come from a variable:
