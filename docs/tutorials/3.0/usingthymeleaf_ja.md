@@ -1,8 +1,8 @@
 ---
 title: 'Tutorial: Using Thymeleaf (ja)'
 author: The Thymeleaf Team
-version: 20180501 - 01 May 2018
-thymeleafVersion: 3.0.9.RELEASE
+version: @documentVersion@
+thymeleafVersion: @projectVersion@
 language: Japanese
 lang: ja
 translator: 'Mitsuyuki Shiiba (<a href="https://twitter.com/bufferings">@bufferings</a>), Masatoshi Tada (<a href="https://twitter.com/suke_masa">@suke_masa</a>)'
