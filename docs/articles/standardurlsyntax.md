@@ -7,7 +7,7 @@ The Thymeleaf standard dialects --called *Standard* and *SpringStandard*--
 offer a way to easily create URLs in your web applications so that they
 include any required *URL preparation* artifacts. This is done by means
 of the so-called *link expressions*, a type of *Thymeleaf
-Standard Epression*: `@{...}`
+Standard Expression*: `@{...}`
 
 
 Absolute URLs
