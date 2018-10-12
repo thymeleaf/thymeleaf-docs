@@ -10,6 +10,10 @@ to use Thymeleaf for login and error pages.
 All the code seen here comes from a working application. You can view or
 download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-springsecurity).
 
+**Note** that the Thymeleaf integration packages for Spring Security support both
+Spring MVC and Spring WebFlux applications since Spring Security 5, but this
+article will focus on a Spring MVC configuration.
+
 
 Prerequisites
 -------------
@@ -92,7 +96,7 @@ Our **login.html** template is as follows:
 Error page
 ----------
 
-We can also configure an error page based on Thymeleaf . In this case Spring
+We can also configure an error page based on Thymeleaf. In this case Spring
 Security is not involved at all, we should simply add an
 [ExceptionHandler](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc)
 to our Spring configuration like:
@@ -142,9 +146,9 @@ to use this `error.html` in other error reporting scenarios).
 Spring Security Dialect
 -----------------------
 
-The [Spring Security 3 integration
-module](https://github.com/thymeleaf/thymeleaf-extras-springsecurity3)
-is a Thymeleaf dialect equivalent to [Spring security
+In Spring MVC environments, the [Spring Security integration
+module](https://github.com/thymeleaf/thymeleaf-extras-springsecurity)
+works as a replacement of the [Spring security
 taglib](http://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/taglibs.html).
 
 We use this dialect in the example in order to print the logged user
