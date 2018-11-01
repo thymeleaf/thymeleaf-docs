@@ -2807,11 +2807,11 @@ So the result is:
 
 ### Advanced conditional insertion of fragments
 
-The availability of both the *emtpy fragment* and *no-operation token* allows us
+The availability of both the *empty fragment* and *no-operation token* allows us
 to perform conditional insertion of fragments in a very easy and elegant way.
 
 For example, we could do this in order to insert our `common :: adminhead`
-fragment *only* if the user is an administrator, and insert nothing (emtpy
+fragment *only* if the user is an administrator, and insert nothing (empty
 fragment) if not:
 
 ```html
