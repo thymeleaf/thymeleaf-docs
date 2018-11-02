@@ -228,7 +228,7 @@ means of wrapping the `HttpServletResponse` object (a commonly used mechanism).
 
 Fragment expressions are an easy way to represent fragments of markup and move
 them around templates. Thanks to these expressions, fragments can be replicated,
-passed to other templates are arguments, and so on.
+passed to other templates as arguments, and so on.
 
 The most common use is for fragment insertion using `th:insert` or `th:replace`:
 
