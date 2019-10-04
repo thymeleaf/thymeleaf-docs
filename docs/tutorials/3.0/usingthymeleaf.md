@@ -1660,7 +1660,7 @@ messages files, the result of processing this file will be:
 </form>
 ```
 
-Besides the new attribute values, you can also see that the applicacion context
+Besides the new attribute values, you can also see that the application context
 name has been automatically prefixed to the URL base in `/gtvg/subscribe`, as
 explained in the previous chapter.
 
