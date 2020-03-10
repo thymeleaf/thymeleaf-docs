@@ -4438,7 +4438,7 @@ of configuration parameters, which include:
  * Encoding to be applied when reading templates:
 
     ```java
-    templateResolver.setEncoding("UTF-8");
+    templateResolver.setCharacterEncoding("UTF-8");
     ```
 
  * Template mode to be used:
