@@ -115,7 +115,7 @@ In the below example we add `mySessionAttribute` to session:
     }
 ```
 
-Similarly to the request parameters, session attributes can be access by using the `session.` prefix:
+Similarly to the request parameters, session attributes can be accessed by using the `session.` prefix:
 
 ```html
     <p th:text="${session.mySessionAttribute}" th:unless="${session == null}">[...]</p>
