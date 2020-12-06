@@ -1627,7 +1627,7 @@ at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-re
 -----------------------
 
 The Thymeleaf + Spring integration packages include integration with Spring
-WebFlow (2.3+).
+WebFlow (2.5+).
 
 WebFlow includes some AJAX capabilities for rendering fragments of the displayed
 page when specific events (_transitions_) are triggered, and in order to enable
