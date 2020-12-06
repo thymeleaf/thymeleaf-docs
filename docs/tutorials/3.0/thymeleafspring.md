@@ -1634,22 +1634,52 @@ page when specific events (_transitions_) are triggered, and in order to enable
 Thymeleaf to attend these AJAX requests, we will have to use a different `ViewResolver`
 implementation, configured like this:
 
-```xml
-<bean id="thymeleafViewResolver" class="org.thymeleaf.spring4.view.AjaxThymeleafViewResolver">
-    <property name="viewClass" value="org.thymeleaf.spring4.view.FlowAjaxThymeleafView" />
-    <property name="templateEngine" ref="templateEngine" />
-</bean>
+```java
+@Bean
+public FlowDefinitionRegistry flowRegistry() {
+    // NOTE: Additional configuration might be needed in your app
+    return getFlowDefinitionRegistryBuilder()
+            .addFlowLocation("...")
+            .setFlowBuilderServices(flowBuilderServices())
+            .build();
+}
+
+@Bean
+public FlowExecutor flowExecutor() {
+    // NOTE: Additional configuration might be needed in your app
+    return getFlowExecutorBuilder(flowRegistry()).build();
+}
+
+@Bean
+public FlowBuilderServices flowBuilderServices() {
+    // NOTE: Additional configuration might be needed in your app
+    return getFlowBuilderServicesBuilder()
+            .setViewFactoryCreator(viewFactoryCreator())
+            .build();
+}
+
+@Bean
+public ViewFactoryCreator viewFactoryCreator() {
+    MvcViewFactoryCreator factoryCreator = new MvcViewFactoryCreator();
+    factoryCreator.setViewResolvers(
+            Collections.singletonList(thymeleafViewResolver()));
+    factoryCreator.setUseSpringBeanBinding(true);
+    return factoryCreator;
+}
+
+@Bean
+public ViewResolver thymeleafViewResolver() {
+    AjaxThymeleafViewResolver viewResolver = new AjaxThymeleafViewResolver();
+    // We need to set a special ThymeleafView implementation: FlowAjaxThymeleafView
+    viewResolver.setViewClass(FlowAjaxThymeleafView.class);
+    viewResolver.setTemplateEngine(templateEngine());
+    return viewResolver;
+}
+
 ```
 
-...and then this `ViewResolver` can be configured at your WebFlow `ViewFactoryCreator`
-like:
-
-```xml
-<bean id="mvcViewFactoryCreator" 
-      class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
-    <property name="viewResolvers" ref="thymeleafViewResolver"/>
-</bean>
-```
+Note the above is not a complete configuration: you will still need to configure your handlers, etc. Refer to the
+Spring WebFlow documentation for that.
 
 From here on, you can specify Thymeleaf templates in your view-state's:
 
