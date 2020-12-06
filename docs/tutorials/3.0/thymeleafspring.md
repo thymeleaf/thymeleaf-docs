@@ -1627,12 +1627,16 @@ at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-re
 -----------------------
 
 The Thymeleaf + Spring integration packages include integration with Spring
-WebFlow (2.5+).
+WebFlow.
+
+_Note: Spring WebFlow 2.5+ is required when Thymeleaf is used with Spring 5, while only
+versions older than WebFlow 2.5 are allowed when Thymeleaf is used with earlier
+versions of Spring._
 
 WebFlow includes some AJAX capabilities for rendering fragments of the displayed
 page when specific events (_transitions_) are triggered, and in order to enable
 Thymeleaf to attend these AJAX requests, we will have to use a different `ViewResolver`
-implementation, configured like this:
+implementation, configured like this (for Spring WebFlow 2.5+):
 
 ```java
 @Bean
