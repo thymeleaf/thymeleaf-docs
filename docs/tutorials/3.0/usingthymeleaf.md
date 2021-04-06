@@ -136,7 +136,7 @@ functionality with:
 <input type="text" name="userName" value="James Carrot" th:value="${user.name}" />
 ```
 
-Not only will this be correctly displayed by browsers, but this also allow us to
+Not only will this be correctly displayed by browsers, but this also allows us to
 (optionally) specify a value attribute in it ("James Carrot", in this case) that
 will be displayed when the prototype is statically opened in a browser, and that
 will be substituted by the value resulting from the evaluation of `${user.name}`
