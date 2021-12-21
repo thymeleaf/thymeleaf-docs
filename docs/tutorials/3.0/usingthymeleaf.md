@@ -1859,7 +1859,7 @@ we will talk about it later.)
 ----------------------------------
 
 HTML has the concept of _boolean attributes_, attributes that have no value and
-the prescence of one means that value is "true".  In XHTML, these attributes
+the presence of one means that value is "true".  In XHTML, these attributes
 take just 1 value, which is itself.
 
 For example, `checked`:
