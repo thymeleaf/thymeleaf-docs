@@ -2046,7 +2046,7 @@ it is available to inner tags like `<td>`.
 
 ### Iterable values
 
-The `java.util.List` class isn't the onlyvalue that can be used for iteration in
+The `java.util.List` class isn't the only value that can be used for iteration in
 Thymeleaf. There is a quite complete set of objects that are considered _iterable_
 by a `th:each` attribute:
 
