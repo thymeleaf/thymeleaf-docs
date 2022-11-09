@@ -44,12 +44,12 @@ gretty {
 }
 
 // These two variables should be updated when creating a new version of the docs
-project.version = '3.0.14.RELEASE'
+project.version = '3.1.0.RC2'
 def documentDate = new Date().clearTime()
 documentDate.set(
-	year: 2021,
-	month: Calendar.DECEMBER,
-	date: 08)
+	year: 2022,
+	month: Calendar.NOVEMBER,
+	date: 7)
 
 def conversions = [
 	articles: ['html'],
