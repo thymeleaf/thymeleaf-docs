@@ -2,9 +2,7 @@
 title: "Thymeleaf 3.1: What's new and how to migrate"
 ---
 
-Please note **Thymeleaf 3.1** is not Generally Available yet. It's current status is **release candidate**.
-
-Latest verion is Thymeleaf `3.1.0.RC2`.
+Latest verion is Thymeleaf `3.1.0.RELEASE`.
 
 ## What's new
 
