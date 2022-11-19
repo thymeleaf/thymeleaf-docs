@@ -28,8 +28,8 @@ import java.text.SimpleDateFormat
 plugins {
 	id 'java'
 	id 'war'
-	id 'com.github.psxpaul.execfork' version '0.1.8'
-	id 'org.gretty' version '2.2.0'
+	id 'com.github.psxpaul.execfork' version '0.2.1'
+	id 'org.gretty' version '4.0.3'
 }
 
 repositories {
@@ -40,7 +40,7 @@ repositories {
 }
 
 gretty {
-	servletContainer 'jetty9.4'
+	servletContainer 'jetty11'
 }
 
 // These two variables should be updated when creating a new version of the docs
@@ -220,8 +220,8 @@ task startServer(
 
 	commandLine = './gradlew'
 	args = ['appStartWar']
-	standardOutput = "${buildDir}/server-stdout.log"
-	errorOutput = "${buildDir}/server-stderr.log"
+	standardOutput = layout.projectDirectory.file("${buildDir}/server-stdout.log")
+	errorOutput = layout.projectDirectory.file("${buildDir}/server-stderr.log")
 	waitForOutput = 'Run \'gradle appStop\' to stop the server'
 }
 
