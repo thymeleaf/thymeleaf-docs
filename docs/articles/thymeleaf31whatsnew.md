@@ -2,7 +2,7 @@
 title: "Thymeleaf 3.1: What's new and how to migrate"
 ---
 
-Latest version is Thymeleaf `3.1.0.RELEASE`.
+Latest version is Thymeleaf `3.1.1.RELEASE`.
 
 ## What's new
 
@@ -87,7 +87,7 @@ a development perspective:
 * Migration of all the testing infrastructure to JUnit 5.
 
 
-## Migrating to Thymeleaf 3.1.0
+## Migrating to Thymeleaf 3.1
 
 ### JDK version
 
