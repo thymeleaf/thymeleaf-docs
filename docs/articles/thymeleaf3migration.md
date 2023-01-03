@@ -168,7 +168,7 @@ The new textual template modes bring to Thymeleaf the ability to output **CSS**,
 of server-side variables in your CSS and Javascript files, or to generate plain
 text content as, for example, in e-mail composing.
 
-In order to have all Thymeleaf features avaible for the textual modes, a new
+In order to have all Thymeleaf features available for the textual modes, a new
 syntax has been introduced. For example, you can iterate like:
 
 ```text
@@ -433,7 +433,7 @@ Let's highlight a few enhancements of the new Dialect system:
    could, for example, use a pre-processor to serve cached content or a
    post-processor to minimize and compress the output.
  - *Dialect precedence* is a new concept which allows the sorting of processors
-   accross dialects. Processor precedences are now considered relative to
+   across dialects. Processor precedences are now considered relative to
    dialect precedence, so every processor in a specific dialect can be
    configured to be executed before any processors from a different dialect just
    by setting the correct values for this dialect precedence.
