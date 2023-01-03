@@ -2218,7 +2218,7 @@ context.setVariable(
      });
 ```
 
-This variable can be used without knowledge of its *lazyness*, in code such as:
+This variable can be used without knowledge of its *laziness*, in code such as:
 
 ```html
 <ul>
@@ -4893,7 +4893,7 @@ like in fragment expressions (`~{...}`).
 
 The impact is extremely small. When a resolved template is marked to use
 decoupled logic and it is not cached, the template logic resource will be
-resolved first, parsed and processed into a secuence of instructions in-memory:
+resolved first, parsed and processed into a sequence of instructions in-memory:
 basically a list of attributes to be injected to each markup selector.
 
 But this is the only *additional step* required because, after this, the real
