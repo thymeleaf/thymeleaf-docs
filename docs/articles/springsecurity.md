@@ -8,7 +8,7 @@ using JSP?  In this article we will see how to configure your Spring application
 to use Thymeleaf for login and error pages.
 
 All the code seen here comes from a working application. You can view or
-download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-springsecurity).
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleaf/tree/3.1-master/examples/springsecurity6/thymeleaf-examples-springsecurity6-websecurity).
 
 **Note** that the Thymeleaf integration packages for Spring Security support both
 Spring MVC and Spring WebFlux applications since Spring Security 5, but this

@@ -6,7 +6,7 @@ title: Say Hello Again! Extending Thymeleaf even more in another 5 minutes
 This article is a continuation of [*"Say Hello! Extending Thymeleaf in 5
 minutes"*](sayhelloextendingthymeleaf5minutes.html) and is meant to be
 read after it.  Code in this article comes from the same example application,
-which you can view or download from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-sayhello).
+which you can view or download from [its GitHub repo](https://github.com/thymeleaf/thymeleaf/tree/3.1-master/examples/spring6/thymeleaf-examples-spring6-sayhello).
 
 
 Some improvements for our 'hello' dialect

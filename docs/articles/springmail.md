@@ -28,7 +28,7 @@ Example application
 -------------------
 
 All the code in this article comes from a working example application.  You can
-view or download the source from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-springmail).
+view or download the source from [its GitHub repo](https://github.com/thymeleaf/thymeleaf/tree/3.1-master/examples/spring6/thymeleaf-examples-spring6-springmail).
 Downloading this application, executing it and exploring its source code is
 highly recommended *(note that you will have to configure your SMTP user name
 and password (and your SMTP server if you are not using GMail) at 

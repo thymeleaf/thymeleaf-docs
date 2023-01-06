@@ -1146,7 +1146,7 @@ will do the following:
     `/views/main.properties`.
   * If not found, then use the *origin* class (which could have been specified `null`) and look
     for `.properties` files in classpath with the name of the class specified there (the
-    processor's own class): `classpath:thymeleafexamples/extrathyme/dialects/score/RemarkForPositionAttributeTagProcessor_gl_ES.properties`,
+    processor's own class): `classpath:org/thymeleaf/examples/spring6/extrathyme/dialects/score/RemarkForPositionAttributeTagProcessor_gl_ES.properties`,
     etc. This allows the *componentization* or processors and dialects with their whole set of
     i18n resource bundles in plain old `.jar` files.
   * If none of these are found, have a look at the *absent message representation* flag. If `false`,

@@ -7,7 +7,7 @@ Extending Thymeleaf is easy: we only have to create a dialect and add
 it to our template engine. Let's see how.
 
 All the code seen here comes from a working application. You can view or
-download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleafexamples-sayhello).
+download the source code from [its GitHub repo](https://github.com/thymeleaf/thymeleaf/tree/3.1-master/examples/spring6/thymeleaf-examples-spring6-sayhello).
 
 
 Dialects
