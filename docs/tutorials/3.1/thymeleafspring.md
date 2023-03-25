@@ -13,7 +13,7 @@ Preface
 
 This tutorial explains how Thymeleaf can be integrated with the Spring Framework, especially (but not only) Spring MVC.
 
-Note that Thymeleaf has integrations for both versions 3.x and 4.x of the Spring Framework, provided by two
+Note that Thymeleaf has integrations for both versions 5.x and 6.x of the Spring Framework, provided by two
 separate libraries called `thymeleaf-spring5` and `thymeleaf-spring6`. These libraries are packaged in separate
 `.jar` files (`thymeleaf-spring5-{version}.jar` and `thymeleaf-spring6-{version}.jar`) and need to be added to your
 classpath in order to use Thymeleaf's Spring integrations in your application.
