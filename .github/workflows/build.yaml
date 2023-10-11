@@ -11,7 +11,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 11
-      # Just run the HTML task for now - the others need to install dependencies
+      - run: wget https://github.com/jgm/pandoc/releases/download/3.1.8/pandoc-3.1.8-1-amd64.deb
+      - run: sudo dpkg -i pandoc-3.1.8-1-amd64.deb
       - run: ./gradlew generateDocsHtml
       - uses: actions/upload-artifact@v3
         with:
