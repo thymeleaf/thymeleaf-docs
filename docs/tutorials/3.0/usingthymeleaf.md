@@ -1722,6 +1722,7 @@ There are quite a lot of attributes like these, each of them targeting a
 specific HTML5 attribute:
 
 <div class="table-scroller">
+
 ---------------------- ---------------------- ----------------------
 `th:abbr`              `th:accept`            `th:accept-charset`    
 `th:accesskey`         `th:action`            `th:align`             
@@ -1783,6 +1784,7 @@ specific HTML5 attribute:
 `th:vspace`            `th:width`             `th:wrap`              
 `th:xmlbase`           `th:xmllang`           `th:xmlspace`          
 ---------------------- ---------------------- ----------------------
+
 </div>
 
 
@@ -1880,6 +1882,7 @@ set to its fixed value, and if evaluated to false, the attribute will not be set
 The following fixed-value boolean attributes exist in the Standard Dialect:
 
 <div class="table-scroller">
+
 ------------------- ------------------ ------------------
 `th:async`          `th:autofocus`     `th:autoplay`      
 `th:checked`        `th:controls`      `th:declare`       
@@ -1890,6 +1893,7 @@ The following fixed-value boolean attributes exist in the Standard Dialect:
 `th:readonly`       `th:required`      `th:reversed`      
 `th:scoped`         `th:seamless`      `th:selected`      
 ------------------- ------------------ ------------------
+
 </div>
 
 

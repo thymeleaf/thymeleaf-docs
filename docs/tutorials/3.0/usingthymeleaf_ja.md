@@ -1424,6 +1424,7 @@ Thymeleafもそう思います。なので実際のところ`th:attr`属性が�
 Thymeleafには、このような属性が非常にたくさん用意されていて、それぞれが特定のHTML5属性に対応しています：
 
 <div class="table-scroller">
+
 ---------------------- ---------------------- ----------------------
 `th:abbr`              `th:accept`            `th:accept-charset`
 `th:accesskey`         `th:action`            `th:align`
@@ -1485,6 +1486,7 @@ Thymeleafには、このような属性が非常にたくさん用意されて�
 `th:vspace`            `th:width`             `th:wrap`
 `th:xmlbase`           `th:xmllang`           `th:xmlspace`
 ---------------------- ---------------------- ----------------------
+
 </div>
 
 
@@ -1567,6 +1569,7 @@ HTMLには*真偽値属性*という概念があります。その属性は値�
 スタンダードダイアレクトには次のような固定値真偽値属性があります：
 
 <div class="table-scroller">
+
 ------------------- ------------------ ------------------
 `th:async`          `th:autofocus`     `th:autoplay`
 `th:checked`        `th:controls`      `th:declare`
@@ -1577,6 +1580,7 @@ HTMLには*真偽値属性*という概念があります。その属性は値�
 `th:readonly`       `th:required`      `th:reversed`
 `th:scoped`         `th:seamless`      `th:selected`
 ------------------- ------------------ ------------------
+
 </div>
 
 
