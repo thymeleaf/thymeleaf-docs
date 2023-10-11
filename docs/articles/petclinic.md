@@ -191,7 +191,7 @@ In order to convert this page to Thymeleaf, we will:
 
     <!-- ============================================================================ -->
     <!-- This <head> is only used for static prototyping purposes (natural templates) -->
-    <!-- and is therefore entirely optionl, as this markup fragment will be included  -->
+    <!-- and is therefore entirely optional, as this markup fragment will be included  -->
     <!-- from "fragments.html" at runtime.                                            -->
     <!-- ============================================================================ -->
 
@@ -222,7 +222,7 @@ In order to convert this page to Thymeleaf, we will:
 
         <!-- =========================================================================== -->
         <!-- This div is only used for static prototyping purposes (natural templates)   -->
-        <!-- and is therefore entirely optionl, as this markup fragment will be included -->
+        <!-- and is therefore entirely optional, as this markup fragment will be included -->
         <!-- from "fragments.html" at runtime.                                           -->
         <!-- =========================================================================== -->
 
@@ -272,7 +272,7 @@ In order to convert this page to Thymeleaf, we will:
 
         <!-- =========================================================================== -->
         <!-- This table section is only used for static prototyping purposes (natural    -->
-        <!-- templates) and is therefore entirely optionl, as this markup fragment will  -->
+        <!-- templates) and is therefore entirely optional, as this markup fragment will  -->
         <!-- be included from "fragments.html" at runtime.                               -->
         <!-- =========================================================================== -->
 

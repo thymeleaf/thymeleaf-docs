@@ -55,7 +55,7 @@ As an exception to this restriction, some classes in these packages are always _
 
 Some artifacts have been deprecated in Thymeleaf 3.1.
 
-* Deprecated `th:include` in favour of `th:insert`. Note that `th:insert` has sligthly different semantics to `th:include`.
+* Deprecated `th:include` in favour of `th:insert`. Note that `th:insert` has slightly different semantics to `th:include`.
 * Deprecated unwrapped syntax for fragment insertion: now `~{template :: fragment}` should always be used instead of simply `template :: fragment`.
 
 Also, artifacts previously deprecated in 3.0 have been removed:
@@ -103,8 +103,8 @@ Thymeleaf 3.1 introduces three interfaces that abstract the specific details of 
 
   * `org.thymeleaf.web.IWebApplication`: Represents the web application and the attributes associated to it.
   * `org.thymeleaf.web.IWebExchange`: Represents the handling of a web request. Contains the request, the session (if any) and any attributes associated by the application to this specific exchange.
-  * `org.thymeleaf.web.IWebRequest`: Representes a web request: URL path, parameters, headers and cookies.
-  * `org.thymeleaf.web.IWebSession`: Representes a web session if it exists, containing any associated attributes.
+  * `org.thymeleaf.web.IWebRequest`: Represents a web request: URL path, parameters, headers and cookies.
+  * `org.thymeleaf.web.IWebSession`: Represents a web session if it exists, containing any associated attributes.
 
 Even if `IWebApplication` would more or less correspond to the Servlet API's `ServletContext`, there would not be an exact correspondence between the above and other structures in 
 the Servlet API. For instance, part of the data offered by Servlet API's `HttpServletRequest` (like e.g. URL and parameters) would be the contained in an `IWebRequest` object, whereas
@@ -169,7 +169,7 @@ public String contextPath(final HttpServletRequest request) {
 }
 ```
 
-But besides this, as also detailed in the _"What's new"_ section, a hard usage restiction has been established on classes belonging to the JDK and Jakarta EE core
+But besides this, as also detailed in the _"What's new"_ section, a hard usage restriction has been established on classes belonging to the JDK and Jakarta EE core
 classes, with some exceptions. Objects of the forbidden classes will not be usable in variable expressions since Thymeleaf 3.1.
 
 If some of your templates absolutely need to execute expressions on objects of the forbidden classes, you can create a wrapper class (in your own application's package)

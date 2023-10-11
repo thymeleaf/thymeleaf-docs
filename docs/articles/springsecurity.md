@@ -18,7 +18,7 @@ article will focus on a Spring MVC configuration.
 Prerequisites
 -------------
 
-We asume you are familiar with Thymeleaf and Spring Security, and you
+We assume you are familiar with Thymeleaf and Spring Security, and you
 have a working application using these technologies. If you don't know
 Spring Security, you could be interested on reading the [Spring Security
 Documentation](http://static.springsource.org/spring-security/site/reference.html).

@@ -283,7 +283,7 @@ when we open our browser:
 
 *WHAT? Where's our page gone?* Well, it's still there, but in order to
 make our page work as JSP we had to add lots of JSP tags and features
-that made it work wondefully when executed by our web server... but at
+that made it work wonderfully when executed by our web server... but at
 the same time made it be HTML no more. And therefore made it
 undisplayable for a browser.
 
@@ -305,7 +305,7 @@ For example, there is now an `<input type="email" ...>`, which will make
 our browser check that the text input by users has the shape of an email
 address. And also, there is a new property for all inputs called
 `placeholder` which shows a text in the field that automatically
-dissapears when the input gains focus (usually by the user clicking on
+disappears when the input gains focus (usually by the user clicking on
 it).
 
 Sounds good, doesn't it? Unfortunately not all browsers support this yet
