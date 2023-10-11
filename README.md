@@ -24,7 +24,7 @@ Types of documents managed
 Setup
 -----
 
-Java 8+ required.  The build process is often run on machines with Java 11.
+Java 11+ required.  The build process is often run on machines with Java 11.
 
 1. Download and install **Gradle**: http://www.gradle.org/install
 2. Download and install **Pandoc**: http://johnmacfarlane.net/pandoc/installing.html
