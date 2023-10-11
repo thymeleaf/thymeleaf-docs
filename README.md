@@ -26,13 +26,12 @@ Setup
 
 Java 11+ required.  The build process is often run on machines with Java 11.
 
-1. Download and install **Gradle**: http://www.gradle.org/install
-2. Download and install **Pandoc**: http://johnmacfarlane.net/pandoc/installing.html
+1. Download and install **Pandoc**: http://johnmacfarlane.net/pandoc/installing.html
    (PDF output is not done using Pandoc, so you don't need to get LaTeX.). You
    will need version 2.2.1 or newer.
-3. Optional: download and install **wkhtmltopdf**: http://wkhtmltopdf.org/downloads.html.
+2. Optional: download and install **wkhtmltopdf**: http://wkhtmltopdf.org/downloads.html.
    wkhtmltopdf is used for rendering PDF files from pandoc's HTML output.
-4. Optional: download and install **Calibre**: http://calibre-ebook.com/download.
+3. Optional: download and install **Calibre**: http://calibre-ebook.com/download.
    Calibre is used for conversion of pandoc's `.epub` output (e-book) into
    `.mobi` files (Kindle format).
 
@@ -52,7 +51,7 @@ sources to HTML, e-books and PDF. The following Gradle tasks perform these jobs:
  * `generateDocsPDF` - Create the PDF docs (also creates the HTML docs since it
    depends on them)
  * `generateDocsEbook` - Create the e-books.
- * `generateDocs` - Creates all docs
+ * `generateDocs`/`build` - Creates all docs
 
 The generated docs will end up in the `build/site/doc` directory. The entire
 `build/site` directory will be prepared for direct copy (`cp -R`) to the
