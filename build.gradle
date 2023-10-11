@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import com.github.psxpaul.task.ExecFork
 import org.apache.tools.ant.filters.ReplaceTokens
 
 import java.text.SimpleDateFormat
@@ -28,7 +29,7 @@ import java.text.SimpleDateFormat
 plugins {
 	id 'java'
 	id 'war'
-	id 'com.github.psxpaul.execfork' version '0.2.1'
+	id 'com.github.psxpaul.execfork' version '0.2.2'
 	id 'org.gretty' version '4.0.3'
 }
 
@@ -78,7 +79,7 @@ def docTypes = [:]
  * be considered their "document type", and this will have an influence on the
  * type of conversions that will be applied to them.
  */
-task copyResources {
+tasks.register('copyResources') {
 	doLast {
 		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentDate)
 
@@ -133,9 +134,10 @@ task copyResources {
 /**
  * Generate HTML versions of the Thymeleaf documentation.
  */
-task generateDocsHTML(
-	dependsOn: copyResources,
-	description: "Generate HTML docs from Thymeleaf's markdown docs") {
+tasks.register('generateDocsHTML') {
+	dependsOn 'copyResources'
+	description "Generate HTML docs from Thymeleaf's markdown docs"
+
 	doLast {
 		docNames.each { docName ->
 			def docType = docTypes.get(docName)
@@ -145,17 +147,19 @@ task generateDocsHTML(
 
 				def outputFile = file("${outputDir}/${docName}.html")
 				file(outputFile.parent).mkdirs()
-				execute([
-					"pandoc",
-					"--write=html5",
-					"--template=" + file("${templatesDir.path}/${docType}.html"),
-					"--toc",
-					"--toc-depth=4",
-					"--section-divs",
-					"--no-highlight",
-					"--output=" + outputFile,
-					"${srcDir.path}/${docName}.md"
-				])
+				exec {
+					commandLine = "pandoc"
+					args = [
+						"--write=html5",
+						"--template=" + file("${templatesDir.path}/${docType}.html"),
+						"--toc",
+						"--toc-depth=4",
+						"--section-divs",
+						"--no-highlight",
+						"--output=" + outputFile,
+						"${srcDir.path}/${docName}.md"
+					]
+				}
 			}
 		}
 
@@ -171,11 +175,11 @@ task generateDocsHTML(
 /**
  * Generate e-books of the Thymeleaf documentation.
  */
-task generateDocsEbook(
-	dependsOn: copyResources,
-	description: "Generate e-books from Thymeleaf's markdown docs") {
-	doLast {
+tasks.register('generateDocsEbook') {
+	description "Generate e-books from Thymeleaf's markdown docs"
+	dependsOn 'copyResources'
 
+	doLast {
 		// Currently only limited to tutorials
 		docNames.each { docName ->
 			def docType = docTypes.get(docName)
@@ -189,21 +193,24 @@ task generateDocsEbook(
 
 				def inputFile = file("${srcDir.path}/${docName}.md")
 
-				execute([
-					"pandoc",
-					"--write=epub",
-					"--template=" + file("${templatesDir.path}/${docType}.epub"),
-					"--toc",
-					"--toc-depth=4",
-					"--section-divs",
-					"--output=" + epubOutputFile,
-					inputFile
-				], file(inputFile.parent))  // We need to set the working dir in order for pandoc to find images
-				execute([
-					"ebook-convert",
-					epubOutputFile,
-					mobiOutputFile
-				])
+				exec {
+					// We need to set the working dir in order for pandoc to find images
+					workingDir = file(inputFile.parent)
+					commandLine = "pandoc"
+					args = [
+						"--write=epub",
+						"--template=" + file("${templatesDir.path}/${docType}.epub"),
+						"--toc",
+						"--toc-depth=4",
+						"--section-divs",
+						"--output=" + epubOutputFile,
+						inputFile
+					]
+				}
+				exec {
+					commandLine = "ebook-convert"
+					args = [epubOutputFile, mobiOutputFile]
+				}
 			}
 		}
 	}
@@ -214,14 +221,11 @@ task generateDocsEbook(
  * background process.  This is because Gretty by itself blocks the existing
  * thread until the server is shut down via other means.
  */
-task startServer(
-	type: com.github.psxpaul.task.ExecFork,
-	dependsOn: 'war') {
+tasks.register('startServer', ExecFork) {
+	dependsOn 'war'
 
 	commandLine = './gradlew'
 	args = ['appStartWar']
-	standardOutput = layout.projectDirectory.file("${buildDir}/server-stdout.log")
-	errorOutput = layout.projectDirectory.file("${buildDir}/server-stderr.log")
 	waitForOutput = 'Run \'gradle appStop\' to stop the server'
 }
 
@@ -231,9 +235,9 @@ task startServer(
  * via the http:// protocol (otherwise the same-origin restriction kicks in, as
  * do some file:// bugs on Windows) and saves them as PDF documents.
  */
-task generateDocsPDF(
-	dependsOn: ['generateDocsHTML', 'startServer'],
-	description: "Generate PDF documents from Thymeleaf's HTML docs") {
+tasks.register('generateDocsPDF') {
+	description "Generate PDF documents from Thymeleaf's HTML docs"
+	dependsOn 'generateDocsHTML', 'startServer'
 
 	doLast {
 		// Generate the PDF documents from the modified HTML documents
@@ -246,49 +250,41 @@ task generateDocsPDF(
 			if (conversions[docType].contains('pdf')) {
 				println "Generating PDF doc for ${docName} (${docType})..."
 
-				execute([
-					"wkhtmltopdf",
-					"--print-media-type",
-					"--dpi", "300",
-					"--javascript-delay", "1000",
-					"--margin-bottom", "15",
-					"--footer-spacing", "5",
-					"--footer-font-size", "8",
-					"--footer-font-name", "'Ubuntu'",
-					"--footer-right", "Page [page] of [topage]",
-					"--quiet",
-					"http://localhost:8080/thymeleaf-docs/${docName}.html",
-					file("${outputDir}/${docName}.pdf")
-				])
+				exec {
+					commandLine = 'wkhtmltopdf'
+					args = [
+						"--print-media-type",
+						"--dpi", "300",
+						"--javascript-delay", "1000",
+						"--margin-bottom", "15",
+						"--footer-spacing", "5",
+						"--footer-font-size", "8",
+						"--footer-font-name", "'Ubuntu'",
+						"--footer-right", "Page [page] of [topage]",
+						"--quiet",
+						"http://localhost:8080/thymeleaf-docs/${docName}.html",
+						file("${outputDir}/${docName}.pdf")
+					]
+				}
 			}
 		}
 
-		execute([
-			'gradle',
-			'appStop'
-		])
+		exec {
+			commandLine = './gradlew'
+			args = ['appStop']
+		}
 	}
 }
 
 /**
  * Generate HTML, E-book and PDF versions of the Thymeleaf documentation.
  */
-task generateDocs(
-	dependsOn: [generateDocsHTML, generateDocsEbook, generateDocsPDF],
-	description: "Generate HTML, E-book and PDF documents from Thymeleaf's markdown docs") {
+tasks.register('generateDocs') {
+	dependsOn 'generateDocsHtml', 'generateDocsEbook', 'generateDocsPdf'
 
 	// Just an aggregator task
 }
 
-/**
- * Execute the given command and wait for the process to complete.
- * 
- * @param command
- */
-def execute(command, workingDir = projectDir) {
-	def proc = command.execute(null, workingDir)
-	proc.waitForProcessOutput(System.out, System.err)
-	if (proc.exitValue() > 0) {
-		println "${proc.err.text}"
-	}
+tasks.named('build') {
+	dependsOn 'generateDocs'
 }
