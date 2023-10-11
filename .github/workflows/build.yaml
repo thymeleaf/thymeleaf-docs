@@ -15,6 +15,10 @@ jobs:
         run: |
           wget https://github.com/jgm/pandoc/releases/download/3.1.8/pandoc-3.1.8-1-amd64.deb
           sudo dpkg -i pandoc-3.1.8-1-amd64.deb
+      - name: Install wkhtmltopdf
+        run: |
+          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
       - run: ./gradlew generateDocsHtml generateDocsPdf
       - uses: actions/upload-artifact@v3
         with:
