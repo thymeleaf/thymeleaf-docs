@@ -41,7 +41,7 @@ repositories {
 }
 
 gretty {
-	servletContainer 'jetty11'
+	scanInterval 0
 }
 
 // These two variables should be updated when creating a new version of the docs
