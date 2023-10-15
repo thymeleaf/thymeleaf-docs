@@ -209,7 +209,10 @@ tasks.register('generateDocsEbook') {
 				}
 				exec {
 					commandLine = "ebook-convert"
-					args = [epubOutputFile, mobiOutputFile]
+					args = [
+						epubOutputFile,
+						mobiOutputFile
+					]
 				}
 			}
 		}
