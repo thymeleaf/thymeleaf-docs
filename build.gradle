@@ -152,6 +152,7 @@ tasks.register('generateDocsHTML') {
 					args = [
 						"--write=html5",
 						"--template=" + file("${templatesDir.path}/${docType}.html"),
+						"--wrap=none",
 						"--toc",
 						"--toc-depth=4",
 						"--section-divs",
