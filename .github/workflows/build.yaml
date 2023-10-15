@@ -21,6 +21,8 @@ jobs:
           sudo apt install -f ./wkhtmltox_0.12.6.1-2.jammy_amd64.deb
       - name: Install Calibre
         run: |
+          sudo apt-get -y install libegl1
+          sudo apt-get -y install libopengl0
           sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
       - run: ./gradlew build
       - uses: actions/upload-artifact@v3
