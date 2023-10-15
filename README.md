@@ -3,8 +3,8 @@ Thymeleaf Docs
 ==============
 
 Thymeleaf documentation in Markdown format, which is then converted to HTML, EPUB
-(using [Pandoc](http://johnmacfarlane.net/pandoc/)), MOBI (using [Calibre](http://calibre-ebook.com/))
-and PDF (using [wkhtmltopdf](http://wkhtmltopdf.org/))
+(using [Pandoc](https://johnmacfarlane.net/pandoc/)), MOBI (using [Calibre](https://calibre-ebook.com/))
+and PDF (using [wkhtmltopdf](https://wkhtmltopdf.org/))
 formats using the supplied Gradle build script.
 
 The flavour of Markdown used is pandoc's Markdown. Its specifics and extensions can be
@@ -21,41 +21,38 @@ Types of documents managed
    with the same HTML style as the rest of the Thymeleaf web site.
 
 
-Setup
------
+Building the documentation
+--------------------------
 
-Java 11+ required.  The build process is often run on machines with Java 11.
+The docs can be generated using the ["build" workflow](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
+in GitHub Actions.  The artifact created contains the docs in the same structure
+as used for copying to and updating the Thymeleaf website (https://github.com/thymeleaf/thymeleaf.github.io).
 
-1. Download and install **Pandoc**: http://johnmacfarlane.net/pandoc/installing.html
-   (PDF output is not done using Pandoc, so you don't need to get LaTeX.). You
-   will need version 2.2.1 or newer.
-2. Optional: download and install **wkhtmltopdf**: http://wkhtmltopdf.org/downloads.html.
-   wkhtmltopdf is used for rendering PDF files from pandoc's HTML output.
-3. Optional: download and install **Calibre**: http://calibre-ebook.com/download.
-   Calibre is used for conversion of pandoc's `.epub` output (e-book) into
-   `.mobi` files (Kindle format).
+If you want to build the docs on your own machine, then you can follow the
+instructions below.
 
-Additionally, if you want to be able to import this project into Eclipse or run
-the Gradle tasks from Eclipse, then install the Groovy-Eclipse and Gradle IDE
-components from the [Spring Tool Suite](http://www.springsource.org/sts).
-IntelliJ IDEA has support for Gradle tasks through its built-in Gradle plugin.
+### Dependencies / things to install
 
+ - Java 11+
+ - Pandoc 2.2.1+ for HTML docs: https://johnmacfarlane.net/pandoc/installing.html
+ - wkhtmltopdf 0.12.6+ for PDF and EPUB/MOBI docs (optional): https://wkhtmltopdf.org/downloads.html
+ - Calibre for EPUB/MOBI docs (optional): https://calibre-ebook.com/download
 
-Generating the documentation
-----------------------------
+### Generating the docs
 
-Use the Gradle build script to generate the documentation from the Markdown
-sources to HTML, e-books and PDF. The following Gradle tasks perform these jobs:
+Use the Gradle wrapper build script (`./gradlew` which is included in this repo)
+to generate the documentation from the Markdown sources to your desired format,
+HTML, PDF, or e-books.  The following Gradle tasks perform these jobs:
 
  * `generateDocsHTML` - Create the HTML docs.
  * `generateDocsPDF` - Create the PDF docs (also creates the HTML docs since it
    depends on them)
  * `generateDocsEbook` - Create the e-books.
- * `generateDocs`/`build` - Creates all docs
+ * `generateDocs`/`build` - Create all the above.
 
-The generated docs will end up in the `build/site/doc` directory. The entire
+The generated docs will end up in the `build/site/doc` directory.  The entire
 `build/site` directory will be prepared for direct copy (`cp -R`) to the
-Thymeleaf website repository (`thymeleaf.github.com`) for publishing.
+Thymeleaf website repository for publishing.
 
 ### Updating the docs for a new version
 
