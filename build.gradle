@@ -283,7 +283,7 @@ tasks.register('generateDocsPDF') {
  * Generate HTML, E-book and PDF versions of the Thymeleaf documentation.
  */
 tasks.register('generateDocs') {
-	dependsOn 'generateDocsHtml', 'generateDocsEbook', 'generateDocsPdf'
+	dependsOn 'generateDocsHTML', 'generateDocsEbook', 'generateDocsPDF'
 
 	// Just an aggregator task
 }
