@@ -57,9 +57,8 @@ Thymeleaf website repository for publishing.
 ### Updating the docs for a new version
 
 To change the version number that appears in the generated docs, update the
-`project.version` property in the `build.gradle` script. The `documentDate` var
-should also be changed to reflect the new date the generated documents should
-refer to.
+`documentMetadata` object in the `build.gradle` script for the date and
+version of docs that need updating.
 
 
 How the docs are generated

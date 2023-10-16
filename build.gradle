@@ -17,7 +17,8 @@
 import com.github.psxpaul.task.ExecFork
 import org.apache.tools.ant.filters.ReplaceTokens
 
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /**
  * Gradle build script for the Thymeleaf Docs project, converts the
@@ -44,13 +45,21 @@ gretty {
 	scanInterval 0
 }
 
-// These two variables should be updated when creating a new version of the docs
-project.version = '3.1.2.RELEASE'
-def documentDate = new Date().clearTime()
-documentDate.set(
-	year: 2023,
-	month: Calendar.JULY,
-	date: 30)
+// Replaces @projectVersion@ and @documentVersion@ placeholders in the docs
+def documentMetadata = [
+  '2.1': [
+	  version: '2.1.6.RELEASE',
+	  date: LocalDate.of(2017, 11, 5)
+  ],
+	'3.0': [
+	  version: '3.0.11.RELEASE',
+		date: LocalDate.of(2018, 10, 29)
+	],
+	'3.1': [
+	  version: '3.1.2.RELEASE',
+		date: LocalDate.of(2023, 7, 30)
+	]
+]
 
 def conversions = [
 	articles: ['html'],
@@ -81,7 +90,6 @@ def docTypes = [:]
  */
 tasks.register('copyResources') {
 	doLast {
-		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentDate)
 
 		// Copy docs files to the src folder. For markdown files, apply property filtering and build the name-type map
 		copy {
@@ -93,11 +101,13 @@ tasks.register('copyResources') {
 				// We need a file path relative to the 'docs' folder
 				def docFileName = (it.relativePath.toString() - ".md").replace('\\', '/')
 				def docFileType = it.file.parentFile.name
+				def thymeleafVersion = null
 
 				// The parent folder in some cases might be a version number (e.g. tutorials for 2.1, 3.0...) In
 				// such case, we need to obtain the document type from the parent of the parent. Note three types
 				// of version specifications are allowed: '2.1', '2.1.4', '2.1.x'
 				if (docFileType ==~ /\d+\.\d+(\.\d+)?/ || docFileType ==~ /\d+\.\d+(\.x)?/) {
+					thymeleafVersion = it.file.parentFile.name
 					docFileType = it.file.parentFile.parentFile.name
 				}
 
@@ -105,10 +115,16 @@ tasks.register('copyResources') {
 				docTypes.put(docFileName, docFileType)
 
 				// Property filtering, this will replace all @gradle-properties@ (mainly used in markdown metadata)
-				filter(ReplaceTokens, tokens: [
-					documentVersion: documentVersion,
-					projectVersion : project.version
-				])
+				var documentMetadataForVersion = documentMetadata[(thymeleafVersion)]
+				if (documentMetadataForVersion) {
+					def documentVersion = DateTimeFormatter.ofPattern('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentMetadataForVersion.date)
+					def projectVersion = documentMetadataForVersion.version
+
+					filter(ReplaceTokens, tokens: [
+						documentVersion: documentVersion,
+						projectVersion : projectVersion
+					])
+				}
 			}
 		}
 
