@@ -2,6 +2,8 @@
 Thymeleaf Docs
 ==============
 
+[![build](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml/badge.svg)](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
+
 Thymeleaf documentation in Markdown format, which is then converted to HTML, EPUB
 (using [Pandoc](https://johnmacfarlane.net/pandoc/)), MOBI (using [Calibre](https://calibre-ebook.com/))
 and PDF (using [wkhtmltopdf](https://wkhtmltopdf.org/))
