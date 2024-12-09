@@ -2,7 +2,7 @@
 title: "Thymeleaf 3.1: What's new and how to migrate (ja)"
 ---
 
-Latest version is Thymeleaf `3.1.1.RELEASE`.
+Latest version is Thymeleaf `3.1.3.RELEASE`.
 
 ## What's new
 
