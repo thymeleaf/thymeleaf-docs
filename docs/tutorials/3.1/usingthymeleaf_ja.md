@@ -1,6 +1,6 @@
 ---
 title: 'Tutorial: Using Thymeleaf (ja)'
-author: The Thymeleaf Team
+author: Thymeleaf
 version: @documentVersion@
 thymeleafVersion: @projectVersion@
 language: Japanese

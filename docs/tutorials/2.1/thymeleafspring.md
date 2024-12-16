@@ -1,6 +1,6 @@
 ---
 title: 'Tutorial: Thymeleaf + Spring'
-author: The Thymeleaf Team
+author: Thymeleaf
 version: @documentVersion@
 thymeleafVersion: @projectVersion@
 ---
