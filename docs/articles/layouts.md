@@ -527,7 +527,7 @@ capabilities by offering support for Thymeleaf attributes through a
 statically accessible javascript library*
 
 Thymol documentation and examples can be found on the official project
-site here: [Thymol](http://www.thymoljs.org/).
+site here: [Thymol](https://github.com/thymol/thymol.js).
 
 Thymeleaf Layout Dialect
 ------------------------
