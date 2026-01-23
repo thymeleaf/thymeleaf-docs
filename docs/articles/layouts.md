@@ -1,74 +1,74 @@
 ---
-title: Thymeleaf Page Layouts
-author: 'Rafa&#322; Borowiec &mdash; <a href="http://blog.codeleak.pl">http://blog.codeleak.pl</a>'
+title: Diseños de página de Thymeleaf
+author: 'Rafa&#322; Borowiec &mdash; <a href="https://blog.codeleak.pl">https://blog.codeleak.pl</a>'
 ---
 
-Introduction
+Introducción
 ------------
 
-Usually websites share common page components like the header, footer,
-menu and possibly many more. These page components can be used by the
-same or different layouts. There are two main styles of organizing
-layouts in projects: *include* style and *hierarchical* style. Both
-styles can be easily utilized with Thymeleaf without losing its biggest
-value: **natural templating**.
+Normalmente, los sitios web comparten componentes de página comunes, como el encabezado, el pie de página, el menú y 
+posiblemente muchos más. Estos componentes de página pueden usarse con el mismo diseño o con diseños diferentes. Existen 
+dos estilos principales para organizar los diseños en los proyectos: el estilo *include* y el estilo *jerárquico*. 
+Ambos estilos se pueden utilizar fácilmente con Thymeleaf sin perder su principal valor: **las plantillas naturales**.
 
-### Include-style layouts
+### Diseños de estilo de inclusión
 
-In this style pages are built by embedding common page component code
-directly within each view to generate the final result. In Thymeleaf
-this can be done using **Thymeleaf Standard Layout System**:
+En este estilo, las páginas se crean integrando código de componente común directamente en cada vista para generar el 
+resultado final. En Thymeleaf, esto se puede lograr mediante el **Sistema de Diseño Estándar de Thymeleaf**:
 
 ```xml
 <body>
     <div th:insert="footer :: copy">...</div>
 </body>
 ```
+Los diseños de estilo include son bastante fáciles de entender e implementar y, 
+de hecho, ofrecen flexibilidad para desarrollar vistas, lo cual constituye su 
+mayor ventaja. Sin embargo, la principal desventaja de esta solución es que 
+introduce cierta duplicación de código, por lo que modificar el diseño de un 
+gran número de vistas en aplicaciones grandes puede resultar algo engorroso.
 
-The include-style layouts are pretty simple to understand and implement
-and in fact they offer flexibility in developing views, which is their
-biggest advantage. The main disadvantage of this solution, though, is
-that some code duplication is introduced so modifying the layout of a
-large number of views in big applications can become a bit cumbersome.
+### Diseños de estilo jerárquico
 
-### Hierarchical-style layouts
+En un estilo jerárquico, las plantillas suelen crearse con una relación 
+padre-hijo, desde la parte más general (diseño) hasta las más específicas 
+(subvistas; por ejemplo, el contenido de la página). Cada componente de la 
+plantilla puede incluirse dinámicamente mediante la inclusión y sustitución de 
+fragmentos de plantilla. En Thymeleaf, esto se puede hacer mediante el 
+**Dialecto de Diseño de Thymeleaf**.
 
-In hierarchical style, the templates are usually created with a
-parent-child relation, from the more general part (layout) to the most
-specific ones (subviews; e.g. page content). Each component of the
-template may be included dynamically based on the inclusion and
-substitution of template fragments. In Thymeleaf this can be done using
-**Thymeleaf Layout Dialect**.
-
-The main advantages of this solution are the reuse of atomic portions of
-the view and modular design, whereas the main disadvantage is that much
-more configuration is needed in order to use them, so the complexity of
-the views is bigger than with Include Style Layouts which are more
-"natural" to use.
+Las principales ventajas de esta solución son la reutilización de porciones 
+atómicas de la vista y el diseño modular, mientras que la principal desventaja 
+es que se necesita mucha más configuración para poder utilizarlas, por lo que la 
+complejidad de las vistas es mayor que con los diseños de estilo Include que son 
+más "naturales" de utilizar.
 
 
-Example Application
--------------------
+Ejemplo de aplicación
+---------------------
 
-All the samples and code fragments presented in this article are
-available on GitHub at
+Todos los ejemplos y fragmentos de código presentados en este artículo están 
+disponibles en GitHub en
 [https://github.com/thymeleaf/thymeleafexamples-layouts](https://github.com/thymeleaf/thymeleafexamples-layouts)
 
 
-Thymeleaf Standard Layout System
+Sistema de diseño estándar de Thymeleaf
 --------------------------------
 
-Thymeleaf Standard Layout System offers page fragment inclusion that is
-similar to *JSP includes*, with some important improvements over them.
+El sistema de diseño estándar de Thymeleaf ofrece la inclusión de fragmentos de página similares a las *inclusiones JSP*,
+con algunas mejoras importantes.
 
-### Basic inclusion with `th:insert` and `th:replace`
+### Inclusión básica con `th:insert` y `th:replace`
 
-Thymeleaf can include parts of other pages as fragments (whereas JSP only includes complete pages) using `th:insert` (it will simply insert the specified fragment as the body of its host tag) or `th:replace` (will actually substitute the host tag by the fragment's). This allows the grouping of fragments into one or several pages. Look at the example.
+Thymeleaf puede incluir partes de otras páginas como fragmentos (mientras que 
+JSP solo incluye páginas completas) mediante `th:insert` (simplemente insertará 
+el fragmento especificado como el cuerpo de su etiqueta de host) o `th:replace` 
+(sustituirá la etiqueta de host por la del fragmento). Esto permite agrupar 
+fragmentos en una o varias páginas. Vea el ejemplo.
 
-The `home/homeNotSignedIn.html` template is rendered when the anonymous
-user enters the home page of our application.
+La plantilla `home/homeNotSignedIn.html` se procesa cuando el usuario anónimo
+ingresa a la página de inicio de aplicación..
 
-Class `thymeleafexamples.layouts.home.HomeController`
+Clase `thymeleafexamples.layouts.home.HomeController`
 
 ```java
 @Controller
@@ -82,7 +82,7 @@ class HomeController {
 }
 ```
 
-Template `home/homeNotSignedIn.html`
+Plantilla `home/homeNotSignedIn.html`
 
 ```xml
 <!DOCTYPE html>
@@ -93,19 +93,19 @@ Template `home/homeNotSignedIn.html`
   <body>
     ...
     <div th:replace="fragments/header :: header">
-      <!-- ============================================================================ -->
-      <!-- This content is only used for static prototyping purposes (natural templates)-->
-      <!-- and is therefore entirely optional, as this markup fragment will be included -->
-      <!-- from "fragments/header.html" at runtime.                                     -->
-      <!-- ============================================================================ -->
+        <!-- =================================================================================================== -->
+        <!-- Este contenido solo se utiliza para la creación de prototipos estáticos (plantillas naturales)      -->
+        <!-- y, por lo tanto, es totalmente opcional, ya que este fragmento de marcado se incluirá               -->
+        <!-- de "fragments/header.html" en tiempo de ejecución.                                                  -->
+        <!-- =================================================================================================== -->
       <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Static header</a>
+            <a class="navbar-brand" href="#">Encabezado estático</a>
           </div>
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
+              <li class="active"><a href="#">Inicio</a></li>
             </ul>
           </div>
         </div>
@@ -113,48 +113,48 @@ Template `home/homeNotSignedIn.html`
     </div>
     <div class="container">
       <div class="hero-unit">
-        <h1>Test</h1>
+        <h1>Prueba</h1>
         <p>
-          Welcome to the Spring MVC Quickstart application!
-          Get started quickly by signing up.
+            ¡Bienvenido a la aplicación de inicio rápido de Spring MVC!
+            Regístrate para empezar rápidamente.
         </p>
         <p>
-          <a href="/signup" th:href="@{/signup}" class="btn btn-large btn-success">Sign up</a>
+          <a href="/signup" th:href="@{/signup}" class="btn btn-large btn-success">Inscribirse</a>
         </p>
       </div>
-      <div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+      <div th:replace="fragments/footer :: footer">© 2016 Las plantillas estáticas</div>
     </div>
     ...
   </body>
 </html>
 ```
 
-You can open the file directly in a browser:
+Puedes abrir el archivo directamente en un navegador:
 
-![Home page when not signed in](images/layouts/homeNotSignedIn.png)
+![Página de inicio cuando no se ha iniciado sesión](images/layouts/homeNotSignedIn.png)
 
-In the above example, we are building a page that consists of page
-header and page footer. In Thymeleaf all fragments can be defined in a
-single file (e.g. `fragments.html`) or in a separate files, like in this
-particular case.
+En el ejemplo anterior, estamos creando una página que consta de un encabezado y 
+un pie de página. En Thymeleaf, todos los fragmentos pueden definirse en un solo 
+archivo (p. ej., `fragments.html`) o en archivos separados, como en este caso 
+particular.
 
-Let's shortly analyze the inclusion statement:
+Analicemos brevemente la declaración de inclusión:
 
 ```xml
 <div th:replace="fragments/header :: header">...</div>
 ```
+La primera parte de la declaración, `fragments/header`, es el nombre de la 
+plantilla al que hacemos referencia. Puede ser un archivo (como en este ejemplo) 
+o puede hacer referencia al mismo archivo usando la palabra clave `this` 
+(p. ej., `this::header`) o sin ninguna palabra clave (p. ej., `::header`). La 
+expresión después de dos puntos es un selector de fragmentos (ya sea un nombre 
+de fragmento o un  *Selector de Marcado*). Como puede ver, el fragmento de 
+encabezado contiene un marcado que se utiliza únicamente para la creación de 
+prototipos estáticos.
 
-The first part of the statement, `fragments/header`, is a template name
-that we are referencing. This can be a file (like in this example) or it
-can reference to the same file either by using the `this` keyword (e.g.
-`this :: header`) or without any keyword (e.g. `:: header`). The
-expression after double colon is a fragment selector (either fragment
-name or *Markup Selector*). As you can also see, the header fragment
-contains a markup that is used for static prototyping only.
+El encabezado y el pie de página se definen en los siguientes archivos:
 
-Header and footer are defined in the following files:
-
-Template `fragments/header.html`
+Plantilla `fragments/header.html`
 
 ```xml
 <!DOCTYPE html>
@@ -171,7 +171,7 @@ Template `fragments/header.html`
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">My project</a>
+          <a class="navbar-brand" href="#">Mi Proyecto</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -185,12 +185,12 @@ Template `fragments/header.html`
           <ul class="nav navbar-nav navbar-right">
             <li th:if="${#authorization.expression('!isAuthenticated()')}">
               <a href="/signin" th:href="@{/signin}">
-                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Iniciar sesión
               </a>
             </li>
             <li th:if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
-                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Cerrar sesión
               </a>
              <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
             </li>
@@ -202,11 +202,11 @@ Template `fragments/header.html`
 </html>
 ```
 
-...which we can open directly in a browser:
+...que podemos abrir directamente en un navegador:
 
 ![Header page](images/layouts/header.png)
 
-And template `fragments/footer.html`
+Y la plantilla `fragments/footer.html`
 
 ```xml
 <!DOCTYPE html>
@@ -216,35 +216,37 @@ And template `fragments/footer.html`
   </head>
   <body>
     <div th:fragment="footer">
-      &copy; 2016 Footer
+      &copy; 2016 Pie de página
     </div>
   </body>
 </html>
 ```
 
-Note how that the referenced fragments are specified with `th:fragment`
-attributes. This way we can define multiple fragments in one template
-file, as it was mentioned earlier.
+Observe cómo los fragmentos referenciados se especifican con atributos 
+`th:fragment`. De esta forma, podemos definir varios fragmentos en un solo 
+archivo de plantilla, como se mencionó anteriormente.
 
-What is important here, is that all the templates can still be natural
-templates and can be viewed in a browser without a running server.
+Lo importante aquí es que todas las plantillas pueden seguir siendo plantillas 
+naturales y visualizarse en un navegador sin necesidad de un servidor en 
+ejecución.
 
-### Including with Markup Selectors
+### Incluido con selectores de marcado
 
-In Thymeleaf, fragments don't need to be explicitly specified using
-`th:fragment` at the page they are extracted from. Thymeleaf can select
-an arbitrary section of a page as a fragment (even a page living on an
-external server) by means of its Markup Selector syntax, similar to XPath
-expressions, CSS or jQuery selectors.
+En Thymeleaf, no es necesario especificar explícitamente los fragmentos  
+usando `th:fragment` en la página de la que se extraen. Thymeleaf puede 
+seleccionar una sección arbitraria de una página como fragmento (incluso una 
+página alojada en un servidor externo) mediante su sintaxis de Selectores de 
+Marcado, similar a las expresiones XPath, CSS o selectores de jQuery. 
+
 
 ```xml
 <div th:insert="https://www.thymeleaf.org :: section.description" >...</div>
 ```
 
-The above code will include a `section` with `class="description"` from
-`thymeleaf.org`. 
+El código anterior incluirá una `section` con `class="description"` de
+`thymeleaf.org`.
 
-In order to make it happen, the template engine must be configured with `UrlTemplateResolver`:
+Para que esto ocurra, el motor de plantillas debe configurarse con `UrlTemplateResolver`:
 
 ```java
 @Bean
@@ -256,24 +258,24 @@ public SpringTemplateEngine templateEngine() {
 }
 ```
 
-For the Markup Selector syntax reference checkout this section in Thymeleaf
-documentation: [Markup Selector syntax](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax).
+Para obtener la referencia de sintaxis del Selector de marcado, consulte esta 
+sección en la documentación de Thymeleaf: [Sintaxis del Selector de Marcado](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax).
 
-### Using expressions
-
-In `templatename :: selector`, both `templatename` and `selector`
-can be fully-featured expressions. In the below example we want to
-include different fragments depending on a condition. If the
-authenticated user is an Admin, we will show a different footer than for
-a regular user:
+### Usando expresiones
+En `templatename :: selector`. tanto `templatename` como `selector` pueden ser 
+expresiones completamente funcionales. En el ejemplo siguiente, queremos incluir 
+diferentes fragmentos dependiendo de una condición. Si el usuario autenticado 
+es un Administrador, mostraremos un pie de página diferente al de  un usuario 
+normal:
 
 ```xml
 <div th:replace="fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'">
-  &copy; 2016 The Static Templates
+  &copy; 2016 Las Plantillas Estáticas
 </div>
 ```
 
-`fragments/footer.html` has slightly changed, as we need to have two footers defined:
+`fragments/footer.html` ha cambiado ligeramente, ya que necesitamos tener dos 
+pies de página definidos:
 
 ```xml
 <!DOCTYPE html>
@@ -282,28 +284,28 @@ a regular user:
     ...
   </head>
   <body>
-    <!-- /*  Multiple fragments may be defined in one file */-->
+    <!-- /*  Se pueden definir múltiples fragmentos en un archivo */-->
     <div th:fragment="footer">
-      &copy; 2016 Footer
+      &copy; 2016 Pié de página
     </div>
     <div th:fragment="footer-admin">
-      &copy; 2016 Admin Footer
+      &copy; 2016 Pié de página del Administrador
     </div>
   </body>
 </html>
 ```
 
-### Parameterized inclusion
+### Inclusión parametrizada
 
-Fragments can specify arguments, just like methods. Whenever they are
-explicitly specified with a `th:fragment` attribute, they can provide an
-argument signature that can then be filled in with arguments from the
-calling `th:insert` or `th:replace` attributes.
+Los fragmentos pueden especificar argumentos, al igual que los métodos. Al 
+especificarse explícitamente con un atributo `th:fragment`, pueden proporcionar 
+una firma de argumento que puede completarse con los argumentos de los atributos 
+`th:insert` o `th:replace` que los invocan.
 
-Examples talk best. We can use parameterized inclusion in many contexts
-but one real life context is displaying messages on different pages of
-our application after successful form submission. Let's look at the
-signup process in the application:
+Los ejemplos son muy ilustrativos. Podemos usar la inclusión parametrizada en 
+muchos contextos, pero un ejemplo práctico es mostrar mensajes en diferentes 
+páginas de nuestra aplicación tras enviar correctamente el formulario. Veamos el 
+proceso de registro en la aplicación:
 
 ```java
 @PostMapping("signup")
@@ -315,17 +317,16 @@ String signup(@Valid @ModelAttribute SignupForm signupForm,
     }
     Account account = accountRepository.save(signupForm.createAccount());
     userService.signin(account);
-    // see /WEB-INF/i18n/messages.properties and /WEB-INF/views/homeSignedIn.html
+    // vea /WEB-INF/i18n/messages.properties y /WEB-INF/views/homeSignedIn.html
     MessageHelper.addSuccessAttribute(ra, "signup.success");
     
     return "redirect:/";
     
 }
 ```
-
-As you can see, after a successful signup the user will be redirected to
-the home page with a flash attribute filled in. We want to create a
-reusable and parameterized fragment. This can be done as follows:
+Como puede ver, tras registrarse correctamente, el usuario será redirigido a la 
+página de inicio con el atributo flash completado. Queremos crear un fragmento 
+reutilizable y parametrizado. Esto se puede hacer de la siguiente manera:
 
 ```xml
 <!DOCTYPE html>
@@ -336,97 +337,107 @@ reusable and parameterized fragment. This can be done as follows:
   <body>
     <div class="alert alert-dismissable" th:fragment="alert (type, message)" th:assert="${!#strings.isEmpty(type) and !#strings.isEmpty(message)}" th:classappend="'alert-' + ${type}">      
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <span th:text="${message}">Test</span>
+      <span th:text="${message}">Prueba</span>
     </div>
   </body>
 </html>
 ```
 
-The above `alert` fragment takes two arguments: `type` and `message`.
-The `type` is the message type used for styling a message whereas the
-`message` is a text that will be shown to the user. We
-ensure that arguments exist and are not empty by using a `th:assert` attribute.
+El fragmento de alerta anterior acepta dos argumentos: `type` y `message`. Donde 
+`type` es el tipo de mensaje utilizado para dar estilo al mensaje, mientras que 
+`message` es el texto que se mostrará al usuario. Nos aseguramos de que los 
+argumentos existan y no estén vacíos mediante el atributo `th:assert`.
 
-In order to include `alert` in any template we may write the following
-code (please note, that the value of a variable can be an expression):
+Para incluir `alert` en cualquier plantilla, podemos escribir el siguiente 
+código (tenga en cuenta que el valor de una variable puede ser una expresión):
 
 ```xml
 <div th:replace="fragments/alert :: alert (type='danger', message=${errorMessage})">...</div>
 ```
 
-Parameterized fragments let developers create functional-like fragments
-that are easier to reuse. Read more about parameterized fragments in the
-Thymeleaf documentation: [Parameterizable fragment
-signatures](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#parameterizable-fragment-signatures).
+Los fragmentos parametrizados permiten a los desarrolladores crear fragmentos funcionales que son más fáciles de 
+reutilizar. Lea más sobre los fragmentos parametrizados en la documentación de Thymeleaf: 
+[Firmas de fragmentos parametrizables](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#parameterizable-fragment-signatures).
 
-### Fragment Expressions
+### Expresiones de fragmentos
 
-Thymeleaf 3.0 introduced a new type of expression as a part of the general Thymeleaf Standard Expression system: **Fragment Expressions**: 
+Thymeleaf 3.0 introdujo un nuevo tipo de expresión como parte del sistema 
+general de expresiones estándar de Thymeleaf: **Expresiones de fragmento**: 
 
 ```xml
     <div th:insert="~{fragments/footer :: footer}">...</div>
 ```
 
-The idea of this syntax is to be able to use resolved fragments as any other kind of objects in the template execution context for later use:
+La idea de esta sintaxis es poder utilizar fragmentos resueltos como cualquier 
+otro tipo de objetos en el contexto de ejecución de la plantilla para su uso 
+posterior:
 
 ```xml
 <div th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/footer :: footer-admin} : ~{fragments/footer :: footer-admin}">
-  &copy; 2016 The Static Templates
+  &copy; 2016 Las Plantillas Estáticas
 </div>
 ```
+La expresión de fragmento permite crear fragmentos de manera tal que puedan 
+enriquecerse con el marcado proveniente de las plantillas que los llaman, lo que 
+da como resultado un mecanismo de diseño mucho más flexible que 
+`th:insert` y `th:replace` únicamente.
 
-Fragment expression allows creating fragments in a way such that they can be enriched with markup coming from the calling templates, resulting in a layout mechanism that is far more flexible than `th:insert` and `th:replace`only.
+#### Ejemplo de diseño flexible
 
-#### Flexible Layout Example
-
-The `task/layout.html` file defines all the fragments that will be used by calling templates. The below `header` fragment takes `breadcrumb` parameter that will replace `ol` markup with its resolved value:
+El archivo `task/layout.html` define todos los fragmentos que se usarán al 
+llamar a las plantillas. El siguiente fragmento `header` utiliza el parámetro 
+`breadcrumb`, que reemplaza el marcado `ol` con su valor resuelto:
 
 ```xml
-<!--/* Header fragment */-->
+<!--/* Fragmento de cabecera */-->
 <div th:fragment="header(breadcrumb)">
     <ol class="breadcrumb container" th:replace="${breadcrumb}">
-        <li><a href="#">Home</a></li>
+        <li><a href="#">Inicio</a></li>
     </ol>
 </div>
 ```
-In the calling template (`task/task-list.html`) we will use a *Markup Selector* syntax to pass the element matching `.breadcrumb` selector:
+
+En la plantilla de llamada (`task/task-list.html`) usaremos una sintaxis de 
+*Selector de Marcado* para pasar el elemento que coincida con el selector 
+`.breadcrumb`:
 
 ```xml
-<!--/* The markup with breadcrumb class will be passed to the header fragment */-->
+<!--/* El marcado con la clase breadcrumb se pasará al fragmento de encabezado */-->
 <header th:insert="task/layout :: header(~{ :: .breadcrumb})">
     <ol class="breadcrumb container">
-        <li><a href="#">Home</a></li>
-        <li><a href="#" th:href="@{/task}">Tasks</a></li>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#" th:href="@{/task}">Tareas</a></li>
     </ol>
 </header>
 ```
 
-As a result, the following HTML will be generated for the `task/taks-list` view:
+Como resultado, se generará el siguiente HTML para la vista `task/taks-list`:
 
 ```xml
 <header>
     <div>
         <ol class="breadcrumb container">
-            <li><a href="#">Home</a></li>
-            <li><a href="[...]">Tasks</a></li>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="[...]">Tareas</a></li>
         </ol>
     </div>
 </header>
 ```
 
-Similarily, we can use the same fragment with different breadcrumb in another view  (`task/task.html`):
+De manera similar, podemos usar el mismo fragmento con diferentes rutas de navegación en otra vista (`task/task.html`):
 
 ```xml
 <header th:insert="task/layout :: header(~{ :: .breadcrumb})">
     <ol class="breadcrumb container">
-        <li><a href="#">Home</a></li>
-        <li><a href="#" th:href="@{/task}">Tasks</a></li>
-        <li th:text="${'Task ' + task.id}">Task</li>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#" th:href="@{/task}">Tareas</a></li>
+        <li th:text="${'Task ' + task.id}">Tarea</li>
     </ol>
 </header>
 ```
 
-If there is nothing to be passed to the fragment, we can use a special empty fragment expression - `~{}`. It will pass an empty value that will be ignored in the `header` fragment:
+Si no hay nada que pasar al fragmento, podemos usar una expresión especial de fragmento vacío: `~{}`. Esta expresión 
+pasará un valor vacío que se ignorará en el fragmento `header`:
 
 ```xml
 <header th:insert="task/layout :: header(~{})">
@@ -434,32 +445,34 @@ If there is nothing to be passed to the fragment, we can use a special empty fra
 </header>
 ```
 
-One another feature of the new fragment expression is so called *no-operation* token that allows the default markup of the fragment to be used in case this is needed:
+Otra característica de la nueva expresión de fragmento es el token llamado *ninguna-operacion* que permite utilizar el 
+marcado predeterminado del fragmento en caso de que sea necesario:
 
 ```xml
 <header th:insert="task/layout :: header(_)">
     
 </header>
 ```
-As a result, we will get:
+Como resultado obtendremos:
 
 ```xml
 <header>
     <ol class="breadcrumb container">
-        <li><a href="#">Home</a></li>
+        <li><a href="#">Inicio</a></li>
     </ol>
 </header>
 ```
 
-Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. Read more about this topic in the Thymeleaf documentation: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+La Expresión de Fragmentos permite personalizar fragmentos de maneras que hasta ahora solo eran posibles con el 
+Dialecto de Diseño de terceros. Lea más sobre este tema en la documentación de Thymeleaf: 
+[Diseños flexibles: más allá de la simple inserción de fragmentos](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
-### Fragment inclusion from Spring `@Controller`
+### Inclusión de fragmentos desde el `@Controller` de Spring
 
-Fragments can be directly specified from a Spring MVC controller, i.e.
-`signup :: signupForm`; which can be useful for AJAX controllers that
-return only a small fragment of HTML to the browser. In the example
-below, the signup form fragment will be loaded upon AJAX request and the
-whole signup view - on regular request:
+Los fragmentos se pueden especificar directamente desde un controlador Spring MVC, por ejemplo, 
+`signup::signupForm`;, lo cual puede ser útil para controladores AJAX que devuelven solo un pequeño fragmento de HTML al 
+navegador. En el ejemplo a continuación, el fragmento del formulario de registro se cargará tras una solicitud AJAX y la 
+vista de registro completa, tras una solicitud regular:
 
 ```java
 @RequestMapping(value = "signup")
@@ -475,7 +488,7 @@ public String signup(Model model,
 }
 ```
 
-The fragment is defined in `signup/signup.html`:
+El fragmento está definido en `signup/signup.html`:
 
 ```xml
 <!DOCTYPE html>
@@ -492,58 +505,56 @@ The fragment is defined in `signup/signup.html`:
 </html>
 ```
 
-The above fragment is loaded when a new user wants to signup from a home
-page. The modal dialog will be shown upon clicking `Signup` button and
-the content will be loaded via AJAX call (see
-`home/homeNotSignedIn.html`).
+El fragmento anterior se carga cuando un nuevo usuario desea registrarse desde la página de inicio. El cuadro de diálogo 
+modal se mostrará al hacer clic en el botón "Registrarse" y el contenido se cargará mediante una llamada AJAX 
+(véase `home/homeNotSignedIn.html`).
 
-### References
+### Referencias
 
-Please check Thymeleaf documentation that describes this topic very
-thoroughly.
+Consulte la documentación de Thymeleaf que describe este tema detalladamente.
 
-* [Template Layout](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#template-layout).
-* [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragment-specification-syntax)
-* [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+* [Diseño de plantilla](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#template-layout).
+* [Expresiones de fragmentos](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragment-specification-syntax)
+* [Diseños flexibles: más allá de la mera inserción de fragmentos](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
 ### Thymol
 
-When a Thymeleaf template is used as a static prototype, we cannot see
-the fragments we are including using the `th:insert/th:replace` host
-tags. We can only see the fragments aside, opening their own template
-documents.
+Cuando se usa una plantilla de Thymeleaf como prototipo estático, no podemos ver 
+los fragmentos que incluimos mediante las etiquetas de host 
+`th:insert/th:replace`. Solo podemos ver los fragmentos a un lado, abriendo sus 
+propios documentos de plantilla.
 
-However, there is a way to see the real fragments included into our
-pages while prototyping. This can be done using
-[Thymol](http://www.thymeleaf.org/ecosystem.html#thymol), an unofficial
-JavaScript library that is an implementation of Thymeleaf's standard
-fragment inclusion functionality, providing static support for some
-Thymeleaf attributes like `th:insert` or `th:replace`, conditional
-display with `th:if`/`th:unless`, etc.
+Sin embargo, existe una manera de ver los fragmentos reales incluidos en nuestras 
+páginas durante el prototipado. Esto se puede hacer usando 
+[Thymol](http://www.thymeleaf.org/ecosystem.html#thymol), una biblioteca 
+JavaScript no oficial que implementa la funcionalidad estándar de inclusión de 
+fragmentos de Thymeleaf. Esta biblioteca proporciona compatibilidad estática con 
+algunos atributos de Thymeleaf como `th:insert` o `th:replace`, visualización 
+condicional con `th:if`/`th:unless`, etc.
 
-As Thymol's author states: *Thymol was created in order to provide a
-more accurate static representation of Thymeleaf's dynamic templating
-capabilities by offering support for Thymeleaf attributes through a
-statically accessible javascript library*
+Como afirma el autor de Thymol: *Thymol se creó para proporcionar una 
+representación estática más precisa de las capacidades de creación de plantillas 
+dinámicas de Thymeleaf, ofreciendo compatibilidad con los atributos de Thymeleaf 
+a través de una biblioteca de JavaScript con acceso estático*.
 
-Thymol documentation and examples can be found on the official project
-site here: [Thymol](https://github.com/thymol/thymol.js).
+La documentación y los ejemplos de Thymol se pueden encontrar en el sitio oficial 
+del proyecto aquí: [Thymol](https://github.com/thymol/thymol.js).
 
-Thymeleaf Layout Dialect
+Dialecto de diseño de Thymeleaf
 ------------------------
 
-[Layout Dialect](https://github.com/ultraq/thymeleaf-layout-dialect)
-gives people the possibility of using hierarchical approach, but from a
-Thymeleaf-only perspective and without the need to use external
-libraries, like Apache Tiles. Thymeleaf Layout Dialect uses
-layout/decorator templates to style the content, as well as it can pass
-entire fragment elements to included pages. Concepts of this library are
-similar to [SiteMesh](http://wiki.sitemesh.org) or JSF with Facelets.
+El [Dialecto de diseño](https://github.com/ultraq/thymeleaf-layout-dialect)
+ofrece la posibilidad de usar un enfoque jerárquico, pero desde una perspectiva 
+exclusiva de Thymeleaf y sin necesidad de bibliotecas externas, como Apache 
+Tiles. El Dialecto de Diseño de Thymeleaf  utiliza plantillas de 
+diseño/decoración para diseñar el contenido y permite pasar elementos de 
+fragmentos completos a las páginas incluidas. Los conceptos de esta biblioteca 
+son similares a los de [SiteMesh](http://wiki.sitemesh.org) o JSF con Facelets.
 
-### Configuration
+### Configuración
 
-To get started with Layout Dialect we need to include it into the
-`pom.xml`. The dependency is:
+Para empezar a usar el Dialecto de Diseño, debemos incluirlo en el archivo 
+`pom.xml`. La dependencia es:
 
 ```xml
 <dependency>
@@ -553,8 +564,8 @@ To get started with Layout Dialect we need to include it into the
 </dependency>
 ```
 
-We will also need to configure the integration by adding an additional
-dialect to our template engine:
+También necesitaremos configurar la integración añadiendo un dialecto adicional 
+a nuestro motor de plantillas:
 
 ```java
 @Bean
@@ -566,33 +577,33 @@ public SpringTemplateEngine templateEngine() {
 }
 ```
 
-No other changes are required.
+No se requieren otros cambios.
 
-### Creating a layout
+### Creando un diseño
 
-The layout file is defined in `/WEB-INF/views/task/layout.html`:
+El archivo de diseño se define en `/WEB-INF/views/task/layout.html`:
 
 ```xml
 <!DOCTYPE html>
 <html>
   <head>
-    <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
-    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Task List</title>
+    <!--/*  Cada token será reemplazado por su respectivo título en la página resultante. */-->
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Lista de Tareas</title>
     ...
   </head>
   <body>
-    <!--/* Standard layout can be mixed with Layout Dialect */-->
+    <!--/* El diseño estándar se puede combinar con el dialecto de diseño */-->
     <div th:replace="fragments/header :: header">
       ...
     </div>
     <div class="container">
       <div layout:fragment="content">
-        <!-- ============================================================================ -->
-        <!-- This content is only used for static prototyping purposes (natural templates)-->
-        <!-- and is therefore entirely optional, as this markup fragment will be included -->
-        <!-- from "fragments/header.html" at runtime.                                     -->
-        <!-- ============================================================================ -->
-        <h1>Static content for prototyping purposes only</h1>
+          <!-- ==================================================================================================  -->
+          <!-- Este contenido solo se utiliza para la creación de prototipos estáticos (plantillas naturales)      -->
+          <!-- y, por lo tanto, es totalmente opcional, ya que este fragmento de marcado se incluirá               -->
+          <!-- de "fragments/header.html" en tiempo de ejecución.                                                  -->
+          <!-- =================================================================================================== -->
+        <h1>Contenido estático solo para fines de creación de prototipos</h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
@@ -601,52 +612,52 @@ The layout file is defined in `/WEB-INF/views/task/layout.html`:
           Phasellus et placerat elit.
         </p>
       </div>
-      <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
+      <div th:replace="fragments/footer :: footer">&copy; 2014 Las Plantillas Estáticas</div>
     </div>
   </body>
 </html>
 ```
 
-We can open the file directly in a browser:
+Podemos abrir el archivo directamente en un navegador:
 
-![Layout page](images/layouts/layoutlayoutdialect.png)
+![Página de diseño](images/layouts/layoutlayoutdialect.png)
 
-The above file is our decorator for content pages we will be creating in
-the application. The most important thing about the above example is
-`layout:fragment="content"`. This is the *heart* of the decorator page
-(layout). You can also notice, that header and footer are included using
-Standard Thymeleaf Layout System.
+El archivo anterior es nuestro decorador para las páginas de contenido que 
+crearemos en la aplicación. Lo más importante del ejemplo anterior es 
+`layout:fragment="content"`. Este es el núcleo de la página decoradora (diseño). 
+También puede observar que el encabezado y el pie de página se incluyen mediante 
+el sistema de Diseño Estándar de Thymeleaf.
 
-The content page looks as follows (`WEB-INF/views/task/list.html`):
+La página de contenido se ve así: (`WEB-INF/views/task/list.html`):
 
 ```xml
 <!DOCTYPE html>
 <html layout:decorate="~{task/layout}">
   <head>
-    <title>Task List</title>
+    <title>Lista de Tareas</title>
     ...
   </head>
   <body>
-    <!-- /* Content of this page will be decorated by the elements of layout.html (task/layout) */ -->
+    <!-- /* El contenido de esta página será decorado por los elementos de layout.html (tarea/diseño) */ -->
     <div layout:fragment="content">
       <table class="table table-bordered table-striped">
         <thead>
           <tr>
             <td>ID</td>
-            <td>Title</td>
-            <td>Text</td>
-            <td>Due to</td>
+            <td>Título</td>
+            <td>Texto</td>
+            <td>Debido a</td>
           </tr>
         </thead>
         <tbody>
           <tr th:if="${tasks.empty}">
-            <td colspan="4">No tasks</td>
+            <td colspan="4">Sin tareas</td>
           </tr>
           <tr th:each="task : ${tasks}">
             <td th:text="${task.id}">1</td>
-            <td><a href="view.html" th:href="@{'/' + ${task.id}}" th:text="${task.title}">Title ...</a></td>
-            <td th:text="${task.text}">Text ...</td>
-            <td th:text="${#calendars.format(task.dueTo)}">July 11, 2012 2:17:16 PM CDT</td>
+            <td><a href="view.html" th:href="@{'/' + ${task.id}}" th:text="${task.title}">Título ...</a></td>
+            <td th:text="${task.text}">Texto ...</td>
+            <td th:text="${#calendars.format(task.dueTo)}">11 Julio 2012 2:17:16 PM CDT</td>
           </tr>
         </tbody>
       </table>
@@ -655,31 +666,31 @@ The content page looks as follows (`WEB-INF/views/task/list.html`):
 </html>
 ```
 
-And in the browser it looks like this:
+Y en el navegador se ve así:
 
-![Layout page](images/layouts/layoutlayoutdialectlist.png)
+![Página de diseño](images/layouts/layoutlayoutdialectlist.png)
 
-Content of this `task/list` view will be decorated by the elements of
-`task/layout` view. Please note `layout:decorate="~{task/layout}"`
-attribute in `<html>` element. This attribute signals to the Layout
-Dialect which layout should be used to decorate given view. 
-And please note it is using Thymeleaf Fragment Expression syntax.
+El contenido de esta vista `task/list` se decorará con los elementos de la 
+vista `task/layout`. Tenga en cuenta el atributo 
+`layout:decorate="~{task/layout}"` en el elemento `<html>`. Este atributo indica 
+al dialecto de diseño qué diseño debe usarse para decorar la vista.
+Y tenga en cuenta que utiliza la sintaxis de expresión de fragmentos de 
+Thymeleaf.
 
-And what about *Natural Templates* using the Layout Dialect? Again,
-possible! You simply need to
-add some prototyping-only markup around the fragments being included in
-your templates and that's it!
+¿Y qué hay de las *Plantillas Naturales* que usan el dialecto de diseño? ¡Es 
+posible! Simplemente agregue marcado específico para prototipado alrededor de 
+los fragmentos que se incluyen en sus plantillas, ¡y listo!
 
-### Include style approach with Layout Dialect
+### Incluir enfoque de estilo con el dialecto de diseño
 
-Layout Dialect supports not only hierarchical approach -- it also
-provides a way to use it in an include-style way (`layout:include`).
-Comparing with standard Thymeleaf includes, with Layout Dialect you can
-pass HTML elements to the included page. Useful if you have some HTML
-that you want to reuse, but whose contents are too complex to pass by
-means of parameterized inclusion in standard Thymeleaf dialect.
+El dialecto de diseño no solo admite un enfoque jerárquico, sino que también 
+permite usarlo con estilo de inclusión (`layout:include`).
+A diferencia de las inclusiones estándar de Thymeleaf, con el dialecto de diseño 
+se pueden pasar elementos HTML a la página incluida. Resulta útil si se desea 
+reutilizar HTML, pero cuyo contenido es demasiado complejo para pasarlo mediante 
+la inclusión parametrizada en el dialecto estándar de Thymeleaf.
 
-This is an example of a reusable alert fragment using `layout:fragment`
+Este es un ejemplo de un fragmento de alerta reutilizable que utiliza `layout:fragment`
 (`task/alert.html`):
 
 ```xml
@@ -689,72 +700,70 @@ This is an example of a reusable alert fragment using `layout:fragment`
     <th:block layout:fragment="alert-content">
         <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula...</p>
         <p>
-            <button type="button" class="btn btn-danger">Take this action</button>
-            <button type="button" class="btn btn-default">Or do this</button>
+            <button type="button" class="btn btn-danger">Tome esta acción</button>
+            <button type="button" class="btn btn-default">O haz esto</button>
         </p>
     </th:block>
   </body>
 </html>
 ```
 
-The calling of the above fragment may look as follows
+La invocación del fragmento anterior podría verse así:
 (`task/list.html`):
 
 ```xml
     <div layout:insert="~{task/alert :: alert}" th:with="type='info', header='Info'" th:remove="tag">
-        <!--/* Implements alert content fragment with simple content */-->
+        <!--/* Implementa un fragmento de contenido de alerta con contenido simple */-->
         <th:block layout:fragment="alert-content">
-            <p><em>This is a simple list of tasks!</em></p>
+            <p><em>¡Esta es una lista sencilla de tareas!</em></p>
         </th:block>
     </div>
 ```
 
-Or:
+O:
 
 ```xml
-    <div layout:insert="~{task/alert :: alert}" th:with="type='danger', header='Oh snap! You got an error!'" th:remove="tag">
-        <!--/* Implements alert content fragment with full-blown HTML content */-->
+    <div layout:insert="~{task/alert :: alert}" th:with="type='danger', header='¡Vaya! ¡Tienes un error!'" th:remove="tag">
+        <!--/* Implementa un fragmento de contenido de alerta con contenido HTML completo */-->
         <th:block layout:fragment="alert-content">
            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula...</p>
             <p>
-                <button type="button" class="btn btn-danger">Take this action</button>
-                <button type="button" class="btn btn-default">Or do this</button>
+                <button type="button" class="btn btn-danger">Tome esta acción</button>
+                <button type="button" class="btn btn-default">O haz estO</button>
             </p>
         </th:block>
     </div>
 ```
 
-In this case, the entire `alert-content` of `task/alert`
-(`/WEB-INF/views/task/alert.html`) template will be replaced by custom
-HTML above.
+En este caso, todo el `alert-content` de la plantilla `task/alert` 
+(`/WEB-INF/views/task/alert.html`) se reemplazará por el HTML personalizado 
+anterior.
 
-### References
+### Referencias
 
-Please check out the Layout Dialect documentation that describes this
-topic very thoroughly. You will definitively find some more advanced
-examples than in this article. 
+Consulta la documentación del dialecto de diseño, que describe este tema 
+detalladamente. Sin duda, encontrarás ejemplos más avanzados que los que se 
+incluyen en este artículo.
 
-You can find the documentation here:
-[Layout Dialect](https://github.com/ultraq/thymeleaf-layout-dialect).
+Puedes encontrar la documentación aquí:
+[Dialecto de Diseño](https://github.com/ultraq/thymeleaf-layout-dialect).
 
 
-Other Layout Options
+Otras opciones de diseño
 --------------------
 
-For some of the developers neither of the solutions presented before is
-sufficient. Thymeleaf Standard Layout System is not enough and using
-external libraries is not an option. In that case, the custom solution
-may be the way to go.
+Para algunos desarrolladores, ninguna de las soluciones presentadas 
+anteriormente es suficiente. El sistema de diseño estándar de Thymeleaf no es
+suficiente y el uso de bibliotecas externas no es una opción. En ese caso, una 
+solución personalizada podría ser la solución ideal.
 
-### Thymeleaf Custom Layout
+### Diseño personalizado de Thymeleaf
 
-One of such a solutions is well described in this blog post: [Thymeleaf
-template layouts in Spring MVC application with no
-extensions](http://blog.codeleak.pl/2013/11/thymeleaf-template-layouts-in-spring.html).
-The idea of this solution is really simple. Let's visualize that with an
-example:
+Una de estas soluciones se describe detalladamente en esta entrada del blog: 
+[Diseños de plantillas de Thymeleaf en una aplicación Spring MVC sin extensiones](http://blog.codeleak.pl/2013/11/thymeleaf-template-layouts-in-spring.html).
+La idea de esta solución es muy sencilla. Visualicémosla con un ejemplo:
 
-Example view file (1):
+Archivo de vista de ejemplo (1):
 
 ```xml
 <!DOCTYPE html>
@@ -765,15 +774,15 @@ Example view file (1):
   <body>
     <div class="container" th:fragment="content">
       <p>
-        Hello <span th:text="${#authentication.name}">User</span>!
-        Welcome to the Spring MVC Quickstart application!
+        ¡Hola <span th:text="${#authentication.name}">Usuario</span>!
+          ¡Bienvenido a la aplicación Spring MVC Quickstart!
       </p>
     </div>
   </body>
 </html>
 ```
 
-And the layout file (2):
+Y el archivo de diseño (2):
 
 ```xml
 <!DOCTYPE html>
@@ -782,37 +791,34 @@ And the layout file (2):
     ...
   </head>
   <body>
-    <div th:replace="fragments/header :: header">Header</div>
-    <div th:replace="${view} :: content">Page Content</div>
-    <div th:replace="fragments/footer :: footer">Footer</div>
+    <div th:replace="fragments/header :: header">Cabecera</div>
+    <div th:replace="${view} :: content">Contenido de la Página</div>
+    <div th:replace="fragments/footer :: footer">Pie de Página</div>
   </body>
 </html>
 ```
 
-What will happen?
+¿Qué pasará?
 
--   Controllers return view names, that translate to single Thymeleaf
-    view file (1)
--   Before rendering the view, the original `viewName` attribute in
-    `ModelAndView` object is replaced with with the name of the layout
-    view and the original `viewName` becomes an attribute in
-    `ModelAndView`.
--   The layout view (2) contains several include elements:
-    `<div th:replace="${view} :: content">Page Content</div>`
--   The actual view file contains fragments, *pulled* by the template
-    which embeds the actual view
+-   Los controladores devuelven nombres de vista, que se traducen en un único 
+    archivo de vista de Thymeleaf (1).
+-   Antes de renderizar la vista, el atributo `viewName` original del objeto 
+    `ModelAndView` se reemplaza por el nombre de la vista de diseño, y el 
+    `viewName` original se convierte en un atributo de `ModelAndView`.
+-   La vista de diseño (2) contiene varios elementos de inclusión:
+-   El archivo de vista contiene fragmentos *extraídos* por la plantilla, que 
+    integra la vista.
 
-The project can be found on
-[GitHub](https://github.com/kolorobot/thymeleaf-custom-layout).
+El proyecto se puede encontrar en [GitHub](https://github.com/kolorobot/thymeleaf-custom-layout).
 
-Summary
+Resumen
 -------
 
-In this article, we described many ways of achieving the same:
-**layouts**. You can build layouts using Thymeleaf Standard Layout
-System that is based on include-style approach. You also have powerful Layout Dialect, that uses
-decorator pattern for working with layout files. Finally, you can easily
-create your own solution. 
+En este artículo, describimos varias maneras de lograrlo: **diseños**. Puedes 
+crear diseños utilizando el sistema de Diseño Estándar de Thymeleaf, basado en 
+un enfoque de estilo de inclusión. También dispones de un potente Dialecto de 
+Diseño, que utiliza patrones decoradores para trabajar con archivos de diseño. 
+Finalmente, puedes crear fácilmente tu propia solución.
 
-Hopefully, this article gives you some more insights on the topic and you will find your preferred approach 
-depending on your needs.
+Esperamos que este artículo te brinde más información sobre el tema y que 
+encuentres el enfoque que prefieras según tus necesidades.

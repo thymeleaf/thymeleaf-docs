@@ -1,20 +1,20 @@
 ---
-title: Bringing Thymeleaf and Natural Templates to the Spring PetClinic
+title: Llevamos Thymeleaf y plantillas naturales a la Clínica Veterinaria de Primavera
 author: 'Soraya S&aacute;nchez \<sschz AT users.sourceforge.net\>'
 ---
 
-**Note**: this article refers to an older version of Thymeleaf (Thymeleaf 2.1).
+**Nota**: este artículo se refiere a una versión anterior de Thymeleaf 
+(Thymeleaf 2.1).
 
-The Spring PetClinic application
+La aplicación Spring PetClinic
 --------------------------------
+*PetClinic* es una de las aplicaciones de ejemplo creadas por SpringSource para 
+Spring Framework. Está diseñada para mostrar y gestionar información relacionada 
+con mascotas y veterinarios en una clínica veterinaria. La versión original de 
+SpringSource se encuentra en [GitHub](https://github.com/SpringSource/spring-petclinic), 
+ y la versión compatible con thymeleaf también se encuentra en 
+[GitHub](https://github.com/thymeleaf/thymeleafexamples-petclinic).
 
-*PetClinic* is one of the example applications created by SpringSource
-for the Spring Framework. It is designed to display and manage
-information related to pets and veterinarians in a pet clinic. The
-original SpringSource version lives in GitHub
-[here](https://github.com/SpringSource/spring-petclinic), and the
-thymeleaf-enabled version lives also in GitHub
-[here](https://github.com/thymeleaf/thymeleafexamples-petclinic).
 
 ![PetClinic home page](images/petclinic/home.png)
 
@@ -32,7 +32,7 @@ will replace using Thymeleaf:
     a browser (*Natural templates*).
 
 All the code of the PetClinic+Thymeleaf application can be obtained at
-the [Thymeleaf Project's Documentation](/documentation.html) page. Note
+the [Thymeleaf Project's Documentation](/docs/documentation.html) page. Note
 that the original JSP files and JSP tags have not been removed from the
 source tree but rather moved to the `doc/old_viewlayer` folder at the
 source tree, so that you can still access them in order to compare with
@@ -41,7 +41,7 @@ the new templates.
 The version of the PetClinic application used as a base is the state of
 its *master branch at Github* as of 17 March 2013.
 
-### The original JSP view layer
+### La capa de vista JSP original
 
 The original JSP view layer has a number of problems we will try to fix
 when converting the view layer to Thymeleaf:
@@ -65,10 +65,10 @@ when converting the view layer to Thymeleaf:
         prototype.
 
 
-Configuration
+Configuración
 -------------
 
-### Basic project configuration
+### Configuración básica del proyecto
 
 Some basic configuration steps will be needed:
 
@@ -129,7 +129,7 @@ will live at the `/WEB-INF/thymeleaf` folder instead of the original
 `/WEB-INF/jsp`.
 
 
-From JSP to Thymeleaf
+De JSP a Thymeleaf
 ---------------------
 
 PetClinic includes more than 10 JSP templates, and we will rewrite all
@@ -138,7 +138,7 @@ on `owners/ownerslist.jsp`, which we will convert into
 `owners/ownersList.html`.
 
 Remember you can see all the templates at the source code, downloadable
-from [the documentation page](/documentation.html), and also that you can
+from [the documentation page](/docs/documentation.html), and also that you can
 review the original JSP files at the `doc/old_viewlayer` folder.
 
 The *owners/ownersList* page looks like this:
@@ -376,7 +376,7 @@ Which we will replace with:
     of this in the next section.
 
 
-And what about the *Natural Templates* thing?
+¿Y qué pasa con lo de las *Plantillas Naturales*?
 ---------------------------------------------
 
 Before we started this migration, we set a goal that our new Thymeleaf
@@ -387,14 +387,12 @@ Templating* capabilities of Thymeleaf.
 Well, let's have a look at how the original `owners/ownersList.jsp`
 template looks like when seen statically:
 
-![Owners list (JSP), statically
-opened](images/petclinic/ownerslist_jsp_static.png)
+![Owners list (JSP), statically opened](images/petclinic/ownerslist_jsp_static.png)
 
 ...and now let's have a look at our new Thymeleaf-powered
 `owners/ownersList.html`:
 
-![Owners list (thymeleaf), statically
-opened](images/petclinic/ownerslist_thymeleaf_static.png)
+![Owners list (thymeleaf), statically opened](images/petclinic/ownerslist_thymeleaf_static.png)
 
 There we are. Data is not valid, because it is a prototype. But it looks
 good!

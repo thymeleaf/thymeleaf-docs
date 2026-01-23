@@ -27,17 +27,17 @@ $endfor$
 <div id="doc-info">
 $if(translator)$
     <div id="doc-translator">
-        <span class="info-header">$lang$ translation contributed by:</span> $translator$
+        <span class="info-header">$lang$ traducción aportada por:</span> $translator$
     </div>
 $endif$
     <div id="doc-version">
-        <span class="info-header">Document version:</span> $version$
+        <span class="info-header">Versión del documento:</span> $version$
     </div>
     <div id="project-version">
-        <span class="info-header">Project Version:</span> $thymeleafVersion$
+        <span class="info-header">Versión del proyecto:</span> $thymeleafVersion$
     </div>
     <div id="project-website">
-        <span class="info-header">Project web site:</span>
+        <span class="info-header">Sitio web del proyecto:</span>
         <a href="http://www.thymeleaf.org">http://www.thymeleaf.org</a>
     </div>
 </div>

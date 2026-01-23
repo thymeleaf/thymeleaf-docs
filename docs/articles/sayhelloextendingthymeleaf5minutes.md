@@ -47,7 +47,7 @@ The simplest dialect ever: Say Hello!
 
 Let's create a dialect for one of our applications. This will be a
 Spring MVC application, so we will be already using the SpringStandard
-dialect (have a look at the [Thymeleaf + Spring tutorial](/documentation.html) 
+dialect (have a look at the [Thymeleaf + Spring tutorial](/docs/documentation.html) 
 for more details). But we want to add a
 new attribute that allows us to say hello to whoever we want, like this:
 

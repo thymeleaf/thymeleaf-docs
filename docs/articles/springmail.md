@@ -407,4 +407,4 @@ For the sake of brevity, we have only detailed one of the five types of
 email our application is able to send. However, you can see the source
 code required for creating all five types of emails at the `springmail`
 example application you can download from the [documentation
-page](/documentation.html).
+page](/docs/documentation.html).

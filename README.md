@@ -1,83 +1,92 @@
 
-Thymeleaf Docs
-==============
+Documentación Thymeleaf
+=======================
 
-[![build](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml/badge.svg)](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
+[![construcción](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml/badge.svg)](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
 
-Thymeleaf documentation in Markdown format, which is then converted to HTML, EPUB
-(using [Pandoc](https://johnmacfarlane.net/pandoc/)), MOBI (using [Calibre](https://calibre-ebook.com/))
-and PDF (using [wkhtmltopdf](https://wkhtmltopdf.org/))
-formats using the supplied Gradle build script.
+La documentación de Thymeleaf está en formato Markdown, la cual es después 
+convertida a los formatos HTML, EPUB
+(usando [Pandoc](https://johnmacfarlane.net/pandoc/)), 
+MOBI (usando [Calibre](https://calibre-ebook.com/))
+y PDF (usando [wkhtmltopdf](https://wkhtmltopdf.org/)) usando el script de construcción de Gradle 
+proporcionado.
 
-The flavour of Markdown used is pandoc's Markdown. Its specifics and extensions can be
-examined here: https://pandoc.org/MANUAL.html#pandocs-markdown
-
-
-Types of documents managed
---------------------------
-
- * Tutorials, living in `docs/tutorials`. Output: HTML, PDF, EPUB and Kindle.
-   Given their length, tutorials use their own HTML style, with an index frame
-   on the left side.
- * Articles, living in `docs/articles`. Output: HTML only. Articles are output
-   with the same HTML style as the rest of the Thymeleaf web site.
+El estilo de Markdown utilizado es el Markdown de Pandoc. Sus particularidades y 
+extensiones pueden examinarse aquí.: 
+https://pandoc.org/MANUAL.html#pandocs-markdown
 
 
-Building the documentation
---------------------------
+Tipos de documentos gestionados
+-------------------------------
 
-The docs can be generated using the ["build" workflow](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
-in GitHub Actions.  The artifact created contains the docs in the same structure
-as used for copying to and updating the Thymeleaf website (https://github.com/thymeleaf/thymeleaf.github.io).
+ * Tutoriales, que se encuentran en `docs/tutorials`. Salidas: HTML, PDF, EPUB y 
+   Kindle. Dados sus tamaños, los tutoriales usan sus propios estilos HTML, con 
+   un marco de índice en el lado izquierdo.
+ * Artículos, que se encuentran en `docs\articles. Salidas: Solo HTML. Los 
+   artículos son salidas con el mismo estilo de HTML que el resto dei sitio web 
+   de Thymeleaf.
 
-If you want to build the docs on your own machine, then you can follow the
-instructions below.
 
-### Dependencies / things to install
+Construyendo la documentación
+-----------------------------
+
+Los documentos pueden ser generados usando el 
+[flujo de trabajo "build"](https://github.com/thymeleaf/thymeleaf-docs/actions/workflows/build.yaml)
+en las Acciones de GitHub.  El artefacto creado contiene los documentos en 
+la misma estructura que se usa para copiar y actualizar el sitio web de 
+Thymeleaf (https://github.com/thymeleaf/thymeleaf.github.io).
+
+Si quiere construir los documentos en su propia máquina, entonces puede seguir 
+las instrucciones de debajo.
+
+### Dependencias / cosas a instalar
 
  - Java 11+
- - Pandoc 2.2.1+ for HTML docs: https://johnmacfarlane.net/pandoc/installing.html
- - wkhtmltopdf 0.12.6+ for PDF and EPUB/MOBI docs (optional): https://wkhtmltopdf.org/downloads.html
- - Calibre for EPUB/MOBI docs (optional): https://calibre-ebook.com/download
+ - Pandoc 2.2.1+ para los documentos HTML: https://johnmacfarlane.net/pandoc/installing.html
+ - wkhtmltopdf 0.12.6+ para los documentos PDF y EPUB/MOBI (opcional): https://wkhtmltopdf.org/downloads.html
+ - Calibre para los documentos EPUB/MOBI (opcional): https://calibre-ebook.com/download
 
-### Generating the docs
+### Generando los documentos
 
-Use the Gradle wrapper build script (`./gradlew` which is included in this repo)
-to generate the documentation from the Markdown sources to your desired format,
-HTML, PDF, or e-books.  The following Gradle tasks perform these jobs:
+Utilize la envoltura del script de construcción de Gradle (`./gradlew` que está 
+incluído en este repositorio) para generar la documentación desde los fuentes 
+de Markdown a su formato deseado, HTML, PDF o libros electrónicos. Las 
+siguientes tareas de Gradle realizan estos trabajos:
 
- * `generateDocsHTML` - Create the HTML docs.
- * `generateDocsPDF` - Create the PDF docs (also creates the HTML docs since it
-   depends on them)
- * `generateDocsEbook` - Create the e-books.
- * `generateDocs`/`build` - Create all the above.
+ * `generateDocsHTML` - Crea los documentos HTML.
+ * `generateDocsPDF` - Crea los documentos PDF (también crea los documentos HTML
+    ya que depende de ellos)
+ * `generateDocsEbook` - Crea los libros electrónicos.
+ * `generateDocs`/`build` - Crea todo lo anterior.
 
-The generated docs will end up in the `build/site/doc` directory.  The entire
-`build/site` directory will be prepared for direct copy (`cp -R`) to the
-Thymeleaf website repository for publishing.
+Los documentos generados terminarán en el directorio `build/site/doc`. El 
+directorio entero `build/site` se preparará para copia directa (`cp -R`) 
+al repositorio del sitio web de Thymeleaf para su publicación.
 
-### Updating the docs for a new version
+### Actualizando los documentos para una versión nueva
 
-To change the version number that appears in the generated docs, update the
-`documentMetadata` object in the `build.gradle` script for the date and
-version of docs that need updating.
+Para cambiar el número de versión que aparece en los documentos generados, 
+actualize el objeto `documentMetadata` en el script `build.gradle` para la fecha 
+y la versión de los documentos que necesitan actualizarse.
 
 
-How the docs are generated
---------------------------
+Cómo se generan los documentos
+------------------------------
 
-**Pandoc** is used to convert the Markdown sources into HTML, using the
-appropriate HTML template in the `templates` directory, which in turn make use
-of JavaScript and CSS files copied from the `scripts` and `styles` directories.
+Se usa **Pandoc** para convertir los fuentes de Markdown en HTML, usando la 
+plantilla apropiada de HTML en el directorio `templates`, que a su vez utiliza 
+archivos JavaScript y CSS copiados de los directorios `scripts` y `styles`.
 
-**Pandoc** is also used to generate e-books in EPUB format.
+También se usa **Pandoc** para generar los libros electrónicos en formato EPUB.
 
-**Calibre** is used to convert e-books to MOBI (Kindle) format.
+Se usa **Calibre** para convertir los libros electrónicos al formato MOBI 
+(Kindle)
 
-**wkhtmltopdf** is used to create PDF versions of the HTML docs based on the
-`media="print"` stylesheet instead of the `media="screen"` one you normally see
-when opening it in your browser.  The PDF generation task also launches a
-**Jetty** server to host the HTML files since wkhtmltopdf uses **WebKit** and
-not using a server would prevent many of the JavaScript files in the HTML
-documentation from running due to WebKit's same-origin policies being stricter
-with the `file://` protocol.
+Se usa **wkhtmltopdf** para crear las versiones PDF de los documentos HTML 
+basados en la hoja de estilos `media="print"` en lugar de la `media="screen"` 
+que normalmente se ve al abrirlos en el navegador. La tarea de generación de PDF 
+también lanza un servidor **Jetty** para hospedar los ficheros HTML ya que 
+wkhtmltopdf usa **WebKit** y no usar un servidor evitaría que muchos de los 
+archivos JavaScript en la documentación HTML se ejecuten debido a que las 
+políticas del mismo origen de WebKit son más estrictas con el protocolo 
+`file://`.

@@ -1,111 +1,112 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="es">
 
-<head>
-	<title>$pagetitle$ - Thymeleaf</title>
-	<meta charset="UTF-8"/>
-	<meta name="generator" content="pandoc">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <head>
+        <title>$pagetitle$ - Thymeleaf</title>
+        <meta charset="UTF-8"/>
+        <meta name="generator" content="pandoc">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-	<link rel="icon" href="../images/favicon.ico"/>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic"/>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic"/>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/2.1.3/normalize.min.css" media="screen"/>
-	<link rel="stylesheet" href="../styles/thymeleaf.css"/>
-	<link rel="stylesheet" href="../styles/thymeleaf-articles.css"/>
+        <link rel="icon" href="../images/favicon.ico"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/2.1.3/normalize.min.css" media="screen"/>
+        <link rel="stylesheet" href="../styles/thymeleaf.css"/>
+        <link rel="stylesheet" href="../styles/thymeleaf-articles.css"/>
 
-	<script src="https://unpkg.com/dumb-query-selector@3.0.0/dumb-query-selector.js" defer></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-core.min.js" defer data-manual></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-markup.min.js" defer></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-clike.min.js" defer></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-java.min.js" defer></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/plugins/line-numbers/prism-line-numbers.min.js" defer></script>
-	<script src="../scripts/thymeleaf-articles.js" defer></script>
-</head>
+        <script src="https://unpkg.com/dumb-query-selector@3.0.0/dumb-query-selector.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-core.min.js" defer data-manual></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-markup.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-clike.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-java.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/plugins/line-numbers/prism-line-numbers.min.js" defer></script>
+        <script src="../scripts/thymeleaf-articles.js" defer></script>
+    </head>
 
-<body lang="en" class="article">
+    <body lang="es" class="article">
 
-	<div class="fluid-container toolbar-container">
-		<nav class="fluid-block toolbar">
-			<div class="toolbar-menu">
-				<div class="toolbar-menu-location">Docs</div>
-				<button id="site-menu-button" type="button" class="toolbar-menu-button">Site Menu</button>
-			</div>
-			<div id="site-menu" class="toolbar-menu-items">
-				<ul class="toolbar-links">
-					<li><a href="../../index.html" class="toolbar-link">Home</a></li>
-					<li><a href="../../download.html" class="toolbar-link">Download</a></li>
-					<li class="selected"><a href="../../documentation.html" class="toolbar-link">Docs</a></li>
-					<li><a href="../../ecosystem.html" class="toolbar-link">Ecosystem</a></li>
-					<li><a href="../../faq.html" class="toolbar-link">FAQ</a></li>
-				</ul>
-				<ul id="site-nav-links" class="toolbar-links">
-					<li><a href="https://bsky.app/profile/thymeleaf.org" class="toolbar-link">Bluesky</a></li>
-					<li><a href="https://github.com/thymeleaf" class="toolbar-link">GitHub</a></li>
-				</ul>
-			</div>
-		</nav>
-	</div>
+        <div class="fluid-container toolbar-container">
+            <nav class="fluid-block toolbar">
+                <div class="toolbar-menu">
+                    <div class="toolbar-menu-location">Documentos</div>
+                    <button id="site-menu-button" type="button" class="toolbar-menu-button">Menú del sitio</button>
+                </div>
+                <div id="site-menu" class="toolbar-menu-items">
+                    <ul class="toolbar-links">
+                        <li><a href="../index.html" class="toolbar-link">Inicio</a></li>
+                        <li><a href="../download.html" class="toolbar-link">Descargar</a></li>
+                        <li class="selected"><a href="../documentation.html" class="toolbar-link">Documentos</a></li>
+                        <li><a href="../ecosystem.html" class="toolbar-link">Ecosistema</a></li>
+                        <li><a href="../faq.html" class="toolbar-link">PF</a></li>
+                    </ul>
+                    <ul id="site-nav-links" class="toolbar-links">
+                        <li><a href="https://bsky.app/profile/thymeleaf.org" class="toolbar-link">Bluesky</a></li>
+                        <li><a href="https://github.com/thymeleaf" class="toolbar-link">GitHub</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
 
-	<div class="hero-container fluid-container">
-		<header class="hero-header fluid-block">
-			<div class="hero-header-text">
-				<h1 class="hero-header-title">Thymeleaf</h1>
-			</div>
-			<div class="hero-header-image">
-				<img src="../images/thymeleaf.png" alt="Thymeleaf logo" class="hero-header-logo"/>
-			</div>
-		</header>
-	</div>
+        <div class="hero-container fluid-container">
+            <header class="hero-header fluid-block">
+                <div class="hero-header-text">
+                    <h1 class="hero-header-title">Thymeleaf</h1>
+                </div>
+                <div class="hero-header-image">
+                    <img src="../images/thymeleaf.png" alt="Thymeleaf logo" class="hero-header-logo"/>
+                </div>
+            </header>
+        </div>
 
-	<div class="fluid-container">
-		<main class="fluid-block article">
-			<article>
-				<header>
-					<h1>$title$</h1>
-					$if(author)$
-						<div class="article-author">
-							Written by $author$
-						</div>
-					$endif$
-				</header>
-				$body$
-			</article>
-		</main>
-	</div>
+        <div class="fluid-container">
+            <main class="fluid-block article">
+                <article>
+                    <header>
+                        <h1>$title$</h1>
+                        $if(author)$
+                        <div class="article-author">
+                            Escrito por $author$
+                        </div>
+                        $endif$
+                    </header>
+                    $body$
+                </article>
+            </main>
+        </div>
 
-	<div class="fluid-container footer-container">
-		<footer class="footer fluid-block">
-			<div class="footer-sections">
-				<h5>On this site</h5>
-				<ul class="footer-sections-links">
-					<li><a href="../../index.html">Home</a></li>
-					<li><a href="../../download.html">Download</a></li>
-					<li><a href="../../documentation.html">Docs</a></li>
-					<li><a href="../../ecosystem.html">Ecosystem</a></li>
-					<li><a href="../../faq.html">FAQ</a></li>
-					<li id="footer-issue-tracking"><a href="../../issuetracking.html">Issue Tracking</a></li>
-					<li><a href="../../team.html">The Thymeleaf Team</a></li>
-					<li><a href="../../whoisusingthymeleaf.html">Who's using Thymeleaf?</a></li>
-				</ul>
-			</div>
-			<div>
-				<h5>External links</h5>
-				<ul class="footer-sections-links">
-					<li><a href="https://bsky.app/profile/thymeleaf.org">Follow us on Bluesky</a></li>
-					<li><a href="https://github.com/thymeleaf">Fork us on GitHub</a></li>
-				</ul>
-			</div>
-		</footer>
-		<div class="copyright fluid-block">Copyright &copy; Thymeleaf</div>
-		<div class="license fluid-block">
-			Thymeleaf is <strong>open source</strong> software distributed under the
-			<a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a><br/>
-			This website (excluding the names and logos of Thymeleaf users) is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0 License</a>
-		</div>
-	</div>
+        <div class="fluid-container footer-container">
+            <footer class="footer fluid-block">
+                <div class="footer-sections">
+                    <h5>En este sitio</h5>
+                    <ul class="footer-sections-links">
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../download.html">Descargar</a></li>
+                        <li><a href="../documentation.html">Documentos</a></li>
+                        <li><a href="../ecosystem.html">Ecosistema</a></li>
+                        <li><a href="../faq.html">PF</a></li>
+                        <li id="footer-issue-tracking"><a href="./issuetracking.html">Seguimiento de problemas</a></li>
+                        <li><a href="../team.html">El equipo de Thymeleaf</a></li>
+                        <li><a href="../whoisusingthymeleaf.html">¿Quién utiliza Thymeleaf?</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Enlaces externos</h5>
+                    <ul class="footer-sections-links">
+                        <li><a href="https://bsky.app/profile/thymeleaf.org">Síguenos en Bluesky</a></li>
+                        <li><a href="https://github.com/thymeleaf">Bifúrcanos en GitHub</a></li>
+                    </ul>
+                </div>
+            </footer>
+            <div class="copyright fluid-block">Derechos de autor &copy; de Thymeleaf</div>
+            <div class="license fluid-block">
+                Thymeleaf es un software de <strong>código</strong> abierto distribuido bajo la licencia
+                <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a><br/>
+                Este sitio web (excluyendo los nombres y logotipos de los usuarios de Thymeleaf) está autorizado bajo la
+                <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0 License</a>
+            </div>
+        </div>
 
-</body>
+    </body>
 
 </html>

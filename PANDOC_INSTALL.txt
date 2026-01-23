@@ -1,17 +1,16 @@
-HOW TO INSTALL AN UPDATED VERSION OF PANDOC ON LINUX
-----------------------------------------------------
+CÓMO INSTALAR UNA VERSIÓN ACTUALIZADA DE PANDOC EN LINUX
+--------------------------------------------------------
 
-1. Install the environment
-   Ubuntu 14.10
-     - Install ghc, libghc-zlib-dev libgmp-dev packages
+1. Instale el entorno
+   Ubuntu 14,10
+    - Instale los paquetes gch, libghc-zlib-dev libgmp-dev
    CentOS 6.5
-     - Install an updated ghc from https://www.haskell.org/ghc/ and add its binaries to the path.
-     - Install the zlib-devel and gmp-devel packages (i686 + x86_64 versions)
-     - Link (symbolic) /usr/lib/libgmp.so as /usr/lib/libgmp.so.10, which will be needed during the execution of the downloaded cabal binary (link can be removed after cabal has been re-compiled).
-2. Download cabal executable (binary) from https://www.haskell.org/cabal/download.html
-3. Execute ./cabal update, and then ./cabal install cabal-install
-4. Cabal will be installed to $HOME/.cabal/bin/cabal
-5. Remove the downloaded binary (use only the new one)
-6. Execute .cabal/bin/cabal install pandoc
-7. Create symlinks to cabal and pandoc from $HOME/bin and add to PATH.
+    - Instale un ghc actualizado desde https://www.haskell.org/ghc/ y agregue sus binarios a la ruta.
+    - Instale los paquetes zlib-devel y gmp-devel (versiones i686 + x86_64)
+2. Descargue el ejecutable cabal (binario) de https://www.haskell.org/cabal/download.html
+3. Ejecute ./cabal update, y después /cabal install cabal-install
+4. Cabal será instalado en $HOME/.cabal/bin/cabal
+5. Elimine el binario descargado (utilize solo el nuevo)
+6. Ejecute .cabal/bin/cabal install pandoc
+7. Cree enlaces simbólicos a cabal y pandoc desde $HOME/bin y agréguelos al PATH.
 

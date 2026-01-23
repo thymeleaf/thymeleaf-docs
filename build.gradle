@@ -1,31 +1,34 @@
-/* 
+/*
  * Copyright 2013, The Thymeleaf Project (http://www.thymeleaf.org/)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *
+ * Licenciado bajo la Licencia Apache, Versión 2.0 (la "Licencia");
+ * No puede usar este archivo excepto de conformidad con la Licencia.
+ * Puede obtener una copia de la Licencia en
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Salvo que lo exija la legislación aplicable o se acuerde por escrito, el software
+ * distribuido bajo la Licencia se distribuye "TAL CUAL",
+ * SIN GARANTÍAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas.
+ * Consulte la Licencia para conocer el idioma específico que rige los permisos y las
+ * limitaciones de la Licencia.
  */
+
 
 import com.github.psxpaul.task.ExecFork
 import org.apache.tools.ant.filters.ReplaceTokens
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
 
 /**
- * Gradle build script for the Thymeleaf Docs project, converts the
- * documentation files, in Markdown format, into HTML and PDF formats.
+ * El script de compilación de Gradle para el proyecto Thymeleaf Docs convierte
+ * los archivos de documentación, en formato Markdown, a formatos HTML y PDF.
  * 
  * @author Emanuel Rabina
  */
+
+
 
 plugins {
 	id 'java'
@@ -34,18 +37,30 @@ plugins {
 	id 'org.gretty' version '4.0.3'
 }
 
+war {
+    webAppDirectory = file("${project.layout.buildDirectory.get()}/site/doc")
+}
+
+
+
+dependencies {
+	// Needed for org.apache.tools.ant.filters.ReplaceTokens
+	implementation 'org.apache.ant:ant:1.10.14'
+}
+
+
 repositories {
 	mavenCentral()
 	maven {
-		url 'https://plugins.gradle.org/m2/'
+		url = 'https://plugins.gradle.org/m2/'
 	}
 }
 
 gretty {
-	scanInterval 0
+	scanInterval = 0
 }
 
-// Replaces @projectVersion@ and @documentVersion@ placeholders in the docs
+// Reemplaza los marcadores de posición @projectVersion@ y @documentVersion@ en los documentos
 def documentMetadata = [
   '2.1': [
 	  version: '2.1.6.RELEASE',
@@ -70,42 +85,62 @@ def imagesDir    = file("${projectDir}/images")
 def scriptsDir   = file("${projectDir}/scripts")
 def stylesDir    = file("${projectDir}/styles")
 def templatesDir = file("${projectDir}/templates")
-def srcDir       = file("${buildDir}/source")
-def outputDir    = file("${buildDir}/site/doc")
+def builddir = file("${project.layout.buildDirectory.get()}")
+def srcDir       = file("${builddir}/source")
+def outputDir    = file("${builddir}/site/doc")
 
-project.webAppDirName = outputDir
+/* Creo que mejor se incluyen estos ejecutables en el path */
+/* En Windows FILEMON
+def cmdPandoc = "C:\\des\\bin\\Pandoc\\pandoc.exe"
+def cmdWkhtmltopdf = "C:\\des\\bin\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+*/
+
+
+/* En Windows ELSUPER */
+def cmdPandoc = "E:\\des\\bin\\Pandoc\\pandoc.exe"
+def cmdWkhtmltopdf = "E:\\des\\bin\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+
+/* En Linux
+def cmdPandoc = "pandoc"
+def cmdWkhtmltopdf = "wkhtmltopdf"
+ */
+
+
+
 
 def docNames = [] as Set
 def docTypes = [:]
 
 
+
 /**
- * Copy all docs and resources to the source dir, from where they will be fed to
- * pandoc. Also, during this copy operation markdown files will be filtered so
- * that Gradle properties are resolved in their metadata sections.
- * 
- * Note that, for doc files, the name of the folder they are immediately in will
- * be considered their "document type", and this will have an influence on the
- * type of conversions that will be applied to them.
+ * Copia todos los documentos y recursos al directorio de origen, desde donde
+ * se enviarán a pandoc. Además, durante esta operación de copia, los archivos
+ * Markdown se filtrarán para que las propiedades de Gradle se resuelvan en sus
+ * secciones de metadatos.
+ *
+ * Tenga en cuenta que, para los archivos .doc, el nombre de la carpeta en la
+ * que se encuentran se considerará su "tipo de documento", lo que influirá en
+ * el tipo de conversiones que se les aplicarán.
  */
 tasks.register('copyResources') {
 	doLast {
 
-		// Copy docs files to the src folder. For markdown files, apply property filtering and build the name-type map
+		// Copia los archivos docs a la carpeta src. Para los archivos Markdown, aplica el filtro de propiedades y crea el mapa de nombre-tipo.
 		copy {
 			from docsDir
 			into srcDir
 
-			filesMatching('**/*.md') {
+			filesMatching("**/*.md") {
 
-				// We need a file path relative to the 'docs' folder
+				// Necesitamos una ruta de archivo relativa a la carpeta 'docs'
 				def docFileName = (it.relativePath.toString() - ".md").replace('\\', '/')
 				def docFileType = it.file.parentFile.name
 				def thymeleafVersion = null
 
-				// The parent folder in some cases might be a version number (e.g. tutorials for 2.1, 3.0...) In
-				// such case, we need to obtain the document type from the parent of the parent. Note three types
-				// of version specifications are allowed: '2.1', '2.1.4', '2.1.x'
+				// En algunos casos, la carpeta principal puede ser un número de versión (p. ej., tutoriales para 2.1, 3.0, etc.). En
+				// tal caso, necesitamos obtener el tipo de documento de la carpeta principal. Tenga en cuenta
+				// que se permiten tres tipos de especificaciones de versión: '2.1', '2.1.4', '2.1.x'.
 				if (docFileType ==~ /\d+\.\d+(\.\d+)?/ || docFileType ==~ /\d+\.\d+(\.x)?/) {
 					thymeleafVersion = it.file.parentFile.name
 					docFileType = it.file.parentFile.parentFile.name
@@ -114,10 +149,10 @@ tasks.register('copyResources') {
 				docNames.add(docFileName)
 				docTypes.put(docFileName, docFileType)
 
-				// Property filtering, this will replace all @gradle-properties@ (mainly used in markdown metadata)
-				var documentMetadataForVersion = documentMetadata[(thymeleafVersion)]
+				// Filtrado de propiedades, esto reemplazará todas las @gradle-properties@ (principalmente utilizadas en metadatos de Markdown)
+				def documentMetadataForVersion = documentMetadata[thymeleafVersion]
 				if (documentMetadataForVersion) {
-					def documentVersion = DateTimeFormatter.ofPattern('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentMetadataForVersion.date)
+					def documentVersion = DateTimeFormatter.ofPattern('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(documentMetadataForVersion.date as TemporalAccessor)
 					def projectVersion = documentMetadataForVersion.version
 
 					filter(ReplaceTokens, tokens: [
@@ -128,7 +163,7 @@ tasks.register('copyResources') {
 			}
 		}
 
-		// Copy all resource directories straight over
+		// Copiar todos los directorios de recursos directamente
 		copy {
 			from scriptsDir
 			into "${srcDir.path}/scripts"
@@ -142,67 +177,69 @@ tasks.register('copyResources') {
 			into "${srcDir.path}/styles"
 		}
 
-		// Generate output directory structure
+		// Generar la estructura del directorio de salida
 		mkdir outputDir
 	}
 }
 
 /**
- * Generate HTML versions of the Thymeleaf documentation.
+ * Generar versiones HTML de la documentación de Thymeleaf.
  */
 tasks.register('generateDocsHTML') {
 	dependsOn 'copyResources'
-	description "Generate HTML docs from Thymeleaf's markdown docs"
+	description = "Genera documentos HTML a partir de los documentos de rebajas de Thymeleaf"
 
 	doLast {
 		docNames.each { docName ->
 			def docType = docTypes.get(docName)
 
 			if (conversions[docType].contains('html')) {
-				println "Generating HTML doc for ${docName} (${docType})..."
+                println "Generando el documento HTML para ${docName} (${docType})..."
 
-				def outputFile = file("${outputDir}/${docName}.html")
-				file(outputFile.parent).mkdirs()
-				exec {
-					commandLine = "pandoc"
-					args = [
-						"--write=html5",
-						"--template=" + file("${templatesDir.path}/${docType}.html"),
-						"--wrap=none",
-						"--toc",
-						"--toc-depth=4",
-						"--section-divs",
-						"--no-highlight",
-						"--output=" + outputFile,
-						"${srcDir.path}/${docName}.md"
-					]
-				}
+                def outputFile = file("${outputDir}/${docName}.html")
+                file(outputFile.parent).mkdirs()
+                exec {
+                    // Aquí se indica la ruta al ejecutable de pandoc, 'pandoc.exe', que dependerá de
+                    // la elección que hayas tomado en la instalación (N. del T.)
+                    commandLine = cmdPandoc
+                    args = [
+                            "--write=html5",
+                            "--template=" + file("${templatesDir.path}/${docType}.html"),
+                            "--wrap=none",
+                            "--toc",
+                            "--toc-depth=4",
+                            "--section-divs",
+                            "--syntax-highlighting=none",
+                            "--output=" + outputFile,
+                            "${srcDir.path}/${docName}.md"
+                    ]
+                }
 			}
 		}
 
-		// Copy over resources needed for the HTML docs
+		// Copiar los recursos necesarios para los documentos HTML
 		copy {
 			from srcDir
 			into outputDir
-			exclude '**/*.md'
+			exclude "**/*.md"
 		}
 	}
 }
 
 /**
- * Generate e-books of the Thymeleaf documentation.
+ * Genera libros electrónicos de la documentación de Thymeleaf.
  */
 tasks.register('generateDocsEbook') {
-	description "Generate e-books from Thymeleaf's markdown docs"
+	description "Genera libros electrónicos a partir de los documentos markdown de Thymeleaf"
 	dependsOn 'copyResources'
 
 	doLast {
-		// Currently only limited to tutorials
+		// Actualmente solo limitada a tutoriales.
 		docNames.each { docName ->
 			def docType = docTypes.get(docName)
 
 			if (conversions[docType].contains('ebook')) {
-				println "Generating E-Book docs for ${docName} (${docType})..."
+				println "Generando el documento E-Book para ${docName} (${docType})..."
 
 				def epubOutputFile = file("${outputDir}/${docName}.epub")
 				def mobiOutputFile = file("${outputDir}/${docName}.mobi")
@@ -210,20 +247,23 @@ tasks.register('generateDocsEbook') {
 
 				def inputFile = file("${srcDir.path}/${docName}.md")
 
-				exec {
-					// We need to set the working dir in order for pandoc to find images
-					workingDir = file(inputFile.parent)
-					commandLine = "pandoc"
-					args = [
-						"--write=epub",
-						"--template=" + file("${templatesDir.path}/${docType}.epub"),
-						"--toc",
-						"--toc-depth=4",
-						"--section-divs",
-						"--output=" + epubOutputFile,
-						inputFile
-					]
-				}
+                exec {
+                    // Necesitamos configurar el directorio de trabajo para que pandoc encuentre imágenes
+                    workingDir = file(inputFile.parent)
+
+                    // Aquí se indica la ruta al ejecutable de pandoc, 'pandoc.exe', que dependerá de
+                    // la elección que hayas tomado en la instalación (N. del T.)
+                    commandLine = cmdPandoc
+                    args = [
+                            "--write=epub",
+                            "--template=" + file("${templatesDir.path}/${docType}.epub"),
+                            "--toc",
+                            "--toc-depth=4",
+                            "--section-divs",
+                            "--output=" + epubOutputFile,
+                            inputFile
+                    ]
+                }
 				exec {
 					commandLine = "ebook-convert"
 					args = [
@@ -237,41 +277,44 @@ tasks.register('generateDocsEbook') {
 }
 
 /**
- * Uses a combination of the Gretty and ExecFork plugins to start a server in a
- * background process.  This is because Gretty by itself blocks the existing
- * thread until the server is shut down via other means.
+ * Usa una combinación de los plugins Gretty y ExecFork para iniciar un servidor
+ * en un  proceso en segundo plano. Esto se debe a que Gretty bloquea el hilo
+ * existente  hasta que el servidor se apaga por otros medios.
  */
 tasks.register('startServer', ExecFork) {
+    doNotTrackState("se declara no trazable la tarea")
 	dependsOn 'war'
-
-	commandLine = './gradlew'
+	commandLine = './gradlew.bat'
 	args = ['appStartWar']
-	waitForOutput = 'Run \'gradle appStop\' to stop the server'
+	waitForOutput = 'Gretty: Server is running'
 }
 
 /**
- * Generate PDF versions of the Thymeleaf documentation.  Uses a Jetty server to
- * host the HTML documents and wkhtmltopdf which uses the server to read files
- * via the http:// protocol (otherwise the same-origin restriction kicks in, as
- * do some file:// bugs on Windows) and saves them as PDF documents.
+ * Genera versiones PDF de la documentación de Thymeleaf. Utiliza un servidor
+ * Jetty para alojar los documentos HTML y wkhtmltopdf, que utiliza el servidor
+ * para leer archivos mediante el protocolo http:// (de lo contrario, se aplica
+ * la restricción del mismo origen, al igual que algunos errores de file:// en
+ * Windows) y los guarda como documentos PDF.
  */
 tasks.register('generateDocsPDF') {
-	description "Generate PDF documents from Thymeleaf's HTML docs"
+	description "Genera documentos PDF a partir de los documentos HTML de Thymeleaf"
 	dependsOn 'generateDocsHTML', 'startServer'
 
 	doLast {
-		// Generate the PDF documents from the modified HTML documents
-		fileTree(outputDir) { include '*/**/*.html' }.each { docFile ->
+		// Genera los documentos PDF a partir de los documentos HTML modificados
+		fileTree(outputDir) { include '*/**/*.html' as Closure }.each { docFile ->
 
 			def folderBase = relativePath(file(outputDir))
 			def docName = (relativePath(docFile).substring(folderBase.length() + 1) - ".html")
 			def docType = docTypes.get(docName)
 
 			if (conversions[docType].contains('pdf')) {
-				println "Generating PDF doc for ${docName} (${docType})..."
+				println "Generando el documento PDF para  ${docName} (${docType})..."
 
 				exec {
-					commandLine = 'wkhtmltopdf'
+					// Aquí se indica la ruta al ejecutable 'whhtmltopdf.exe', que dependerá de
+					// la elección que hayas tomado en la instalación (N. del T.)
+					commandLine = cmdWkhtmltopdf
 					args = [
 						"--print-media-type",
 						"--dpi", "300",
@@ -290,19 +333,19 @@ tasks.register('generateDocsPDF') {
 		}
 
 		exec {
-			commandLine = './gradlew'
+			commandLine = './gradlew.bat'
 			args = ['appStop']
 		}
 	}
 }
 
 /**
- * Generate HTML, E-book and PDF versions of the Thymeleaf documentation.
+ * Genera versiones HTML, de libro electrónico y PDF de la documentación de Thymeleaf.
  */
 tasks.register('generateDocs') {
 	dependsOn 'generateDocsHTML', 'generateDocsEbook', 'generateDocsPDF'
 
-	// Just an aggregator task
+	// Solo una tarea de agregador
 }
 
 tasks.named('build') {

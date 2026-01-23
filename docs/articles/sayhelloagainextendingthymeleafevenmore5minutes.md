@@ -300,5 +300,5 @@ expressions we can use in this attribute now should make this quite
 easy, and there are also some examples in articles like [*"Getting
 started with the Standard Dialect in 5
 minutes"*](standarddialect5minutes.html) and the
-[tutorials](/documentation.html) quite similar to this scenario.
+[tutorials](/docs/documentation.html) quite similar to this scenario.
 
