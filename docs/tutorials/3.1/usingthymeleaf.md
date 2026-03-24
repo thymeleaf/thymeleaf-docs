@@ -3388,8 +3388,8 @@ would be slightly less readable):
 --------------------------------
 
 Standard HTML/XML comments `<!-- ... -->` can be used anywhere in Thymeleaf
-templates. Anything inside these comments won't be processed by Thymeleaf, and
-will be copied verbatim to the result:
+templates. Anything inside these comments will be processed by Thymeleaf as
+any other block of text in the template:
 
 ```html
 <!-- User info follows -->
