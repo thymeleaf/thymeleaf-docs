@@ -174,5 +174,5 @@ and roles:
 
 ```html
 Logged user: <span sec:authentication="name">Bob</span>
-Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+Roles: <span sec:authentication="authorities">[ROLE_USER, ROLE_ADMIN]</span>
 ```
