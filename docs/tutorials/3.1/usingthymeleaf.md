@@ -6050,11 +6050,14 @@ read on to know why):
 <div th:insert="~{mytemplate :: //div[@class='content']}">...</div>
 ```
 
+All selector expressions are absolute, i.e. computed from the root of the template being
+selected in the left side of the `::`, even if this is the _current_ template.
+
 The basic syntax includes:
 
- * `/x` means direct children of the current node with name x.
+ * `n/x` means direct children of `n` with name x. If `/x`, then direct children of the root.
 
- * `//x` means children of the current node with name x, at any depth.
+ * `n//x` means children of `n` with name x, at any depth. If `//x`, then computed from the root.
 
  * `x[@z="v"]` means elements with name x and an attribute called z with value
    "v".
