@@ -56,8 +56,8 @@ def documentMetadata = [
 		date: LocalDate.of(2018, 10, 29)
 	],
 	'3.1': [
-	  version: '3.1.4.RELEASE',
-		date: LocalDate.of(2026, 4, 12)
+	  version: '3.1.5.RELEASE',
+		date: LocalDate.of(2026, 4, 22)
 	]
 ]
 
