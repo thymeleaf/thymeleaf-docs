@@ -3986,14 +3986,26 @@ Dear Mary Ann Blueberry,
 
 This is the list of our products:
 
+
    - Apricots. Price: 1.12 EUR/kg
+
    - Bananas. Price: 1.78 EUR/kg
+
    - Apples. Price: 0.85 EUR/kg
+
    - Watermelon. Price: 1.91 EUR/kg
+
 
 Thanks,
   The Thymeleaf Shop
 ```
+
+Note that `[# th:each="..."]` and `[/]` each occupy their own line in the template, and the
+newline at the end of each of those lines is part of the surrounding text and is therefore included
+in the output. This means the `[# ...]` line contributes an extra blank line before the first item,
+each iteration boundary contributes a blank line between items, and the `[/]` line contributes an
+extra blank line before "Thanks,". If compact output is needed, the tags can be placed at the end
+of adjacent content lines rather than on lines of their own.
 
 And another example in `JAVASCRIPT` template mode, a `greeter.js` file, we
 process as a textual template and which result we call from our HTML pages. Note
