@@ -1612,7 +1612,8 @@ following equivalent:
 
 The preprocessing String `__` can be escaped in attributes using `\_\_`.
 
-
+> Note that preprocessing is subject to stricter expression evaluation restrictions
+> for security reasons. See [Appendix D: Expression Restrictions](#appendix-d-expression-restrictions).
 
 
 5 Setting Attribute Values
@@ -2497,6 +2498,9 @@ this target template.
 > fragments in pages that are perfectly displayable by a browser, with a
 > complete and even *valid* markup structure, while still retaining the ability
 > to make Thymeleaf include them into other templates.
+
+> Note that fragment expressions are subject to stricter expression evaluation restrictions
+> for security reasons. See [Appendix D: Expression Restrictions](#appendix-d-expression-restrictions).
 
 
 ### Referencing fragments without `th:fragment`
@@ -4021,6 +4025,10 @@ var greeter = function() {
 
 };
 ```
+
+> Note that the `TEXT` template mode is subject to stricter expression evaluation restrictions
+> for security reasons. See [Appendix D: Expression Restrictions](#appendix-d-expression-restrictions).
+
 
 
 ### Escaped element attributes
@@ -6168,11 +6176,12 @@ For security reasons, Thymeleaf applies restrictions on the use of certain
 Thymeleaf Standard Expressions depending on the context in which those
 expressions are evaluated. There are two types of restrictions:
 
- * General restrictions, applied to every expression: using most classes or objects
-   from Thymeleaf's, Spring's and Java/Jakarta's base infrastructure is
-   forbidden, as well as a number of well-known third-party framework packages.
+ * General restrictions, applied to every expression: static use (instantiation,
+   calling static methods…) of most classes from Thymeleaf's, Spring's and
+   Java/Jakarta's base infrastructure is forbidden, as well as a number of
+   well-known third-party framework packages.
    **This is not meant to be an exhaustive filter** but a mere helper that
-   bans a set of the most obvious common classes that could potentially be misused.
+   bans a set of the most obvious common classes that could be potentially misused.
  * Stricter restrictions applied in specific contexts on the use of some
    kinds of expression syntax and available objects. These restrictions are
    collectively referred to as the **restricted expression evaluation mode**.
@@ -6191,7 +6200,7 @@ not a first line of defence.
 The restricted expression evaluation mode is applied when expressions are
 evaluated in the following contexts:
 
- * **Pre-processing expressions**: `__...__`
+ * **Preprocessing expressions**: `__...__`
  * **Unescaped text output**: `th:utext` and unescaped inlined expressions.
  * **JavaScript event handler attributes**: all `th:on*` attribute processors
    whose value is a Thymeleaf Standard Expression.
@@ -6222,13 +6231,20 @@ When expressions are evaluated in restricted mode, the following are forbidden:
  * Instantiation of new objects (e.g. `new com.example.SomeClass()`).
  * Access to static classes and their members (OGNL's `@identifier@` syntax,
    or Spring EL's `T(identifier)` syntax).
- * Access to some of Thymeleaf's context-level expression utility objects.
+ * Access to some of Thymeleaf's context-level expression utility objects like
+   `#execInfo`.
  * In `th:on*` event handler attributes specifically: variable expressions
    that result in values of a type other than a numeric or boolean type are
    also forbidden.
+ * In Spring Applictions: access to beans from the application context via the
+   `@beanName` syntax.
 
 Attempts to evaluate a restricted expression in one of the above scenarios
 will result in a template processing exception being raised at runtime.
+
+It is importent to note that **any checks not explicitly listed above will
+not be performed**, and that these checks can never be considered a replacement
+for data and user input validation at the application's code.
 
 
 ### Important note for application developers
@@ -6248,7 +6264,16 @@ used, regardless of where or how it will eventually appear in a template.
 Trusting external data without validation and relying solely on Thymeleaf's
 expression restrictions for protection is not an acceptable security posture.
 
-If an expression that previously worked causes a restriction error after a
+What is more: Thymeleaf, being a template engine and not a full application
+framework, does not have the technical capability to check whether the values
+that an application puts into the context for template processing
+did originate as direct user input in the current or previous requests or
+user interactions, and therefore under no circumstances it should be
+assumed that it would able to verify such origin. Whatever the origin of
+the expressions being executed, **they will be executed** if they do not
+match any of the filters listed above, in the specific contexts listed above.
+
+Lastly, if an expression that previously worked causes a restriction error after a
 Thymeleaf upgrade, this most likely means it was being used in a way that
 poses a potential security risk. The recommended approach is to refactor the
 template logic so that the affected data is introduced into the template
