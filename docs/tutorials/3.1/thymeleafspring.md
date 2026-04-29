@@ -1086,7 +1086,7 @@ And now we can add a dynamic table to our form:
 </table>
 ```
 
-Quite a lot of things to see here, but not much we should not understand by now...
+Quite a lot of things to see here, but nothing we shouldn't understand by now...
 except for one `strange` thing:
 
 ```html
@@ -1206,7 +1206,7 @@ Instead of iterating, we could have also used `th:errors`, a specialized attribu
 
 ### Simplifying error-based CSS styling: `th:errorclass`
 
-The example we saw above, *setting a CSS class to a form input if that field has errors*, is so common that Thymeleaf offers a specific attribute for doing exacly that: `th:errorclass`.
+The example we saw above, *setting a CSS class to a form input if that field has errors*, is so common that Thymeleaf offers a specific attribute for doing exactly that: `th:errorclass`.
 
 Applied to a form field tag (input, select, textarea...), it will read the name of the field to be examined from any existing `name` or `th:field` attributes in the same tag, and then append the specified CSS class to the tag if such field has any associated errors:
 
@@ -1559,7 +1559,7 @@ public String showContentPart() {
 11.1 Integration with `RequestDataValueProcessor`
 -------------------------------------------------
 
-Thymeleaf seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection agains CSRF (Cross-Site Request Forgery).
+Thymeleaf seamlessly integrates with Spring's `RequestDataValueProcessor` interface. This interface allows the interception of link URLs, form URLs and form field values before they are written to the markup result, as well as transparently adding hidden form fields that enable security features like e.g. protection against CSRF (Cross-Site Request Forgery).
 
 An implementation of `RequestDataValueProcessor` can be easily configured at the Application Context. It needs to implement
 the `org.springframework.web.servlet.support.RequestDataValueProcessor` interface and have 

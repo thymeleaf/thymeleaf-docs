@@ -57,7 +57,7 @@ with JSP.
 
 **Scenario 3: creating your own template system**
 
-Now imagine your are creating a public website that allows users to create their
+Now imagine you are creating a public website that allows users to create their
 own design templates for showing their content. Of course, you don't want your
 users to be able to do absolutely everything in their templates, not even all that
 the Standard Dialect allows (for example, execute OGNL expressions). So you need
@@ -229,7 +229,7 @@ public interface IExpressionObjectDialect extends IDialect {
 
 Which, as we can see, does not return the expression objects themselves, 
 but only a *factory*. The reason for this is some *expression objects* might 
-require data from the processing context in order to being built, so it won't 
+require data from the processing context in order to be built, so it won't 
 be possible to build them until we really are processing the template... and 
 besides, most expressions don't need *expression objects* at all, so it's 
 just better to build them *on demand*, only when they are really needed 
@@ -1355,7 +1355,7 @@ an `IModel` containing 3 events: `<p score:matcher="whatever">` (open tag),
 
 
 So back to our requirements: we wanted a model processor matching a
-`scrore:match-day-today`, that we can apply to the league table header and 
+`score:match-day-today`, that we can apply to the league table header and 
 make it display, below this header, a banner warning the user that sundays are match days:
 
 ```html
@@ -1365,7 +1365,7 @@ make it display, below this header, a banner warning the user that sundays are m
 ```
 
 Note that we don't need a value for this `score:match-day-today` attribute, so
-we can just ignore it. Our code will like like this:
+we can just ignore it. Our code will look like this:
 
 
 ```java

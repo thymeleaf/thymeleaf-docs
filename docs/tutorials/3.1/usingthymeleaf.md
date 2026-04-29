@@ -4542,10 +4542,10 @@ check* if a resource exists before considering it *resolvable*. It is the
 ```java
 ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
 classLoaderTemplateResolver.setOrder(Integer.valueOf(1));
-classLoaderTempalteResolver.setCheckExistence(true);
+classLoaderTemplateResolver.setCheckExistence(true);
 ```
 
-This `checkExistence` flag forces the resolver perform a *real check* for
+This `checkExistence` flag forces the resolver to perform a *real check* for
 resource existence during the resolution phase (and let the following resolver
 in the chain be called if existence check returns false). While this might sound
 good in every case, in most cases this will mean a double access to the resource
@@ -4986,7 +4986,7 @@ them:
    or `org.thymeleaf.context.IWebContext` depending on our environment
    (standalone or web).
 
-   Note `#vars` and `#root` are synomyns for the same object, but using `#ctx`
+   Note `#vars` and `#root` are synonyms for the same object, but using `#ctx`
    is recommended.
 
 ```java
@@ -5054,7 +5054,7 @@ ${param.containsKey('foo')}
  * ======================================================================
  */
 
-${session.foo}                 // Retrieves the session atttribute 'foo'
+${session.foo}                 // Retrieves the session attribute 'foo'
 ${session.size()}
 ${session.isEmpty()}
 ${session.containsKey('foo')}
@@ -5070,7 +5070,7 @@ ${session.containsKey('foo')}
  * =============================================================================
  */
 
-${application.foo}              // Retrieves the ServletContext atttribute 'foo'
+${application.foo}              // Retrieves the ServletContext attribute 'foo'
 ${application.size()}
 ${application.isEmpty()}
 ${application.containsKey('foo')}
@@ -6254,7 +6254,7 @@ When expressions are evaluated in restricted mode, the following are forbidden:
 Attempts to evaluate a restricted expression in one of the above scenarios
 will result in a template processing exception being raised at runtime.
 
-It is importent to note that **any checks not explicitly listed above will
+It is important to note that **any checks not explicitly listed above will
 not be performed**, and that these checks can never be considered a replacement
 for data and user input validation at the application's code.
 
