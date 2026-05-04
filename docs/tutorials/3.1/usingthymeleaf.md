@@ -5603,6 +5603,16 @@ ${#numbers.arrayFormatCurrency(numArray)}
 ${#numbers.listFormatCurrency(numList)}
 ${#numbers.setFormatCurrency(numSet)}
 
+/*
+ * Format using the locale's formatting conventions but with a specific currency
+ * (symbol, ISO code, and number of fraction digits), regardless of the locale's
+ * default currency. The currency argument is a java.util.Currency instance.
+ */
+${#numbers.formatCurrency(num, currency)}
+${#numbers.arrayFormatCurrency(numArray, currency)}
+${#numbers.listFormatCurrency(numList, currency)}
+${#numbers.setFormatCurrency(numSet, currency)}
+
 
 /* 
  * ======================
