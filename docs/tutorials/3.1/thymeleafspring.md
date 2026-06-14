@@ -860,6 +860,13 @@ Spring MVC's infrastructure:
    would not be.
  * Once inside the `<form>` tag, no other `th:object` attribute can be specified.
    This is consistent with the fact that HTML forms cannot be nested.
+ * The name used in `th:object` (`seedStarter` in the example above) must match
+   the name of the corresponding model attribute on the Spring MVC side. Unless
+   a different name is set explicitly (e.g. via `@ModelAttribute("someName")` on
+   the controller method parameter, or `Model#addAttribute("someName", ...)`),
+   Spring will use the uncapitalized simple name of the command object's class
+   as the model attribute name, so a `SeedStarter` object will by default be
+   exposed to the view as `seedStarter`.
 
 
 
