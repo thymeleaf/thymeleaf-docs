@@ -308,12 +308,11 @@ address. And also, there is a new property for all inputs called
 disappears when the input gains focus (usually by the user clicking on
 it).
 
-Sounds good, doesn't it? Unfortunately not all browsers support this yet
-(as of 2011, Opera 11 and Firefox 4 do), but we are safe using these
-features anyway because all browsers will treat an input of a type they
-do not understand (`email`) as a `text` input, and will silently ignore
-the `placeholder` attribute in the same way they ignore Thymeleaf's
-`th:*` ones.
+Sounds good, doesn't it? And even if some browser didn't support this,
+we would still be safe using these features anyway because all browsers
+will treat an input of a type they do not understand (`email`) as a
+`text` input, and will silently ignore the `placeholder` attribute in the
+same way they ignore Thymeleaf's `th:*` ones.
 
 ### Doing HTML5 with JSP
 
