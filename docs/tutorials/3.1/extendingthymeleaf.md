@@ -242,7 +242,7 @@ public interface IExpressionObjectFactory {
 
     public Map<String,ExpressionObjectDefinition> getObjectDefinitions();
 
-    public Object buildObject(final IProcessingContext processingContext, final String expressionObjectName);
+    public Object buildObject(final IExpressionContext context, final String expressionObjectName);
 
 }
 ```

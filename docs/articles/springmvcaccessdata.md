@@ -96,11 +96,6 @@ Since parameters can be multivalued (e.g. `https://example.com/query?q=Thymeleaf
 
 Note: If you access multivalued parameter with `${param.q}` you will get a serialized array as a value.
 
-Another way to access request parameters is by using the special `#request` object that gives you direct access to the `javax.servlet.http.HttpServletRequest` object:
-
-```html
-    <p th:text="${#request.getParameter('q')}" th:unless="${#request.getParameter('q') == null}">Test</p>
-```
 
 Session attributes
 ------------------
@@ -121,24 +116,22 @@ Similarly to the request parameters, session attributes can be accessed by using
     <p th:text="${session.mySessionAttribute}" th:unless="${session == null}">[...]</p>
 ```
 
-Or by using `#session`, that gives you direct access to the `javax.servlet.http.HttpSession` object: `${#session.getAttribute('mySessionAttribute')}`
-
 
 ServletContext attributes
 -------------------------
 
-The ServletContext attributes are shared between requests and sessions. In order to access ServletContext attributes in Thymeleaf you can use the `#servletContext.` prefix:
+The ServletContext attributes are shared between requests and sessions. In order to access ServletContext attributes in Thymeleaf you can use the `application.` prefix:
 
 ```html
         <table>
             <tr>
                 <td>My context attribute</td>
                 <!-- Retrieves the ServletContext attribute 'myContextAttribute' -->
-                <td th:text="${#servletContext.getAttribute('myContextAttribute')}">42</td>
+                <td th:text="${application.myContextAttribute}">42</td>
             </tr>
-            <tr th:each="attr : ${#servletContext.getAttributeNames()}">
-                <td th:text="${attr}">javax.servlet.context.tempdir</td>
-                <td th:text="${#servletContext.getAttribute(attr)}">/tmp</td>
+            <tr th:each="attr : ${application}">
+                <td th:text="${attr.key}">jakarta.servlet.context.tempdir</td>
+                <td th:text="${attr.value}">/tmp</td>
             </tr>
         </table>
 ```
@@ -175,10 +168,10 @@ This is fairly easy and useful in some scenarios.
 References
 ----------
 
-- [Thymeleaf + Spring 3][2]
+- [Thymeleaf + Spring][2]
 - [Expression Basic Objects][3]
 
 
   [1]: http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/expressions.html
-  [2]: http://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html
-  [3]: http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-a-expression-basic-objects
+  [2]: http://www.thymeleaf.org/doc/tutorials/3.1/thymeleafspring.html
+  [3]: http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#appendix-a-expression-basic-objects

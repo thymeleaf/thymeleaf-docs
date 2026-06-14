@@ -73,7 +73,7 @@ features:
    selection.
  * An expression object and method, `#themes.code(...)`, which is equivalent
    to the `spring:theme` JSP custom tag.
- * An expression object and method, `#mvc.uri(...)`, which is equivalent to 
+ * An expression object and method, `#mvc.url(...)`, which is equivalent to 
    the `spring:mvcUrl(...)` JSP custom function. 
 
 Note that most of the times _you shouldn't be using this dialect directly in a normal 
@@ -1388,7 +1388,7 @@ public DateFormatter dateFormatter() {
 }
 ```
 
-9.1 Double-brace syntax
+9.2 Double-brace syntax
 -----------------------
 
 The Conversion Service can be easily applied in order to convert/format any object into String. This 
@@ -1413,7 +1413,7 @@ So, for example, given an Integer-to-String converter that adds commas as a thou
 
 
 
-9.2 Use in forms
+9.3 Use in forms
 ----------------
 
 
@@ -1434,7 +1434,7 @@ is applied in expressions using single-brace syntax.
 
 
 
-9.3 `#conversions` utility object
+9.4 `#conversions` utility object
 --------------------------------- 
 
 The `#conversions` expression utility object allows the manual execution of the Conversion Service wherever needed:
@@ -1613,7 +1613,7 @@ public RequestDataValueProcessor requestDataValueProcessor() {
 
 
 
-11.1 Building URIs to controllers
+11.2 Building URIs to controllers
 ---------------------------------
 
 Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the 

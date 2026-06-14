@@ -4963,7 +4963,7 @@ The specific implementation of `IDecoupledTemplateLogicResolver` to be used can
 be configured at the `TemplateEngine` easily:
 
 ```java
-final StandardDecoupledTemplateLogicResolver decoupledresolver = 
+final StandardDecoupledTemplateLogicResolver decoupledResolver = 
         new StandardDecoupledTemplateLogicResolver();
 decoupledResolver.setPrefix("../viewlogic/");
 ...
@@ -5032,12 +5032,6 @@ accessing request parameters, session attributes and application attributes:
    normally be used for getting the first value.
 
 ```java
-/*
- * ============================================================================
- * See javadoc API for class org.thymeleaf.context.WebRequestParamsVariablesMap
- * ============================================================================
- */
-
 ${param.foo}              // Retrieves a String[] with the values of request parameter 'foo'
 ${param.size()}
 ${param.isEmpty()}
@@ -5048,12 +5042,6 @@ ${param.containsKey('foo')}
  * **session** : for retrieving session attributes.
 
 ```java
-/*
- * ======================================================================
- * See javadoc API for class org.thymeleaf.context.WebSessionVariablesMap
- * ======================================================================
- */
-
 ${session.foo}                 // Retrieves the session attribute 'foo'
 ${session.size()}
 ${session.isEmpty()}
@@ -5064,12 +5052,6 @@ ${session.containsKey('foo')}
  * **application** : for retrieving application/servlet context attributes.
 
 ```java
-/*
- * =============================================================================
- * See javadoc API for class org.thymeleaf.context.WebServletContextVariablesMap
- * =============================================================================
- */
-
 ${application.foo}              // Retrieves the ServletContext attribute 'foo'
 ${application.size()}
 ${application.isEmpty()}
