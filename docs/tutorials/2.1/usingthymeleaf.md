@@ -1430,7 +1430,7 @@ messages (`#{...}`), URLs (`@{...}`) or literals (`'...'`).
 Conditional expressions can also be nested using parentheses:
 
 ```html
-<tr th:class="${row.even}? (${row.first}? 'first' : 'even') : 'odd'">
+<tr th:class="${row.odd}? (${row.first}? 'first' : 'odd') : 'even'">
   ...
 </tr>
 ```
