@@ -257,7 +257,7 @@ public SpringTemplateEngine templateEngine() {
 ```
 
 For the Markup Selector syntax reference checkout this section in Thymeleaf
-documentation: [Markup Selector syntax](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax).
+documentation: [Markup Selector syntax](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#appendix-c-markup-selector-syntax).
 
 ### Using expressions
 
@@ -357,7 +357,7 @@ code (please note, that the value of a variable can be an expression):
 Parameterized fragments let developers create functional-like fragments
 that are easier to reuse. Read more about parameterized fragments in the
 Thymeleaf documentation: [Parameterizable fragment
-signatures](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#parameterizable-fragment-signatures).
+signatures](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#parameterizable-fragment-signatures).
 
 ### Fragment Expressions
 
@@ -401,7 +401,7 @@ In the calling template (`task/task-list.html`) we will use a *Markup Selector* 
 </header>
 ```
 
-As a result, the following HTML will be generated for the `task/taks-list` view:
+As a result, the following HTML will be generated for the `task/task-list` view:
 
 ```xml
 <header>
@@ -414,7 +414,7 @@ As a result, the following HTML will be generated for the `task/taks-list` view:
 </header>
 ```
 
-Similarily, we can use the same fragment with different breadcrumb in another view  (`task/task.html`):
+Similarly, we can use the same fragment with different breadcrumb in another view  (`task/task.html`):
 
 ```xml
 <header th:insert="task/layout :: header(~{ :: .breadcrumb})">
@@ -451,7 +451,7 @@ As a result, we will get:
 </header>
 ```
 
-Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. Read more about this topic in the Thymeleaf documentation: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+Fragment Expression enables the customization of fragments in ways that until now were only possible using the 3rd party Layout Dialect. Read more about this topic in the Thymeleaf documentation: [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
 ### Fragment inclusion from Spring `@Controller`
 
@@ -502,9 +502,9 @@ the content will be loaded via AJAX call (see
 Please check Thymeleaf documentation that describes this topic very
 thoroughly.
 
-* [Template Layout](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#template-layout).
-* [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragment-specification-syntax)
-* [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
+* [Template Layout](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#template-layout).
+* [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#fragment-specification-syntax)
+* [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
 ### Thymol
 
@@ -549,7 +549,7 @@ To get started with Layout Dialect we need to include it into the
 <dependency>
   <groupId>nz.net.ultraq.thymeleaf</groupId>
   <artifactId>thymeleaf-layout-dialect</artifactId>
-  <version>2.0.5</version>
+  <version>4.0.1</version>
 </dependency>
 ```
 
@@ -794,7 +794,7 @@ What will happen?
 -   Controllers return view names, that translate to single Thymeleaf
     view file (1)
 -   Before rendering the view, the original `viewName` attribute in
-    `ModelAndView` object is replaced with with the name of the layout
+    `ModelAndView` object is replaced with the name of the layout
     view and the original `viewName` becomes an attribute in
     `ModelAndView`.
 -   The layout view (2) contains several include elements:

@@ -18,10 +18,10 @@ app to be web-enabled in order to send email with Thymeleaf.
 Prerequisites
 -------------
 
-This article assumes you are familiar with both Thymeleaf and Spring 4.
+This article assumes you are familiar with both Thymeleaf and Spring.
 We will not dive into Spring Mail details, for further information
 please take a look at the [Email chapter at the Spring
-Documentation](http://docs.spring.io/spring/docs/4.3.x/spring-framework-reference/html/mail.html).
+Documentation](https://docs.spring.io/spring-framework/reference/integration/email.html).
 
 
 Example application

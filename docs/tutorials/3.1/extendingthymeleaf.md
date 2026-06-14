@@ -1313,7 +1313,7 @@ also useful methods for modifying the attributes in a tag (by creating a new `ta
 such as:
 
 ```java
-final IOpenElemenTag newTag = modelFactory.setAttribute(tag, "class", "newvalue");
+final IOpenElementTag newTag = modelFactory.setAttribute(tag, "class", "newvalue");
 ```
 
 Also, the model factory is able to create `IModel` instances from scratch (like the `modelFactory.createModel()` above),

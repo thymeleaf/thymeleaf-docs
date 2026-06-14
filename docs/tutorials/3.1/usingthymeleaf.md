@@ -3087,7 +3087,7 @@ five different ways, depending on its value:
 
  * `all`: Remove both the containing tag and all its children.
  * `body`: Do not remove the containing tag, but remove all its children.
- * `tag`: Remove the containing tag, but do not remove its children.
+ * `tag`: Remove the containing tag, but do not remove its children. (`tags`, plural, is also allowed as an alias for this value.)
  * `all-but-first`: Remove all children of the containing tag except the first one.
  * `none` : Do nothing. This value is useful for dynamic evaluation.
 
@@ -5689,6 +5689,12 @@ ${#strings.substring(name,3,5)}                     // also array*, list* and se
 ${#strings.substringAfter(name,prefix)}             // also array*, list* and set*
 ${#strings.substringBefore(name,suffix)}            // also array*, list* and set*
 ${#strings.replace(name,'las','ler')}               // also array*, list* and set*
+
+/*
+ * Replace several before/after pairs in one go
+ * Also works with arrays, lists or sets
+ */
+${#strings.multipleReplace(name,{'las','o'},{'ler','a'})}   // also array*, list* and set*
 
 /*
  * Append and prepend

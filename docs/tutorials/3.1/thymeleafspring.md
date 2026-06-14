@@ -107,11 +107,11 @@ public SpringTemplateEngine templateEngine(){
     // enables Spring's own MessageSource message resolution mechanisms.
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.setTemplateResolver(templateResolver());
-    // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
-    // speed up execution in most scenarios, but might be incompatible
-    // with specific cases when expressions in one template are reused
-    // across different data types, so this flag is "false" by default
-    // for safer backwards compatibility.
+    // Enabling the SpringEL compiler can speed up execution in most
+    // scenarios, but might be incompatible with specific cases when
+    // expressions in one template are reused across different data
+    // types, so this flag is "false" by default for safer backwards
+    // compatibility.
     templateEngine.setEnableSpringELCompiler(true);
     return templateEngine;
 }
@@ -447,11 +447,11 @@ public class SpringWebConfig
         // enables Spring's own MessageSource message resolution mechanisms.
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
-        // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
-        // speed up execution in most scenarios, but might be incompatible
-        // with specific cases when expressions in one template are reused
-        // across different data types, so this flag is "false" by default
-        // for safer backwards compatibility.
+        // Enabling the SpringEL compiler can speed up execution in most
+        // scenarios, but might be incompatible with specific cases when
+        // expressions in one template are reused across different data
+        // types, so this flag is "false" by default for safer backwards
+        // compatibility.
         templateEngine.setEnableSpringELCompiler(true);
         return templateEngine;
     }
@@ -576,7 +576,7 @@ public DateFormatter dateFormatter() {
 
 Spring *formatters* are implementations of the `org.springframework.format.Formatter` 
 interface. For more information on how the Spring conversion infrastructure works, 
-see the docs at [spring.io](http://docs.spring.io/spring/docs/4.3.x/spring-framework-reference/html/validation.html#core-convert).
+see the docs at [spring.io](https://docs.spring.io/spring-framework/reference/core/validation/format.html).
 
 Let's have a look at the `DateFormatter`, which formats dates according to a format 
 string present at the `date.format` message key of our `Messages.properties`:
@@ -985,7 +985,7 @@ generated for a specific input id.
 > unchecked checkbox values to the server upon form submission.
 
 Also note that if our features property contained some selected values in our
-form-backing bean, `th:field`would have taken care of that and would have added
+form-backing bean, `th:field` would have taken care of that and would have added
 a `checked="checked"` attribute to the corresponding input tags.
 
 
@@ -1446,7 +1446,7 @@ The `#conversions` expression utility object allows the manual execution of the 
 Syntax for this utility object:
 
   * `#conversions.convert(Object,Class)`: converts the object to the specified class.
-  * `#conversions.convert(Object,String)`: same as above, but specifying the target class as a String (note the `java.lang.` package can be ommitted).
+  * `#conversions.convert(Object,String)`: same as above, but specifying the target class as a String (note the `java.lang.` package can be omitted).
 
 
 
@@ -1616,7 +1616,7 @@ public RequestDataValueProcessor requestDataValueProcessor() {
 11.2 Building URIs to controllers
 ---------------------------------
 
-Since version 4.1, Spring allows the possibility to build links to annotated controllers directly from views, without the 
+Spring allows the possibility to build links to annotated controllers directly from views, without the 
 need to know the URIs these controllers are mapped to.
 
 In Thymeleaf, this can be achieved by means of the `#mvc.url(...)` expression object method, which allows the 
@@ -1642,7 +1642,7 @@ The following code will create a link to it:
 ``` 
 
 You can read more about this mechanism 
-at http://docs.spring.io/spring-framework/docs/4.1.2.RELEASE/spring-framework-reference/html/mvc.html#mvc-links-to-controllers-from-views
+at https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/uri-building.html
 
 
 12 Spring WebFlow integration

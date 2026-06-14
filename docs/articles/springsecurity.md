@@ -21,7 +21,7 @@ Prerequisites
 We assume you are familiar with Thymeleaf and Spring Security, and you
 have a working application using these technologies. If you don't know
 Spring Security, you could be interested on reading the [Spring Security
-Documentation](http://static.springsource.org/spring-security/site/reference.html).
+Documentation](https://docs.spring.io/spring-security/reference/index.html).
 
 
 Login pages
@@ -149,7 +149,7 @@ Spring Security Dialect
 In Spring MVC environments, the [Spring Security integration
 module](https://github.com/thymeleaf/thymeleaf-extras-springsecurity)
 works as a replacement of the [Spring security
-taglib](http://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/taglibs.html).
+taglib](https://docs.spring.io/spring-security/reference/servlet/integrations/jsp-taglibs.html).
 
 We use this dialect in the example in order to print the logged user
 credentials and to show different content to different roles.
