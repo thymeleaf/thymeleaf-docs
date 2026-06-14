@@ -450,13 +450,13 @@ public interface IElementTagStructureHandler {
 
     public void setTemplateData(final TemplateData templateData);
 
-    public void setBody(final String text, final boolean processable);
+    public void setBody(final CharSequence text, final boolean processable);
     public void setBody(final IModel model, final boolean processable);
 
     public void insertBefore(final IModel model); // cannot be processable
     public void insertImmediatelyAfter(final IModel model, final boolean processable);
 
-    public void replaceWith(final String text, final boolean processable);
+    public void replaceWith(final CharSequence text, final boolean processable);
     public void replaceWith(final IModel model, final boolean processable);
 
 

@@ -114,6 +114,7 @@ public class ErrorController {
         logger.error("Exception during execution of SpringSecurity application", throwable);
         String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
         model.addAttribute("errorMessage", errorMessage);
+        model.addAttribute("httpStatus", HttpStatus.INTERNAL_SERVER_ERROR);
         return "error";
     }
 
@@ -130,17 +131,18 @@ The **error.html** template could be like:
         <meta charset="utf-8" />
         <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
     </head>
-    <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
+    <body>
+        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">500 - Internal Server Error</h1>
         <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
         <a href="index.html" th:href="@{/index.html}">Back to Home Page</a>
     </body>
 </html>
 ```
 
-Note how we are using Spring's `HttpStatus` enum in order to obtain detailed information about the
-response status that has been set (which in this case will always be `500`, but this allows us
-to use this `error.html` in other error reporting scenarios).
+Note how we pass Spring's `HttpStatus` enum value as a model attribute, so that the template can
+display detailed information about the error status (which in this case will always be `500`,
+but this allows us to reuse this `error.html` in other error reporting scenarios where a
+different `HttpStatus` is set on the model).
 
 
 Spring Security Dialect

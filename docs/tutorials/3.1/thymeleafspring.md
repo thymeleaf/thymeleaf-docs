@@ -364,7 +364,7 @@ Resolver instances.
 @EnableWebMvc
 @ComponentScan
 public class SpringWebConfig
-        extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+        implements WebMvcConfigurer, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -552,7 +552,7 @@ public String saveSeedstarter(
 
 In order to allow easy formatting of `Date` and also `Variety` objects in our view layer, we 
 configured our application so that a Spring `ConversionService` object was created and
-initialized (by the `WebMvcConfigurerAdapter` we extend) with a couple of *formatter*
+initialized (by the `WebMvcConfigurer` we implement) with a couple of *formatter*
 objects we will need. See it again:
 
 ```java
@@ -1365,7 +1365,7 @@ perfectly valid prototype made up of perfectly displayable HTML code.
 -----------------
 
 As explained before, Thymeleaf can make use of a Conversion Service registered at the Application Context. Our
-application configuration class, by extending Spring's own `WebMvcConfigurerAdapter` helper, will automatically
+application configuration class, by implementing Spring's own `WebMvcConfigurer` interface, will automatically
 register such conversion service, which we can configure by adding the *formatters* that we need. Let's see 
 again what it looks like:
 

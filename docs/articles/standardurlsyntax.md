@@ -158,8 +158,9 @@ URL rewriting
 
 Thymeleaf allows you to configure _URL rewriting filters_ in your application,
 and it does so by calling the `response.encodeURL(...)` method in the
-`javax.servlet.http.HttpServletResponse` class of the Servlet API for every
-URL generated from a Thymeleaf template.
+`HttpServletResponse` class of the Servlet API for every
+URL generated from a Thymeleaf template (Thymeleaf 3.1 supports both the
+`javax.servlet` and the `jakarta.servlet` namespaces).
 
 This is the standard way of supporting URL rewriting operations in Java web
 applications, and allows URLs to:

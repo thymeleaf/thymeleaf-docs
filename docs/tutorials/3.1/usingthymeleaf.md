@@ -4462,7 +4462,7 @@ of configuration parameters, which include:
 
     ```java
     // Default is HTML
-    templateResolver.setTemplateMode("XML");
+    templateResolver.setTemplateMode(TemplateMode.XML);
     ```
 
  * Default mode for template cache, and patterns for defining whether specific
@@ -5001,14 +5001,15 @@ ${#ctx.variableNames}
 
 /*
  * ======================================================================
- * See javadoc API for class org.thymeleaf.context.IWebContext
+ * See javadoc API for classes org.thymeleaf.context.IWebContext
+ * and org.thymeleaf.web.IWebExchange
  * ======================================================================
  */
 
-${#ctx.request}
-${#ctx.response}
-${#ctx.session}
-${#ctx.servletContext}
+${#ctx.exchange}
+${#ctx.exchange.request}
+${#ctx.exchange.session}
+${#ctx.exchange.application}
 ```
 
  * **\#locale** : direct access to the `java.util.Locale` associated with

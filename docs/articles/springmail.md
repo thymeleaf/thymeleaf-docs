@@ -192,7 +192,7 @@ public class SpringMailConfig implements ApplicationContextAware, EnvironmentAwa
         final StringTemplateResolver templateResolver = new StringTemplateResolver();
         templateResolver.setOrder(Integer.valueOf(3));
         // No resolvable pattern, will simply process as a String template everything not previously matched
-        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCacheable(false);
         return templateResolver;
     }
@@ -214,7 +214,7 @@ resolving the specified template if its name matches.
 Also note how this `TemplateEngine` is specific to email processing, and completely
 separate to the one used for the web interface. This `TemplateEngine` for the web 
 interface, which will be integrated with Spring MVC by means of a `ThymeleafViewResolver`
-is in fact defined in a different `@Configuration` file extending `WebMvcConfigurerAdapter`
+is in fact defined in a different `@Configuration` file implementing `WebMvcConfigurer`
 (and which we will not show here in order to focus on email processing).
 
 ### Executing the Template Engine
