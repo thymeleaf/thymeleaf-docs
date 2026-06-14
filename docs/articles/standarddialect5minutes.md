@@ -246,8 +246,19 @@ But they can be used anywhere, just as any other variable:
 
 Fragment expressions can have arguments:
 
+```html
+<div th:insert="~{commons :: #main(${title},${content})}">...</div>
+```
 
+These arguments are then available inside the referenced fragment as
+context variables:
 
+```html
+<div th:fragment="main(title,content)">
+  <h1 th:text="${title}">A title</h1>
+  <p th:text="${content}">Some content</p>
+</div>
+```
 
 
 ### Literals and operations
