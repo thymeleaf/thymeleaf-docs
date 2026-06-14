@@ -156,9 +156,21 @@ Using the hello dialect
 -----------------------
 
 Using our new dialect is very easy. This being a Spring MVC application,
-we just have to add it to our `templateEngine` bean during configuration. 
+we just have to add it to our `templateEngine` bean during configuration,
+along with the `templateResolver` bean it depends on:
 
 ```java
+@Bean
+public SpringResourceTemplateResolver templateResolver(){
+    SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+    templateResolver.setApplicationContext(this.applicationContext);
+    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setSuffix(".html");
+    templateResolver.setTemplateMode(TemplateMode.HTML);
+    templateResolver.setCacheable(true);
+    return templateResolver;
+}
+
 @Bean
 public SpringTemplateEngine templateEngine(){
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
