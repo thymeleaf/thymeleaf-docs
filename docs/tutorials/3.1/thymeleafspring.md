@@ -896,6 +896,11 @@ line of code is similar to:
 
 ...but in fact it is a little bit more than that, because `th:field` will also apply the registered Spring Conversion Service, including the `DateFormatter` we saw before (even if the field expression is not double-bracketed). Thanks to this, the date will be shown correctly formatted.
 
+Note that, as with `th:value`, the value rendered by `th:field` is always
+HTML-escaped. Unlike Spring MVC's JSP tag library, which lets you disable this
+via the `htmlEscape` attribute (or a global `defaultHtmlEscape` setting),
+Thymeleaf provides no equivalent way to turn off escaping for `th:field`.
+
 Values for `th:field` attributes must be selection expressions (`*{...}`), which
 makes sense given the fact that they will be evaluated on the form-backing bean
 and not on the context variables (or model attributes in Spring MVC jargon).
