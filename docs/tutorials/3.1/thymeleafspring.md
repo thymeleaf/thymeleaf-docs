@@ -1260,6 +1260,13 @@ Finally note that `#fields.hasErrors('*')` is equivalent to `#fields.hasAnyError
 </div>
 ```
 
+Note that the `*{all}` selection expression (e.g. `th:errors="*{all}"`) can only
+be used inside an element with a `th:object` attribute (or nested inside one,
+such as a `<form>`), as selection expressions are always evaluated on the
+object selected by the closest `th:object` in scope. See *7.4 Displaying
+errors outside forms* below for how to display the same errors when there is
+no `th:object` in scope.
+
 
 7.3 Global errors
 -----------------
@@ -1285,6 +1292,11 @@ Thymeleaf offers the `global` constant for accessing these errors:
   <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
 </div>
 ```
+
+As with `*{all}`, the `*{global}` selection expression (e.g.
+`th:errors="*{global}"`) requires a `th:object` in scope. See *7.4 Displaying
+errors outside forms* below for the alternative syntax to use when there is no
+`th:object` in scope.
 
 
 7.4 Displaying errors outside forms
