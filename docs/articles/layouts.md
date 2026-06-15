@@ -506,29 +506,6 @@ thoroughly.
 * [Fragment Expressions](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#fragment-specification-syntax)
 * [Flexible layouts: beyond mere fragment insertion](http://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#flexible-layouts-beyond-mere-fragment-insertion)
 
-### Thymol
-
-When a Thymeleaf template is used as a static prototype, we cannot see
-the fragments we are including using the `th:insert/th:replace` host
-tags. We can only see the fragments aside, opening their own template
-documents.
-
-However, there is a way to see the real fragments included into our
-pages while prototyping. This can be done using
-[Thymol](http://www.thymeleaf.org/ecosystem.html#thymol), an unofficial
-JavaScript library that is an implementation of Thymeleaf's standard
-fragment inclusion functionality, providing static support for some
-Thymeleaf attributes like `th:insert` or `th:replace`, conditional
-display with `th:if`/`th:unless`, etc.
-
-As Thymol's author states: *Thymol was created in order to provide a
-more accurate static representation of Thymeleaf's dynamic templating
-capabilities by offering support for Thymeleaf attributes through a
-statically accessible javascript library*
-
-Thymol documentation and examples can be found on the official project
-site here: [Thymol](https://github.com/thymol/thymol.js).
-
 Thymeleaf Layout Dialect
 ------------------------
 
