@@ -1225,6 +1225,14 @@ result of evaluating another expression:
 <a th:href="@{'/details/'+${user.login}(orderId=${o.id})}">view</a>
 ```
 
+Note that Thymeleaf does not validate the scheme (`http:`, `https:`, `mailto:`...)
+or the destination of the URLs it outputs, whether they are written as link
+expressions or as any other kind of expression. Except for a basic sanity check
+on link expressions, which must not be relied upon, URLs computed from data
+coming from users or other external sources are not checked in any way, so it is
+the responsibility of the application to validate such URLs before they reach the
+template context, for example by only allowing the `http` and `https` schemes.
+
 
 ### A menu for our home page
 
@@ -1614,6 +1622,12 @@ The preprocessing String `__` can be escaped in attributes using `\_\_`.
 
 > Note that preprocessing is subject to stricter expression evaluation restrictions
 > for security reasons. See [Appendix D: Expression Restrictions](#appendix-d-expression-restrictions).
+> These restrictions apply to the preprocessing expression itself (the `__...__`
+> part), not to the expression that results from preprocessing, which is executed
+> afterwards in the same way as any other expression in that attribute (as the
+> example above shows). The result of preprocessing becomes part of the expression
+> being executed, so preprocessing should never be used for building expressions
+> out of data coming from users or other external sources.
 
 
 5 Setting Attribute Values
@@ -6211,7 +6225,9 @@ not a first line of defence.
 The restricted expression evaluation mode is applied when expressions are
 evaluated in the following contexts:
 
- * **Preprocessing expressions**: `__...__`
+ * **Preprocessing expressions**: `__...__`. Only the preprocessing expression
+   itself is restricted: the expression resulting from preprocessing is executed
+   afterwards according to the context in which it appears.
  * **Unescaped text output**: `th:utext` and unescaped inlined expressions.
  * **JavaScript event handler attributes**: all `th:on*` attribute processors
    whose value is a Thymeleaf Standard Expression.
@@ -6224,7 +6240,9 @@ evaluated in the following contexts:
    `th:substituteby` attributes.
  * **The base (non-parameter) part of URL expressions**: `@{...}` URL bases,
    `th:href`, and `th:src` (URL parameters within Link Expressions are not
-   restricted).
+   restricted in `th:href` and `th:src` or in contexts not listed here, but they
+   are restricted when the Link Expression appears in any of the other contexts
+   listed here).
  * **All output expressions in `TEXT` template mode**, whether escaped or not,
    due to the lack of knowledge about the specific context in which they will
    be used.
