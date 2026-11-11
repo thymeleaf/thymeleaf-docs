@@ -4897,6 +4897,11 @@ final WebApplicationTemplateResolver templateResolver =
 templateResolver.setUseDecoupledLogic(true);
 ```
 
+Decoupled logic is only available for markup templates (`HTML` and `XML` template
+modes). This flag is ignored for any templates that are resolved in a different
+template mode (e.g. `TEXT` or `JAVASCRIPT`), so a single template resolver can
+serve both kinds of templates.
+
 
 ### Mixing coupled and decoupled logic
 

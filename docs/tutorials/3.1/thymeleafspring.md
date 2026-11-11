@@ -1602,6 +1602,9 @@ public RequestDataValueProcessor requestDataValueProcessor() {
 
   * `th:action` calls `RequestDataValueProcessor.processAction(...)` before rendering the form's `action` attribute, and additionally it detects when this attribute is being applied on a `<form>` tag ---which should be the only place, anyway---, and in such case calls `RequestDataValueProcessor.getExtraHiddenFields(...)` and adds the returned hidden fields just after the opening `<form>` tag (i.e. at the beginning of the form's body).
 
+  * `th:formaction` calls `RequestDataValueProcessor.processAction(...)` before rendering the `formaction` attribute of a submit button, using the value of its `formmethod` attribute as HTTP method (or `GET` if absent). No
+  hidden fields are added, as these are already added by `th:action` on the enclosing `<form>`.
+
   * `th:value` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value it refers to, unless there is a `th:field` present in the same tag (in which case `th:field` will take care).
 
   * `th:field` calls `RequestDataValueProcessor.processFormFieldValue(...)` for rendering the value of the field it applies to (or the tag body if it is a `<textarea>`).
